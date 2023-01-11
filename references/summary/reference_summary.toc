@@ -1,0 +1,1 @@
+\contentsline {section}{\numberline {1}Torque and Pitch Angle Control for Variable Speed Wind Turbines in All Operating Regimes \cite {5874598}, pag. 3-4}{1}%

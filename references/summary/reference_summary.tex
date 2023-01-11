@@ -1,0 +1,41 @@
+\documentclass[]{article}
+\usepackage{amsmath}
+
+% Title Page
+%\title{Documentation summary}
+
+\begin{document}
+\tableofcontents
+\section{Torque and Pitch Angle Control for Variable Speed Wind Turbines in All Operating Regimes \cite{5874598}, pag. 3-4}
+A multivariate controller acts both on rotor speed and electrical power. 
+\begin{itemize}
+	\item Below rated: Maximum power extraction; variable rotor speed and constant pitch angle; torque controller allows to work following the MPPA
+	\item Above rated: pitch angle controlled to maintain constant power while the torque controller regulates the rotor speed to keep the constant nominal speed. 
+\end{itemize}
+Reference torque produced by an estimator.\\
+In this work the torque controls the rotational speed and the pitch control the power\\
+Optimal tip speed ratio and rated wind speed are computed beforehand. \\
+The turbine works in three regions: region 1 is the one below rated wind speed where the turbine stars-up; region 2 is in between cut in and rated power (here pitch is constant and the rotor speed is kept constant by changing the torque control) here small changes in the pitch angle about the optimal can be done in order to reduce the dynamic load; region 3 is above the rated wind speed where we want to limit the output power to the rated one. Make the transition smooth between the regions. \\
+\begin{gather}
+	P = \frac{\pi \rho cp R^2 v^3}{2}\\
+	T = \frac{P}{\omega}\\
+	J \frac{d \omega}{d t} = T_{t} - T_{generator} -K_t\omega_t
+\end{gather}
+with J the total inertia, $K_t$ is the total damping.\\
+Torque controller implemented estimating the the aerodynamic torque with an estimator. Pitch controller implementing the angle as function of the error between the actual power and the nominal one.\\
+In the work a permanent magnets synchronous generator is used. The d-q current components are controlled via a PI controller. \\
+Torque estimation is quite good and so the speed tracking. The steady state tracking error is removed by the integral action on the torque estimator.\\
+The reference rotational speed is carried out from the measurements on the wind speed, however there are other methods to define the reference speed without wind speed measurements to avoid inaccuracy of the measurements and its relation to the wins speed as this is perceived by the wind turbine.
+
+
+
+
+
+
+% bibliography
+{\footnotesize
+	\bibliographystyle{unsrt}  %Type of stye for reference
+	\bibliography{document} %Name of the reference file, without the .bib extension
+}
+
+\end{document}          
