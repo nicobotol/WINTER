@@ -1,6 +1,6 @@
 \documentclass[]{article}
 \usepackage{amsmath}
-
+\usepackage{siunitx}
 % Title Page
 %\title{Documentation summary}
 
@@ -27,11 +27,43 @@ In the work a permanent magnets synchronous generator is used. The d-q current c
 Torque estimation is quite good and so the speed tracking. The steady state tracking error is removed by the integral action on the torque estimator.\\
 The reference rotational speed is carried out from the measurements on the wind speed, however there are other methods to define the reference speed without wind speed measurements to avoid inaccuracy of the measurements and its relation to the wins speed as this is perceived by the wind turbine.
 
+\section{Control of Wind Turbines \cite{5160195}}
+Usually the rotor drives the generator via a a steps up gearbox but direct drive configurations are becoming more popular in order to eliminate possible source of failures. \\
+Variable speed wind turbines require electrical power processing in order to fulfil the grid requirements. They are also able to reduce loads because possible gusts are absorbed as rotational speed increase rather than as component bending.\\
+Three blades turbines experience more symmetrical loading than two bladed turbine.  
+\subsection{Wind speed variation}
+Wind turbines have difference levels of control: supervisory, operational, and subsystem. Supervisory determines when the turbine starts and stops in response to changes in the wind speed and also monitors the health of the turbine. The operational determine how the turbine achieves its control objective in regions 2 and 3. The subsystems are responsible for the generator, power electronics yaw drive, pitch drive and other actuators.\\
+The wind speed may or may not been assumed constant across the rotor swept area, in time and space. These variations may be considered as disturbances for control design. The assumption of constant wind speed may lead to poor results especially for large size turbine. \\
+In order to capture the wind speed variations along the blade, then hundred of sensors would been necessary to characterize the wind distribution along the blade. The most important parameters to characterize the wind are: spatial and temporal average, frequency distribution of wind speed, temporal and spatial variation, prevailing wind direction. There are different time scales: long time scales are used for determining whether a location is suitable for siting a wind turbine; daily scale affects mainly the direction and it is due to different heating of the surface; hourly is used to plan the mixing of different resources in the portfolio; short term prediction is used to mitigate structural loading during gusts and turbulence. \\
+\subsection{Sensors}
+The rotor speed measurement is used as feedback for basic control (ie speed and power) in region 2 and 3. It can be measured either before or after the gearbox.\\ Anemometer is used to determine whether the wind speed is sufficient for starting the turbine operation. The wind measurement is distorted by the rotor-wind interaction, so the measurement is not always reliable. \\
+Measurements must be reliable, and fault identification can be used to identify faulty sensors. 
+\subsection{Actuators} 
+Yaw motor: aligns the nacelle with the wind; turbine cannot be yawed at high rates due to gyroscopic effects (a typical rate is 1 \si{\degree}/s). The control ofthe yaw provides less benefit rather than the others.\\
+Generator: can be controlled to follow a desired torque and so determines how much torque is extracted from the turbine. The generator torque can be used to accelerate and decelerate the rotor. \\
+Bade-pitch motor: is restricted to approximately 5 \si{\degree \per \second} during the shut down of the turbine in region 1, while it can be around 8 \si{\degree \per \second} in 5 MW turbines. The blades can be controlled to pitch collectively or independently. 
+\subsection{Control loops}
+In region 2 the controller tries to maximize the power coefficient (ie optimal pitch angle), and so varying the pitch according to the incoming wind speed. \\
+In region 3, the control is done by a pitch control loop, limiting the power and the speed in order to not exceed the electrical and mechanical load. \\
+Controllers and effects are frequently coupled, especially in complex turbines. 
+\subsubsection{Generator torque control}
+\subsubsection{Pitch control}
+Pitch control in region 3 is done with a PID controller, but usually only just a PI is used. \\
+The basic controller is the SISO independent pitch controller, while if also other measurements are taken into account (ie strain gauge measuring the blade bending moment) then a MIMO individual pitch controller can be designed. 
+\subsubsection{Switching regime}
+Alongside with region 2 and 3 there is frequently even a third region, called region 2.5 which is used to facilitate the switch between the other two. This regime should be carefully considered because the linear connection often used may no result in smooth operations. \\
+Particularly important is also the control during the emergency switch off of the turbine, and also the use of the emergency break should be carefully considered. \\ \\
+Further advanced control strategies are presented in the publication.
+\subsection{Control of wind farm}
+There are different configurations in which the turbine can be placed in the farm. \\
+The controller may wants to set active and reactive power supplied to the grid.\\
+Due to the modification of the wind flow, it is not true that if all the turbines in the farm extract the maximum power than also the farm extracts the maximum available. This happens because the first turbine slow down the wind a lot and so the ones in the wake may experience a slower wind speed and so they are able to extract less power.\\
+An important decision parameter is the spacing of the turbine both in the direction of the wind and in the perpendicular one. 
 
-
-
-
-
+\section{Description of the DTU 10 MW Reference Wind Turbine}
+\subsection{Drivetrain properties}
+The DTU 10 MW has a medium speed gearbox design. This is a compromise between direct drive generators (where the rare hearts are expansive) and the high speed gearboxes (with high risks of failure).\\
+The rated rotor speed is 9.6 [rpm] = 1.0048 [rad/s] and a rated generator speed of 480 [rpm] with a gearbox ratio of 50:1. The gearbox is assumed a double-stage gearbox with no friction losses.  
 % bibliography
 {\footnotesize
 	\bibliographystyle{unsrt}  %Type of stye for reference

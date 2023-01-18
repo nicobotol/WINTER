@@ -1,1 +1,10 @@
 \contentsline {section}{\numberline {1}Torque and Pitch Angle Control for Variable Speed Wind Turbines in All Operating Regimes \cite {5874598}, pag. 3-4}{1}%
+\contentsline {section}{\numberline {2}Control of Wind Turbines \cite {5160195}}{2}%
+\contentsline {subsection}{\numberline {2.1}Wind speed variation}{2}%
+\contentsline {subsection}{\numberline {2.2}Sensors}{3}%
+\contentsline {subsection}{\numberline {2.3}Actuators}{3}%
+\contentsline {subsection}{\numberline {2.4}Control loops}{3}%
+\contentsline {subsubsection}{\numberline {2.4.1}Generator torque control}{3}%
+\contentsline {subsubsection}{\numberline {2.4.2}Pitch control}{3}%
+\contentsline {subsubsection}{\numberline {2.4.3}Switching regime}{3}%
+\contentsline {subsection}{\numberline {2.5}Control of wind farm}{4}%

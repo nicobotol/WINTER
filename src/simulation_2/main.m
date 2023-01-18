@@ -1,3 +1,8 @@
+%% EXAMPLE OF CONTROL 
+% This simulation is the most simple one: the power is based on a look-up
+% table relating cp and tip speed ratio, no pitching is taken into account,
+% the genreator model is discrete
+
 clear 
 close all
 clc
