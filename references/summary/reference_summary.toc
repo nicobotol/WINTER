@@ -4,7 +4,14 @@
 \contentsline {subsection}{\numberline {2.2}Sensors}{3}%
 \contentsline {subsection}{\numberline {2.3}Actuators}{3}%
 \contentsline {subsection}{\numberline {2.4}Control loops}{3}%
-\contentsline {subsubsection}{\numberline {2.4.1}Generator torque control}{3}%
-\contentsline {subsubsection}{\numberline {2.4.2}Pitch control}{3}%
-\contentsline {subsubsection}{\numberline {2.4.3}Switching regime}{3}%
+\contentsline {subsubsection}{\numberline {2.4.1}Generator torque control}{4}%
+\contentsline {subsubsection}{\numberline {2.4.2}Pitch control}{4}%
+\contentsline {subsubsection}{\numberline {2.4.3}Switching regime}{4}%
 \contentsline {subsection}{\numberline {2.5}Control of wind farm}{4}%
+\contentsline {section}{\numberline {3}Description of the DTU 10 MW Reference Wind Turbine}{4}%
+\contentsline {subsection}{\numberline {3.1}Drivetrain properties}{4}%
+\contentsline {section}{\numberline {4}10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}{5}%
+\contentsline {subsection}{\numberline {4.1}Introduction}{5}%
+\contentsline {subsection}{\numberline {4.2}System Description}{5}%
+\contentsline {subsection}{\numberline {4.3}Proposed control system}{5}%
+\contentsline {subsection}{\numberline {4.4}PMSG current control}{6}%

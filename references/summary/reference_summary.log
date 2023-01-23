@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.12.22)  12 JAN 2023 16:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.12.22)  23 JAN 2023 11:00
 entering extended mode
 **./reference_summary.tex
 (reference_summary.tex
@@ -456,40 +456,48 @@ Underfull \hbox (badness 10000) in paragraph at lines 15--19
 [1
 
 {C:/Users/Niccolò/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 35--38
+Underfull \hbox (badness 10000) in paragraph at lines 36--39
 
  []
 
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 54--57
+[2] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 55--58
 
  []
 
-[3] (reference_summary.bbl) [4] (reference_summary.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--71
+
+ []
+
+[4] [5] [6] [7] (reference_summary.bbl) [8] (reference_summary.aux) ) 
 Here is how much of TeX's memory you used:
- 13451 strings out of 492449
- 279195 string characters out of 3118591
+ 13454 strings out of 492449
+ 279238 string characters out of 3118591
  303192 words of memory out of 3000000
- 17814 multiletter control sequences out of 15000+200000
- 536370 words of font info for 39 fonts, out of 3000000 for 9000
+ 17816 multiletter control sequences out of 15000+200000
+ 536716 words of font info for 40 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  44i,10n,67p,769b,769s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Users/Niccolò/App
-Data/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Us
-ers/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
-mbx12.pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cm/cmmi10.pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/
-fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Niccolò/AppData/Local/Progr
-ams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Niccolò/AppD
-ata/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users
-/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8
+<C:/Users/
+Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx1
+0.pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmbx12.pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/Niccolò/AppData/Local/Programs
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Niccolò/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/
+Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10
 .pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/am
-sfonts/cm/cmsy10.pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts
-/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Niccolò/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti8.pfb>
-Output written on reference_summary.pdf (4 pages, 136224 bytes).
+sfonts/cm/cmr7.pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/t
+ype1/public/amsfonts/cm/cmr8.pfb><C:/Users/Niccolò/AppData/Local/Programs/MiKT
+eX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Niccolò/AppData/Loc
+al/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Nicco
+lò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb
+><C:/Users/Niccolò/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfon
+ts/cm/cmti8.pfb>
+Output written on reference_summary.pdf (8 pages, 173944 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
+ 77 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

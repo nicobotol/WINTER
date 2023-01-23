@@ -20,6 +20,7 @@ The turbine works in three regions: region 1 is the one below rated wind speed w
 	P = \frac{\pi \rho cp R^2 v^3}{2}\\
 	T = \frac{P}{\omega}\\
 	J \frac{d \omega}{d t} = T_{t} - T_{generator} -K_t\omega_t
+	\label{eq:dynamic_rotor_gen}
 \end{gather}
 with J the total inertia, $K_t$ is the total damping.\\
 Torque controller implemented estimating the the aerodynamic torque with an estimator. Pitch controller implementing the angle as function of the error between the actual power and the nominal one.\\
@@ -64,6 +65,48 @@ An important decision parameter is the spacing of the turbine both in the direct
 \subsection{Drivetrain properties}
 The DTU 10 MW has a medium speed gearbox design. This is a compromise between direct drive generators (where the rare hearts are expansive) and the high speed gearboxes (with high risks of failure).\\
 The rated rotor speed is 9.6 [rpm] = 1.0048 [rad/s] and a rated generator speed of 480 [rpm] with a gearbox ratio of 50:1. The gearbox is assumed a double-stage gearbox with no friction losses.  
+
+\section{10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}
+This work presents a model for a 10 mw direct-drive wind energy conversion system, considering also wind shear and tower shadow effects. The control is based on the theoretical maximum power curve.\\
+\subsection{Introduction}
+Tower shadows and wind shear are not always considered in the modelling of WT, as long as the working operations in region different from the MPPT, but here they do so. The investigate turbine is direct drive.
+\subsection{System Description}
+\textbf{Wind Turbine Modeling}\\
+The aerodynamic torque is computed by
+\begin{equation}
+	T_{aero} = \rho \pi R^3 V_w \frac{C_p(\lambda, \beta)}{\lambda}\left[\frac{V_w}{2} + V_w^{WS} + V_w^{TS}\right]
+\end{equation}
+Where $V_w$ is the nominal windspeed, $V_w^{WS}$ is the windspeed taking into account the wind shear, and $V_w^{TS}$ is the one taking into account the tower effect. $V_w^{WS}$ and $V_w^{TS}$, which are angle depending terms, are considered because otherwise the torque equation does not represent well the power fluctuations occurring in high power WTs. Their effect may produce an oscillations fo the electric quantities in the range 0.5-2 Hz. Models for $V_w^{WS}$ and $V_w^{TS}$ are reported in the article. \\
+\textbf{PMSG}\\
+The chosen genrator is a isotropy PMSG (ie permanent magnets are mounted on the surface of the rotor). It is modeled in the dq synchronous reference frame, so the d and q axis are equal to the ones in the \textit{Azionamenti elettrici} notes. The generator torque may be modelled as by the quadrature current component. \\
+The rotor-generator dynamic are controlled by Eq. \ref{eq:dynamic_rotor_gen} in which J is the equivalent rotational inertia, considering the rotor and drivetrain dynamic:
+\begin{equation}
+	J = \frac{J_{turbine}}{n_{gearbox}^2} + J_{gearbox}
+\end{equation}
+\subsection{Proposed control system}
+The control has to: process the maximum amount of energy at different wind speed, increase efficiency, increase useful life of the WT, decrease structural mechanical effort, reduce energy production downtime, provide optimum dynamic performances, ensure system stability. The control is based on the typical theoretical power curve, featuring 5 operating regions.\\
+Region 1: the low wind speed does not provide enough torque to make the rotor turn and furthermore this low speed rotation may force a low frequency vibration of the tower. For those reasons, the generator is kept braked. Furthermore the blades are kept pitched at 90 \si{\degree}.\\
+Region 2: MPPT algorithm must be applied to extract the maximum power provided by the wind, and the pitch angle is kept at the value of maximum aerodynamic efficiency (usually 0\si{\degree} ). In this work the control is done with a method called Optimal Torque Control. Even though it has a slower dynamic response to variations in wind speed, it provides smoother transitions wrt to other methods. This reduces the mechanical stress on the components of the wind system. The OTC uses a rotational speed sensor and $\omega_m$ is used to compute the mechanical torque reference, assuming that the turbine works with the most convenient Cp and $\lambda$: 
+\begin{equation}
+	T_{w}^*=0.5 \rho \pi R^5 \frac{C_{p,max}}{\lambda_{opt}}\omega_m^2
+\end{equation} 
+In the steady state and neglecting the losses, the electromagnetic torque is approximately the mechanical torque, rescaled by the gearbox transformation ratio. The OTC method is used as an electromagnetic torque reference:
+\begin{equation}
+	T_e^* = T_{w}^*/n_{gearbox}=0.5 \rho \pi R^5 \frac{C_{p,max}}{\lambda_{opt}^3n_{gearbox}^3}\omega_{gearbox}^2
+\end{equation}
+Region 3: it is a transition region between 2 and 4. In this region the rotational speed is kept constant at its nominal value and the pitch is 0 \si{\degree}. This implies that the maximum power is no longer a priority as opposed to operation within region 2. The control variable is the nominal rotational speed of the generator. A PI controller can be designed.  This reagion of operation is not always present.\\
+Region 4: is the power limiting one, and the control is done changing the pitch angle of the blades. The actuation mechanism consists of a servo motor, modeled as a first order function. The output of the servomotor is limited within 0-90 \si{\degree} and the pitch rate is limited between $\pm$ 3 \si{\degree \per \second}.\\
+Region 5: It is the region where the WT is shut down because the windspeed is above the maximum allowed one.
+\subsection{PMSG current control}
+The input parameters are torque and/or angular speed and/or voltage of the DC bus of the machine side converter. In this work the control is applied using the Field Oriented Control FOC, aimed to keep the direct axis (d-axis) constantly aligned with the flux vector permanent magnet. The referent current $i_{d,s}^*$ must be kept at zero, while the reference for the $i_{q,s}$ is determined by the speed or power control system.\\
+The FOC control technique is composed by two independent current control loops whose $i_{q,s}^*$ is :
+\begin{equation}
+	i_{q,s}^* = \frac{T_e^*}{1.5p \lambda_m}
+\end{equation}
+Leggere reference 17
+
+
+\newpage
 % bibliography
 {\footnotesize
 	\bibliographystyle{unsrt}  %Type of stye for reference
