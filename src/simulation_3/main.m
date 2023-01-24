@@ -9,41 +9,18 @@ clc
 s = tf('s'); % define s a complex variable
 
 %% Load parameters
+parameters;
 
-% general parameters
-rho = 1.225;                % air density [kg/m^3]
-stop_time = 300;            % max time to investigaste [s]
-
-% rotor parameters
-rotor.R = 9.5;      % rotor diameter [m]
-rotor.I = 15e3;     % rotor iniertia [kgm^2]
-rotor.omega_r = 1;  % initial rotational speed [rad/s]
-rotor.cP_c = [0.78, 151, 0.58, 0.002, 2.14, 13.2, 20.9, -0.002, -0.008];
-rotor_bus_info = Simulink.Bus.createObject(rotor); % transform tha struct into a bus
+% transform the structs of parameters into buses for simulink
+rotor_bus_info = Simulink.Bus.createObject(rotor); 
 rotor_bus = evalin('base', rotor_bus_info.busName);
-
-% generator parameters
-generator.sincronous_velocity = 5;    % [rad/s]
-generator.MG_coefficient = 2.55e5;    % generator curve coefficient
-generator.I = 1e3;                    % generator iniertia [kgm^2]
-generator.B = 1;                      % generator rotational friction [kgm^2/s] (random placeholder)
-generator.vll = 4e3;                  % rated line-to-line voltage [V]
-generator.is = 1443.4;                % rated stator current [A]
-generator.fe = 26.66;                 % rated stator frequency [Hz]
-generator.p = 320;                % number of poles
-generator.Ld = 1.8e-3;                % d-axis stator inductance [H]
-generator.Lq = 1.8e-3;                % q-axis stator inductance [H]
-generator.Rs = 64;                    % stator resistance [ohm]
-generator.Lambda = 19.49;             % magnet flux-linkage [Wb]
-generator.tau_c = 50e-6;              % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
 generator_bus_info = Simulink.Bus.createObject(generator); 
 generator_bus = evalin('base', generator_bus_info.busName);
+gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
+gearbox_bus = evalin('base', gearbox_bus_info.busName);
 
-% gearbox parameters
-gearbox.ratio = 1;  % gearbox transmission ratio 
-
-%cP_vs_lambda = load('Cp_Lambda.txt');   % power coefficient's look-up table 
-wind_speed = load('usim.dat');          % wind time history
+% wind time history
+wind_speed = load('usim.dat');                    % [m/s] 
 sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
 
 I_eq = rotor.I/gearbox.ratio^2 + generator.I; % equivalent inertia [kgm^2]

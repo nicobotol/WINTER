@@ -1,4 +1,4 @@
-%% cP as function of pitch angle and tip speed ratio
+%% cP as function of pitch angle and Tip Speed ratio (TSR)
 % This file is aimed to create a mesh of cP and cT as function of the pitch 
 % angle and the tip speed ratio.
 % Furthermore the optimum TSR, pitch angle are found.
@@ -9,10 +9,6 @@ close all
 clc
 
 parameters
-
-% distribute lambda and TSR in their ranges
-lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
-pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
 cP_store = zeros(pitch_item, lambda_item); % matrix to store cP
 cT_store = zeros(pitch_item, lambda_item); % matrix to store cT
@@ -84,8 +80,10 @@ omega_rated_rpm = 30/pi*omega_rated;                        % [rpm]
 rated_values(1) = V0_rated;
 rated_values(2) = omega_rated;
 rated_values(3) = omega_rated_rpm;
+rated_values(4) = lambda_opt;
+rated_values(5) = cP_max;
 
 %% Save the results 
-save('mesh_cP_theta_lambda.mat', 'cP_store');
-save('mesh_cT_theta_lambda.mat', 'cT_store');
+save('lookup_cP_theta_lambda.mat', 'cP_store');
+save('lookup_cT_theta_lambda.mat', 'cT_store');
 save('rated_values.mat', 'rated_values');
