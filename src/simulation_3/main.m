@@ -2,10 +2,11 @@
 % cP computed via an expression based on 10-MW_Direct-Drive...
 % damping of the rotor dynamic taken into account
 
-
 clear 
 close all
 clc
+
+s = tf('s'); % define s a complex variable
 
 %% Load parameters
 
@@ -25,19 +26,23 @@ rotor_bus = evalin('base', rotor_bus_info.busName);
 generator.sincronous_velocity = 5;    % [rad/s]
 generator.MG_coefficient = 2.55e5;    % generator curve coefficient
 generator.I = 1e3;                    % generator iniertia [kgm^2]
+generator.B = 1;                      % generator rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;                  % rated line-to-line voltage [V]
 generator.is = 1443.4;                % rated stator current [A]
 generator.fe = 26.66;                 % rated stator frequency [Hz]
-genarator.poles = 320;                % number of poles
-genarator.Ld = 1.8e-3;                % d-axis stator inductance [H]
+generator.p = 320;                % number of poles
+generator.Ld = 1.8e-3;                % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;                % q-axis stator inductance [H]
 generator.Rs = 64;                    % stator resistance [ohm]
 generator.Lambda = 19.49;             % magnet flux-linkage [Wb]
+generator.tau_c = 50e-6;              % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
+generator_bus_info = Simulink.Bus.createObject(generator); 
+generator_bus = evalin('base', generator_bus_info.busName);
 
 % gearbox parameters
 gearbox.ratio = 1;  % gearbox transmission ratio 
 
-cP_vs_lambda = load('Cp_Lambda.txt');   % power coefficient's look-up table 
+%cP_vs_lambda = load('Cp_Lambda.txt');   % power coefficient's look-up table 
 wind_speed = load('usim.dat');          % wind time history
 sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
 
