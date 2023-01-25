@@ -17,29 +17,29 @@ rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
 rotor.blades = 3;           % number of blades [#]
 rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
-rotor.V0_cut_out = 25;      % cut out wind velocity [m/s]
+rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.I = 325671;           % inertia [kgm^2]
-rotor.omega_r = 1;          % initial rotational speed [rad/s]
-% rotor.cP_c = [0.78, 151, 0.58, 0.002, 2.14, 13.2, 20.9, -0.002, -0.008];
+rotor.omega_r = 0;          % initial rotational speed [rad/s]
+rotor.B  = 1;               % rotational friction [kgm^2/s] (random placeholder)\
 
 % generator parameters
-% generator.sincronous_velocity = 5;    % [rad/s]
-% generator.MG_coefficient = 2.55e5;    % generator curve coefficient
-generator.I = 1e3;                    % generator iniertia [kgm^2]
-generator.B = 1;                      % rotational friction [kgm^2/s] (random placeholder)
-generator.vll = 4e3;                  % rated line-to-line voltage [V]
-generator.is = 1443.4;                % rated stator current [A]
-generator.fe = 26.66;                 % rated stator frequency [Hz]
-generator.p = 320;                    % number of poles
-generator.Ld = 1.8e-3;                % d-axis stator inductance [H]
-generator.Lq = 1.8e-3;                % q-axis stator inductance [H]
-generator.Rs = 64;                    % stator resistance [ohm]
-generator.Lambda = 19.49;             % magnet flux-linkage [Wb]
-generator.tau_c = 50e-6;              % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
+generator.I = 1e3;          % generator iniertia [kgm^2]
+generator.B = 1;            % rotational friction [kgm^2/s] (random placeholder)
+generator.vll = 4e3;        % rated line-to-line voltage [V]
+generator.is = 1443.4;      % rated stator current [A]
+generator.fe = 26.66;       % rated stator frequency [Hz]
+generator.p = 320;          % number of poles
+generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
+generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
+generator.Rs = 64;          % stator resistance [ohm]
+generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
+generator.tau_c = 50e-6;    % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
+generator.p_ctrl = 10;      % gain for the Ig reference
+generator.k_ctrl = 0.01;    % parmter for the Iq refernce
 
 % gearbox_parameters
-gearbox.ratio = 1;  % gearbox transmission ratio 
+gearbox.ratio = 1;          % gearbox transmission ratio 
 
 % lambda_opt = 7.857; % optimal lambda
 % cp_opt = 0.465; % optimal cp
@@ -56,7 +56,8 @@ lambda_item = 20;                             % # of guess pitch
 lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
 pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
-% load mesh for cP, cT, and rated values (computed in lookup_cp.m)
+% load mesh for cP, cT, rated values, and pitch angle (computed in 
+% lookup_cp.m and lookup_pitch.m)
 if isfile('lookup_cP_theta_lambda.mat')
   load('lookup_cP_theta_lambda.mat'); % cP as function of TSR and pitch angle
 end
@@ -73,9 +74,18 @@ if isfile('rated_values.mat')
   velocity_vector = sort(velocity_vector);
   velocity_item = size(velocity_vector, 2); % # of wind speed
   omega_rated = rated_values(2);            % rated wind speed [rad/s]
+  lambda_opt = rated_values(4);             % optimum TSR
+  cp_max = rated_values(5);                 % maximum cp
 else
   disp(['Attention: rated values may not have been computed. ' ...
     'Run lookup_cp.m first']);
+end
+
+if isfile('lookup_pitch.mat') 
+  load('lookup_pitch.mat');
+else
+   disp(['Attention: pitch angle values may not have been computed. ' ...
+    'Run lookup_pitch.m first']);
 end
 
 % airfoil parameters 

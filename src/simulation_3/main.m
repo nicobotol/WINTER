@@ -6,7 +6,7 @@ clear
 close all
 clc
 
-s = tf('s'); % define s a complex variable
+% s = tf('s'); % define s a complex variable
 
 %% Load parameters
 parameters;
@@ -23,7 +23,15 @@ gearbox_bus = evalin('base', gearbox_bus_info.busName);
 wind_speed = load('usim.dat');                    % [m/s] 
 sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
 
-I_eq = rotor.I/gearbox.ratio^2 + generator.I; % equivalent inertia [kgm^2]
+% Equivlent inertia and damping, referred to the rotor side of the
+% transmission
+I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
+B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
+
+% Set the pitching startegy (feathering or stall)
+pitch_strategy = 0;  % 0     -> feathering
+                     % 1     -> stalling
+                     % else  -> no pitch control
 
 %% Simulink simulation
 mdl = 'winter_simulink';                        % model's name
@@ -33,11 +41,11 @@ in = Simulink.SimulationInput(mdl);             % set simulation parameters
 out = sim(in, 'ShowProgress','on');             % run the simulation
 
 %% Plot of the results
-figure()
-plot(out.tout, out.Torques(:, 2))
-hold on
-plot(out.tout, out.Torques(:, 1))
-legend('Rotor', 'Generator', 'Location','best')
-xlabel('Time [s]')
-ylabel('Torque [Nm]')
-grid on
+% figure()
+% plot(out.tout, out.Torques(:, 2))
+% hold on
+% plot(out.tout, out.Torques(:, 1))
+% legend('Rotor', 'Generator', 'Location','best')
+% xlabel('Time [s]')
+% ylabel('Torque [Nm]')
+% grid on
