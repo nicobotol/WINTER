@@ -103,7 +103,26 @@ The FOC control technique is composed by two independent current control loops w
 \begin{equation}
 	i_{q,s}^* = \frac{T_e^*}{1.5p \lambda_m}
 \end{equation}
-Leggere reference 17
+
+\section{Parameters for the simulation}
+\begin{center}
+	\begin{tabular}{c|cccc}
+		Rotor & Inertia &  & $\left[\si{\kilo \gram \meter \square}\right]$ & \\ 
+		& Rotational friction &  & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & \\ \hline 
+		Generator & Inertia & 1500.5 & $\left[\si{\kilo \gram \meter \square}\right]$ & \cite{DTU_Wind_Energy_Report-I-0092} \\
+		& Rotational friction &  & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & \\
+		& Poles & 320 & & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
+		& d-axis stator inductance & $1.8 \cdot 10^{-3}$ & $\left[\si{\henry}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
+		& q-axis stator inductance & $1.8 \cdot 10^{-3}$ & $\left[\si{\henry}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
+		& stator resistance & 64 & $\left[ \si{\ohm}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}\\
+		& magnet flux-linkage & 19.49 & $\left[ \si{\weber}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
+		& inverter time constant & 50 & $\left[ \si{\micro \second}\right]$& \\
+		& gain for the Ig reference & 10 & & \cite{5874598} \\
+		& parameter for the Ig reference & 0.01 & & \cite{5874598} \\ \hline
+		Gearbox & Ratio & 1 & & \\
+		
+	\end{tabular}
+\end{center}
 
 
 \newpage
