@@ -2,7 +2,7 @@
 
 % general parameters
 rho = 1.225;                % air density [kg/m^3]
-stop_time = 300;            % max time to investigaste [s]
+stop_time = 30;            % max time to investigaste [s]
 font_size = 25;             % fontsize for plots
 line_width = 2;             % line width for plots
 i_max = 300;                % max number of accepted iterations
@@ -19,24 +19,24 @@ rotor.blades = 3;           % number of blades [#]
 rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
 rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
-rotor.I = 325671;           % inertia [kgm^2]
-rotor.omega_r = 0;          % initial rotational speed [rad/s]
-rotor.B  = 1;               % rotational friction [kgm^2/s] (random placeholder)\
+rotor.I = 325671e4;           % inertia [kgm^2]
+rotor.omega_r = 1;        % initial rotational speed [rad/s]
+rotor.B  = 0.0;             % rotational friction [kgm^2/s] (random placeholder)
 
 % generator parameters
-generator.I = 1e3;          % generator iniertia [kgm^2]
-generator.B = 1;            % rotational friction [kgm^2/s] (random placeholder)
+generator.I = 1500.5;       % generator iniertia [kgm^2]
+generator.B = 0.0;            % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
 generator.is = 1443.4;      % rated stator current [A]
 generator.fe = 26.66;       % rated stator frequency [Hz]
 generator.p = 320;          % number of poles
 generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
-generator.Rs = 64;          % stator resistance [ohm]
+generator.Rs = 64e-2;          % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
-generator.tau_c = 50e-6;    % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
+generator.tau_c = 50e-3;    % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
 generator.p_ctrl = 10;      % gain for the Ig reference
-generator.k_ctrl = 0.01;    % parmter for the Iq refernce
+generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 
 % gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 
