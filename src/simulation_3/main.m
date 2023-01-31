@@ -1,51 +1,30 @@
-%% Simulation 3
-% cP computed via an expression based on 10-MW_Direct-Drive...
-% damping of the rotor dynamic taken into account
+%% WINTER simulation
 
 clear 
 close all
 clc
 
-% s = tf('s'); % define s a complex variable
-
 %% Load parameters
+addpath("lookup"); % add the lookup tables
 parameters;
-
-% transform the structs of parameters into buses for simulink
-rotor_bus_info = Simulink.Bus.createObject(rotor); 
-rotor_bus = evalin('base', rotor_bus_info.busName);
-generator_bus_info = Simulink.Bus.createObject(generator); 
-generator_bus = evalin('base', generator_bus_info.busName);
-gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
-gearbox_bus = evalin('base', gearbox_bus_info.busName);
-
-% wind time history
-wind_speed = load('usim.dat');                    % [m/s] 
-sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
-
-% Equivlent inertia and damping, referred to the rotor side of the
-% transmission
-I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
-B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
-
-% Set the pitching startegy (feathering or stall)
-pitch_strategy = 0;  % 0     -> feathering
-                     % 1     -> stalling
-                     % else  -> no pitch control
 
 %% Simulink simulation
 mdl = 'winter_simulink';                        % model's name
 open_system(mdl);                               % open the model
 set_param(mdl, 'StopTime', num2str(stop_time)); % set simulation time
 in = Simulink.SimulationInput(mdl);             % set simulation parameters
-out = sim(in, 'ShowProgress','on');             % run the simulation
+% out = sim(in, 'ShowProgress','on');             % run the simulation
 
-%% Plot of the results
-% figure()
-% plot(out.tout, out.Torques(:, 2))
-% hold on
-% plot(out.tout, out.Torques(:, 1))
-% legend('Rotor', 'Generator', 'Location','best')
-% xlabel('Time [s]')
-% ylabel('Torque [Nm]')
-% grid on
+WS = V0_cut_in:1:V0_cut_out;
+WS_length = length(WS);
+omega_r_store = zeros(1, WS_length);
+pitch_store = zeros(1, WS_length);
+for i = 1:WS_length
+  wind_speed = WS(i);
+  out = sim(in, 'ShowProgress','on');             % run the simulation
+  omega_r_store(i) = mean(out.omega_r.Data(end - 80:end));
+  pitch_store(i) = mean(out.pitch.Data(end - 80:end));
+end
+
+%% Plot the results
+plots
