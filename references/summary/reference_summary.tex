@@ -64,7 +64,8 @@ An important decision parameter is the spacing of the turbine both in the direct
 \section{Description of the DTU 10 MW Reference Wind Turbine}
 \subsection{Drivetrain properties}
 The DTU 10 MW has a medium speed gearbox design. This is a compromise between direct drive generators (where the rare hearts are expansive) and the high speed gearboxes (with high risks of failure).\\
-The rated rotor speed is 9.6 [rpm] = 1.0048 [rad/s] and a rated generator speed of 480 [rpm] with a gearbox ratio of 50:1. The gearbox is assumed a double-stage gearbox with no friction losses.  
+The rated rotor speed is 9.6 [rpm] = 1.0048 [rad/s] and a rated generator speed of 480 [rpm] with a gearbox ratio of 50:1. The gearbox is assumed a double-stage gearbox with no friction losses.  \\
+The TSR used below the rated wind speed is 7.5.\\ 
 
 \section{10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}
 This work presents a model for a 10 mw direct-drive wind energy conversion system, considering also wind shear and tower shadow effects. The control is based on the theoretical maximum power curve.\\
@@ -103,7 +104,39 @@ The FOC control technique is composed by two independent current control loops w
 \begin{equation}
 	i_{q,s}^* = \frac{T_e^*}{1.5p \lambda_m}
 \end{equation}
-
+\section{Offshore Wind Energy Technology \cite{Olimpo_Anaya‐Lara}}
+\subsection{Modeling and analysis if drivetrains in offshore wind turbines}
+Wind turbine drivetrains are made of components that have been used successfully in many other industries, the failure rates of drivetrains has been a concerned in the wind industry. The problem is not the failure rate but the long downtime needed to repair or replace a part of the drivetrain. The reliability of the gearbox is an important feature.\\
+Gearboxes are primary used to increase the rotational speed to facilitate the use of high speed generators. A typical high speed gearbox has three stages of planetary gears and parallel gears. Direct drive WT are the most common gearless technologies. Rotor and generator speed is the same. In that case the generator has to have a large number of poles. Advantages are low number of mechanical components while disadvantages are the weight and material cost. Some researchers highlighted that removing the gearbox does not necessary increase the reliability. \\
+Medium speed gearboxes (ratio about 1/10) are in between high speed and direct drive.  \\
+Adding a gearbox in the drivetrain amplifies the inertia of the transmission, making it less sensitive to the torque variation and limiting the fatigue life of the components. \\
+Planetary gearboxes are widely employed due to their compact design, limited weight and low cost. The disadvantage is an increased complexity and difficulties of access, and they are more sensitive to the manufacturing errors.\\
+According some researchers the less reliable subassemblies are: pitch mechanism, power electronic converter, yaw system, control system, generator, gearbox.
+\subsection{Offshore wind turbine controls}
+The flexibility of the blade must be taken into account in the tuning of the control system. Furthermore the presence of the submerged structure and the corresponding wave-tower interaction must be taken into account.
+\subsubsection{5.1}
+The primary objective of the wind turbine controller is to keep the rotor speed of the
+wind turbine within limits, as it generates power. Secondary objectives include reducing
+aerodynamic loads and structural vibrations, and providing ancillary services to the
+electric grid. A supervisory level of control detects and handles operator commands,
+faults, and extreme events, and initiates startup and shutdown sequences, as appropriate.\\
+The turbine rating is defined as the electric power, bu the aerodynamic one is slightly higher.\\
+The rotor speed has two boundaries: an upper and a lower one. The upper limits the load on the blades while the lower is necessary to avoid the excitation of the lowest tower resonant frequencies. At the start up (ie between 4 and 7 m/s) the blade pitch is set to maximize the aerodynamic power.\\
+The turbine gas to respond to 3 loads due to wind and waves: the steady state ones (associated with the power extraction and gravity cycles in rotating components), the fluctuating loads at frequencies not near resonance, and the third is the resonance response.\\ 
+Active and reactive power are almost independently controllable. It is meaningless to command a sustained active power higher than that which can be extracted from the wind. Operation in short‐term transients above the available aerodynamic power is possible by drawing down the kinetic energy of the spinning rotor. This subsequently requires a recovery period of reduced power generation, in order to re-accelerate the rotor.\\
+The turbine has to deviate from the normal operation, such as during start up and shutdown sequences.\\
+The power output can be regulated actively or passively. The latter us done with aerodynamic stall while the former with blades pitching or adjusting the torque. The active control helps to damp structural vibrations and provides grid support functions. The nacelle yaw is also actively regulated but it has a slower dynamic compared to the others.
+\subsubsection{5.2}
+SISO control: The simplest controller for a pitch‐regulated, variable speed wind turbine consists of a blook‐up table for the generator torque, as a function of rotor speed, and a PI controller for collective blade pitch, which becomes active when the rotor speed hits its rated value. The sole sensor input required for normal operation is a measurement of the shaft speed. The gain of the PI controller should be scheduled as a function of the wind speed. The results is not robust in the sense that it may give a significantly different performance if implemented on a model other than that with which it was tuned. Additional single‐input, single‐output pathways are added in order to fulfil specific secondary objectives. Each objective is assigned either to the generator torque or the blade pitch action; thus, tower fore–aft damping is provided by blade pitch, while side‐to‐side damping is provided by generator torque. \\ 
+Advanced controls: The estimated wind speed may be used to improve the controller. \\
+Multiple‐input, multiple‐output control systems are typically formulated in statespace and based around a model of the plant that is embedded within the controller. A distinction is made between linear parameter‐varying models – those which are formulated using linear theory and scheduled on the basis of one or more slowly‐varying parameters – and truly nonlinear models. It is possible to design control algorithms that adapt themselves online, during operation, in order to incrementally improve performance towards some optimum. Such adaptive, evolutionary or intelligent control algorithms do not necessarily require an embedded model.\\
+A basic control strategy assigns each input control function to either the blade pitch or the generator torque. One SISO path is designed for each function. It is possible to design almost independent path, with only a small amount of coupling between them, but best performances are not obtainable in such a way.  \\
+REGION 1: power command is set as cubic function if the measured speed. Alternatively, a speed tracking mode is active when operating at the minimum rotor speed. Here a PI controller drives the speed error to zero. Only one of these two pathways is active at a given time. The transition between modes may be scheduled as a function of the estimated windspeed, or blade pitch angle.\\
+REGION 2: The basic rotor speed control function is the path that leads from the rotor speed error $\Omega - \Omega_{ref}$ through to the collective blade pitch command $\beta$. The operations at minimum speed are controlled in a specific way, also using an estimation of the wind speed. \\
+Individual pitch is used to take into account the wind sheer. 
+\subsubsection{5.3}
+Pitch actuators: three strategies may be used to model the pitching dynamics. The simplest is to neglect the pitch actuator, and to assign the blade pitch angle directly from the control command. This simplification may be useful for some kind of controllers. The second modelling strategy is to represent the pitch actuator with a low order transfer function, and a second order one represents the most important effects. In the book there are also some indications of he parameters to be used in the transfer function. There are bounds on the maximum pitching rate. Since the dynamic of the pitching blade is complicated, then it should be implemented in combination with a full aeroelastic model of the rotating blade. The model proposed in the book considers a spring and a damper for connecting the pitching actuation mechanism with the blade.
+\newpage
 \section{Parameters for the simulation}
 \begin{center}
 	\begin{tabular}{c|cccc}
@@ -114,7 +147,7 @@ The FOC control technique is composed by two independent current control loops w
 		& Poles & 320 & & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
 		& d-axis stator inductance & $1.8 \cdot 10^{-3}$ & $\left[\si{\henry}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
 		& q-axis stator inductance & $1.8 \cdot 10^{-3}$ & $\left[\si{\henry}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
-		& stator resistance & 64 & $\left[ \si{\ohm}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}\\
+		& stator resistance & $64 \cdot 10^{-3}$ & $\left[ \si{\ohm}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}\\
 		& magnet flux-linkage & 19.49 & $\left[ \si{\weber}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
 		& inverter time constant & 50 & $\left[ \si{\micro \second}\right]$& \\
 		& gain for the Ig reference & 10 & & \cite{5874598} \\
