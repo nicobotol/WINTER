@@ -16,7 +16,6 @@ in = Simulink.SimulationInput(mdl);             % set simulation parameters
 % out = sim(in, 'ShowProgress','on');             % run the simulation
 
 WS = V0_cut_in:1:V0_cut_out;
-% WS = 12;
 WS_length = length(WS);
 omega_r_store = zeros(1, WS_length);
 pitch_store = zeros(1, WS_length);

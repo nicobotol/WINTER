@@ -46,10 +46,6 @@ generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 % Gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 
 
-% Blade parameters
-blade.Kp = 10;             % proportional gain
-blade.Ki = 0.0;             % integrative gain
-
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
@@ -62,8 +58,6 @@ generator_bus_info = Simulink.Bus.createObject(generator);
 generator_bus = evalin('base', generator_bus_info.busName);
 gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
 gearbox_bus = evalin('base', gearbox_bus_info.busName);
-blade_bus_info = Simulink.Bus.createObject(blade); 
-blade_bus = evalin('base', blade_bus_info.busName);
 
 % Wind time history
 wind_speed = load('usim.dat');                    % [m/s] 
