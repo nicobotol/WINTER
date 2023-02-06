@@ -1,5 +1,3 @@
-%% Compare cP computed with the loookup table and with the formulas
-
 clear;
 close all;
 clc;
@@ -8,6 +6,7 @@ clc;
 parameters
 addpath("lookup");
 
+%% Compare cP in the loookup table with the results proposed by PoliMi
 % redefine a range for the pitch and the lambda
 pitch_r = deg2rad([-3, 12]);
 lambda_r = [2, 10];
@@ -15,16 +14,6 @@ pitch_i = 6;
 lambda_i = 10;
 pitch_v = linspace(pitch_r(1), pitch_r(2), pitch_i);
 lambda_v = linspace(lambda_r(1), lambda_r(2), lambda_i);
-
-cP = zeros(pitch_i, lambda_i);
-for l = 1:lambda_i
-  for p = 1:pitch_i
-    lambda = lambda_v(l);
-    pitch = rad2deg(pitch_v(p));
-    lambda1 = 1/(1/(lambda + 0.089) - 0.035/(pitch^3 + 1));
-    cP(p, l) = 0.5*(116/lambda1 - 0.4*(pitch - 5))*exp(-16.5/lambda1);
-  end
-end
 
 % table read from the PoliMi pubblication
 %           2   4    6    8    10
@@ -49,11 +38,14 @@ cP_interp = zeros(lambda_i, 1);
 cT_interp = zeros(lambda_i, 1);
 colors = ['b', 'r', 'k', 'c', 'm', 'g'];
 figure(1)
+% result from the look up table
 for p = 1:pitch_i
   cP_interp = interp2(lambda_vector, pitch_vector, lookup_cP, ...
     lambda_v(:), pitch_v(p));
   cT_interp = interp2(lambda_vector, pitch_vector, lookup_cT, ...
     lambda_v(:), pitch_v(p));
+
+  % plot
   subplot(121)
   plot(lambda_v, cP_interp, '--', 'Color', colors(p), ...
     'LineWidth', line_width);
@@ -64,6 +56,7 @@ for p = 1:pitch_i
   hold on
   LegS{p} = ['\theta {',num2str(rad2deg(pitch_v(p))),'°}'];
 end
+% results from the pubblication
 for p = 1:pitch_i
     subplot(121)
     plot(lambda_t, table_cP(p, :), 'o', 'Color', colors(p), ...
@@ -83,6 +76,23 @@ subplot(122)
 xlabel('\lambda [-]')
 ylabel('c_T [-]')
 grid on
+%% Compare the results from the analytical formula
+% 
+% cP = zeros(pitch_i, lambda_i);
+% for l = 1:lambda_i
+%   for p = 1:pitch_i
+%     lambda = lambda_v(l);
+%     pitch = rad2deg(pitch_v(p));
+%     lambda1 = 1/(1/(lambda + 0.089) - 0.035/(pitch^3 + 1));
+%     cP(p, l) = 0.5*(116/lambda1 - 0.4*(pitch - 5))*exp(-16.5/lambda1);
+%   end
+% end
+% 
+% figure(3)
+% for i = 1:pitch_i
+%   plot(lambda_v, cP(i, :));
+%   hold on
+% end
 
 %% Comparison between the results and the DTU report pag.34
 V0_v = 4:1:25;                  % windspeed [m/s]
