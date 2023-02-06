@@ -9,13 +9,13 @@ close all
 clc
 
 % add path for the functions for the aerodynamic
-addpath("aerodynamic_functions");
+addpath("..\")
 
 % load the parameters
 parameters
 
-cP_store = zeros(pitch_item, lambda_item); % matrix to store cP
-cT_store = zeros(pitch_item, lambda_item); % matrix to store cT
+lookup_cP = zeros(pitch_item, lambda_item); % matrix to store cP
+lookup_cT = zeros(pitch_item, lambda_item); % matrix to store cT
 for l = 1:lambda_item % loop over the TSR
   lambda = lambda_vector(l); 
   for p = 1:pitch_item  % loop over the pitch 
@@ -36,22 +36,22 @@ for l = 1:lambda_item % loop over the TSR
       trapezoidal_integral(r_vector(1:r_item_no_tip), cT_partial);
 
     % store the results
-    cP_store(p, l) = cP;
-    cT_store(p, l) = cT;
+    lookup_cP(p, l) = cP;
+    lookup_cT(p, l) = cT;
   end
 end
 
 %% Optimium point
-max_tmp = max(cP_store);       
+max_tmp = max(lookup_cP);       
 [~, lambda_pos] = max(max_tmp);                     
-[cP_max, theta_pos] = max(cP_store(:, lambda_pos)); % max cP
+[cP_max, theta_pos] = max(lookup_cP(:, lambda_pos)); % max cP
 lambda_opt = lambda_vector(lambda_pos);             % TSR for cP_max
 theta_opt = pitch_vector(theta_pos);                % pitch for cP_max
 
 %% Plot
 % contour plot for cP
 contour_plot_cP = figure('Position', get(0, 'Screensize'));
-[C, h] = contourf(lambda_vector, rad2deg(pitch_vector), cP_store, ...
+[C, h] = contourf(lambda_vector, rad2deg(pitch_vector), lookup_cP, ...
   'ShowText', 'on'); % To display value on the plot use ,'ShowText','on'
 clabel(C,h,'FontSize',font_size*0.8)
 hold on
@@ -67,7 +67,7 @@ ax.FontSize = font_size;
 
 % contour plot for cT
 contour_plot_cT = figure('Position', get(0, 'Screensize'));
-[C, h] = contourf(lambda_vector, rad2deg(pitch_vector), cT_store, ...
+[C, h] = contourf(lambda_vector, rad2deg(pitch_vector), lookup_cT, ...
   'ShowText', 'on');
 clabel(C,h,'FontSize',font_size*0.8)
 colorbar()
@@ -88,6 +88,6 @@ rated_values(4) = lambda_opt;
 rated_values(5) = cP_max;
 
 % % Save the results 
-save('lookup_cP_theta_lambda.mat', 'cP_store');
-save('lookup_cT_theta_lambda.mat', 'cT_store');
+save('lookup_cP_theta_lambda.mat', 'lookup_cP');
+save('lookup_cT_theta_lambda.mat', 'lookup_cT');
 save('rated_values.mat', 'rated_values');

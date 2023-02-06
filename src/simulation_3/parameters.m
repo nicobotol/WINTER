@@ -7,9 +7,10 @@ addpath("lookup")
 
 % General parameters
 rho = 1.225;                % air density [kg/m^3]
-stop_time = 30;            % max time to investigaste [s]
+stop_time = 30;             % max time to investigaste [s]
 font_size = 25;             % fontsize for plots
 line_width = 2;             % line width for plots
+marker_size = 12;           % marker size for plots
 i_max = 300;                % max number of accepted iterations
 fake_zero = 1e-8;           % thershold for exiting the loop
 a_guess = 0;                % initial guess for the BEM code
@@ -48,14 +49,14 @@ gearbox.ratio = 1;          % gearbox transmission ratio
 
 % Blade parameters
 blade.Kp = 10;             % proportional gain
-blade.Ki = 0.0;             % integrative gain
+blade.Ki = 0.0;            % integrative gain
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
 B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
 
-% Transform the structs of parameters into buses for simulink
+% Transform the struct of parameters into buses for simulink
 rotor_bus_info = Simulink.Bus.createObject(rotor); 
 rotor_bus = evalin('base', rotor_bus_info.busName);
 generator_bus_info = Simulink.Bus.createObject(generator); 
@@ -87,12 +88,13 @@ pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 % load mesh for cP, cT, rated values, and pitch angle (computed in 
 % lookup_cp.m and lookup_pitch.m)
 if isfile('lookup\lookup_cP_theta_lambda.mat')
-  load('lookup\lookup_cP_theta_lambda.mat'); % cP as function of TSR and pitch angle
+  load('lookup\lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
+  load('lookup\lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
 end
 
 % parameters for the file lookup_pitch.m
 if isfile('lookup\rated_values.mat')
-  load('lookup\rated_values.mat');           % rated values of wind speed and omega
+  load('lookup\rated_values.mat');          % rated values of ws and omega
   stall_lim = -4*pi/180;                    % initial stall limit [°]
   feather_lim = 4*pi/180;                   % initial feathering limit [°]
   p_item = 50;                              % # of item to investigate
@@ -132,5 +134,7 @@ r_item_no_tip = r_item - 1; % number of cross section without the tip
 % column 1 -> windspeed [m/s]
 % column 2 -> pitch angle [°]
 % column 3 -> rotaional speed [rpm]
+% column 4 -> cP [-]
+% column 5 -> cT [-]
 reference = load('airfoil_data\DTU_10MW_reference.txt'); 
 
