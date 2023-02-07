@@ -30,19 +30,23 @@ rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
 rotor.B  = 0.0;             % rotational friction [kgm^2/s] (random placeholder)
 
 % Generator parameters
-generator.I = 1500.5;       % generator iniertia [kgm^2]
+generator.I = 4800;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
 generator.is = 1443.4;      % rated stator current [A]
 generator.fe = 26.66;       % rated stator frequency [Hz]
-generator.p = 320;          % number of poles
+generator.p = 32;           % number of poles
 generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
-generator.tau_c = 50e-3;    % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
+generator.tau_c = 50e-6;    % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
 generator.p_ctrl = 10;      % gain for the Ig reference
 generator.k_ctrl = 0.01;    % paramter for the Iq refernce
+generator.iq_pm = 50;       % phase margin for the Iq controller [°]
+generator.iq_omegaBP = 1e5; % Iq controller crossover frequency [rad/s]
+generator.omega_pm = 50;    % phase margin for the speed controller [°]
+generator.omega_omegaBP=1e6;% speed controller crossover frequency [rad/s]
 
 % Gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 
