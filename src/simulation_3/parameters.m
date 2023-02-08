@@ -7,7 +7,7 @@ addpath("lookup")
 
 % General parameters
 rho = 1.225;                % air density [kg/m^3]
-stop_time = 30;             % max time to investigaste [s]
+stop_time = 60;             % max time to investigaste [s]
 font_size = 25;             % fontsize for plots
 line_width = 2;             % line width for plots
 marker_size = 12;           % marker size for plots
@@ -25,9 +25,9 @@ rotor.blades = 3;           % number of blades [#]
 rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
 rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
-rotor.I = 325671e4;         % inertia [kgm^2]
-rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
-rotor.B  = 0.0;             % rotational friction [kgm^2/s] (random placeholder)
+rotor.I = 1.5649e8;         % inertia [kgm^2]
+rotor.omega_r = 0.1;        % initial rotational speed [rad/s]
+rotor.B  = 0;             % rotational friction [kgm^2/s] (random placeholder)
 
 % Generator parameters
 generator.I = 4800;         % generator iniertia [kgm^2]
@@ -41,19 +41,19 @@ generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
 generator.tau_c = 50e-6;    % inverter time constant [s] (pag. 141 notes 'azionemanti elettrici')
-generator.p_ctrl = 10;      % gain for the Ig reference
+generator.p_ctrl = 1e3;      % gain for the Ig reference
 generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 50;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 1e5; % Iq controller crossover frequency [rad/s]
-generator.omega_pm = 50;    % phase margin for the speed controller [°]
-generator.omega_omegaBP=1e6;% speed controller crossover frequency [rad/s]
+generator.iq_omegaBP = 1e4; % Iq controller crossover frequency [rad/s]
+generator.omega_pm = 60;    % phase margin for the speed controller [°]
+generator.omega_omegaBP=500/60/5;% speed controller crossover frequency [rad/s]
 
 % Gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 
 
 % Blade parameters
-blade.Kp = 10;             % proportional gain
-blade.Ki = 0.0;            % integrative gain
+blade.Kp = 1.2e-7;              % proportional gain
+blade.Ki = 0.5e-8;             % integrative gain
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
