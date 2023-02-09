@@ -150,6 +150,21 @@ The obtained cP and cT are compared with the ones retrieved from the literature.
 \end{figure}
 
 \newpage
+\section{Reduce Order model for control applications in offshore wind turbine  \cite{SMILDEN2016386}}
+The wind turbine control system contribute to the dynamic behaviour of the structure through its influence on aerodynamic damping, and ability to affect load variations caused by turbulence and the rotational motion of the rotor. The control system can therefore be used to lower the fatigue contributions from both wind and wave loads, allowing for a more marginally designed structure. \\ 
+The model developed in this work includes a polynomial based approximation of the rotor aerodynamic:
+\begin{gather}
+	T_G = \frac{1}{2}\rho\pi R^3 C_Q(\theta, \lambda) V_0^2\\
+	C_Q(\theta, \lambda) = a_{00} + a_{01}\lambda +a_{01}\lambda^2 + a_{10}\theta + a_{20}\theta^2 + a_{11}\theta\lambda + a_{21}\theta^2\lambda + a_{12}\theta\lambda^2 \\
+\end{gather} 
+The coefficients are obtained by curve fitting.\\ 
+The drivetrain dynamic may include also the presence of a shaft with a finite stiffness and damping coefficients.\\ 
+The switching between the two classical control regions is based on the power curve as it exceeds the rated on. Below rated the control low is based on the equation 
+\begin{equation}
+	T_G = \frac{1}{2 \lambda_{opt}^3}\rho \pi R^5 _{p,opt}\omega_G^2 = K_{opt}\omega_G^2
+\end{equation}
+Above rated the blades are pitched ti feather. The controller is a PI one, as shown in the publication and on the notes (pag. 17-18).
+\newpage
 \section{Parameters for the simulation}
 \begin{center}
 	\begin{tabular}{c|cccc}

@@ -7,7 +7,7 @@ addpath("lookup")
 
 % General parameters
 rho = 1.225;                % air density [kg/m^3]
-stop_time = 60;             % max time to investigaste [s]
+stop_time = 600;             % max time to investigaste [s]
 font_size = 25;             % fontsize for plots
 line_width = 2;             % line width for plots
 marker_size = 12;           % marker size for plots
@@ -25,8 +25,10 @@ rotor.blades = 3;           % number of blades [#]
 rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
 rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
+rotor_P_rated = rotor.P_rated;% rated power [W]
 rotor.I = 1.5649e8;         % inertia [kgm^2]
-rotor.omega_r = 0.1;        % initial rotational speed [rad/s]
+% rotor.omega_r = 1.0457;        % initial rotational speed [rad/s]
+rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
 rotor.B  = 0;             % rotational friction [kgm^2/s] (random placeholder)
 
 % Generator parameters
@@ -52,8 +54,8 @@ generator.omega_omegaBP=500/60/5;% speed controller crossover frequency [rad/s]
 gearbox.ratio = 1;          % gearbox transmission ratio 
 
 % Blade parameters
-blade.Kp = 7e-10;              % proportional gain
-blade.Ki = 5e-12;             % integrative gain
+blade.Kp = 10;              % proportional gain
+blade.Ki = 100;             % integrative gain
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
