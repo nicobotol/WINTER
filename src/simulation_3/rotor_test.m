@@ -23,20 +23,23 @@ out = sim(in, 'ShowProgress','on');             % run the simulation
 omega_r_store = mean(out.omega_r.Data(end - 80:end));
 pitch_store = mean(out.pitch.Data(end - 80:end));
 P_r_store = mean(out.P_r.Data(end - 80:end));
+Pr_ref = mean(out.P_r.Data(end - 80:end));
 
 %% Multiple simulation
 
-% WS = V0_cut_in:1:V0_cut_out;                    % range of ws to test [m/s]
+% WS = V0_cut_in:2:V0_cut_out;                    % range of ws to test [m/s]
 % WS_length = length(WS);
 % omega_r_store = zeros(1, WS_length);
 % pitch_store = zeros(1, WS_length);
 % P_r_store = zeros(1, WS_length);
+% Pr_ref = zeros(1, WS_length);
 % for i = 1:WS_length
 %   wind_speed = WS(i);
 %   out = sim(in, 'ShowProgress','on');             % run the simulation
 %   omega_r_store(i) = mean(out.omega_r.Data(end - 80:end));
 %   pitch_store(i) = mean(out.pitch.Data(end - 80:end));
 %   P_r_store(i) = mean(out.P_r.Data(end - 80:end));
+%   Pr_ref(i) = mean(out.Pr_ref.Data(end - 80:end));  
 % end
 
 %% Plot the results

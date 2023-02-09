@@ -27,9 +27,10 @@ figure(3)
 plot(WS, P_r_store, 'o')
 hold on
 plot(reference(:, 1), reference(:, 6)*1e3)
+plot(WS, Pr_ref, 'x')
 xlabel('Wind speed [m/s]')
 ylabel('P [W]')
-legend('simulation', 'reference', 'location', 'best')
+legend('simulation', 'reference', 'observer', 'location', 'best')
 title('Mechanical power')
 grid on
 

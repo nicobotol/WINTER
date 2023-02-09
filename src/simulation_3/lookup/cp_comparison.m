@@ -8,7 +8,7 @@ addpath("lookup");
 
 %% Compare cP in the loookup table with the results proposed by PoliMi
 % redefine a range for the pitch and the lambda
-pitch_r = deg2rad([-3, 12]);
+pitch_r = [-3, 12]*pi/180; % [rad]
 lambda_r = [2, 10];
 pitch_i = 6;
 lambda_i = 10;
@@ -77,22 +77,22 @@ xlabel('\lambda [-]')
 ylabel('c_T [-]')
 grid on
 %% Compare the results from the analytical formula
-% 
-% cP = zeros(pitch_i, lambda_i);
-% for l = 1:lambda_i
-%   for p = 1:pitch_i
-%     lambda = lambda_v(l);
-%     pitch = rad2deg(pitch_v(p));
-%     lambda1 = 1/(1/(lambda + 0.089) - 0.035/(pitch^3 + 1));
-%     cP(p, l) = 0.5*(116/lambda1 - 0.4*(pitch - 5))*exp(-16.5/lambda1);
-%   end
-% end
-% 
-% figure(3)
-% for i = 1:pitch_i
-%   plot(lambda_v, cP(i, :));
-%   hold on
-% end
+
+cP = zeros(pitch_i, lambda_i);
+for l = 1:lambda_i
+  for p = 1:pitch_i
+    lambda = lambda_v(l);
+    pitch = pitch_v(p)*180/pi; % [°]
+    lambda1 = 1/(1/(lambda + 0.089) - 0.035/(pitch^3 + 1));
+    cP(p, l) = 0.5*(116/lambda1 - 0.4*(pitch - 5))*exp(-16.5/lambda1);
+  end
+end
+
+figure(3)
+for i = 1:pitch_i
+  plot(lambda_v, cP(i, :));
+  hold on
+end
 
 %% Comparison between the results and the DTU report pag.34
 V0_v = 4:1:25;                  % windspeed [m/s]

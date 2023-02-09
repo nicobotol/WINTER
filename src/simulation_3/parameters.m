@@ -52,8 +52,8 @@ generator.omega_omegaBP=500/60/5;% speed controller crossover frequency [rad/s]
 gearbox.ratio = 1;          % gearbox transmission ratio 
 
 % Blade parameters
-blade.Kp = 1.2e-7;              % proportional gain
-blade.Ki = 0.5e-8;             % integrative gain
+blade.Kp = 7e-10;              % proportional gain
+blade.Ki = 5e-12;             % integrative gain
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
