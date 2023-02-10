@@ -14,14 +14,14 @@ ylabel('\omega_r [rpm]')
 legend('simulation', 'reference', 'location', 'best')
 grid on
 
-% figure(2)
-% plot(WS, rad2deg(pitch_store), 'o')
-% hold on
-% plot(reference(:, 1), reference(:, 2))
-% xlabel('Wind speed [m/s]')
-% ylabel('\theta [°]')
-% legend('simulation', 'reference', 'location', 'best')
-% grid on
+figure(2)
+plot(WS, rad2deg(pitch_store), 'o')
+hold on
+plot(reference(:, 1), reference(:, 2))
+xlabel('Wind speed [m/s]')
+ylabel('\theta [°]')
+legend('simulation', 'reference', 'location', 'best')
+grid on
 
 figure(3)
 plot(WS, P_r_store, 'o')

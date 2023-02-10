@@ -2,8 +2,8 @@ function [kp_d, ki_d, kd_d] = PI_tuning(G_noR, tA)
 % This function tunes a PI controller
 % G_noR -> open-loop TF
 % tA -> raising time [s]
-syms ki tau_i
-s = tf('s');                    % define s as complex variable
+syms ki tau_i s
+% s = tf('s');                    % define s as complex variable
 
 R = ki*(1 + tau_i*s)/s;         % controller TF
 GH = R*G_noR;                   % close loop TF

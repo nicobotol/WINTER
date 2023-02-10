@@ -7,7 +7,7 @@ addpath("lookup")
 
 % General parameters
 rho = 1.225;                % air density [kg/m^3]
-stop_time = 600;             % max time to investigaste [s]
+stop_time = 60;             % max time to investigaste [s]
 font_size = 25;             % fontsize for plots
 line_width = 2;             % line width for plots
 marker_size = 12;           % marker size for plots
@@ -27,8 +27,8 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor_P_rated = rotor.P_rated;% rated power [W]
 rotor.I = 1.5649e8;         % inertia [kgm^2]
-% rotor.omega_r = 1.0457;        % initial rotational speed [rad/s]
-rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
+rotor.omega_r = 1.0457;        % initial rotational speed [rad/s]
+% rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
 rotor.B  = 0;             % rotational friction [kgm^2/s] (random placeholder)
 
 % Generator parameters
@@ -48,7 +48,7 @@ generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 50;       % phase margin for the Iq controller [°]
 generator.iq_omegaBP = 1e4; % Iq controller crossover frequency [rad/s]
 generator.omega_pm = 60;    % phase margin for the speed controller [°]
-generator.omega_omegaBP=500/60/5;% speed controller crossover frequency [rad/s]
+generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
 
 % Gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 

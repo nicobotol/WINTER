@@ -44,9 +44,9 @@ end
 %% Optimium point
 max_tmp = max(lookup_cP);       
 [~, lambda_pos] = max(max_tmp);                     
-[cP_max, theta_pos] = max(lookup_cP(:, lambda_pos)); % max cP
-lambda_opt = lambda_vector(lambda_pos);             % TSR for cP_max
-theta_opt = pitch_vector(theta_pos);                % pitch for cP_max
+[cP_max, theta_pos] = max(lookup_cP(:, lambda_pos));  % max cP
+lambda_opt = lambda_vector(lambda_pos);               % TSR for cP_max
+theta_opt = pitch_vector(theta_pos);                  % pitch for cP_max
 
 %% Plot
 % contour plot for cP
