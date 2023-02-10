@@ -31,8 +31,8 @@ Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
 Gc = 1/(1 + s*tau_c);                                     % power converter TF
 Giq_noR = Yiq*Gc;                                         % G2
 
-R = ki*(1 + tau_iq*s)/s;  % controller TF
-GH = R*Giq_noR;           % close loop TF
+Riq = ki*(1 + tau_iq*s)/s;  % controller TF
+GH = Riq*Giq_noR;           % close loop TF
 pol = poles(GH, s);       % find the poles of the TF
 max_pol = pol(1);
 

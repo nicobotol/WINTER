@@ -73,8 +73,8 @@ blade_bus_info = Simulink.Bus.createObject(blade);
 blade_bus = evalin('base', blade_bus_info.busName);
 
 % Wind time history
-wind_speed = load('usim.dat');                    % [m/s] 
-sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
+% wind_speed = load('usim.dat');                    % [m/s] 
+% sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
 
 % Pitching startegy (feathering or stall)
 pitch_strategy = 0;  % 0     -> feathering

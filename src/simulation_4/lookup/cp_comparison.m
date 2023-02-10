@@ -4,6 +4,7 @@ clc;
 
 % load the parameters
 parameters
+addpath('\..')
 addpath("lookup");
 
 %% Compare cP in the loookup table with the results proposed by PoliMi
@@ -40,7 +41,7 @@ colors = ['b', 'r', 'k', 'c', 'm', 'g'];
 figure(1)
 % result from the look up table
 for p = 1:pitch_i
-  cP_interp = interp2(lambda_vector, pitch_vector, lookup_cP, ...
+  cP_interp = interp2(lambda_vector, pitch_vector, lookup_cp, ...
     lambda_v(:), pitch_v(p));
   cT_interp = interp2(lambda_vector, pitch_vector, lookup_cT, ...
     lambda_v(:), pitch_v(p));

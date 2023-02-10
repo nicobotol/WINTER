@@ -27,8 +27,8 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor_P_rated = rotor.P_rated;% rated power [W]
 rotor.I = 1.5649e8;         % inertia [kgm^2]
-rotor.omega_r = 1.0457;        % initial rotational speed [rad/s]
-% rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
+% rotor.omega_r = 1.0457;        % initial rotational speed [rad/s]
+rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
 rotor.B  = 0;             % rotational friction [kgm^2/s] (random placeholder)
 
 % Generator parameters
@@ -73,8 +73,8 @@ blade_bus_info = Simulink.Bus.createObject(blade);
 blade_bus = evalin('base', blade_bus_info.busName);
 
 % Wind time history
-wind_speed = load('usim.dat');                    % [m/s] 
-sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
+% wind_speed = load('usim.dat');                    % [m/s] 
+% sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
 
 % Pitching startegy (feathering or stall)
 pitch_strategy = 0;  % 0     -> feathering
