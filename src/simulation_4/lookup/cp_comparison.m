@@ -3,9 +3,18 @@ close all;
 clc;
 
 % load the parameters
-parameters
-addpath('\..')
-addpath("lookup");
+addpath('..\');                        
+addpath('..\aerodynamic_functions');
+addpath('..\aerodynamic_functions\airfoil_data')
+parameters;                                       % load the parameters
+load('lookup_cP_theta_lambda.mat');               % load the cP lookup 
+load('lookup_cT_theta_lambda.mat');               % load the cT lookup 
+load("rated_values.mat");
+load('lookup_pitch.mat');
+V0_rated = rated_values(1);                       % rated wind speed [m/s]
+omega_rated = rated_values(2);                    % rated speed [rad/s]
+lambda_opt = rated_values(4);                     % optimal TSR
+cp_max = rated_values(5);                         % maximum cp
 
 %% Compare cP in the loookup table with the results proposed by PoliMi
 % redefine a range for the pitch and the lambda
@@ -41,7 +50,7 @@ colors = ['b', 'r', 'k', 'c', 'm', 'g'];
 figure(1)
 % result from the look up table
 for p = 1:pitch_i
-  cP_interp = interp2(lambda_vector, pitch_vector, lookup_cp, ...
+  cP_interp = interp2(lambda_vector, pitch_vector, lookup_cP, ...
     lambda_v(:), pitch_v(p));
   cT_interp = interp2(lambda_vector, pitch_vector, lookup_cT, ...
     lambda_v(:), pitch_v(p));
@@ -77,23 +86,6 @@ subplot(122)
 xlabel('\lambda [-]')
 ylabel('c_T [-]')
 grid on
-%% Compare the results from the analytical formula
-
-cP = zeros(pitch_i, lambda_i);
-for l = 1:lambda_i
-  for p = 1:pitch_i
-    lambda = lambda_v(l);
-    pitch = pitch_v(p)*180/pi; % [°]
-    lambda1 = 1/(1/(lambda + 0.089) - 0.035/(pitch^3 + 1));
-    cP(p, l) = 0.5*(116/lambda1 - 0.4*(pitch - 5))*exp(-16.5/lambda1);
-  end
-end
-
-figure(3)
-for i = 1:pitch_i
-  plot(lambda_v, cP(i, :));
-  hold on
-end
 
 %% Comparison between the results and the DTU report pag.34
 V0_v = 4:1:25;                  % windspeed [m/s]

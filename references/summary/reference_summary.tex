@@ -8,6 +8,7 @@
 
 \begin{document}
 \tableofcontents
+\newpage
 \section{Torque and Pitch Angle Control for Variable Speed Wind Turbines in All Operating Regimes \cite{5874598}, pag. 3-4}
 A multivariate controller acts both on rotor speed and electrical power. 
 \begin{itemize}
@@ -29,7 +30,7 @@ Torque controller implemented estimating the the aerodynamic torque with an esti
 In the work a permanent magnets synchronous generator is used. The d-q current components are controlled via a PI controller. \\
 Torque estimation is quite good and so the speed tracking. The steady state tracking error is removed by the integral action on the torque estimator.\\
 The reference rotational speed is carried out from the measurements on the wind speed, however there are other methods to define the reference speed without wind speed measurements to avoid inaccuracy of the measurements and its relation to the wins speed as this is perceived by the wind turbine.
-
+\newpage
 \section{Control of Wind Turbines \cite{5160195}}
 Usually the rotor drives the generator via a a steps up gearbox but direct drive configurations are becoming more popular in order to eliminate possible source of failures. \\
 Variable speed wind turbines require electrical power processing in order to fulfil the grid requirements. They are also able to reduce loads because possible gusts are absorbed as rotational speed increase rather than as component bending.\\
@@ -62,13 +63,13 @@ There are different configurations in which the turbine can be placed in the far
 The controller may wants to set active and reactive power supplied to the grid.\\
 Due to the modification of the wind flow, it is not true that if all the turbines in the farm extract the maximum power than also the farm extracts the maximum available. This happens because the first turbine slow down the wind a lot and so the ones in the wake may experience a slower wind speed and so they are able to extract less power.\\
 An important decision parameter is the spacing of the turbine both in the direction of the wind and in the perpendicular one. 
-
+\newpage
 \section{Description of the DTU 10 MW Reference Wind Turbine}
 \subsection{Drivetrain properties}
 The DTU 10 MW has a medium speed gearbox design. This is a compromise between direct drive generators (where the rare hearts are expansive) and the high speed gearboxes (with high risks of failure).\\
 The rated rotor speed is 9.6 [rpm] = 1.0048 [rad/s] and a rated generator speed of 480 [rpm] with a gearbox ratio of 50:1. The gearbox is assumed a double-stage gearbox with no friction losses.  \\
-The TSR used below the rated wind speed is 7.5.\\ 
-
+The TSR used below the rated wind speed is 7.5.
+\newpage
 \section{10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}
 This work presents a model for a 10 mw direct-drive wind energy conversion system, considering also wind shear and tower shadow effects. The control is based on the theoretical maximum power curve.\\
 \subsection{Introduction}
@@ -106,6 +107,8 @@ The FOC control technique is composed by two independent current control loops w
 \begin{equation}
 	i_{q,s}^* = \frac{T_e^*}{1.5p \lambda_m}
 \end{equation}
+
+\newpage
 \section{Offshore Wind Energy Technology \cite{Olimpo_Anaya‐Lara}}
 \subsection{Modeling and analysis if drivetrains in offshore wind turbines}
 Wind turbine drivetrains are made of components that have been used successfully in many other industries, the failure rates of drivetrains has been a concerned in the wind industry. The problem is not the failure rate but the long downtime needed to repair or replace a part of the drivetrain. The reliability of the gearbox is an important feature.\\
@@ -139,6 +142,7 @@ Individual pitch is used to take into account the wind sheer.
 \subsubsection{5.3}
 Pitch actuators: three strategies may be used to model the pitching dynamics. The simplest is to neglect the pitch actuator, and to assign the blade pitch angle directly from the control command. This simplification may be useful for some kind of controllers. The second modelling strategy is to represent the pitch actuator with a low order transfer function, and a second order one represents the most important effects. In the book there are also some indications of he parameters to be used in the transfer function. There are bounds on the maximum pitching rate. Since the dynamic of the pitching blade is complicated, then it should be implemented in combination with a full aeroelastic model of the rotating blade. The model proposed in the book considers a spring and a damper for connecting the pitching actuation mechanism with the blade.
 
+\newpage
 \section{Comparison of the obtained cP with the reference ones}
 The obtained cP and cT are compared with the ones retrieved from the literature. In particular the value of the cP and cT values in the two operating regimes of the turbine are read directly from the \cite{DTU_Wind_Energy_Report-I-0092}, while the parametric relation between cP, $\lambda$ and $\theta$ are read from \cite{Variable-speed_Variable-pitch_control_for_a_wind_t}. The plots done by me are produced by the file cp\_comparison. 
 \begin{figure}[H]
@@ -165,10 +169,30 @@ The switching between the two classical control regions is based on the power cu
 \end{equation}
 Above rated the blades are pitched ti feather. The controller is a PI one, as shown in the publication and on the notes (pag. 17-18).
 \newpage
-\section{Parameters for the simulation}
+\section{Basic DTU Wind Energy controller \cite{DTU_Wind_Energy_E_0028}}
+The torque reference Qref,k at the current step k is computed based on a second order low-pass filtered LSS generator speed as $K\bar{\Omega_k}$. \\
+The torque reference will then be given by the PID controller based on the speed error eQ,k = $\bar{\Omega_k} - \Omega_{set,k}$, where the set point is the minimum, or rated speed.\\
+Because the rotor speed is bounded, the power loss can often be minimized be performing some adjustment of the minimum pitch. A first order lowpass filtered wind speed measured at hub height Vk is used as parameter for varying the minimum pitch angle $\Theta_{min,k} = \Theta_{min(\bar{Vk})}$ based on a look-up table provided by the user.
+\newpage
+\section{Definition of a 5-MW Reference Wind Turbine for Offshore System Development \cite{NREL_5MW_reference}}
+The mass and inertia reported in this report are compared to the one computed with our method and the results are close
+\begin{table}[H]
+	\begin{tabular}{ccc}
+		\hline
+		& Blade mass (kg) & Blade moment of inertia ($kgm^2$)\\
+		Computed 	& 16845	&  1.2267e7\\
+		Report		& 17740 & 1.1776e7\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\section{Simulation 4}
+\subsection{Parameters for the simulation}
 \begin{center}
 	\begin{tabular}{c|cccc}
 		Rotor & Inertia & $1.5649 \cdot 10^8$ & $\left[\si{\kilo \gram \meter \square}\right]$ & computed from data\\ 
+		& Mass & $1.3016 \cdot 10^5$ & $\left[\si{\kilo \gram}\right]$ & computed from data\\ 
 		& Rotational friction &  & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & \\ \hline 
 		Generator & Inertia & 1500.5 & $\left[\si{\kilo \gram \meter \square}\right]$ & \cite{DTU_Wind_Energy_Report-I-0092} \\
 		& Rotational friction &  & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & \\
@@ -180,12 +204,19 @@ Above rated the blades are pitched ti feather. The controller is a PI one, as sh
 		& inverter time constant & 50 & $\left[ \si{\micro \second}\right]$& \\
 		& gain for the Ig reference & 10 & & \cite{5874598} \\
 		& parameter for the Ig reference & 0.01 & & \cite{5874598} \\ \hline
-		Gearbox & Ratio & 1 & & \\
+		Gearbox & Ratio & 1 & & \\ \hline
+		Blade & Mass & $4.3388 \cdot 10^4$ & $\left[\si{\kilo \gram}\right]$ & computed from data\\
+		& Inertia & $5.2056\cdot 10^7$ & $\left[\si{\kilo \gram \meter \square}\right]$ & computed from data\\
+		& Damping ratio of the actuator & $\zeta_p = 0.7$ & & \cite{Olimpo_Anaya‐Lara}\\
+		& Undamped nat. freq. of the actuator & $\omega_p = 2\pi$ & $\left[ \si{\radian \per \second }\right]$ & \cite{Olimpo_Anaya‐Lara}\\
 		
 	\end{tabular}
 \end{center}
-
-
+\subsection{Characteristics of the simulation}
+Simulation done with fixed time step $\Delta_t = 0.001 \left[ s \right]$ .\\
+Torque control: using the constant term $K^{opt}$ on the feedback term.\\
+Pitch control: PID tuned using almost random values ki=100 kp=100. Switching between the two control regimes using a saturation block using as input the difference between the actual and the rated power. \\
+Pitch actuator modelled with a second order system as reported by Olimpo (\cite{Olimpo_Anaya‐Lara}) at pag. 168.
 \newpage
 % bibliography
 {\footnotesize
