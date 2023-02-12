@@ -193,7 +193,8 @@ The mass and inertia reported in this report are compared to the one computed wi
 	\begin{tabular}{c|cccc}
 		Rotor & Inertia & $1.5649 \cdot 10^8$ & $\left[\si{\kilo \gram \meter \square}\right]$ & computed from data\\ 
 		& Mass & $1.3016 \cdot 10^5$ & $\left[\si{\kilo \gram}\right]$ & computed from data\\ 
-		& Rotational friction &  & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & \\ \hline 
+		& Rotational friction &  & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & \\ 
+		\hline 
 		Generator & Inertia & 1500.5 & $\left[\si{\kilo \gram \meter \square}\right]$ & \cite{DTU_Wind_Energy_Report-I-0092} \\
 		& Rotational friction &  & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & \\
 		& Poles & 32 & & \cite{the_switch_datasheet} \\
@@ -201,17 +202,22 @@ The mass and inertia reported in this report are compared to the one computed wi
 		& q-axis stator inductance & $1.8 \cdot 10^{-3}$ & $\left[\si{\henry}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
 		& stator resistance & $64 \cdot 10^{-3}$ & $\left[ \si{\ohm}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}\\
 		& magnet flux-linkage & 19.49 & $\left[ \si{\weber}\right]$ & \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \\
-		& inverter time constant & 50 & $\left[ \si{\micro \second}\right]$& \\
+		& q-axis control time constant & 835 & $\left[ \si{\micro \second}\right]$& Note 1 \\
 		& gain for the Ig reference & 10 & & \cite{5874598} \\
-		& parameter for the Ig reference & 0.01 & & \cite{5874598} \\ \hline
-		Gearbox & Ratio & 1 & & \\ \hline
+		& parameter for the Ig reference & 0.01 & & \cite{5874598} \\ & Frequency of the $\omega$ filter & $\omega_{LP}$=0.2 & $\left[ \si{\radian \per \second }\right]$ & \cite{DTU_Wind_Energy_E_0028} pag.13 \\
+		& Damping of the $\omega$ filter & $\zeta_{LP}$=0.7 & $\left[ - \right]$ & \cite{DTU_Wind_Energy_E_0028} pag.13 \\
+		\hline
+		Gearbox & Ratio & 1 & & \\ 
+		\hline
 		Blade & Mass & $4.3388 \cdot 10^4$ & $\left[\si{\kilo \gram}\right]$ & computed from data\\
 		& Inertia & $5.2056\cdot 10^7$ & $\left[\si{\kilo \gram \meter \square}\right]$ & computed from data\\
 		& Damping ratio of the actuator & $\zeta_p = 0.7$ & & \cite{Olimpo_Anaya‐Lara}\\
 		& Undamped nat. freq. of the actuator & $\omega_p = 2\pi$ & $\left[ \si{\radian \per \second }\right]$ & \cite{Olimpo_Anaya‐Lara}\\
-		
+		& Maximum pitch rate & 10 & $\left[ \si{\radian \per \second }\right]$ & \cite{Olimpo_Anaya‐Lara} \\
+
 	\end{tabular}
 \end{center}
+Note 1: Assuming a switching frequency of the inverter of 3 kHz and assuming that the delay on the q-axis is 1/5 of it.
 \subsection{Characteristics of the simulation}
 Simulation done with fixed time step $\Delta_t = 0.001 \left[ s \right]$ .\\
 Torque control: using the constant term $K^{opt}$ on the feedback term.\\

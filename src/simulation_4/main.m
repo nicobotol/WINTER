@@ -8,6 +8,10 @@ clc
 addpath("lookup"); % add the lookup tables path
 parameters;
 
+%% Load PMSM transfer functions
+
+PMSM_TF;
+
 %% Simulink simulation
 % Run a simulation with wind blowing at constant speed, for all the
 % windspeeds between cut-in and cut-out
@@ -16,8 +20,8 @@ open_system(mdl);                               % open the model
 set_param(mdl, 'StopTime', num2str(stop_time)); % set simulation time
 in = Simulink.SimulationInput(mdl);             % set simulation parameters
 
-% WS = V0_cut_in:1:V0_cut_out;                    % range of ws to test [m/s]
-WS = 20;
+% WS = V0_cut_in:1:V0_cut_out;                  % range of ws to test [m/s]
+WS = 10;
 WS_length = length(WS);
 omega_r_store = zeros(1, WS_length);
 pitch_store = zeros(1, WS_length);

@@ -28,7 +28,7 @@ tA = 0.5;
 
 %% Iq controller
 Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2);  % generataor TF
-Gc = 1/(1 + s*tau_c);               % power converter TF
+Gc = 1/(1 + s*tau_c);                                       % power converter TF
 Giq_noR = Yiq*Gc;
 
 % tune current PID controller
