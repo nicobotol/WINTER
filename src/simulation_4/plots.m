@@ -4,7 +4,7 @@
 %% Static simulation
 % Comparison between the results from the DTU report and the static
 % simulation ones
-figure(1)
+fig_omega = figure('Position', get(0, 'Screensize'));
 plot(WS, omega_r_store*30/pi, 'o')
 hold on
 plot(reference(:, 1), reference(:, 3))
@@ -14,7 +14,7 @@ ylabel('\omega_r [rpm]')
 legend('simulation', 'reference', 'location', 'best')
 grid on
 
-figure(3)
+fig_power = figure('Position', get(0, 'Screensize'));
 plot(WS, P_r_store, 'o')
 hold on
 plot(reference(:, 1), reference(:, 6)*1e3)
@@ -25,7 +25,7 @@ title('Mechanical power')
 grid on
 
 
-figure(2)
+fig_pitch = figure('Position', get(0, 'Screensize'));
 plot(WS, rad2deg(pitch_store), 'o')
 hold on
 plot(reference(:, 1), reference(:, 2))

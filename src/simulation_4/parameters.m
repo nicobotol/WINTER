@@ -49,7 +49,7 @@ end
 
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
-stop_time = 150;            % max time to investigaste [s]
+stop_time = 50;             % max time to investigaste [s]
 font_size = 25;             % fontsize for plots
 line_width = 2;             % line width for plots
 marker_size = 12;           % marker size for plots
@@ -90,26 +90,31 @@ generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
 generator.tau_c = 835e-6;   % q-axis control time constant [s]
-% generator.p_ctrl = 1e3;     % gain for the Ig reference
+% generator.p_ctrl = 1e3;   % gain for the Ig reference
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 50;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 1e2; % Iq controller crossover frequency [rad/s]
-generator.omega_pm = 60;    % phase margin for the speed controller [°]
-generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
+generator.iq_omegaBP = 3000*2*pi; % Iq controller crossover freq. [rad/s]
+% generator.omega_pm = 60;  % phase margin for the speed controller [°]
+% generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
-generator.omega_LP = 0.2;   % freq. of the II order speed LP filter [rad/s]  
-generator.zeta_LP = 0.7;    % damping of the II order speed LP filter [-]
+% generator.omega_LP = 0.2;   % freq. of the II order speed LP filter [rad/s]  
+% generator.zeta_LP = 0.7;    % damping of the II order speed LP filter [-]
+generator.design = 0;       % 0 enables manual design of the controller
+                            % 1 enables pidtune design of the controller
+generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
+generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 
 % Blade parameters
-blade.Kp = 1e3;             % proportional gain
-blade.Ki = 5e2;             % integrative gain
+blade.Kp = 5;               % proportional gain
+blade.Ki = 2.5;             % integrative gain
 blade.mass = 4.3388e4;      % mass [kg]
 blade.I = 5.2056e7;         % inertia wrt the rotor rotational axis [kgm^2]
 blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
-blade.pitch_rate =10*pi/180;% maximum pitch rate [rad/s]
+blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
+
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]

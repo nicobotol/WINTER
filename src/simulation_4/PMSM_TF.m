@@ -1,9 +1,5 @@
-%% Transfer functions of the PMSM generator
-
-clc
-close all
-s = tf('s'); % define s as complex variable (i.e. s = j*omega)
-syms ki R2 R1 Giq_noR 
+function [Yiq, Gc, Riq] = PMSM_TF(design_method, enable_plot, name)
+parameters
 
 % Redefine the parameters for clarity
 B = generator.B;
@@ -15,43 +11,57 @@ L = generator.Ld;
 tau_c =generator.tau_c;
 iq_pm = generator.iq_pm;
 iq_omegaBP = generator.iq_omegaBP;
-omega_pm = generator.omega_pm;    
-omega_omegaBP = generator.omega_omegaBP;
-n = gearbox.ratio;
 
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2);  % generataor TF
-Gc = 1/(1 + s*tau_c);                                      % power converter TF
-Giq_noR = Yiq*Gc;
+%% Manual design of the controller
+if design_method == 0
+% Define the transfer function as symbol
+syms s ki
+Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
+Gc = 1/(1 + s*tau_c);                                  % power converter TF
+G = Yiq*Gc;  
+[ki, kp] = pi_tune(G, iq_omegaBP);                        % tune the gains
 
-% tune current PID controller
-opts = pidtuneOptions('PhaseMargin', iq_pm);
-[Riq, info] = pidtune(Giq_noR, 'pi', iq_omegaBP, opts);
-kiq_p = Riq.kp;
-kiq_i = Riq.ki;
-kiq_d = Riq.kd;
-Riq = kiq_p + 1/s*kiq_i + s*kiq_d;  % Iq controller TF
-
-% tune in the second way
-clear s
-syms s
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2);  % generataor TF
-Gc = 1/(1 + s*tau_c);                                      % power converter TF
-Giq_noR = Yiq*Gc;
-pol = poles(Giq_noR); % poles of the TF
-pol_abs = abs(pol)
-tau_i = pol_abs(1);
-R1 = ki*(1 + s*tau_i)/s;
-GH = R1*Giq_noR;
-R2 = eval(norm(subs(GH, s, 1j*iq_omegaBP)));
-ki_solve = eval(solve(R2 == 1, ki));
-kp_solve = eval(tau_i*ki_solve);
+% Redefine the transfer function as 'transfer function' type 
 s = tf('s');
-R3 = kp_solve + ki_solve/s; 
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2);  % generataor TF
-Gc = 1/(1 + s*tau_c);                                      % power converter TF
-Giq_noR = Yiq*Gc;
+Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
+Gc = 1/(1 + s*tau_c);                                  % power converter TF
+G = Yiq*Gc;  
+Riq = (kp + ki/s);                                        % regulator
+GR = G*Riq;
 
-figure(1)
-bodeplot(Giq_noR, Riq*Giq_noR, R3*Giq_noR)
-legend('Not controlled', 'Controlled', 'Manual','location', 'best')
-grid on
+%% Automatic design of the controller
+elseif design_method == 1
+s = tf('s');
+Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
+Gc = 1/(1 + s*tau_c);                                  % power converter TF
+G = Yiq*Gc;  
+opts = pidtuneOptions('PhaseMargin', 45);
+Riq_pid = pidtune(G, 'pi', iq_omegaBP, opts);
+GR = G*Riq_pid;
+Riq = (Riq_pid.kp + Riq_pid.ki/s);                     % regulator
+end
+
+%% Plot
+if enable_plot == 1
+[magG, phaseG, woutG] = bode(G);
+[magGR, phaseGR, woutGR] = bode(GR);
+[magRiq, phaseRiq, woutRiq] = bode(Riq);
+fig_bode_gnerator = figure('Position', get(0, 'Screensize'));
+subplot(2,1,1)
+semilogx(woutG, 20*log10(squeeze(magG)), 'LineWidth', line_width)
+hold on
+semilogx(woutGR, 20*log10(squeeze(magGR)), 'LineWidth', line_width)
+semilogx(woutRiq, 20*log10(squeeze(magRiq)), 'LineWidth', line_width)
+hold off
+grid
+subplot(2,1,2)
+semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
+hold on
+semilogx(woutGR, squeeze(phaseGR), 'LineWidth', line_width)
+semilogx(woutRiq, squeeze(phaseRiq), 'LineWidth', line_width)
+hold off
+grid
+sgtitle('PSMS Bode plot');
+legend('Open loop', 'With regulator', 'Regulator')
+end
+end
