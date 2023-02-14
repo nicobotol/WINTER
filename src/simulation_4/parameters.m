@@ -4,7 +4,8 @@
 addpath("aerodynamic_functions")
 addpath("aerodynamic_functions\airfoil_data")
 addpath("lookup")
-
+addpath("run")
+addpath("wind_series")
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-15 90]);              % range for picth angle [rad]
 pitch_item = ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
@@ -49,7 +50,6 @@ end
 
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
-stop_time = 50;             % max time to investigaste [s]
 font_size = 25;             % fontsize for plots
 line_width = 2;             % line width for plots
 marker_size = 12;           % marker size for plots
@@ -59,7 +59,15 @@ a_guess = 0;                % initial guess for the BEM code
 a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
-time_step = 1e-3;           % simulation time step [s]
+
+simulation.stop_time = 60;  % max time to investigaste [s]
+simulation.time_step = 1e-3;% time step [s]
+simulation.type = 3;        % 1 -> constant wind speed
+                            % 2 -> ramp
+                            % 3 -> generated wind series
+simulation.plot_time = 15;  % time from the end of the simulation to 
+                            % average the response
+simulation.plot_step = simulation.plot_time/simulation.time_step;
 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
@@ -115,6 +123,22 @@ blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 
+% Wind parameters
+wind.mean = [11.5];                 % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0.12*wind.mean;      % 10 min std (i.e. turbulence) [m/s]
+wind.height = 119.0;            % height where to measure the wind [m]
+wind.sample_f = 500;            % wind sample frequncy [Hz]
+wind.sample_t = 1/wind.sample_f;% wind sample time [s]
+wind.ramp_WS_start = 4;         % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [0 20];       % time speed at the start of the ramp [s]
+wind.ramp_time_stop = [50 35];       % time speed at the stop of the ramp [s]
+if simulation.type == 1 || simulation.type == 3
+  wind.WS_len = length(wind.mean);  % number of separated WSs to test
+elseif simulation.type ==2
+  wind.WS_len = length(wind.ramp_time_start);
+end
+
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
@@ -129,10 +153,6 @@ gearbox_bus_info = Simulink.Bus.createObject(gearbox);
 gearbox_bus = evalin('base', gearbox_bus_info.busName);
 blade_bus_info = Simulink.Bus.createObject(blade); 
 blade_bus = evalin('base', blade_bus_info.busName);
-
-% Wind time history
-wind_speed = load('usim.dat');                    % [m/s] 
-sample_time = wind_speed(2,1) - wind_speed(1, 1); % WS sample time [s]
 
 % Pitching startegy (feathering or stall)
 pitch_strategy = 0;  % 0     -> feathering
@@ -159,3 +179,8 @@ r_item_no_tip = r_item - 1; % number of cross section without the tip
 % column 5 -> cT [-]
 reference = load('airfoil_data\DTU_10MW_reference.txt'); 
 
+%% colors
+colors_vect = [[0 0.4470 0.7410]; [0.8500 0.3250 0.0980]; ...
+               [0.9290 0.6940 0.1250]; [0.4940 0.1840 0.5560]; ...
+               [0.4660 0.6740 0.1880]; [0.3010 0.7450 0.9330]; ...
+               [0.6350 0.0780 0.1840]];

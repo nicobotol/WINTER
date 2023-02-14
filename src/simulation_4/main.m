@@ -4,7 +4,6 @@ close all
 clc
 
 %% Load parameters
-addpath("lookup"); % add the lookup tables path
 parameters;
 
 %% Load PMSM transfer functions
@@ -15,21 +14,25 @@ parameters;
 % windspeeds between cut-in and cut-out
 mdl = 'winter_simulink';                        % model's name
 open_system(mdl);                               % open the model
-set_param(mdl, 'StopTime', num2str(stop_time)); % set simulation time
 in = Simulink.SimulationInput(mdl);             % set simulation parameters
+wind_speed = zeros(simulation.stop_time/wind.sample_t, 2);
+out_store = cell(wind.WS_len);
 
-WS = V0_cut_in:3:V0_cut_out;                  % range of ws to test [m/s]
-% WS = 15;
-WS_length = length(WS);
-omega_r_store = zeros(1, WS_length);
-pitch_store = zeros(1, WS_length);
-P_r_store = zeros(1, WS_length);
-for i = 1:WS_length
-  wind_speed = WS(i);
-  out = sim(in, 'ShowProgress','on');             % run the simulation
-  omega_r_store(i) = mean(out.omega_r.Data(end - 80:end));
-  pitch_store(i) = mean(out.pitch.Data(end - 80:end));
-  P_r_store(i) = mean(out.P_r.Data(end - 80:end));
+for i = 1:wind.WS_len
+  switch simulation.type
+    case 1  % constant wind speed  
+      wind_speed = run_single_constant_speed(wind.mean(i));
+    case 2  % wind speed ramp
+      wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, ...
+        wind.ramp_time_start(i), wind.ramp_time_stop(i));
+    case 3  % generated time series
+      wind_speed = run_generated_wind_series(wind.mean(i), ...
+        wind.turbulence(i));
+  end
+
+  % Run the simulation
+  out = sim(in, 'ShowProgress','on'); 
+  out_store{i} = out; % store the results of the simulation
 end
 
 %% Plot the results
