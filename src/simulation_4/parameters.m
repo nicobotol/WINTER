@@ -7,24 +7,28 @@ addpath("lookup")
 addpath("run")
 addpath("wind_series")
 %% Parameters for the lookup tables generation
-pitch_range = deg2rad([-15 90]);              % range for picth angle [rad]
-pitch_item = ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
-lambda_range = [0 18];                        % range for the TSR
-lambda_item = diff(lambda_range)*3;           % # of guess pitch 
+pitch_range = deg2rad([-15 90]);              % range for picth angle [rad] (original)
+% pitch_range = deg2rad([-2 5]);              % range for picth angle [rad]
+% pitch_item = ceil(rad2deg(diff(pitch_range)));% # of guess pitch (original)
+pitch_item = 2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
+lambda_range = [0 18];                        % range for the TSR (original)
+% lambda_range = [5 10];                        % range for the TSR
+% lambda_item = diff(lambda_range)*3;           % # of guess TSR (original)
+lambda_item = 2*diff(lambda_range)*3;           % # of guess TSR 
 % distribute lambda and TSR in their ranges
 lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
 pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
 % load mesh for cP, cT, rated values, and pitch angle (computed in 
 % lookup_cp.m and lookup_pitch.m)
-if isfile('lookup\lookup_cP_theta_lambda.mat')
-  load('lookup\lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
-  load('lookup\lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
+if isfile('lookup_cP_theta_lambda.mat')
+  load('lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
+  load('lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
 end
 
 % parameters for the file lookup_pitch.m
-if isfile('lookup\rated_values.mat')
-  load('lookup\rated_values.mat');          % rated values of ws and omega
+if isfile('rated_values.mat')
+  load('rated_values.mat');          % rated values of ws and omega
   stall_lim = -4*pi/180;                    % initial stall limit [°]
   feather_lim = 4*pi/180;                   % initial feathering limit [°]
   p_item = 50;                              % # of item to investigate
@@ -41,8 +45,8 @@ else
     'Run lookup_cp.m first']);
 end
 
-if isfile('lookup\lookup_pitch.mat') 
-  load('lookup\lookup_pitch.mat');
+if isfile('lookup_pitch.mat') 
+  load('lookup_pitch.mat');
 else
    disp(['Attention: pitch angle values may not have been computed. ' ...
     'Run lookup_pitch.m first']);
@@ -78,7 +82,6 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-% rotor.omega_r = 1.0457;     % initial rotational speed [rad/s]
 rotor.omega_r = 0.2;      % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
 

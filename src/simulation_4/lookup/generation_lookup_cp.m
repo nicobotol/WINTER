@@ -10,6 +10,9 @@ clc
 
 % add path for the functions for the aerodynamic
 addpath("..\")
+addpath("..\aerodynamic_functions")
+addpath("..\aerodynamic_functions\airfoil_data")
+
 
 % load the parameters
 parameters
@@ -56,7 +59,7 @@ contour_plot_cP = figure('Position', get(0, 'Screensize'));
 clabel(C,h,'FontSize',font_size*0.8)
 hold on
 plot(lambda_opt, theta_opt, 'r.', 'MarkerSize',30)
-text(7.9, 0.4, num2str(cP_max), 'Color','r', 'FontSize', font_size)
+text(7.9, 0.4, num2str(cP_max, '%.3f'), 'Color','r', 'FontSize', font_size)
 hold off
 colorbar()
 xlabel('\lambda')
@@ -86,8 +89,9 @@ rated_values(2) = omega_rated;
 rated_values(3) = omega_rated_rpm;
 rated_values(4) = lambda_opt;
 rated_values(5) = cP_max;
-
-% % Save the results 
+rated_values 
+%%
+% Save the results 
 save('lookup_cP_theta_lambda.mat', 'lookup_cP');
 save('lookup_cT_theta_lambda.mat', 'lookup_cT');
 save('rated_values.mat', 'rated_values');
