@@ -8,13 +8,18 @@ close all
 clc
 
 % load the physical parameters from the file "parameters.m"
+addpath("..\")
+addpath("..\aerodynamic_functions")
+addpath("..\aerodynamic_functions\airfoil_data")
 parameters
 
-P = zeros(p_item, 1);               % vector of power
-stall = zeros(velocity_item, 1);    % pitch angle for stall [rad]
-feather = zeros(velocity_item, 1);  % pitch angle for feathering [rad]
+%% 
+P = zeros(p_item, 1);                   % vector of power
+stall = zeros(velocity_item, 1);        % pitch angle for stall [rad]
+feather = zeros(velocity_item, 1);      % pitch angle for feathering [rad]
 stall_deg = zeros(velocity_item, 1);    % stall angle [°]
 feather_deg = zeros(velocity_item, 1);  % feathering angle [°]
+cp = zeros(p_item, 1);
 
 for v = 1:velocity_item % loop over different velocities
   
@@ -28,12 +33,9 @@ for v = 1:velocity_item % loop over different velocities
     % adapt the space where to look for solutions
     p_vector = linspace(stall_lim, feather_lim, p_item); 
     
-    for p = 1:p_item % loop over different pitch
-      Theta_p = p_vector(p);
-      cP = interp2(lambda_vector, pitch_vector, cP_store, lambda, ...
-        Theta_p); % interpolate the look-up table
-      P(p) = 0.5*rotor.A*V0^3*cP*rho; % compute the power
-    end
+    cP(:) = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, ...
+      p_vector); % interpolate the look-up table
+    P(:) = 0.5*rotor.A*V0^3.*cP*rho; % compute the power
   
     [~, max_pos] = max(P); % find the peak of the power curve
   
@@ -56,6 +58,26 @@ for v = 1:velocity_item % loop over different velocities
   end
 end
 
+%% Generate the data for the plots
+v_plot = [4, 9, 12, 18, 25];
+v_plot_len = length(v_plot);
+P_plot = zeros(p_item, v_plot_len);
+cp = zeros(p_item, 1);
+p_vector = linspace(-15, 25, p_item)*pi/180;
+for v=1:v_plot_len
+  V0 = v_plot(v);
+  if V0 <= V0_rated
+    lambda = rated_values(4);
+  else
+    lambda = omega_rated*rotor.R/V0;    
+  end
+
+  cP(:) = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, ...
+      p_vector); % interpolate the look-up table
+  P_plot(:, v) = 0.5*rotor.A*V0^3.*cP*rho; % compute the power
+
+end
+
 %% Save the results
 lookup_Pitch = zeros(3, velocity_item);
 lookup_Pitch(1, :) = velocity_vector;
@@ -65,14 +87,33 @@ save('lookup_pitch.mat', 'lookup_Pitch');
 
 %% Plot the results
 
-fig_pitch = figure();
+% Plot the pitch angles
+fig_pitch_vs_V0 = figure('Position', get(0, 'Screensize'));
 plot(velocity_vector', feathering_deg, 'LineWidth', line_width)
 hold on
 plot(velocity_vector', stall_deg, 'LineWidth', line_width)
-plot(velocity_reference, pitch_reference, 'ro', 'LineWidth', line_width)
+plot(reference(:, 1), reference(:, 2), 'ro', 'LineWidth', line_width)
 legend('Feather', 'Stall', 'Validation','Location', 'southwest')
 grid on
 xlabel('Wind speed [m/s]')
 ylabel('Pitch angle [°]')
 title('Pitch as function of windspeed')
-set(gca, 'FontAngle', 'oblique', 'FontSize', font_size)
+set(gca, 'FontSize', font_size)
+
+%% Plot the power curve for some velocities
+fig_power_vs_pitch = figure('Position', get(0, 'Screensize'));
+hold on;
+leg = cell(v_plot_len + 1, 1);
+for i = 1:v_plot_len
+  plot(p_vector'*180/pi, P_plot(:, i), 'LineWidth', line_width);
+  leg{i} = ['V_0 = ', num2str(v_plot(i)), ' [m/s]'];
+end
+yline(rotor.P_rated, '--r', 'LineWidth', line_width); 
+leg{end} = 'Rated power';
+legend(leg, 'location', 'best', 'FontSize', font_size);
+xlabel('\theta [°]')
+ylabel('Power [W]')
+ylim([-1e6, 6e7]);
+grid on
+title('Mechanical power as function of \theta')
+set(gca, 'FontSize', font_size)
