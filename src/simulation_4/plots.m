@@ -87,15 +87,15 @@ fig_power_dynamic = figure('Position', get(0, 'Screensize'));
 hold on
 leg = cell(2*wind.WS_len, 1); % remove last element from the legend name
 for i = 1:wind.WS_len
-  plot(out_store{i}.P_r.Time, rad2deg(out_store{i}.P_r.Data), ...
+ plot(out_store{i}.P_r.Time, out_store{i}.P_r.Data, ...
     'LineWidth', line_width, 'Color', colors_vect(i, :))
- plot(out_store{i}.P_g.Time, rad2deg(out_store{i}.P_g.Data), ...
+ plot(out_store{i}.P_g.Time, out_store{i}.P_g.Data, ...
   'LineStyle', '--', 'LineWidth', line_width, 'Color', colors_vect(i, :))
   leg{2*i - 1} = ['Aero series ', num2str(i)];
   leg{2*i} = ['Generator series ', num2str(i)];
 end
 xlabel('Wind speed [m/s]')
-ylabel('\theta [°]')
+ylabel('P [W]')
 legend(leg, 'location', 'best', 'FontSize', font_size)
 set(gca, 'FontSize', font_size)
 grid on

@@ -1,9 +1,11 @@
-function [Yiq, Gc, Riq] = PMSM_TF(design_method, enable_plot, name)
+function [Yiq, Gc, Riq] = PMSM_TF(design_method, enable_plot)
 parameters
 
 % Redefine the parameters for clarity
-B = generator.B;
-I = generator.I;
+% B = generator.B;
+% I = generator.I;
+B = B_eq;
+I = I_eq;
 p = generator.p;
 Lambda = generator.Lambda;
 R = generator.Rs;

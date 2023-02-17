@@ -3,7 +3,7 @@
 % Add some folders to the path
 addpath("aerodynamic_functions")
 addpath("aerodynamic_functions\airfoil_data")
-addpath("lookup")
+addpath("lookup\")
 addpath("run")
 addpath("wind_series")
 %% Parameters for the lookup tables generation
@@ -21,13 +21,13 @@ pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
 % load mesh for cP, cT, rated values, and pitch angle (computed in 
 % lookup_cp.m and lookup_pitch.m)
-if isfile('lookup_cP_theta_lambda.mat')
+if exist('lookup_cP_theta_lambda.mat', 'file')
   load('lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
   load('lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
 end
 
 % parameters for the file lookup_pitch.m
-if isfile('rated_values.mat')
+if exist('rated_values.mat', 'file')
   load('rated_values.mat');          % rated values of ws and omega
   stall_lim = -4*pi/180;                    % initial stall limit [°]
   feather_lim = 4*pi/180;                   % initial feathering limit [°]
@@ -45,7 +45,7 @@ else
     'Run lookup_cp.m first']);
 end
 
-if isfile('lookup_pitch.mat') 
+if exist('lookup_pitch.mat', 'file') 
   load('lookup_pitch.mat');
 else
    disp(['Attention: pitch angle values may not have been computed. ' ...
@@ -66,7 +66,7 @@ V0_cut_out = 25;            % cut out wind speed [m/s]
 
 simulation.stop_time = 60;  % max time to investigaste [s]
 simulation.time_step = 1e-3;% time step [s]
-simulation.type = 3;        % 1 -> constant wind speed
+simulation.type = 1;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
 simulation.plot_time = 15;  % time from the end of the simulation to 
@@ -118,16 +118,29 @@ generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 
 % Blade parameters
-blade.Kp = 5;               % proportional gain
-blade.Ki = 2.5;             % integrative gain
+blade.Kp = 0.341;               % proportional gain
+blade.Ki = 0.183;             % integrative gain
 blade.mass = 4.3388e4;      % mass [kg]
 blade.I = 5.2056e7;         % inertia wrt the rotor rotational axis [kgm^2]
 blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
+blade.alpha_beta = 0.4;     % constant for the pitch error filter [Hz]
+blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
+blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
+
+% blade.kp_schedule = [ 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
+%                       25,26,27;
+%                       2.35,1.5,1.25,1.08,0.98,0.9,0.82,0.78,0.71,0.68,...
+%                       0.65,0.6,0.57,0.55,0.5,0.49,0.43,0.43,0.42,0.41];
+% blade.ki_schedule = [ 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
+%                       25,26,27;
+%                       0.92,0.58,0.49,0.42,0.39,0.36,0.32,0.305,0.29,...
+%                       0.28,0.26,0.23,0.22,0.21,0.205,0.195,0.19,0.185,...
+%                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [11.5];                 % 10 minutes mean wind speed [m/s]]
+wind.mean = [16];                 % 10 minutes mean wind speed [m/s]]
 wind.turbulence = 0.12*wind.mean;      % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 500;            % wind sample frequncy [Hz]
