@@ -125,7 +125,7 @@ blade.I = 5.2056e7;         % inertia wrt the rotor rotational axis [kgm^2]
 blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
-blade.alpha_beta = 0.4;     % constant for the pitch error filter [Hz]
+blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
 blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
 blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 
