@@ -64,12 +64,12 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.stop_time = 60;  % max time to investigaste [s]
-simulation.time_step = 1e-3;% time step [s]
+simulation.stop_time = 30;  % max time to investigaste [s]
+simulation.time_step = 1e-4;% time step [s]
 simulation.type = 1;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
-simulation.plot_time = 15;  % time from the end of the simulation to 
+simulation.plot_time = 5;  % time from the end of the simulation to 
                             % average the response
 simulation.plot_step = simulation.plot_time/simulation.time_step;
 
@@ -82,7 +82,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_r = 0.2;      % initial rotational speed [rad/s]
+rotor.omega_r = 0.2;        % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
 
 % Gearbox_parameters
@@ -95,16 +95,17 @@ generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
 generator.is = 1443.4;      % rated stator current [A]
 generator.fe = 26.66;       % rated stator frequency [Hz]
-generator.p = 32;           % number of poles
+generator.p = 320;           % number of poles
 generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
-generator.tau_c = 835e-6;   % q-axis control time constant [s]
+% generator.tau_c = 100e-6;   % q-axis control time constant [s]
+generator.tau_c = 666e-6;   % q-axis control time constant [s]
 % generator.p_ctrl = 1e3;   % gain for the Ig reference
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 50;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 3000*2*pi; % Iq controller crossover freq. [rad/s]
+generator.iq_omegaBP = 1000; % Iq controller crossover freq. [rad/s]
 % generator.omega_pm = 60;  % phase margin for the speed controller [°]
 % generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
@@ -112,14 +113,14 @@ rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
 % generator.omega_LP = 0.2;   % freq. of the II order speed LP filter [rad/s]  
 % generator.zeta_LP = 0.7;    % damping of the II order speed LP filter [-]
-generator.design = 0;       % 0 enables manual design of the controller
+generator.design = 1;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 
 % Blade parameters
-blade.Kp = 0.341;               % proportional gain
-blade.Ki = 0.183;             % integrative gain
+% blade.Kp = 0.341;           % proportional gain
+% blade.Ki = 0.183;           % integrative gain
 blade.mass = 4.3388e4;      % mass [kg]
 blade.I = 5.2056e7;         % inertia wrt the rotor rotational axis [kgm^2]
 blade.zetap = 0.7;          % damping ratio of the pitch actuator
@@ -140,15 +141,15 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [16];                 % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.12*wind.mean;      % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [22];                 % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0.12*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 500;            % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 4;         % wind speed at the start of the ramp [m/s]
 wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [0 20];       % time speed at the start of the ramp [s]
-wind.ramp_time_stop = [50 35];       % time speed at the stop of the ramp [s]
+wind.ramp_time_start = [0 20];  % time speed at the start of the ramp [s]
+wind.ramp_time_stop = [50 35];  % time speed at the stop of the ramp [s]
 if simulation.type == 1 || simulation.type == 3
   wind.WS_len = length(wind.mean);  % number of separated WSs to test
 elseif simulation.type ==2

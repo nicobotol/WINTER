@@ -12,7 +12,7 @@ parameters;
 %% Simulink simulation
 % Run a simulation with wind blowing at constant speed, for all the
 % windspeeds between cut-in and cut-out
-mdl = 'winter_simulink';                        % model's name
+mdl = 'winter_simulink_no_delay';                        % model's name
 open_system(mdl);                               % open the model
 in = Simulink.SimulationInput(mdl);             % set simulation parameters
 wind_speed = zeros(simulation.stop_time/wind.sample_t, 2);
@@ -36,4 +36,4 @@ for i = 1:wind.WS_len
 end
 
 %% Plot the results
-plots
+% plots

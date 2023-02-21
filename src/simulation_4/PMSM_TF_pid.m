@@ -1,4 +1,4 @@
-function [Yiq, Gc, Riq] = PMSM_TF(design_method, enable_plot)
+function [Yiq, Gc, Riq] = PMSM_TF_pid(design_method, enable_plot)
 parameters
 
 % Redefine the parameters for clarity
@@ -17,18 +17,18 @@ iq_omegaBP = generator.iq_omegaBP;
 %% Manual design of the controller
 if design_method == 0
 % Define the transfer function as symbol
-syms s ki
+syms s ki kd
 Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
-[ki, kp] = pi_tune(G, iq_omegaBP);                        % tune the gains
+[ki, kp, kd] = pid_tune(G, iq_omegaBP);                        % tune the gains
 
 % Redefine the transfer function as 'transfer function' type 
 s = tf('s');
 Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
-Riq = (kp + ki/s);                                        % regulator
+Riq = (kp + ki/s + s*kd);                                        % regulator
 GR = G*Riq;
 
 %% Automatic design of the controller
