@@ -22,8 +22,20 @@ clear leg
 %% Static simulation
 % Comparison between the results from the DTU report and the static
 % simulation ones
+
+% compute the reference rotational speed
+omega_ref = zeros(length(reference(:,1)),1);
+for i=1:length(reference(:,1))
+  if (reference(i,1) < rated_values(1))
+    omega_ref(i) = reference(i, 1).*rated_values(4)/rotor.R;
+  else
+    omega_ref(i) = omega_rated;
+  end
+end
+omega_ref = omega_ref*30/pi;
+
 fig_omega = figure('Position', get(0, 'Screensize'));
-leg = cell(1, wind.WS_len + 1);
+leg = cell(1, wind.WS_len + 2);
 hold on
 for i = 1:wind.WS_len
   plot(wind.mean(i), ...
@@ -31,9 +43,10 @@ for i = 1:wind.WS_len
     'o')
   leg{i} = ['Simulation', num2str(i)];
 end
-plot(reference(:, 1), reference(:, 3))
-leg{end} =  ['DTU 10MW ref.'];
-yline(omega_rated*30/pi, 'g')
+plot(reference(:, 1), reference(:, 3)); % DTU reference
+plot(reference(:, 1), omega_ref, 'g'); % reference with my TSR
+leg{wind.WS_len + 1} =  ['DTU 10MW ref.'];
+leg{wind.WS_len + 2} =  ['Computed ref.'];
 xlabel('Wind speed [m/s]')
 ylabel('\omega_r [rpm]')
 legend(leg, 'location', 'best', 'FontSize', font_size);

@@ -64,7 +64,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.stop_time = 30;  % max time to investigaste [s]
+simulation.stop_time = 50;  % max time to investigaste [s]
 simulation.time_step = 1e-4;% time step [s]
 simulation.type = 1;        % 1 -> constant wind speed
                             % 2 -> ramp
@@ -101,11 +101,11 @@ generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
 % generator.tau_c = 100e-6;   % q-axis control time constant [s]
-generator.tau_c = 666e-6;   % q-axis control time constant [s]
+generator.tau_c = 667e-6;   % q-axis control time constant [s]
 % generator.p_ctrl = 1e3;   % gain for the Ig reference
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 50;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 1000; % Iq controller crossover freq. [rad/s]
+generator.iq_omegaBP = 1.5e4; % Iq controller crossover freq. [rad/s]
 % generator.omega_pm = 60;  % phase margin for the speed controller [°]
 % generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
@@ -129,20 +129,22 @@ blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
 blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
 blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
+% blade.kp_schedule = 0.4;
+% blade.ki_schedule = 0.2;
 
-% blade.kp_schedule = [ 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
-%                       25,26,27;
-%                       2.35,1.5,1.25,1.08,0.98,0.9,0.82,0.78,0.71,0.68,...
-%                       0.65,0.6,0.57,0.55,0.5,0.49,0.43,0.43,0.42,0.41];
-% blade.ki_schedule = [ 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
-%                       25,26,27;
-%                       0.92,0.58,0.49,0.42,0.39,0.36,0.32,0.305,0.29,...
-%                       0.28,0.26,0.23,0.22,0.21,0.205,0.195,0.19,0.185,...
-%                       0.18,0.17];
+blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
+                      25,26,27;
+                   2.35,2.35,1.5,1.25,1.08,0.98,0.9,0.82,0.78,0.71,0.68,...
+                      0.65,0.6,0.57,0.55,0.5,0.49,0.43,0.43,0.42,0.41];
+blade.ki_tab = [ -2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
+                      25,26,27;
+                    0.92, 0.92,0.58,0.49,0.42,0.39,0.36,0.32,0.305,0.29,...
+                      0.28,0.26,0.23,0.22,0.21,0.205,0.195,0.19,0.185,...
+                      0.18,0.17];
 
 % Wind parameters
-wind.mean = [22];                 % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.12*wind.mean; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [15];                 % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 500;            % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
