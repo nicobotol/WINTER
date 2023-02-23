@@ -1,4 +1,5 @@
-function [wind_speed] = run_ramp(WS_start, WS_stop, time_start, time_stop)
+function [wind_speed] = run_ramp(WS_start, WS_stop, time_start, ...
+  time_stop, wind_speed, stop_time)
 % This function runs the simulation for a wind speed ramp
 % WS_start -> wind speed at the start of the ramp [m/s]
 % WS_stop -> wind speed at the stop of the ramp [m/s]
@@ -9,7 +10,7 @@ function [wind_speed] = run_ramp(WS_start, WS_stop, time_start, time_stop)
 parameters
 
 % Check if the time instants are correct
-if time_start <= time_stop && time_stop <= simulation.stop_time
+if time_start <= time_stop && time_stop <= stop_time
 
 else
   error('Incorrect time steps for the ramp')
@@ -17,9 +18,7 @@ end
 
 
 % Define the wind speed vector
-wind_speed        = zeros(simulation.stop_time/wind.sample_t, 2);
-wind_speed(:, 1)  = [wind.sample_t:wind.sample_t:...
-  simulation.stop_time]'; % [s]
+wind_speed(:, 1)  = [wind.sample_t:wind.sample_t:stop_time]'; % [s]
 N_start = time_start/wind.sample_t;
 N_stop = time_stop/wind.sample_t;
 
@@ -28,6 +27,4 @@ wind_speed(N_start+1:N_stop, 2) = WS_start + (WS_stop - WS_start)/...
   (N_stop - N_start).*([0:1:N_stop-N_start-1]');
 wind_speed(N_stop+1:end, 2) = WS_stop;
 
-% figure()
-% plot(wind_speed(:, 1), wind_speed(:, 2))
 end

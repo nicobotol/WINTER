@@ -208,6 +208,8 @@ The mass and inertia reported in this report are compared to the one computed wi
 		& Frequency of the $\omega$ filter (NOT USED) & $\omega_{LP}$=0.2 & $\left[ \si{\radian \per \second }\right]$ & \cite{DTU_Wind_Energy_E_0028} pag.13 \\
 		& Damping of the $\omega$ filter (NOT USED) & $\zeta_{LP}$=0.7 & $\left[ - \right]$ & \cite{DTU_Wind_Energy_E_0028} pag.13 \\
 		& Speed filter constant & $\alpha_{\Omega}=2.51$ & $\left[\si{\radian \per \second}\right]$ & \cite{Olimpo_Anaya‐Lara} pag.180\\
+		& Kp for the power controlled block & kp=0.5 & & \cite{Olimpo_Anaya‐Lara} pag.229\\
+		& Ki for the power controlled block & ki=0.5 & & \cite{Olimpo_Anaya‐Lara} pag.226\\
 		\hline
 		Gearbox & Ratio & 1 & & \\ 
 		\hline
@@ -216,6 +218,7 @@ The mass and inertia reported in this report are compared to the one computed wi
 		& Damping ratio of the actuator & $\zeta_p = 0.7$ & & \cite{Olimpo_Anaya‐Lara}\\
 		& Undamped nat. freq. of the actuator & $\omega_p = 2\pi$ & $\left[ \si{\radian \per \second }\right]$ & \cite{Olimpo_Anaya‐Lara}\\
 		& Maximum pitch rate & 10 & $\left[ \si{\radian \per \second }\right]$ & \cite{Olimpo_Anaya‐Lara} \\
+		& Low pass filter constant & $\alpha_{beta}=2\pi0.4$ & $\left[ \si{\radian \per \second }\right]$ & \cite{Olimpo_Anaya‐Lara} pag.189 \\
 
 	\end{tabular}
 \end{center}
@@ -225,7 +228,10 @@ Simulation done with fixed time step $\Delta_t = 0.001 \left[ s \right]$ .\\
 Torque control: using the constant term $K^{opt}$ on the feedback term.\\
 Pitch control: PID tuned using almost random values ki=100 kp=100. Switching between the two control regimes using a saturation block using as input the difference between the actual and the rated power. \\
 Pitch actuator modelled with a second order system as reported by Olimpo (\cite{Olimpo_Anaya‐Lara}) at pag. 168.\\
-Low speed shaft rotational speed filtered with a first order filter as reported by Olimpo (\cite{Olimpo_Anaya‐Lara}) at pag. 180.
+Low speed shaft rotational speed filtered with a first order filter as reported by Olimpo (\cite{Olimpo_Anaya‐Lara}) at pag. 180.\\
+Introduction of a power controlled block between the generator torque reference and the PMSM. In this block the generator reference is synthesized based on the power error. Gain based on what it is explained in olimpo 226.
+
+
 \newpage
 % bibliography
 {\footnotesize

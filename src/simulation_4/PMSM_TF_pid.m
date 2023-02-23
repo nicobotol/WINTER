@@ -59,6 +59,7 @@ semilogx(woutGR, 20*log10(squeeze(magGR)), 'LineWidth', line_width)
 semilogx(woutRiq, 20*log10(squeeze(magRiq)), 'LineWidth', line_width)
 hold off
 grid
+set(gca, 'FontSize', font_size)
 subplot(2,1,2)
 semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
 hold on
@@ -66,7 +67,10 @@ semilogx(woutGR, squeeze(phaseGR), 'LineWidth', line_width)
 semilogx(woutRiq, squeeze(phaseRiq), 'LineWidth', line_width)
 hold off
 grid
-sgtitle('PSMS Bode plot');
+sgtitle('PMSM Bode plot', 'FontSize', font_size);
 legend('Open loop', 'With regulator', 'Regulator')
+set(gca, 'FontSize', font_size)
+saveas(fig_bode_generator,strcat(path_images,'\fig_bode_generator.png'),...
+  'png');
 end
 end
