@@ -53,12 +53,14 @@ if enable_plot == 1
 [magRiq, phaseRiq, woutRiq] = bode(Riq);
 fig_bode_generator = figure('Position', get(0, 'Screensize'));
 subplot(2,1,1)
+xlabel('\omega [rad/s]', 'FontSize', font_size, 'interpreter','tex')
+ylabel('Mag. [dB]', 'FontSize', font_size, 'interpreter','latex')
 semilogx(woutG, 20*log10(squeeze(magG)), 'LineWidth', line_width)
 hold on
 semilogx(woutGR, 20*log10(squeeze(magGR)), 'LineWidth', line_width)
 semilogx(woutRiq, 20*log10(squeeze(magRiq)), 'LineWidth', line_width)
 hold off
-grid
+grid on
 subplot(2,1,2)
 semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
 hold on
@@ -66,7 +68,10 @@ semilogx(woutGR, squeeze(phaseGR), 'LineWidth', line_width)
 semilogx(woutRiq, squeeze(phaseRiq), 'LineWidth', line_width)
 hold off
 grid
+xlabel('\omega [rad/s]', 'FontSize', font_size, 'interpreter','tex')
+ylabel('Phase [°]', 'FontSize', font_size, 'interpreter','latex')
 sgtitle('PSMS Bode plot');
-legend('Open loop', 'With regulator', 'Regulator')
+legend('Open loop', 'With regulator', 'Regulator','interpreter','latex')
 end
+
 end

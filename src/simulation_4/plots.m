@@ -4,7 +4,7 @@ close all
 clc
 
 date = string(datetime('now','TimeZone','local','Format', ...
-        'y_MMM_d_HH_mm_ss')); % save the date to identify the figures
+        'y_MM_d_HH_mm_ss')); % save the date to identify the figures
 
 %% Wind time series
 fig_wind_TS = figure('Position', get(0, 'Screensize'));
@@ -22,9 +22,10 @@ for i = 1:wind.WS_len
     num2str(wind.turbulence(i))];
   end
 end
-legend(leg, 'Location', 'best', 'FontSize', font_size);
-xlabel('Time [s]')
-ylabel('Wind speed [m/s]')
+legend(leg, 'Location', 'best', 'FontSize', font_size,...
+  'interpreter','latex');
+xlabel('Time [s]','interpreter','latex')
+ylabel('Wind speed [m/s]','interpreter','latex')
 title('Wind speed time serie')
 grid on
 set(gca, 'FontSize', font_size)
@@ -64,10 +65,11 @@ plot(reference(:,1),omega_ref, 'Color', colors_vect(i + 2,:), ...
   'LineWidth',line_width);%ref. with my TSR
 leg{wind.WS_len + 1} =  ['DTU 10MW ref.'];
 leg{wind.WS_len + 2} =  ['Computed ref.'];
-xlabel('Wind speed [m/s]')
-ylabel('\omega_r [rpm]')
+xlabel('Wind speed [m/s]','interpreter','latex')
+ylabel('\omega_r [rpm]','interpreter','latex')
 title('Rotor rotational speed')
-legend(leg, 'location', 'best', 'FontSize', font_size);
+legend(leg, 'location', 'best', 'FontSize', font_size,...
+  'interpreter','latex');
 set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
@@ -83,9 +85,10 @@ for i = 1:wind.WS_len
     'LineWidth', line_width)
 end
 plot(reference(:, 1), reference(:, 6)*1e3, 'LineWidth', line_width)
-xlabel('Wind speed [m/s]')
-ylabel('P [W]')
-legend(leg, 'location', 'best', 'FontSize', font_size);
+xlabel('Wind speed [m/s]','interpreter','latex')
+ylabel('P [W]','interpreter','latex')
+legend(leg, 'location', 'best', 'FontSize', font_size,...
+  'interpreter','latex');
 title('Mechanical power')
 set(gca, 'FontSize', font_size)
 grid on
@@ -103,10 +106,11 @@ for i = 1:wind.WS_len
    'o', 'LineWidth', line_width)
 end
 plot(reference(:, 1), reference(:, 2), 'LineWidth', line_width)
-xlabel('Wind speed [m/s]')
-ylabel('\theta [°]')
+xlabel('Time [s]','interpreter','latex')
+ylabel('\theta [°]','interpreter','latex')
 title('Collective blade pitch angle')
-legend(leg, 'location', 'best', 'FontSize', font_size);
+legend(leg, 'location', 'best', 'FontSize', font_size,...
+  'interpreter','latex');
 set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
@@ -125,12 +129,14 @@ for i = 1:wind.WS_len
   plot(out_store{i}.pitch.Time, rad2deg(out_store{i}.pitch.Data), ...
     'LineWidth', line_width)
 end
-xlabel('Wind speed [m/s]')
-ylabel('\theta [°]')
-legend(leg, 'location', 'best', 'FontSize', font_size)
+xlabel('Wind speed [m/s]','interpreter','latex')
+ylabel(' \theta [°]','interpreter','tex')
+legend(leg, 'location', 'best', 'FontSize', font_size,...
+  'interpreter','latex')
 set(gca, 'FontSize', font_size)
 title('Collective blade pitch angle')
 grid on
+
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_pitch_dynamic','.png');
   saveas(fig_pitch_dynamic, fig_name,'png');
@@ -142,10 +148,11 @@ for i = 1:wind.WS_len
  plot(out_store{i}.omega_r.Time, out_store{i}.omega_r.Data, ...
     'LineWidth', line_width, 'Color', colors_vect(i, :))
 end
-xlabel('Time [s]')
-ylabel('\omega_r [rad/s]')
+xlabel('Time [s]','interpreter','latex')
+ylabel('\omega_r [rad/s]','interpreter','tex')
 title('Rotor rotational speed')
-legend(leg, 'location', 'best', 'FontSize', font_size)
+legend(leg, 'location', 'best', 'FontSize', font_size,...
+  'interpreter','latex')
 set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
@@ -155,19 +162,23 @@ end
 
 fig_power_dynamic = figure('Position', get(0, 'Screensize'));
 hold on
-leg = cell(2*wind.WS_len, 1);
+leg = cell(2*wind.WS_len + 1, 1);
 for i = 1:wind.WS_len
  plot(out_store{i}.P_r.Time, out_store{i}.P_r.Data, ...
     'LineWidth', line_width, 'Color', colors_vect(i, :))
  plot(out_store{i}.P_g.Time, out_store{i}.P_g.Data, ...
   'LineStyle', '--', 'LineWidth', line_width, 'Color', colors_vect(i, :))
-  leg{2*i - 1} = ['Aero series ', num2str(i)];
-  leg{2*i} = ['Generator series ', num2str(i)];
+  leg{2*i - 1} = ['Aero. sim. ', num2str(i)];
+  leg{2*i} = ['Gen. sim. ', num2str(i)];
 end
-xlabel('Wind speed [m/s]')
-ylabel('P [W]')
+yline(rotor.P_rated, 'LineStyle', '-.', 'LineWidth', line_width,...
+  'Color', colors_vect(i + 1, :));
+leg{2*wind.WS_len + 1} = ['Rated'];
+xlabel('Wind speed [m/s]', 'interpreter','latex')
+ylabel('P [W]', 'interpreter','latex')
 title('Rotor and generator powers')
-legend(leg, 'location', 'best', 'FontSize', font_size)
+legend(leg, 'location', 'best', 'FontSize', font_size, ...
+  'interpreter','latex')
 set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1

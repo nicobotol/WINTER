@@ -76,16 +76,16 @@ for p = 1:pitch_i
       'MarkerSize', marker_size, 'LineWidth', line_width);
     hold on
 end
-legend(LegS, 'location', 'best');
+legend(LegS, 'location', 'best', 'Interpreter','tex');
 subplot(121)
-xlabel('\lambda [-]')
-ylabel('c_P [-]')
+xlabel('\lambda [-]','Interpreter','tex')
+ylabel('cP [-]','Interpreter','latex')
 set(gca, 'FontSize', font_size)
 title('Power coefficient')
 grid on
 subplot(122)
-xlabel('\lambda [-]')
-ylabel('c_T [-]')
+xlabel('\lambda [-]','Interpreter','tex')
+ylabel('cT [-]','Interpreter','latex')
 title('Thrust coefficient')
 grid on
 set(gca, 'FontSize', font_size)
@@ -119,17 +119,17 @@ plot(V0_v, cP_v, 'LineWidth', line_width)
 hold on 
 plot(V0_v, cP_ref, 'o', 'LineWidth', line_width)
 grid on
-xlabel('Wind speed [m/s]')
-ylabel('cP [-]')
+xlabel('Wind speed [m/s]','Interpreter','latex')
+ylabel('cP [-]','Interpreter','latex')
 title('Power coefficient')
 set(gca, 'FontSize', font_size)
 subplot(122)
 plot(V0_v, cT_v, 'LineWidth', line_width)
 hold on 
 plot(V0_v, cT_ref, 'o', 'LineWidth', line_width)
-xlabel('Wind speed [m/s]')
-ylabel('cT [-]')
-legend('Computed', 'DTU report', 'location', 'best')
+xlabel('Wind speed [m/s]','Interpreter','latex')
+ylabel('cT [-]','Interpreter','latex')
+legend('Computed', 'DTU report', 'location', 'best','Interpreter','latex')
 title('Thrust coefficient')
 grid on
 set(gca, 'FontSize', font_size)
@@ -175,10 +175,10 @@ fig_power_vs_V0 = figure('Position', get(0, 'Screensize'));
 plot(V0_v, P_s, 'LineWidth', line_width*2, 'Color', colors_vect(3,:));
 hold on
 plot(V0_v, P_f, '--', 'LineWidth', line_width, 'Color', colors_vect(1,:));
-legend('Stall', 'Feather', 'Location', 'best');
+legend('Stall', 'Feather', 'Location', 'best','Interpreter','latex');
 grid on
-xlabel('V_0 [m/s]')
-ylabel('Power [W]')
+xlabel('V_0 [m/s]','Interpreter','latex')
+ylabel('Power [W]','Interpreter','latex')
 title('Power as function of the wind speed')
 set(gca, 'FontSize', font_size)
 saveas(fig_power_vs_V0,strcat(path_images,'\fig_power_vs_V0.png'),'png');
@@ -187,10 +187,10 @@ fig_thrust_vs_V0 = figure('Position', get(0, 'Screensize'));
 plot(V0_v, T_s, 'LineWidth', line_width, 'Color', colors_vect(3,:));
 hold on
 plot(V0_v, T_f, '--', 'LineWidth', line_width, 'Color', colors_vect(1,:));
-legend('Stall', 'Feather', 'Location', 'best');
+legend('Stall', 'Feather', 'Location', 'best','Interpreter','latex');
 grid on
-xlabel('V_0 [m/s]')
-ylabel('Thrust [N]')
+xlabel('V_0 [m/s]','Interpreter','latex')
+ylabel('Thrust [N]','Interpreter','latex')
 title('Thrust as function of the wind speed')
 set(gca, 'FontSize', font_size)
 saveas(fig_thrust_vs_V0,strcat(path_images,'\fig_thrust_vs_V0.png'),'png');

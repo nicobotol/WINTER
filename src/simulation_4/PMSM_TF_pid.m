@@ -58,7 +58,9 @@ hold on
 semilogx(woutGR, 20*log10(squeeze(magGR)), 'LineWidth', line_width)
 semilogx(woutRiq, 20*log10(squeeze(magRiq)), 'LineWidth', line_width)
 hold off
-grid
+xlabel('\omega [rad/s]', 'FontSize', font_size, 'interpreter','tex')
+ylabel('Mag. [dB]', 'FontSize', font_size, 'interpreter','latex')
+grid on
 set(gca, 'FontSize', font_size)
 subplot(2,1,2)
 semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
@@ -67,10 +69,13 @@ semilogx(woutGR, squeeze(phaseGR), 'LineWidth', line_width)
 semilogx(woutRiq, squeeze(phaseRiq), 'LineWidth', line_width)
 hold off
 grid
+xlabel('\omega [rad/s]', 'FontSize', font_size, 'interpreter','tex')
+ylabel('Phase [°]', 'FontSize', font_size, 'interpreter','tex')
 sgtitle('PMSM Bode plot', 'FontSize', font_size);
-legend('Open loop', 'With regulator', 'Regulator')
-set(gca, 'FontSize', font_size)
-saveas(fig_bode_generator,strcat(path_images,'\fig_bode_generator.png'),...
-  'png');
-end
+legend('Open loop', 'With regulator', 'Regulator','interpreter','latex',...
+  'FontSize', font_size)
+
+fig_name = strcat(path_images,'\fig_bode_generator','.png');
+saveas(fig_bode_generator, fig_name, 'png');
+bb end
 end
