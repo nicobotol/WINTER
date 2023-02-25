@@ -83,7 +83,7 @@ lookup_Pitch = zeros(3, velocity_item);
 lookup_Pitch(1, :) = velocity_vector;
 lookup_Pitch(2, :) = stall;
 lookup_Pitch(3, :) = feather;
-% save('lookup_pitch.mat', 'lookup_Pitch');
+save('lookup_pitch.mat', 'lookup_Pitch');
 
 %% Plot the results
 
@@ -97,7 +97,7 @@ legend('Feather', 'Stall', 'Validation','Location', 'southwest' ...
   ,'Interpreter','latex')
 grid on
 xlabel('Wind speed [m/s]','Interpreter','latex')
-ylabel('Pitch angle [°]','Interpreter','latex')
+ylabel('Pitch [deg.]','Interpreter','latex')
 title('Pitch as function of windspeed')
 set(gca, 'FontSize', font_size)
 fig_name = strcat(path_images,'\fig_pitch_vs_V0','.png');
@@ -115,7 +115,7 @@ yline(rotor.P_rated, '--r', 'LineWidth', line_width);
 leg{end} = 'Rated power';
 legend(leg, 'location', 'best', 'FontSize', font_size, ...
   'Interpreter','latex');
-xlabel('Pitch [°]','Interpreter','tex')
+xlabel('Pitch [deg.]','Interpreter','latex')
 ylabel('Power [W]','Interpreter','latex')
 ylim([-1e6, 6e7]);
 grid on

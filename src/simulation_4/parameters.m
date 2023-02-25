@@ -65,12 +65,12 @@ V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
 simulation.mdl = 'winter_simulink_time_delay'; % model's name
-simulation.stop_time = [60 60 80];  % max time to investigaste [s]
+simulation.stop_time = [60];  % max time to investigaste [s]
 simulation.time_step = 1e-4;% time step [s]
-simulation.type = 2;        % 1 -> constant wind speed
+simulation.type = 3;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
-simulation.plot_time = 1;   % time from the end of the simulation to 
+simulation.plot_time = 10;  % time from the end of the simulation to 
                             % average the response [s]
 simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 1;% enables or disable plot's autosaving 
@@ -88,7 +88,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_r = 1.01;       % initial rotational speed [rad/s]
+rotor.omega_r = 0.3;       % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
 
 % Gearbox_parameters
@@ -120,7 +120,7 @@ rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
 % generator.zeta_LP = 0.7;    % damping of the II order speed LP filter [-]
 generator.design = 1;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain
 generator.power_ctrl_ki=5.5;% power controller gain
@@ -149,8 +149,8 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [10 15];                 % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [8];                 % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0.15*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 500;            % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]

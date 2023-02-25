@@ -5,7 +5,7 @@ clc
 
 %% Load parameters
 parameters;
-parameters_sim4;
+% parameters_sim2;
 
 %% Load PMSM transfer functions and design the controller
 [Yiq, Gc, Riq] = PMSM_TF_pid(generator.design, generator.bode_plot);
