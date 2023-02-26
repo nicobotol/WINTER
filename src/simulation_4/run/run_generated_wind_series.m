@@ -34,9 +34,9 @@ wind_speed(:, 2) = wind_mean + p_sum;  % add the mean to the WS [m/s]
 wind_speed(:, 2) = wind_turbulence*wind_speed(:, 2) + ...
   (1 - wind_turbulence)*wind_mean;
 
-close all
-figure()
-plot(wind_speed(:, 1), wind_speed(:, 2))
-yline(mean(wind_speed(:, 2)))
-grid on
+% close all
+% figure()
+% plot(wind_speed(:, 1), wind_speed(:, 2))
+% yline(mean(wind_speed(:, 2)))
+% grid on
 end

@@ -64,7 +64,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.mdl = 'winter_simulink_time_delay'; % model's name
+simulation.mdl = 'winter_simulink'; % model's name
 simulation.stop_time = [60];  % max time to investigaste [s]
 simulation.time_step = 1e-4;% time step [s]
 simulation.type = 3;        % 1 -> constant wind speed
@@ -149,8 +149,8 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [8];                 % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.15*wind.mean; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [16];                 % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0.16*(wind.mean*0.75 + 3.8); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 500;            % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
