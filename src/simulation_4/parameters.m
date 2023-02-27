@@ -149,7 +149,7 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [16];                 % 10 minutes mean wind speed [m/s]]
+wind.mean = [8];                 % 10 minutes mean wind speed [m/s]]
 wind.turbulence = 0.16*(wind.mean*0.75 + 3.8); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 500;            % wind sample frequncy [Hz]
