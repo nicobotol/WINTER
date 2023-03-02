@@ -51,7 +51,7 @@ if enable_plot == 1
 [magG, phaseG, woutG] = bode(G);
 [magGR, phaseGR, woutGR] = bode(GR);
 [magRiq, phaseRiq, woutRiq] = bode(Riq);
-fig_bode_generator = figure('Position', get(0, 'Screensize'));
+fig_bode_generator = figure('Position', get(0, 'Screensize'), 'Color','w');
 subplot(2,1,1)
 semilogx(woutG, 20*log10(squeeze(magG)), 'LineWidth', line_width)
 hold on
@@ -62,6 +62,8 @@ xlabel('$\omega$ [rad/s]', 'FontSize', font_size, 'interpreter','latex')
 ylabel('Mag. [dB]', 'FontSize', font_size, 'interpreter','latex')
 grid on
 set(gca, 'FontSize', font_size)
+legend('Open loop', 'With regulator', 'Regulator','interpreter','latex',...
+  'FontSize', font_size, 'location', 'best')
 subplot(2,1,2)
 semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
 hold on
@@ -72,10 +74,11 @@ grid on
 xlabel('$\omega$ \ [rad/s]', 'FontSize', font_size, 'interpreter','latex')
 ylabel('Phase [deg.]', 'FontSize', font_size, 'interpreter','latex')
 sgtitle('PMSM Bode plot', 'FontSize', font_size);
-legend('Open loop', 'With regulator', 'Regulator','interpreter','latex',...
-  'FontSize', font_size)
 set(gca, 'FontSize', font_size)
-fig_name = strcat(path_images,'\fig_bode_generator','.png');
-saveas(fig_bode_generator, fig_name, 'png');
+if simulation.print_figure == 1
+  fig_name = strcat(path_images,'\fig_bode_generator','.png');
+  export_fig('fig_bode_generator', fig_name);
 end
+end
+
 end

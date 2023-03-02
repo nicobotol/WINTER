@@ -7,7 +7,7 @@ date = string(datetime('now','TimeZone','local','Format', ...
         'y_MM_d_HH_mm_ss')); % save the date to identify the figures
 
 %% Wind time series
-fig_wind_TS = figure('Position', get(0, 'Screensize'));
+fig_wind_TS = figure('Position', get(0, 'Screensize'), 'Color','w');
 leg = cell(1, wind.WS_len);
 hold on
 for i = 1:wind.WS_len
@@ -31,7 +31,7 @@ grid on
 set(gca, 'FontSize', font_size)
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_wind_TS','.png');
-  saveas(fig_wind_TS, fig_name, 'png');
+  export_fig('fig_wind_TS', fig_name);
 end
 
 %% Static simulation
@@ -51,7 +51,7 @@ for i=1:length(reference(:,1))
 end
 omega_ref = omega_ref*30/pi;
 
-fig_omega = figure('Position', get(0, 'Screensize'));
+fig_omega = figure('Position', get(0, 'Screensize'), 'Color','w');
 leg = cell(1, wind.WS_len + 2);
 hold on
 for i = 1:wind.WS_len
@@ -74,10 +74,10 @@ set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_omega','.png');
-  saveas(fig_omega, fig_name,'png');
+  export_fig('fig_omega', fig_name);
 end
 
-fig_power = figure('Position', get(0, 'Screensize'));
+fig_power = figure('Position', get(0, 'Screensize'), 'Color','w');
 hold on
 for i = 1:wind.WS_len
   plot(wind.mean(i), ...
@@ -94,11 +94,11 @@ set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_power','.png');
-  saveas(fig_power, fig_name,'png');
+  export_fig('fig_power', fig_name);
 end
 
 
-fig_pitch = figure('Position', get(0, 'Screensize'));
+fig_pitch = figure('Position', get(0, 'Screensize'), 'Color','w');
 hold on
 for i = 1:wind.WS_len
   plot(wind.mean(i), ...
@@ -115,7 +115,7 @@ set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_pitch','.png');
-  saveas(fig_pitch, fig_name,'png');
+  export_fig('fig_pitch', fig_name);
 end
 
 leg(end) = []; % remove last element from the legend name
@@ -123,7 +123,7 @@ else
 end
 
 %% Dynamic simulation
-fig_pitch_dynamic = figure('Position', get(0, 'Screensize'));
+fig_pitch_dynamic = figure('Position', get(0, 'Screensize'), 'Color','w');
 hold on
 for i = 1:wind.WS_len
   plot(out_store{i}.pitch.Time, rad2deg(out_store{i}.pitch.Data), ...
@@ -138,10 +138,10 @@ title('Collective blade pitch angle')
 grid on
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_pitch_dynamic','.png');
-  saveas(fig_pitch_dynamic, fig_name,'png');
+  export_fig('fig_pitch_dynamic', fig_name);
 end
 
-fig_omega_dynamic = figure('Position', get(0, 'Screensize'));
+fig_omega_dynamic = figure('Position', get(0, 'Screensize'), 'Color','w');
 hold on
 for i = 1:wind.WS_len
  plot(out_store{i}.omega_r.Time, out_store{i}.omega_r.Data, ...
@@ -156,10 +156,10 @@ set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_omega_dynamic', '.png');
-  saveas(fig_omega_dynamic, fig_name,'png');
+  export_fig('fig_omega_dynamic', fig_name);
 end
 
-fig_power_dynamic = figure('Position', get(0, 'Screensize'));
+fig_power_dynamic = figure('Position', get(0, 'Screensize'), 'Color','w');
 hold on
 leg = cell(2*wind.WS_len + 1, 1);
 for i = 1:wind.WS_len
@@ -183,6 +183,6 @@ set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_power_dynamic','.png');
-  saveas(fig_power_dynamic, fig_name,'png');
+  export_fig('fig_power_dynamic', fig_name);
 end
 

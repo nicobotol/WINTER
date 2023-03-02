@@ -66,9 +66,9 @@ V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
 simulation.mdl = 'winter_simulink'; % model's name
-simulation.stop_time = [60];  % max time to investigaste [s]
-simulation.time_step = 1e-4;% time step [s]
-simulation.type = 3;        % 1 -> constant wind speed
+simulation.stop_time = [5];  % max time to investigaste [s]
+simulation.time_step = 50e-7;% time step [s]
+simulation.type = 1;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
 simulation.plot_time = 10;  % time from the end of the simulation to 
@@ -107,11 +107,11 @@ generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
-generator.tau_c = 667e-6;   % q-axis control time constant [s]
+generator.tau_c = 500e-6;   % q-axis control time constant [s]
 % generator.p_ctrl = 1e3;   % gain for the Ig reference
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 50;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 1.5e4; % Iq controller crossover freq. [rad/s]
+generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
 % generator.omega_pm = 60;  % phase margin for the speed controller [°]
 % generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
@@ -119,9 +119,9 @@ rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
 % generator.omega_LP = 0.2;   % freq. of the II order speed LP filter [rad/s]  
 % generator.zeta_LP = 0.7;    % damping of the II order speed LP filter [-]
-generator.design = 1;       % 0 enables manual design of the controller
+generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain
 generator.power_ctrl_ki=5.5;% power controller gain
