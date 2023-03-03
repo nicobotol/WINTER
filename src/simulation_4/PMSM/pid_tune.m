@@ -16,4 +16,9 @@ GH_mag = abs(subs(GH, s, 1j*omega));      % mag at the crossover frequency
 ki = solve(GH_mag == 1, ki);              % integral gain
 ki = eval(ki);
 
+fprintf('ki = %f\n', ki);
+fprintf('kp = %f\n', ki*tau_d*tau_p);
+fprintf('kd = %f\n', ki*(tau_d + tau_p));
+
+
 end

@@ -41,6 +41,9 @@ opts = pidtuneOptions('PhaseMargin', generator.iq_pm);
 Riq_pid = pidtune(G, 'pid', iq_omegaBP, opts);
 GR = G*Riq_pid;
 Riq = (Riq_pid.kp + Riq_pid.ki/s + Riq_pid.kd*s)*(1/(1 + s/(2*iq_omegaBP)));                     % regulator
+Riq_pid.kp
+Riq_pid.ki
+Riq_pid.kd
 end
 
 % Plot the phase margin

@@ -28,10 +28,13 @@ p_sum = 0;            % partial sum
 for n = 1:N/2
   f_n = n/T;                                  % frequency [Hz]
   PSD = I^2*V10*l/(1 + 1.5*f_n*l/V10)^(5/3);  % PSD
+  PSD_store(n) = PSD;
   phi_n = rand(1)*2*pi;                       % Random phase [rad]
   cos_v = cos(2*pi*f_n.*t - phi_n);            % vector of cosines
   p_sum = p_sum + sqrt(2*PSD/T)*cos_v;        % partial sum
 end
+
+
 
 u = V10 + p_sum;  % add the mean to the windspeed [m/s]
 
