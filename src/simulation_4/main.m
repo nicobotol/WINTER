@@ -39,4 +39,4 @@ for i = 1:wind.WS_len
 end
 
 %% Plot the results
-% plots
+plots

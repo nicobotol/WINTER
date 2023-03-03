@@ -67,11 +67,11 @@ V0_cut_out = 25;            % cut out wind speed [m/s]
 
 simulation.mdl = 'winter_simulink'; % model's name
 simulation.stop_time = [5];  % max time to investigaste [s]
-simulation.time_step = 50e-7;% time step [s]
+simulation.time_step = 50e-6;% time step [s]
 simulation.type = 1;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
-simulation.plot_time = 10;  % time from the end of the simulation to 
+simulation.plot_time = 2;  % time from the end of the simulation to 
                             % average the response [s]
 simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 1;% enables or disable plot's autosaving 
@@ -89,7 +89,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_r = 0.3;       % initial rotational speed [rad/s]
+rotor.omega_R = 0.3;       % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
 
 % Gearbox_parameters
