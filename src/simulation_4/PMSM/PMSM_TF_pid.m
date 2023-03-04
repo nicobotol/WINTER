@@ -1,9 +1,8 @@
 function [Yiq, Gc, Riq] = PMSM_TF_pid(design_method, enable_plot)
+%% Tune a PID controller for the generator
 parameters
 
 % Redefine the parameters for clarity
-% B = generator.B;
-% I = generator.I;
 B = B_eq;
 I = I_eq;
 p = generator.p;
@@ -21,14 +20,14 @@ syms s ki kd
 Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
-[ki,tau_p, tau_d, tau_d1] = pid_tune(G, iq_omegaBP);                        % tune the gains
+[kp, ki, kd, tau_d1] = pid_tune(G, iq_omegaBP);           % tune the gains
 
 % Redefine the transfer function as 'transfer function' type 
 s = tf('s');
 Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
-Riq =  ki/s*(1 + s*tau_p)*(1 + s*tau_d)/(1+s*tau_d1);                                        % regulator
+Riq = (kp + ki/s + kd*s)/(1 + s*tau_d1);                   % regulator
 GR = G*Riq;
 
 %% Automatic design of the controller
@@ -39,11 +38,13 @@ Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
 opts = pidtuneOptions('PhaseMargin', generator.iq_pm);
 Riq_pid = pidtune(G, 'pid', iq_omegaBP, opts);
-GR = G*Riq_pid;
-Riq = (Riq_pid.kp + Riq_pid.ki/s + Riq_pid.kd*s)*(1/(1 + s/(2*iq_omegaBP)));                     % regulator
-Riq_pid.kp
-Riq_pid.ki
-Riq_pid.kd
+Riq = (Riq_pid.kp + Riq_pid.ki/s + Riq_pid.kd*s);%/(1 + s*Riq_pid.Tf));  
+GR = G*Riq;
+                   % regulator
+
+fprintf('ki = %f\n', Riq_pid.ki);
+fprintf('kp = %f\n', Riq_pid.kp);
+fprintf('kd = %f\n', Riq_pid.kd);
 end
 
 % Plot the phase margin

@@ -1,9 +1,8 @@
-function [Yiq, Gc, Riq] = PMSM_TF(design_method, enable_plot)
+function [Yiq, Gc, Riq] = PMSM_TF_pi(design_method, enable_plot)
+%% Tune a PI controller for the generator
 parameters
 
 % Redefine the parameters for clarity
-% B = generator.B;
-% I = generator.I;
 B = B_eq;
 I = I_eq;
 p = generator.p;
@@ -41,6 +40,12 @@ opts = pidtuneOptions('PhaseMargin', generator.iq_pm);
 Riq_pid = pidtune(G, 'pi', iq_omegaBP, opts);
 GR = G*Riq_pid;
 Riq = (Riq_pid.kp + Riq_pid.ki/s);                     % regulator
+
+
+
+fprintf('ki = %f\n', Riq_pid.ki);
+fprintf('kp = %f\n', Riq_pid.kp);
+
 end
 
 % Plot the phase margin
