@@ -142,7 +142,8 @@ REGION 2: The basic rotor speed control function is the path that leads from the
 Individual pitch is used to take into account the wind sheer. 
 \subsubsection{5.3}
 Pitch actuators: three strategies may be used to model the pitching dynamics. The simplest is to neglect the pitch actuator, and to assign the blade pitch angle directly from the control command. This simplification may be useful for some kind of controllers. The second modelling strategy is to represent the pitch actuator with a low order transfer function, and a second order one represents the most important effects. In the book there are also some indications of he parameters to be used in the transfer function. There are bounds on the maximum pitching rate. Since the dynamic of the pitching blade is complicated, then it should be implemented in combination with a full aeroelastic model of the rotating blade. The model proposed in the book considers a spring and a damper for connecting the pitching actuation mechanism with the blade.
-
+\subsubsection{Vibration of the tower}
+It is reported at page 147
 \newpage
 \section{Comparison of the obtained cP with the reference ones}
 The obtained cP and cT are compared with the ones retrieved from the literature. In particular the value of the cP and cT values in the two operating regimes of the turbine are read directly from the \cite{DTU_Wind_Energy_Report-I-0092}, while the parametric relation between cP, $\lambda$ and $\theta$ are read from \cite{Variable-speed_Variable-pitch_control_for_a_wind_t}. The plots done by me are produced by the file cp\_comparison. 
