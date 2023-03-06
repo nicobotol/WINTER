@@ -8,14 +8,20 @@ parameters;
 % parameters_sim2;
 
 %% Load PMSM transfer functions and design the controller
-[Yiq, Gc, Riq] = PMSM_TF_pid(generator.design, generator.bode_plot);
+[Yiq, Gc, Riq, GR] = PMSM_TF_pid(generator.design, generator.bode_plot);
 
 %% Simulink simulation
-
 open_system(simulation.mdl);                    % open the model
 in = Simulink.SimulationInput(simulation.mdl);  % set simulation parameters
+set_param(strcat(simulation.mdl,'/Gain1'),'SampleTime','simulation.time_step_H');
+set_param(strcat(simulation.mdl,'/Gain'),'SampleTime','simulation.time_step_H');
+set_param(strcat(simulation.mdl,'/Somma'),'SampleTime','simulation.time_step_L');
+set_param(strcat(simulation.mdl,'/Step'),'SampleTime','simulation.time_step_H');
+% set_param(strcat(simulation.mdl,'/sum1'),'SampleTime','simulation.time_step_H');
+% set_param(strcat(simulation.mdl,'/sum2'),'SampleTime','simulation.time_step_H');
 out_store = cell(wind.WS_len);
 
+tic
 for i = 1:wind.WS_len
   stop_time = simulation.stop_time(i); % set the stop time 
   wind_speed = zeros(stop_time/wind.sample_t, 2);
@@ -37,6 +43,7 @@ for i = 1:wind.WS_len
   out = sim(in, 'ShowProgress','on'); 
   out_store{i} = out; % store the results of the simulation
 end
+toc
 
 %% Plot the results
 % plots
