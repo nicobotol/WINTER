@@ -7,18 +7,20 @@ clc
 parameters;
 % parameters_sim2;
 
+rng(simulation.seed); % set the seed for the random number generator
+
 %% Load PMSM transfer functions and design the controller
 [Yiq, Gc, Riq, GR] = PMSM_TF_pid(generator.design, generator.bode_plot);
 
 %% Simulink simulation
 open_system(simulation.mdl);                    % open the model
 in = Simulink.SimulationInput(simulation.mdl);  % set simulation parameters
-set_param(strcat(simulation.mdl,'/Gain1'),'SampleTime','simulation.time_step_H');
-set_param(strcat(simulation.mdl,'/Gain'),'SampleTime','simulation.time_step_H');
-set_param(strcat(simulation.mdl,'/Somma'),'SampleTime','simulation.time_step_L');
-set_param(strcat(simulation.mdl,'/Step'),'SampleTime','simulation.time_step_H');
-% set_param(strcat(simulation.mdl,'/sum1'),'SampleTime','simulation.time_step_H');
-% set_param(strcat(simulation.mdl,'/sum2'),'SampleTime','simulation.time_step_H');
+set_param(strcat(simulation.mdl,'/PMSM1/Gain'),'SampleTime','simulation.time_step_L');
+set_param(strcat(simulation.mdl,'/PMSM1/Gain1'),'SampleTime','simulation.time_step_L');
+set_param(strcat(simulation.mdl,'/PMSM1/Sum2'),'SampleTime','simulation.time_step_L');
+set_param(strcat(simulation.mdl,'/PMSM/Gain'),'SampleTime','simulation.time_step_L');
+set_param(strcat(simulation.mdl,'/PMSM/Gain1'),'SampleTime','simulation.time_step_L');
+set_param(strcat(simulation.mdl,'/PMSM/Sum2'),'SampleTime','simulation.time_step_L');
 out_store = cell(wind.WS_len);
 
 tic

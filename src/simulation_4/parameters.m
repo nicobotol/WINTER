@@ -66,9 +66,9 @@ V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
 simulation.mdl = 'winter_simulink'; % model's name
-simulation.stop_time = [2]; % max time to investigaste [s]
-simulation.time_step_H=5e-6;% time step for the mechanical part [s]
-simulation.time_step_L=5e-7;% time step for the electrical part [s]
+simulation.stop_time = [100]; % max time to investigaste [s]
+simulation.time_step_H=5e-3;% time step for the mechanical part [s]
+simulation.time_step_L=5e-6;% time step for the electrical part [s]
 simulation.type = 1;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
@@ -78,6 +78,7 @@ simulation.plot_time = 2;  % time from the end of the simulation to
 simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
+simulation.seed = 3;        % seed for the random number generation
 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]

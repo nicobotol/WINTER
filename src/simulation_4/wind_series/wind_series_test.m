@@ -6,7 +6,9 @@ clc
 addpath('C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\src\simulation_4');
 parameters
 
-[u, t] = wind_series(10, 0.1, wind.sample_f, ...
+rng(simulation.seed);
+
+[u, t] = wind_series(wind.mean, 0.5, wind.sample_f, ...
   wind.height, simulation.stop_time);
 % [u1, ~] = wind_series(wind.mean, wind.turbulence, wind.sample_f, ...
 %   wind.height, simulation.stop_time);
@@ -23,4 +25,3 @@ plot(t, u)
 yline(wind.mean, '--r')
 grid on
 
-std(u)
