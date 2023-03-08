@@ -21,8 +21,8 @@ end
 
 fs = 50; % sample frequency
 V10 = 10;
-V10_std = 0.50;
-T = 1000; % second to generate
+V10_std = 1;
+T = 500; % second to generate
 
 delta_ts = 1/fs;  % sampling time [s]
 N = T/delta_ts;   % number of samples
@@ -42,28 +42,40 @@ for n = 1:N/2
   p_sum = p_sum + sqrt(2*PSD/T)*cos_v;        % partial sum
 end
 
-sum(PSD_store)/T
+fprintf('Integral of the PSD: %6.5f\n', sum(PSD_store)/T);
+fprintf('SQRT of integral of the PSD: %6.5f\n', sqrt(sum(PSD_store)/T));
 
 u = V10 + p_sum;  % add the mean to the windspeed [m/s]
-%%
+fprintf('Mean: %5.4f [m/s]\n', mean(u));
+fprintf('STD: %5.4f [m/s]\n', std(u));
+
 % Rescale the std
 u1 = V10_std*u + (1 - V10_std)*V10;
 
+fprintf('Mean: %5.4f [m/s]\n', mean(u1));
+fprintf('STD: %5.4f [m/s]\n', std(u1));
+
+%%
 figure()
 plot([1/fs:1/fs:T], u)
 hold on
 plot([1/fs:1/fs:T], u1)
 legend('u', 'u1', 'location','southeast')
 %%
-fs2 = 10000;
-window = hamming(256);  % Window for spectral estimation
-noverlap = 128;  % Number of samples to overlap between segments
-nfft = 1024;  % Number of points for FFT
-[Pxx,f] = periodogram(u,hamming(length(u)),length(u),fs2);
-trapz(f, Pxx)
-sum(Pxx)*(f(2)-f(1))
+fs2 = 100*fs;
+% window = hamming(256);  % Window for spectral estimation
+% noverlap = 128;  % Number of samples to overlap between segments
+% nfft = 1024;  % Number of points for FFT
+[pxx,f] = pwelch(u, hanning(1024), [], 1024, fs2);
+freq = 1/T:1/T:N/(2*T);
+V10_std2 = sqrt(trapz(f, pxx)/(pi*max(f)));
+fprintf('STD %5.4f\n', V10_std2);
+
+[pxx,f] = pwelch(u1, hanning(1024), [], 1024, fs2);
+V10_std2 = sqrt(trapz(f, pxx)/(pi*max(f)));
+fprintf('STD %5.4f\n', V10_std2);
 
 figure()
-plot([1:1:N/2]/T, PSD_store)
-hold on
-plot(f, Pxx)
+% plot([1:1:N/2]/T, PSD_store)
+% hold on
+plot(f, pxx)

@@ -10,7 +10,7 @@ pol_abs_sort = sort(pol_abs, 'ascend');
 tau_p = 1/pol_abs_sort(1);                % 1st zero 
 tau_d = 1/pol_abs_sort(end);              % 2nd zero 
 tau_d1 = 1/(10*omega);                    % high freq pole
-R = ki/s*(1 + s*tau_p)*(1 + s*tau_d);%/(1 + s*tau_d1); % regulator
+R = ki/s*(1 + s*tau_p)*(1 + s*tau_d)/(1 + s*tau_d1); % regulator
 GH = G*R;                                  % series of regulator and system
 GH_mag = abs(subs(GH, s, 1j*omega));      % mag at the crossover frequency
 ki = solve(GH_mag == 1, ki);              % integral gain

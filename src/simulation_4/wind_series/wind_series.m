@@ -28,7 +28,7 @@ p_sum = 0;            % partial sum
 PSD_store = zeros(N/2, 1);
 for n = 1:N/2
   f_n = n/T;                                  % frequency [Hz]
-  PSD = I^2*V10*l/(1 + 1.5*f_n*2*pi*l/V10)^(5/3);  % PSD
+  PSD = I^2*V10*l/(1 + 1.5*f_n*l/V10)^(5/3);  % PSD
   PSD_store(n) = PSD;
   phi_n = rand(1)*2*pi;                       % Random phase [rad]
   cos_v = cos(2*pi*f_n.*t - phi_n);            % vector of cosines
@@ -41,16 +41,9 @@ std(u)
 % Rescale the std
 % u = V10_std*u + (1 - V10_std)*V10;
 
-figure()
-plot([1:1:N/2]/T, PSD_store);
+% figure()
+% plot([1:1:N/2]/T, PSD_store);
+% 
+% psd_integral = trapz([1:1:N/2]/T, PSD_store)
 
-psd_integral = trapz([1:1:N/2]/T, PSD_store)
-
-% 0.5^2/sum(PSD_store)
-
-% somma = 0;
-% for i=1:N/2-1
-%   somma = somma + PSD_store(i+1) + PSD_store(i);
-% end
-% somma/2*fs
 end
