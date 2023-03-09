@@ -66,7 +66,7 @@ V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
 simulation.mdl = 'winter_simulink'; % model's name
-simulation.stop_time = [100]; % max time to investigaste [s]
+simulation.stop_time = [50]; % max time to investigaste [s]
 simulation.time_step_H=5e-3;% time step for the mechanical part [s]
 simulation.time_step_L=5e-6;% time step for the electrical part [s]
 simulation.type = 1;        % 1 -> constant wind speed

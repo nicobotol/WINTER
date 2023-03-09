@@ -7,7 +7,7 @@ syms s ki
 pol = poles(G, s);                  % pole of the TF
 pol_abs = eval(abs(pol));
 pol_abs_sort = sort(pol_abs, 'ascend');
-tau = 1/pol_abs_sort(1);        % const. of the controller tau = kp/ki
+tau = 1/pol_abs_sort(end);          % const. of the controller tau = kp/ki
 R = (1 + s*tau)*ki/s;               % regulator TF
 GH = G*R;                           % series of regulator and system
 GH_mag = abs(subs(GH, s, 1j*omega));% magnitude at the crossover frequency

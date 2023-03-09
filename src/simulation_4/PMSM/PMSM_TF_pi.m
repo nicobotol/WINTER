@@ -1,4 +1,4 @@
-function [Yiq, Gc, Riq] = PMSM_TF_pi(design_method, enable_plot)
+function [Yiq, Gc, Riq, GR] = PMSM_TF_pi(design_method, enable_plot)
 %% Tune a PI controller for the generator
 parameters
 
