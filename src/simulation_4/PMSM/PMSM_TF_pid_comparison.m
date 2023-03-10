@@ -1,5 +1,5 @@
 function [Yiq, Gc, Riq_manual, GR_manual] = PMSM_TF_pid_comparison(design_method, enable_plot)
-%% Tune a PID controller for the generator
+%% Comparison between the manual design and the "pidtune" one
 parameters
 
 % Redefine the parameters for clarity
@@ -54,7 +54,7 @@ if enable_plot == 1
 [magRiq_manual, phaseRiq_manual, woutRiq_manual] = bode(Riq_manual);
 [magRiq_auto, phaseRiq_auto, woutRiq_auto] = bode(Riq_auto);
 fig_bode_generator = figure('Position', get(0, 'Screensize'), 'Color','w');
-% subplot(2,1,1)
+subplot(2,1,1)
 semilogx(woutG, 20*log10(squeeze(magG)), 'LineWidth', line_width)
 hold on
 semilogx(woutGR_manual, 20*log10(squeeze(magGR_manual)), 'LineWidth', line_width)
@@ -69,18 +69,18 @@ set(gca, 'FontSize', font_size)
 legend('Open loop', 'With regulator manual', 'Regulator manual', ...
   'With regulator auto', 'Regulator auto','interpreter','latex',...
   'FontSize', font_size, 'location', 'best')
-% subplot(2,1,2)
-% semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
-% hold on
-% semilogx(woutGR_manual, squeeze(phaseGR_manual), 'LineWidth', line_width)
-% semilogx(woutRiq_manual, squeeze(phaseRiq_manual), 'LineWidth', line_width)
-% semilogx(woutGR_auto, squeeze(phaseGR_auto), 'LineWidth', line_width)
-% semilogx(woutRiq_auto, squeeze(phaseRiq_auto), 'LineWidth', line_width)
-% hold off
-% grid on
-% xlabel('$\omega$ \ [rad/s]', 'FontSize', font_size, 'interpreter','latex')
-% ylabel('Phase [deg.]', 'FontSize', font_size, 'interpreter','latex')
-% sgtitle('PMSM Bode plot', 'FontSize', font_size);
+subplot(2,1,2)
+semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
+hold on
+semilogx(woutGR_manual, squeeze(phaseGR_manual), 'LineWidth', line_width)
+semilogx(woutRiq_manual, squeeze(phaseRiq_manual), 'LineWidth', line_width)
+semilogx(woutGR_auto, squeeze(phaseGR_auto), 'LineWidth', line_width)
+semilogx(woutRiq_auto, squeeze(phaseRiq_auto), 'LineWidth', line_width)
+hold off
+grid on
+xlabel('$\omega$ \ [rad/s]', 'FontSize', font_size, 'interpreter','latex')
+ylabel('Phase [deg.]', 'FontSize', font_size, 'interpreter','latex')
+sgtitle('PMSM Bode plot', 'FontSize', font_size);
 set(gca, 'FontSize', font_size)
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\fig_bode_generator','.png');

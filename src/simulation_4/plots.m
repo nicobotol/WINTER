@@ -1,25 +1,26 @@
 %% Plot of the results
 % This file is used for print the results of the simulation
 close all
-clc
 
 date = string(datetime('now','TimeZone','local','Format', ...
         'y_MM_d_HH_mm_ss')); % save the date to identify the figures
 
 %% Wind time series
+if simulation.type ~= 4
 fig_wind_TS = figure('Position', get(0, 'Screensize'), 'Color','w');
 leg = cell(1, wind.WS_len);
 hold on
 for i = 1:wind.WS_len
   plot(out_store{i}.wind.Time, out_store{i}.wind.Data, 'LineWidth', ...
     line_width);
-  if simulation.type == 1       % constant
-    leg{i} = ['Mean: ', num2str(wind.mean(i)), '; Std: 0'];
-  elseif simulation.type == 2   % ramp
-    leg{i} = ['Sim. ', num2str(i)];
-  elseif simulation.type == 3   % generated wind series
-    leg{i} = ['Mean: ', num2str(wind.mean(i)), '; Std: ',...
-    num2str(wind.turbulence(i))];
+  switch simulation.type
+    case 1 % constant    
+      leg{i} = ['Mean: ', num2str(wind.mean(i)), '; Std: 0'];
+    case 2   % ramp
+      leg{i} = ['Sim. ', num2str(i)];
+    case {3, 5}    % generated wind series
+      leg{i} = ['Mean: ', num2str(wind.mean(i)), '; Std: ',...
+        num2str(wind.turbulence(i))];  
   end
 end
 legend(leg, 'Location', 'best', 'FontSize', font_size,...
@@ -32,6 +33,7 @@ set(gca, 'FontSize', font_size)
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_wind_TS','.png');
   export_fig('fig_wind_TS', fig_name);
+end
 end
 
 %% Static simulation
@@ -84,9 +86,9 @@ for i = 1:wind.WS_len
     mean(out_store{i}.P_G.Data(end-simulation.plot_step:end)), 'o', ...
     'LineWidth', line_width)
 end
-plot(reference(:, 1), reference(:, 6)*1e3, 'LineWidth', line_width)
+plot(reference(:, 1), reference(:, 6)*1e-3, 'LineWidth', line_width)
 xlabel('Wind speed [m/s]','interpreter','latex')
-ylabel('P [W]','interpreter','latex')
+ylabel('P [MW]','interpreter','latex')
 legend(leg, 'location', 'best', 'FontSize', font_size,...
   'interpreter','latex');
 title('Generator power')
@@ -96,7 +98,6 @@ if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_power','.png');
   export_fig('fig_power', fig_name);
 end
-
 
 fig_pitch = figure('Position', get(0, 'Screensize'), 'Color','w');
 hold on
@@ -123,6 +124,8 @@ else
 end
 
 %% Dynamic simulation
+if simulation.type ~= 4 
+
 fig_pitch_dynamic = figure('Position', get(0, 'Screensize'), 'Color','w');
 hold on
 for i = 1:wind.WS_len
@@ -165,7 +168,7 @@ leg = cell(2*wind.WS_len + 1, 1);
 for i = 1:wind.WS_len
  plot(out_store{i}.P_R.Time, out_store{i}.P_R.Data, ...
     'LineWidth', line_width*0.6, 'Color', colors_vect(i, :))
- plot(out_store{i}.P_G.Time, out_store{i}.P_G.Data, ...
+ plot(out_store{i}.P_G.Time, out_store{i}.P_G.Data/1e-6, ...
   'LineStyle', '--', 'LineWidth', line_width*1.2, ...
   'Color', colors_vect(i, :))
   leg{2*i - 1} = ['Aero. sim. ', num2str(i)];
@@ -175,7 +178,7 @@ yline(rotor.P_rated, 'LineStyle', '-.', 'LineWidth', line_width,...
   'Color', colors_vect(i + 1, :));
 leg{2*wind.WS_len + 1} = ['Rated'];
 xlabel('Time [s]', 'interpreter','latex')
-ylabel('P [W]', 'interpreter','latex')
+ylabel('P [MW]', 'interpreter','latex')
 title('Rotor and generator powers')
 legend(leg, 'location', 'best', 'FontSize', font_size, ...
   'interpreter','latex')
@@ -185,4 +188,92 @@ if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date, 'fig_power_dynamic','.png');
   export_fig('fig_power_dynamic', fig_name);
 end
+end
 
+%% Paramertrization plot
+% print only the steady state time horizon (i.e. the last 
+% simulation.plot_time seconds of the simulation)
+if simulation.type == 5
+
+leg = cell(wind.WS_len + 1, 1);     % struct for the legend
+
+% elements to be plotted
+print_index = zeros(wind.WS_len, 2); % transform time into indeces
+print_index(:, 1) = (simulation.stop_time - simulation.plot_time)/ ...
+  simulation.time_step_L;
+print_index(:, 2) = simulation.stop_time/simulation.time_step_L;
+print_index = ceil(print_index);
+
+fig_power_param = figure('Position', get(0, 'Screensize'),'Color','w');
+  for i = 1:wind.WS_len
+
+    % interpolate the coarser simulation
+    wind_resampled = zeros(length(out_store{i}.P_G.Time), 1);
+    wind_resampled = interp1(out_store{i}.wind.Time, ...
+      out_store{i}.wind.Data, out_store{i}.P_G.Time);
+
+    % plot
+    plot(wind_resampled(print_index(i, 1):print_index(i, 2)), ...
+      out_store{i}.P_G.Data(print_index(i, 1):print_index(i, 2))/1e6, ...
+      'LineWidth', line_width, 'Color', colors_vect(i, :));
+    hold all;
+    leg{i} = ['Mean: ', num2str(wind.mean(i)), '; Std: ',...
+      num2str(wind.turbulence(i))];
+  end
+  plot(reference(:, 1), reference(:, 6)*1e-3, 'LineWidth', line_width)
+  leg{wind.WS_len + 1} =  ['DTU 10MW ref.'];
+  xlabel('Wind speed [m/s]','interpreter','latex')
+  ylabel('P [MW]','interpreter','latex')
+  legend(leg, 'location', 'best', 'FontSize', font_size,...
+    'interpreter','latex');
+  title('Generator power')
+  set(gca, 'FontSize', font_size)
+  grid on
+  if simulation.print_figure == 1
+    fig_name = strcat(path_images,'\', date, 'fig_power_param','.png');
+    export_fig('fig_power_param', fig_name);
+  end
+  
+end
+
+%% Generator step response
+if simulation.type == 4
+
+  N_start = ceil(step_t_start/simulation.time_step_L); % item where start 
+  N_end = ceil(step_t_stop/simulation.time_step_L);    % item where stop 
+
+  fig_gen_step = figure('Position', get(0, 'Screensize'),'Color','w');
+  plot(out.T_G_reference.Time, out.T_G_reference.Data, '--',...
+    'LineWidth', line_width);
+  hold on
+  plot(out.T_G.Time, out.T_G.Data, 'LineWidth', line_width*0.75);
+  legend('Reference', 'Response', 'location', 'best', 'FontSize', ...
+    font_size, 'interpreter','latex');
+  grid on;
+  title('Generator torque step response')
+  xlabel('Time [s]', 'interpreter','latex')
+  ylabel('$T_{G}$ [Nm]', 'interpreter','latex')
+  set(gca, 'FontSize', font_size)
+  rectangle('Position', [step_t_start step_y_min ...
+    step_step_t_stop-step_t_start  step_y_max-step_y_min])
+
+  axes('position',[2.8/5 0.4/1.2 .30 .30])
+  plot(out.T_G_reference.Time(N_start:N_end), ...
+    out.T_G_reference.Data(N_start:N_end), '--','LineWidth', 1.5, ...
+    'MarkerSize',6, 'Color', colors_vect(1,:)); %axis tight
+  hold on
+  plot(out.T_G.Time(N_start:N_end), ...
+    out.T_G.Data(N_start:N_end), 'LineWidth', 1.5, ...
+    'MarkerSize',6, 'Color', colors_vect(2,:)); %axis tight
+  xlim([step_t_start step_t_stop])
+  ylim([step_y_min step_y_max]);
+  grid on
+  title('Overshoot of the response')
+  set(gca, 'FontSize', font_size)
+
+  if simulation.print_figure == 1
+  fig_name = strcat(path_images,'\', date, 'fig_gen_step','.png');
+  export_fig('fig_gen_step', fig_name);
+  end
+
+end

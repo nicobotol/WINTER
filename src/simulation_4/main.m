@@ -10,18 +10,13 @@ parameters;
 rng(simulation.seed); % set the seed for the random number generator
 
 %% Load PMSM transfer functions and design the controller
-[Yiq, Gc, Riq, GR] = PMSM_TF_pid_comparison(generator.design, generator.bode_plot);
+[Yiq, Gc, Riq, GR] = PMSM_TF_pid(generator.design, generator.bode_plot);
 
 %% Simulink simulation
 open_system(simulation.mdl);                    % open the model
 in = Simulink.SimulationInput(simulation.mdl);  % set simulation parameters
-set_param(strcat(simulation.mdl,'/PMSM1/Gain'),'SampleTime','simulation.time_step_L');
-set_param(strcat(simulation.mdl,'/PMSM1/Gain1'),'SampleTime','simulation.time_step_L');
-set_param(strcat(simulation.mdl,'/PMSM1/Sum2'),'SampleTime','simulation.time_step_L');
-set_param(strcat(simulation.mdl,'/PMSM/Gain'),'SampleTime','simulation.time_step_L');
-set_param(strcat(simulation.mdl,'/PMSM/Gain1'),'SampleTime','simulation.time_step_L');
-set_param(strcat(simulation.mdl,'/PMSM/Sum2'),'SampleTime','simulation.time_step_L');
-out_store = cell(wind.WS_len);
+
+set_simulink_parameters(simulation.mdl, simulation.type);
 
 tic
 for i = 1:wind.WS_len
@@ -36,16 +31,21 @@ for i = 1:wind.WS_len
       wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, ...
         wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, ...
         stop_time);
-    case 3  % generated time series
+    case {3, 5} % generated time series
       wind_speed = run_generated_wind_series(wind.mean(i), ...
         wind.turbulence(i), wind_speed, stop_time);
+    case 4 % generator step response
+      [stop_time] = run_generator_step();
   end
 
   % Run the simulation
   out = sim(in, 'ShowProgress','on'); 
   out_store{i} = out; % store the results of the simulation
+
+%   % Uncomment all the blocks
+%   uncomment_all(simulation.mdl)
 end
 toc
 
 %% Plot the results
-% plots
+plots

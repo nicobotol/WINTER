@@ -7,6 +7,8 @@ addpath("lookup\")
 addpath("run")
 addpath("wind_series")
 addpath("PMSM")
+addpath("simulink\")
+
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-15 90]);              % range for picth angle [rad] (original)
 % pitch_range = deg2rad([-2 5]);              % range for picth angle [rad]
@@ -65,14 +67,23 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.mdl = 'winter_simulink'; % model's name
-simulation.stop_time = [50]; % max time to investigaste [s]
-simulation.time_step_H=5e-3;% time step for the mechanical part [s]
+simulation.model = 1;       % choice of the model
+                            % 1 -> without power controller
+                            % 2 -> with power controller
+if simulation.model == 1    % without power controller
+  simulation.mdl = 'winter_simulink_without_PC'; 
+elseif simulation.model == 2 % with power controller
+  simulation.mdl = 'winter_simulink_with_PC'; 
+end
+simulation.stop_time = [30 30]; % max time to investigaste [s]
+simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-6;% time step for the electrical part [s]
-simulation.type = 1;        % 1 -> constant wind speed
+simulation.type = 5;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
-simulation.plot_time = 2;  % time from the end of the simulation to 
+                            % 4 -> generator step response
+                            % 5 -> generated WS and parametrization plot
+simulation.plot_time = 5;  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
@@ -119,7 +130,7 @@ rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain
 generator.power_ctrl_ki=5.5;% power controller gain
@@ -146,8 +157,8 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [8];                % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.16*(wind.mean*0.75 + 3.8); % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [5 10];                % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
@@ -155,11 +166,18 @@ wind.ramp_WS_start = 15;        % wind speed at the start of the ramp [m/s]
 wind.ramp_WS_stop = 10;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [0 0 0]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [10 20 40];  % time speed at the stop of the ramp [s]
-if simulation.type == 1 || simulation.type == 3
-  wind.WS_len = length(wind.mean);  % number of separated WSs to test
-elseif simulation.type == 2
-  wind.WS_len = length(wind.ramp_time_start);
+
+switch simulation.type
+  case {1, 3, 5}
+    wind.WS_len = length(wind.mean);  % number of separated WSs to test
+  case 2
+    wind.WS_len = length(wind.ramp_time_start);
+  case 4
+    wind.WS_len = 1; 
 end
+
+% Struct where to save the simulations results
+out_store = cell(wind.WS_len);
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
@@ -212,3 +230,9 @@ path_images = ['C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\' ...
   '\report\images'];
 % set latex iterpreter
 set(0,'defaulttextinterpreter','latex');
+
+% parameters for the generator step response plot
+step_t_start = 0.35;
+step_t_stop = 0.65;
+step_y_min = 0.9;
+step_y_max = 1.1;
