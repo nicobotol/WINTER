@@ -67,7 +67,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 1;       % choice of the model
+simulation.model = 2;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
 if simulation.model == 1    % without power controller
@@ -75,18 +75,19 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [30 30]; % max time to investigaste [s]
+simulation.stop_time = [500]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
-simulation.time_step_L=5e-6;% time step for the electrical part [s]
-simulation.type = 5;        % 1 -> constant wind speed
+simulation.time_step_L=5e-5;% time step for the electrical part [s]
+simulation.type = 6;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
-simulation.plot_time = 5;  % time from the end of the simulation to 
+                            % 6 -> ramp and parametrization plot
+simulation.plot_time = 499;  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 0;% enables or disable plot's autosaving 
+simulation.print_figure = 1;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
@@ -157,27 +158,27 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [5 10];                % 10 minutes mean wind speed [m/s]]
+wind.mean = [5 10 15];                % 10 minutes mean wind speed [m/s]]
 wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 15;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 10;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [0 0 0]; % time speed at the start of the ramp [s]
-wind.ramp_time_stop = [10 20 40];  % time speed at the stop of the ramp [s]
+wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [0]; % time speed at the start of the ramp [s]
+wind.ramp_time_stop = [499];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
   case {1, 3, 5}
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case 2
+  case {2, 6}
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 
 end
 
 % Struct where to save the simulations results
-out_store = cell(wind.WS_len);
+out_store = cell(1, wind.WS_len);
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
