@@ -25,9 +25,11 @@ I = V10_std/V10;  % turbulence intensity
 t = delta_ts*[1:1:N]; % [s] time  
 cos_v = zeros(N, 1);  % vector of cosines
 p_sum = 0;            % partial sum
+PSD_store = zeros(N/2, 1);
 for n = 1:N/2
   f_n = n/T;                                  % frequency [Hz]
   PSD = I^2*V10*l/(1 + 1.5*f_n*l/V10)^(5/3);  % PSD
+  PSD_store(n) = PSD;
   phi_n = rand(1)*2*pi;                       % Random phase [rad]
   cos_v = cos(2*pi*f_n.*t - phi_n);            % vector of cosines
   p_sum = p_sum + sqrt(2*PSD/T)*cos_v;        % partial sum
@@ -35,7 +37,13 @@ end
 
 u = V10 + p_sum;  % add the mean to the windspeed [m/s]
 
+std(u)
 % Rescale the std
-u = V10_std*u + (1 - V10_std)*V10;
+% u = V10_std*u + (1 - V10_std)*V10;
+
+% figure()
+% plot([1:1:N/2]/T, PSD_store);
+% 
+% psd_integral = trapz([1:1:N/2]/T, PSD_store)
 
 end

@@ -75,7 +75,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [500]; % max time to investigaste [s]
+simulation.stop_time = [100]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 6;        % 1 -> constant wind speed
@@ -84,10 +84,10 @@ simulation.type = 6;        % 1 -> constant wind speed
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
                             % 6 -> ramp and parametrization plot
-simulation.plot_time = 499;  % time from the end of the simulation to 
+simulation.plot_time = 99;  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
@@ -101,7 +101,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = 0.3;       % initial rotational speed [rad/s]
+rotor.omega_R = 1.01;       % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
 
 % Gearbox_parameters
@@ -163,10 +163,10 @@ wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [0]; % time speed at the start of the ramp [s]
-wind.ramp_time_stop = [499];  % time speed at the stop of the ramp [s]
+wind.ramp_WS_start = 25;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 4;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [10]; % time speed at the start of the ramp [s]
+wind.ramp_time_stop = [100];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
   case {1, 3, 5}

@@ -7,6 +7,8 @@ addpath("lookup\")
 addpath("run")
 addpath("wind_series")
 addpath("PMSM")
+addpath("simulink\")
+
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-15 90]);              % range for picth angle [rad] (original)
 % pitch_range = deg2rad([-2 5]);              % range for picth angle [rad]
@@ -65,20 +67,30 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.mdl = 'winter_simulink'; % model's name
-simulation.stop_time = [60];  % max time to investigaste [s]
-simulation.time_step = 1e-4;% time step [s]
-simulation.type = 3;        % 1 -> constant wind speed
+simulation.model = 2;       % choice of the model
+                            % 1 -> without power controller
+                            % 2 -> with power controller
+if simulation.model == 1    % without power controller
+  simulation.mdl = 'winter_simulink_without_PC'; 
+elseif simulation.model == 2 % with power controller
+  simulation.mdl = 'winter_simulink_with_PC'; 
+end
+simulation.stop_time = [100]; % max time to investigaste [s]
+simulation.time_step_H=1e-2;% time step for the mechanical part [s]
+simulation.time_step_L=5e-5;% time step for the electrical part [s]
+simulation.type = 6;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
-simulation.plot_time = 10;  % time from the end of the simulation to 
+                            % 4 -> generator step response
+                            % 5 -> generated WS and parametrization plot
+                            % 6 -> ramp and parametrization plot
+simulation.plot_time = 99;  % time from the end of the simulation to 
                             % average the response [s]
-simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+% simulation.plot_step = simulation.plot_time/simulation.time_step;
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
-
-
+simulation.seed = 3;        % seed for the random number generation
 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
@@ -89,7 +101,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_r = 0.3;       % initial rotational speed [rad/s]
+rotor.omega_R = 1;       % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
 
 % Gearbox_parameters
@@ -107,19 +119,17 @@ generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
-generator.tau_c = 667e-6;   % q-axis control time constant [s]
+generator.tau_c = 500e-6;   % q-axis control time constant [s]
 % generator.p_ctrl = 1e3;   % gain for the Ig reference
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
-generator.iq_pm = 50;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 1.5e4; % Iq controller crossover freq. [rad/s]
+generator.iq_pm = 70;       % phase margin for the Iq controller [°]
+generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
 % generator.omega_pm = 60;  % phase margin for the speed controller [°]
 % generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
-% generator.omega_LP = 0.2;   % freq. of the II order speed LP filter [rad/s]  
-% generator.zeta_LP = 0.7;    % damping of the II order speed LP filter [-]
-generator.design = 1;       % 0 enables manual design of the controller
+generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
@@ -127,8 +137,6 @@ generator.power_ctrl_kp=0.5;% power controller gain
 generator.power_ctrl_ki=5.5;% power controller gain
 
 % Blade parameters
-% blade.Kp = 0.341;           % proportional gain
-% blade.Ki = 0.183;           % integrative gain
 blade.mass = 4.3388e4;      % mass [kg]
 blade.I = 5.2056e7;         % inertia wrt the rotor rotational axis [kgm^2]
 blade.zetap = 0.7;          % damping ratio of the pitch actuator
@@ -137,6 +145,14 @@ blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
 blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
 blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
+blade.omega_2_ratio = 1.3;  % ratio 
+blade.K1 = 164.13;
+blade.K2 = 702.09;
+blade.kp = 0.592;
+blade.ki = 0.133;
+blade.kd = 0.0;
+blade.kpp = 4e-9;
+blade.kip = 4e-9;
 % blade.kp_schedule = 0.4;
 % blade.ki_schedule = 0.2;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
@@ -150,20 +166,27 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 
 % Wind parameters
-wind.mean = [8];                 % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.16*(wind.mean*0.75 + 3.8); % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [5 10 15];                % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
-wind.sample_f = 500;            % wind sample frequncy [Hz]
+wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 15;         % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 10;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [0 0 0];  % time speed at the start of the ramp [s]
-wind.ramp_time_stop = [10 20 40];  % time speed at the stop of the ramp [s]
-if simulation.type == 1 || simulation.type == 3
-  wind.WS_len = length(wind.mean);  % number of separated WSs to test
-elseif simulation.type == 2
-  wind.WS_len = length(wind.ramp_time_start);
+wind.ramp_WS_start = 10;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 12;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [10]; % time speed at the start of the ramp [s]
+wind.ramp_time_stop = [100];  % time speed at the stop of the ramp [s]
+
+switch simulation.type
+  case {1, 3, 5}
+    wind.WS_len = length(wind.mean);  % number of separated WSs to test
+  case {2, 6}
+    wind.WS_len = length(wind.ramp_time_start);
+  case 4
+    wind.WS_len = 1; 
 end
+
+% Struct where to save the simulations results
+out_store = cell(1, wind.WS_len);
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
@@ -216,3 +239,9 @@ path_images = ['C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\' ...
   '\report\images'];
 % set latex iterpreter
 set(0,'defaulttextinterpreter','latex');
+
+% parameters for the generator step response plot
+step_t_start = 0.35;
+step_t_stop = 0.65;
+step_y_min = 0.9;
+step_y_max = 1.1;
