@@ -101,7 +101,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = 1;       % initial rotational speed [rad/s]
+rotor.omega_R = 0.85;       % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
 
 % Gearbox_parameters
@@ -172,7 +172,7 @@ wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 10;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 12;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [10]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [100];  % time speed at the stop of the ramp [s]
 
