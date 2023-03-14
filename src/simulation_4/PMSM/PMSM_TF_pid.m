@@ -49,39 +49,19 @@ end
 % Plot the phase margin
 [~, PM] = margin(GR)
 
+% Close loop transfer function
+G_cl = GR/(1 + GR);
+
 %% Plot
 if enable_plot == 1
-[magG, phaseG, woutG] = bode(G);
-[magGR, phaseGR, woutGR] = bode(GR);
-[magRiq, phaseRiq, woutRiq] = bode(Riq);
-fig_bode_generator = figure('Position', get(0, 'Screensize'), 'Color','w');
-subplot(2,1,1)
-semilogx(woutG, 20*log10(squeeze(magG)), 'LineWidth', line_width)
-hold on
-semilogx(woutGR, 20*log10(squeeze(magGR)), 'LineWidth', line_width)
-semilogx(woutRiq, 20*log10(squeeze(magRiq)), 'LineWidth', line_width)
-hold off
-xlabel('$\omega$ [rad/s]', 'FontSize', font_size, 'interpreter','latex')
-ylabel('Mag. [dB]', 'FontSize', font_size, 'interpreter','latex')
-grid on
-set(gca, 'FontSize', font_size)
-legend('Open loop', 'With regulator', 'Regulator','interpreter','latex',...
-  'FontSize', font_size, 'location', 'best')
-subplot(2,1,2)
-semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
-hold on
-semilogx(woutGR, squeeze(phaseGR), 'LineWidth', line_width)
-semilogx(woutRiq, squeeze(phaseRiq), 'LineWidth', line_width)
-hold off
-grid on
-xlabel('$\omega$ \ [rad/s]', 'FontSize', font_size, 'interpreter','latex')
-ylabel('Phase [deg.]', 'FontSize', font_size, 'interpreter','latex')
-sgtitle('PMSM Bode plot', 'FontSize', font_size);
-set(gca, 'FontSize', font_size)
-if simulation.print_figure == 1
-  fig_name = strcat(path_images,'\fig_bode_generator','.png');
-  export_fig('fig_bode_generator', fig_name);
-end
+  % Open loop, with regulator, regulator
+  TF = [G, GR, Riq];                                      % TF to plot
+  legends = {'Open loop', 'With regulator', 'Regulator'}; % legends names
+  bode_plot(TF, legends, 'PMSM Bode plot', 'fig_bode_generator')
+
+  % Close loop
+  bode_plot(G_cl, {'Close loop'}, 'Close loop Bode plot', 'fig_bode_cl')
+
 end
 
 end

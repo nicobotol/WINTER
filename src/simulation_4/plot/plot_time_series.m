@@ -1,5 +1,5 @@
 function plot_time_series(plot_name,out_cell,series,x_label,y_label,...
-  plot_title,scaling,date)
+  plot_title,scaling,date_fig)
 
 parameters
 
@@ -19,6 +19,6 @@ title(plot_title, 'Interpreter','latex')
 grid on
 set(gca, 'FontSize', font_size)
 if simulation.print_figure == 1
-  fig_name = strcat(path_images,'\', date, plot_name,'.png');
+  fig_name = strcat(path_images,'\', date_fig, plot_name,'.png');
   export_fig('fig', fig_name);
 end

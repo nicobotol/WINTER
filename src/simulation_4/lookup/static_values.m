@@ -37,6 +37,7 @@ for i=1:velocity_item
     T_G(i) = rotor.P_rated/omega_rated*gearbox.ratio; % generator torque [Nm]
     % generator power [W]
     P_G(i) = generator.K_opt*omega_G(i)^3; 
+    P_R(i) = rotor.P_rated;
   end
 end
 

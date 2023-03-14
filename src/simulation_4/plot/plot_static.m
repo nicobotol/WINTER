@@ -1,5 +1,5 @@
 function plot_static(plot_name, x_data, y_data, x_ref_DTU, y_ref_DTU, ...
-  x_my_ref, y_my_ref, x_label, y_label, plot_title, scaling, date)
+  x_my_ref, y_my_ref, x_label, y_label, plot_title, scaling, date_fig)
 
 parameters
 
@@ -25,6 +25,6 @@ legend(leg, 'location', 'best', 'FontSize', font_size,...
 set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
-  fig_name = strcat(path_images,'\', date, plot_name,'.png');
+  fig_name = strcat(path_images,'\', date_fig, plot_name,'.png');
   export_fig('fig', fig_name);
 end
