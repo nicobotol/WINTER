@@ -47,7 +47,8 @@ fprintf('kd = %f\n', Riq_pid.kd);
 end
 
 % Plot the phase margin
-[~, PM] = margin(GR)
+[~, PM] = margin(GR);
+fprintf('Phase margin = %f [°]\n', PM);
 
 % Close loop transfer function
 G_cl = GR/(1 + GR);
@@ -56,8 +57,8 @@ G_cl = GR/(1 + GR);
 if enable_plot == 1
   % Open loop, with regulator, regulator
   TF = [G, GR, Riq];                                      % TF to plot
-  legends = {'Open loop', 'With regulator', 'Regulator'}; % legends names
-  bode_plot(TF, legends, 'PMSM Bode plot', 'fig_bode_generator')
+  legends = {'Not regulated', 'Regulated', 'Regulator'};  % legends names
+  bode_plot(TF, legends, 'Open loop Bode plot', 'fig_bode_generator')
 
   % Close loop
   bode_plot(G_cl, {'Close loop'}, 'Close loop Bode plot', 'fig_bode_cl')
