@@ -47,5 +47,16 @@ for i = 1:wind.WS_len
 end
 toc
 
+%% Check if aby if the simulations ended with error
+simulation_fails = uint8(0); 
+for i=1:wind.WS_len
+  if out_store{1}.SimulationMetadata.ModelInfo.StopTime < simulation.stop_time(i);
+    simulation_fails = 1;
+  end
+end
 %% Plot the results
-plots
+if simulation_fails == 0
+  plots
+else
+  fprintf('Smulation ended with error\n');
+end

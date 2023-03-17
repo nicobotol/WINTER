@@ -8,6 +8,7 @@ addpath("run")
 addpath("wind_series")
 addpath("PMSM")
 addpath("simulink\")
+addpath("plot\")
 
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-15 90]);              % range for picth angle [rad] (original)
@@ -27,6 +28,14 @@ pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 if exist('lookup_cP_theta_lambda.mat', 'file')
   load('lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
   load('lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
+  load('lookup_static_values.mat');   % static values for rows:
+                                      % 1 -> wind speed [m/s]
+                                      % 2 -> rotor rotational speed [rad/s]
+                                      % 3 -> gen. rotational speed [rad/s]
+                                      % 4 -> rotor torque [Nm]
+                                      % 5 -> generator torque [Nm]
+                                      % 6 -> rotor power [W]
+                                      % 7 -> generator power [W]
 end
 
 % parameters for the file lookup_pitch.m
@@ -36,7 +45,8 @@ if exist('rated_values.mat', 'file')
   feather_lim = 4*pi/180;                   % initial feathering limit [°]
   p_item = 50;                              % # of item to investigate
   V0_rated = rated_values(1);               % rated windspeed [m/s]
-  velocity_vector = [0:0.5:30];             % range of wind speed [m/s]
+  velocity_spacing = 0.5;                   % spcae between two WS [m/s]
+  velocity_vector = [0:velocity_spacing:30];% range of wind speed [m/s]
   velocity_vector(end) = V0_rated;          % add the rated windspeed
   velocity_vector = sort(velocity_vector);
   velocity_item = size(velocity_vector, 2); % # of wind speed
@@ -75,7 +85,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [100]; % max time to investigaste [s]
+simulation.stop_time = [200]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 6;        % 1 -> constant wind speed
@@ -84,7 +94,7 @@ simulation.type = 6;        % 1 -> constant wind speed
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
                             % 6 -> ramp and parametrization plot
-simulation.plot_time = 99;  % time from the end of the simulation to 
+simulation.plot_time = [];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
@@ -101,14 +111,16 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = 0.85;       % initial rotational speed [rad/s]
+rotor.omega_R = 8.46*pi/30;       % initial rotational speed [rad/s]
 rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
+rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 
 
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
+generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
 generator.I = 4800;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
@@ -131,10 +143,18 @@ rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
-generator.power_ctrl_kp=0.5;% power controller gain
-generator.power_ctrl_ki=5.5;% power controller gain
+% generator.power_ctrl_kp=0.5;% power controller gain
+% generator.power_ctrl_ki=5.5;% power controller gain
+generator.kp = 7.33e7;
+generator.kd = 0;
+generator.ki = 1.32e7;
+generator.omega1_min = V0_cut_in*lambda_opt/rotor.R;
+generator.omega2_min = 1.05*generator.omega1_min;
+generator.omega1_max = 0.90*generator.omega_rated;
+generator.omega2_max = 0.95*generator.omega_rated;
+generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
 
 % Blade parameters
 blade.mass = 4.3388e4;      % mass [kg]
@@ -145,14 +165,6 @@ blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
 blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
 blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
-blade.omega_2_ratio = 1.3;  % ratio 
-blade.K1 = 164.13;
-blade.K2 = 702.09;
-blade.kp = 0.592;
-blade.ki = 0.133;
-blade.kd = 0.0;
-blade.kpp = 4e-9;
-blade.kip = 4e-9;
 % blade.kp_schedule = 0.4;
 % blade.ki_schedule = 0.2;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
@@ -164,17 +176,18 @@ blade.kip = 4e-9;
 %                     0.92, 0.92,0.58,0.49,0.42,0.39,0.36,0.32,0.305,0.29,...
 %                       0.28,0.26,0.23,0.22,0.21,0.205,0.195,0.19,0.185,...
 %                       0.18,0.17];
+blade.theta_f = 0.5*pi/180; % added term in the generator control [rad]
 
 % Wind parameters
-wind.mean = [5 10 15];                % 10 minutes mean wind speed [m/s]]
+wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
 wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 10;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [10]; % time speed at the start of the ramp [s]
-wind.ramp_time_stop = [100];  % time speed at the stop of the ramp [s]
+wind.ramp_WS_stop = 15;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
+wind.ramp_time_stop = [200];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
   case {1, 3, 5}
@@ -241,7 +254,7 @@ path_images = ['C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\' ...
 set(0,'defaulttextinterpreter','latex');
 
 % parameters for the generator step response plot
-step_t_start = 0.35;
+step_t_start = 0.4;
 step_t_stop = 0.65;
 step_y_min = 0.9;
-step_y_max = 1.1;
+step_y_max = 1.06;

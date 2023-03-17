@@ -85,7 +85,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [3]; % max time to investigaste [s]
+simulation.stop_time = [200]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 6;        % 1 -> constant wind speed
@@ -120,6 +120,7 @@ gearbox.ratio = 1;          % gearbox transmission ratio
 
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
+generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
 generator.I = 4800;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
@@ -144,8 +145,16 @@ generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
-generator.power_ctrl_kp=0.5;% power controller gain
-generator.power_ctrl_ki=5.5;% power controller gain
+% generator.power_ctrl_kp=0.5;% power controller gain
+% generator.power_ctrl_ki=5.5;% power controller gain
+generator.kp = 7.33e7;
+generator.kd = 0;
+generator.ki = 1.32e7;
+generator.omega1_min = V0_cut_in*lambda_opt/rotor.R;
+generator.omega2_min = 1.05*generator.omega1_min;
+generator.omega1_max = 0.90*generator.omega_rated;
+generator.omega2_max = 0.95*generator.omega_rated;
+generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
 
 % Blade parameters
 blade.mass = 4.3388e4;      % mass [kg]
@@ -167,6 +176,7 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                     0.92, 0.92,0.58,0.49,0.42,0.39,0.36,0.32,0.305,0.29,...
 %                       0.28,0.26,0.23,0.22,0.21,0.205,0.195,0.19,0.185,...
 %                       0.18,0.17];
+blade.theta_f = 0.5*pi/180; % added term in the generator control [rad]
 
 % Wind parameters
 wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
