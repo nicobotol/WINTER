@@ -32,11 +32,11 @@ switch simulation.type
   case 5 % generated WS and parametrization plot
     plot_all_dynamic
     
+    plot_all_parametrizations_wind
     plot_all_parametrizations
-
   case 6 % ramp and parametrization plot
     plot_all_dynamic
 
+    plot_all_parametrizations_wind
     plot_all_parametrizations
-    
 end
