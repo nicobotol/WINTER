@@ -9,8 +9,8 @@ parameters;
 
 rng(simulation.seed); % set the seed for the random number generator
 
-%% Load PMSM transfer functions and design the controller
-[Yiq, Gc, Riq, GR] = PMSM_TF_pid(generator.design, generator.bode_plot);
+%% Tuning the controllers
+tuning_controllers
 
 %% Simulink simulation
 open_system(simulation.mdl);                    % open the model

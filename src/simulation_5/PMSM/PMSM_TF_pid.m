@@ -1,4 +1,4 @@
-function [Yiq, Gc, Riq, GR] = PMSM_TF_pid(design_method, enable_plot)
+function [Yiq, Gc, Riq, GR, G_cl] = PMSM_TF_pid(design_method, enable_plot)
 %% Tune a PID controller for the generator
 parameters
 

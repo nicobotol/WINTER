@@ -132,20 +132,22 @@ generator.tau_c = 500e-6;   % q-axis control time constant [s]
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
 generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
-% generator.omega_pm = 60;  % phase margin for the speed controller [°]
-% generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
+generator.omega_pm = 60;  % phase margin for the speed controller [°]
+generator.omega_omegaBP=1.5e3;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
+generator.design2 = 1;       % 0 enables manual design of the controller
+                            % 1 enables pidtune design of the controller                          
 generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain
 generator.power_ctrl_ki=5.5;% power controller gain
-generator.kp = 7.33e7;
-generator.kd = 0;
-generator.ki = 1.32e7;
+% generator.kp = 7.33e7;
+% generator.kd = 0;
+% generator.ki = 1.32e7;
 generator.omega1_min = 0;
 generator.omega2_min = 1.05*generator.omega1_min;
 generator.omega1_max = 0.90*generator.omega_rated;

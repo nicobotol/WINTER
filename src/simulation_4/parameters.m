@@ -137,7 +137,7 @@ generator.tau_c = 500e-6;   % q-axis control time constant [s]
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
 generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
 % generator.omega_pm = 60;  % phase margin for the speed controller [°]
-% generator.omega_omegaBP=1e3;% speed controller crossover frequency [rad/s]
+% generator.omega_omegaBP=150;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
