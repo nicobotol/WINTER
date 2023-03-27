@@ -1,4 +1,4 @@
-function [ki_r, kp_r] = pi_tune(G, omega)
+function [kp_r, ki_r] = pi_tune(G, omega)
 % Tune a PI controller for the open loop TF G with crossover frequency
 % omega
 

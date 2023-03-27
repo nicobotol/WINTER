@@ -1,4 +1,4 @@
-function [Romega, ki, kp, kd, tau_d1] = omega_G_pid(design_method, enable_plot)
+function [Romega, ki, kp, kd] = omega_G_pi(design_method, enable_plot)
 %% Tune a PID controller for the rotational speed
 % G_cl -> close loop tf of the generator
 parameters
@@ -8,30 +8,29 @@ omega_omegaBP = generator.omega_omegaBP;  % crossband frequency [rad/s]
 omega_pm = generator.omega_pm;            % phase margin [rad]
 B = B_eq;
 I = I_eq;
-
+kd = 0;
 %% Manual design of the controller
 if design_method == 0
 % Define the transfer function as symbol
-syms s ki kd
+syms s ki
 G = 1/(s*I + B);                      % transfer function
-[kp, ki, kd, tau_d1] = pid_tune(G, omega_omegaBP); % tune the gains
+[kp, ki] = pi_tune(G, omega_omegaBP); % tune the gains
 
 % Redefine the transfer function as 'transfer function' type 
 s = tf('s');
-Romega = (kp + ki/s + kd*s)/(1 + s*tau_d1);                   % regulator
+Romega = kp + ki/s;                   % regulator
+G = 1/(s*I + B);                      % transfer function
 GR = G*Romega;
 
 %% Automatic design of the controller
 elseif design_method == 1
 s = tf('s');
 G = 1/(s*I + B);            % transfer function
-tau_d1 = 1/(10*omega_omegaBP);
 opts = pidtuneOptions('PhaseMargin', omega_pm);
 Romega_pid = pidtune(G, 'pid', omega_omegaBP, opts);
 ki = Romega_pid.ki; % integral gain
 kp = Romega_pid.kp; % proportional gain [1/s]
-kd = Romega_pid.kd; % integral gain [s]
-Romega = (Romega_pid.kp + Romega_pid.ki/s + s*Romega_pid.kd)/(1 + s*tau_d1);  
+Romega = (Romega_pid.kp + Romega_pid.ki/s);  
 GR = G*Romega; % regulator
 
 fprintf('ki = %f\n', Romega_pid.ki);

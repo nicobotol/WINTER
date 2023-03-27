@@ -108,7 +108,7 @@ rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
 rotor.omega_R = lambda_opt*4/rotor.R;  % initial rotational speed [rad/s]
-rotor.B  = 0;               % rotational friction [kgm^2/s] (random placeholder)
+rotor.B  = 0.1;               % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
@@ -133,15 +133,15 @@ generator.tau_c = 500e-6;   % q-axis control time constant [s]
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
 generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
 generator.omega_pm = 60;  % phase margin for the speed controller [°]
-generator.omega_omegaBP=1.5e3;% speed controller crossover frequency [rad/s]
+generator.omega_omegaBP=generator.iq_omegaBP/10;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.design2 = 1;       % 0 enables manual design of the controller
+generator.design2 = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller                          
-generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain
 generator.power_ctrl_ki=5.5;% power controller gain

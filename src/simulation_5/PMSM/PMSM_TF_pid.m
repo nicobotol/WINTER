@@ -51,7 +51,19 @@ end
 fprintf('Phase margin = %f [°]\n', PM);
 
 % Close loop transfer function
-G_cl = GR/(1 + GR);
+G_cl = GR/(1 + GR)
+% num = G_cl.Numerator{1,1}(end-3:end-2);
+% den = G_cl.Denominator{1,1}(end-4:end-2);
+% num = G_cl.Numerator{1,1}(1:end-2);
+% den = G_cl.Denominator{1,1}(1:end-2);
+% num = G_cl.Numerator{1,1}(9);
+% den = G_cl.Denominator{1,1}(7:9);
+% G_cl_simply = tf(num, den)
+% 
+% pole(G_cl)
+% pole(G_cl_simply)
+% zero(G_cl)
+% zero(G_cl_simply)
 
 %% Plot
 if enable_plot == 1
@@ -61,8 +73,8 @@ if enable_plot == 1
   bode_plot(TF, legends, 'Open loop Bode plot', 'fig_bode_generator')
 
   % Close loop
+%   bode_plot([G_cl, G_cl_simply], {'Close loop', 'Simplified'}, 'Close loop Bode plot', 'fig_bode_cl')
   bode_plot(G_cl, {'Close loop'}, 'Close loop Bode plot', 'fig_bode_cl')
-
 end
 
 end
