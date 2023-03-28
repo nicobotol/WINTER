@@ -51,7 +51,7 @@ end
 fprintf('Phase margin = %f [°]\n', PM);
 
 % Close loop transfer function
-G_cl = GR/(1 + GR)
+G_cl = GR/(1 + GR);
 % num = G_cl.Numerator{1,1}(end-3:end-2);
 % den = G_cl.Denominator{1,1}(end-4:end-2);
 % num = G_cl.Numerator{1,1}(1:end-2);

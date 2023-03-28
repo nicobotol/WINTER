@@ -5,4 +5,4 @@
 
 % Controller for the generator rotational speed
 [Romega, generator_ki, generator_kp, generator_kd] = ...
-  omega_G_pi(generator.design2, generator.bode_plot);
+  omega_G_pi(generator.design_omega, generator.bode_plot);

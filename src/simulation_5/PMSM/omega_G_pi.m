@@ -27,7 +27,7 @@ elseif design_method == 1
 s = tf('s');
 G = 1/(s*I + B);            % transfer function
 opts = pidtuneOptions('PhaseMargin', omega_pm);
-Romega_pid = pidtune(G, 'pid', omega_omegaBP, opts);
+Romega_pid = pidtune(G, 'pi', omega_omegaBP, opts);
 ki = Romega_pid.ki; % integral gain
 kp = Romega_pid.kp; % proportional gain [1/s]
 Romega = (Romega_pid.kp + Romega_pid.ki/s);  
@@ -48,7 +48,7 @@ G_cl = GR/(1 + GR);
 %% Plot
 if enable_plot == 1
   % Open loop, with regulator, regulator
-  TF = [G_cl, GR, Romega];                                      % TF to plot
+  TF = [G, GR, Romega];                                      % TF to plot
   legends = {'Not regulated', 'Regulated', 'Regulator'};  % legends names
   bode_plot(TF, legends, 'Open loop Bode plot', 'fig_bode_generator')
 

@@ -81,7 +81,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [160]; % max time to investigaste [s]
+simulation.stop_time = [100]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 6;        % 1 -> constant wind speed
@@ -108,7 +108,7 @@ rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
 rotor.omega_R = lambda_opt*4/rotor.R;  % initial rotational speed [rad/s]
-rotor.B  = 0.1;               % rotational friction [kgm^2/s] (random placeholder)
+rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
@@ -132,16 +132,16 @@ generator.tau_c = 500e-6;   % q-axis control time constant [s]
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
 generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
-generator.omega_pm = 60;  % phase margin for the speed controller [°]
+generator.omega_pm = 70;  % phase margin for the speed controller [°]
 generator.omega_omegaBP=generator.iq_omegaBP/10;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
                                                           % const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.design2 = 0;       % 0 enables manual design of the controller
+generator.design_omega = 0; % 0 enables manual design of speed controller
                             % 1 enables pidtune design of the controller                          
-generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain
 generator.power_ctrl_ki=5.5;% power controller gain
@@ -184,7 +184,7 @@ wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 18;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_stop = 15;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
