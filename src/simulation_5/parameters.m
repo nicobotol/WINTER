@@ -93,7 +93,7 @@ simulation.type = 6;        % 1 -> constant wind speed
 simulation.plot_time = [];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 0;% enables or disable plot's autosaving 
+simulation.print_figure = 1;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
@@ -249,11 +249,18 @@ colors_vect = [[0 0.4470 0.7410]; [0.8500 0.3250 0.0980]; ...
 % pathe where to save the images
 path_images = ['C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\' ...
   '\report\images'];
-% set latex iterpreter
-set(0,'defaulttextinterpreter','latex');
 
 % parameters for the generator step response plot
 step_t_start = 0.4;
 step_t_stop = 0.65;
 step_y_min = 0.9;
 step_y_max = 1.06;
+
+% Set LaTeX as default interpreter for axis labels, ticks and legends
+set(0,'defaulttextinterpreter','latex')
+set(groot, 'defaultAxesTickLabelInterpreter','latex');
+set(groot, 'defaultLegendInterpreter','latex');
+
+set(0,'DefaultFigureWindowStyle','docked');
+set(0,'defaultAxesFontSize',  font_size)
+set(0,'DefaultLegendFontSize', font_size)

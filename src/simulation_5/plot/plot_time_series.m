@@ -4,7 +4,7 @@ function plot_time_series(plot_name,out_cell,series,x_label,y_label,...
 parameters
 
 leg = cell(1, wind.WS_len);
-fig = figure('Position', get(0, 'Screensize'), 'Color','w');
+fig = figure('Color','w');
 hold on
 for i = 1:wind.WS_len
   plot(out_cell{i}.(series).Time, out_cell{i}.(series).Data/scaling, ...

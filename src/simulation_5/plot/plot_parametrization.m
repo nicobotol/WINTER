@@ -4,7 +4,7 @@ function plot_parametrization(plot_name,out_cell,series_x,series_y, ...
 parameters
 
 leg = cell(1, wind.WS_len);
-fig = figure('Position', get(0, 'Screensize'), 'Color','w');
+fig = figure('Color','w');
 hold on
 for i=1:wind.WS_len
   plot(out_cell{i}.(series_x).Data/scaling_x, out_cell{i}.(series_y).Data/scaling_y, ...

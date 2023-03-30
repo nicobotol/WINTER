@@ -4,7 +4,7 @@ function plot_parametrization_wind(plot_name,out_cell,series,x_my_ref, ...
 parameters
 
 leg = cell(1, wind.WS_len + 1);
-fig = figure('Position', get(0, 'Screensize'), 'Color','w');
+fig = figure('Color','w');
 hold on
 for i=1:wind.WS_len
   % Resample the wind speed
