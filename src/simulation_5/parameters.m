@@ -162,7 +162,7 @@ blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
 blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
-blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
+blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351]*3;
 % blade.kp_schedule = 0.4;
 % blade.ki_schedule = 0.2;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
@@ -176,6 +176,16 @@ blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351];
 %                       0.18,0.17];
 blade.theta_f = 0.5*pi/180; % added term in the generator control [rad]
 blade.initial_pitch = 0*pi/180;  % initial condition for pitch ctrl 
+blade.K1 = 164.13; % Linear coeff. in aero gain scheduling [deg]
+blade.K2 = 702.09; % Quadratic coeff. in aero gain scheduling [deg^2]
+blade.omega2omega0ratio = 1.3; % Relative speed for double nonlinear gain
+blade.pitch_min = 0;        % minimum pitch angle [rad]
+blade.kp = 0.592;
+blade.kpp = 4e-9;
+blade.ki = 0.133;
+blade.kip = 4e-9;
+blade.kd = 0;
+
 
 % Wind parameters
 wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
@@ -184,7 +194,7 @@ wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 15;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
