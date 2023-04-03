@@ -81,7 +81,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [180]; % max time to investigaste [s]
+simulation.stop_time = [80]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 6;        % 1 -> constant wind speed
@@ -161,8 +161,8 @@ blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
-blade.kp_schedule = 1.0e+04*[4.3543 -8.7196 7.3927 -3.4753 1.0017 -0.1871 0.0240 -0.0023 0.0002]; %[-59.871 46.281 -7.814 -2.541 1];
-blade.ki_schedule = 1.0e+04*[1.9792 -3.9634 3.3603 -1.5797 0.4553 -0.0851 0.0109 -0.0011 0.0001];%[27.689 -31.926 13.128 -2.405 0.351];
+blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
+blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351]*3;
 % blade.kp_schedule = 0.4;
 % blade.ki_schedule = 0.2;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
@@ -185,8 +185,7 @@ blade.kpp = 4e-9;
 blade.ki = 0.133;
 blade.kip = 4e-9;
 blade.kd = 0;
-blade.omega_phin = 0.6; % resonance frequency of the PI controller [rad/s]
-blade.zeta_phi = 0.6;  % damping ratio of the PI controller [rad/s]
+
 
 % Wind parameters
 wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
@@ -195,7 +194,7 @@ wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
@@ -232,11 +231,11 @@ pitch_strategy = 0;  % 0     -> feathering
                      % else  -> no pitch control
 
 %% Airfoil parameters 
-filenames = [ "airfoil_data\cylinder", "airfoil_data\FFA-W3-600",  ...
-  "airfoil_data\FFA-W3-480", "airfoil_data\FFA-W3-360", ...
-  "airfoil_data\FFA-W3-301", "airfoil_data\FFA-W3-241"];
+filenames = [ "airfoil_data\cyli1", "airfoil_data\cyli1", "airfoil_data\DU40_A17",... 
+  "airfoil_data\DU35_A17", "airfoil_data\DU30_A17", ...
+  "airfoil_data\DU25_A17", "airfoil_data\DU21_A17","airfoil_data\NA64_A17"];
 blade_filename = "airfoil_data\bladedat.txt";
-thick_prof = [100 60 48 36 30.1 24.1]; % t/c ratio
+thick_prof = [100 100 40.5 35.09 30 25 21 18 ]; % t/c ratio
 [aoa_mat, cl_mat, cd_mat] = load_airfoil_data(filenames);
 [r_vector, c_vector, beta_vector, thick_vector] = load_blade_data( ...
   blade_filename);

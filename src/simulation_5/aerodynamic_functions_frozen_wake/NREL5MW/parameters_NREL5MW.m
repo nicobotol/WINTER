@@ -19,47 +19,20 @@ lambda_item = 2*diff(lambda_range)*3;           % # of guess TSR
 lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
 pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
-% load mesh for cP, cT, rated values, and pitch angle (computed in 
-% lookup_cp.m and lookup_pitch.m)
-if exist('lookup_cP_theta_lambda.mat', 'file')
-  load('lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
-  load('lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
-  load('lookup_static_values.mat');   % static values for rows:
-                                      % 1 -> wind speed [m/s]
-                                      % 2 -> rotor rotational speed [rad/s]
-                                      % 3 -> gen. rotational speed [rad/s]
-                                      % 4 -> rotor torque [Nm]
-                                      % 5 -> generator torque [Nm]
-                                      % 6 -> rotor power [W]
-                                      % 7 -> generator power [W]
-end
 
-% parameters for the file lookup_pitch.m
-if exist('rated_values.mat', 'file')
-  load('rated_values.mat');          % rated values of ws and omega
-  stall_lim = -4*pi/180;                    % initial stall limit [°]
-  feather_lim = 4*pi/180;                   % initial feathering limit [°]
-  p_item = 50;                              % # of item to investigate
-  V0_rated = rated_values(1);               % rated windspeed [m/s]
-  velocity_spacing = 0.5;                   % spcae between two WS [m/s]
-  velocity_vector = [0:velocity_spacing:30];% range of wind speed [m/s]
-  velocity_vector(end) = V0_rated;          % add the rated windspeed
-  velocity_vector = sort(velocity_vector);
-  velocity_item = size(velocity_vector, 2); % # of wind speed
-  omega_rated = rated_values(2);            % rated wind speed [rad/s]
-  lambda_opt = rated_values(4);             % optimum TSR
-  cp_max = rated_values(5);                 % maximum cp
-else
-  disp(['Attention: rated values may not have been computed. ' ...
-    'Run lookup_cp.m first']);
-end
+% parameters read from the report
 
-if exist('lookup_pitch.mat', 'file') 
-  load('lookup_pitch.mat');
-else
-   disp(['Attention: pitch angle values may not have been computed. ' ...
-    'Run lookup_pitch.m first']);
-end
+V0_rated = 11.4;               % rated windspeed [m/s]
+omega_rated = 12.1*pi/30;            % rated wind speed [rad/s]
+lambda_opt = 61.5*omega_rated/V0_rated;             % optimum TSR
+cp_max = 0.44;                 % maximum cp
+
+lookup_Pitch =  zeros(3, 15);
+lookup_Pitch(1, 1) = 11.4;
+lookup_Pitch(1, 2:end) = 12:1:25; 
+lookup_Pitch(3, :) = [0 3.83 6.6 8.7 10.45 12.06 13.54 14.92 16.23 17.47 18.7 19.94 21.18 22.35 23.47]*pi/180;
+lookup_dPdtheta = -[28.24 43.73 51.66 58.44 64.44 70.46 76.53 83.94 90.67 94.71 99.04 105.90 114.30 120.20 125.30]*1e6;
+cp_mat = readmatrix("airfoil_data_NREL5MW\cp_param.txt");
 
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
@@ -76,48 +49,27 @@ V0_cut_out = 25;            % cut out wind speed [m/s]
 simulation.model = 2;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
-if simulation.model == 1    % without power controller
-  simulation.mdl = 'winter_simulink_without_PC'; 
-elseif simulation.model == 2 % with power controller
-  simulation.mdl = 'winter_simulink_with_PC'; 
-end
-simulation.stop_time = [180]; % max time to investigaste [s]
-simulation.time_step_H=1e-2;% time step for the mechanical part [s]
-simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 6;        % 1 -> constant wind speed
-                            % 2 -> ramp
-                            % 3 -> generated wind series
-                            % 4 -> generator step response
-                            % 5 -> generated WS and parametrization plot
-                            % 6 -> ramp and parametrization plot
-simulation.plot_time = [];  % time from the end of the simulation to 
-                            % average the response [s]
-% simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
-                            % 1 -> plot enabled
-                            % 0 -> plot disable
-simulation.seed = 3;        % seed for the random number generation
 
 % Rotor parameters
-rotor.R = 89.17;            % rotor radius [m]
+rotor.R = 61.5;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
 rotor.blades = 3;           % number of blades [#]
 rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
 rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
-rotor.P_rated = 10.64e6;    % rated power [W]
+rotor.P_rated = 5e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
-rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
+rotor.I = 534.116;         % inertia wrt rotational axis [kgm^2]
 rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
 rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
-gearbox.ratio = 1;          % gearbox transmission ratio 
+gearbox.ratio = 97;          % gearbox transmission ratio 
 
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
 generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
-generator.I = 4800;         % generator iniertia [kgm^2]
+generator.I = 0;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
 generator.is = 1443.4;      % rated stator current [A]
@@ -161,8 +113,8 @@ blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
-blade.kp_schedule = 1.0e+04*[4.3543 -8.7196 7.3927 -3.4753 1.0017 -0.1871 0.0240 -0.0023 0.0002]; %[-59.871 46.281 -7.814 -2.541 1];
-blade.ki_schedule = 1.0e+04*[1.9792 -3.9634 3.3603 -1.5797 0.4553 -0.0851 0.0109 -0.0011 0.0001];%[27.689 -31.926 13.128 -2.405 0.351];
+blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
+blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351]*3;
 % blade.kp_schedule = 0.4;
 % blade.ki_schedule = 0.2;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
@@ -186,30 +138,9 @@ blade.ki = 0.133;
 blade.kip = 4e-9;
 blade.kd = 0;
 blade.omega_phin = 0.6; % resonance frequency of the PI controller [rad/s]
-blade.zeta_phi = 0.6;  % damping ratio of the PI controller [rad/s]
+blade.zeta_phi = 0.7;  % damping ratio of the PI controller [rad/s]
 
-% Wind parameters
-wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
-wind.height = 119.0;            % height where to measure the wind [m]
-wind.sample_f = 50;             % wind sample frequncy [Hz]
-wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
-wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
-switch simulation.type
-  case {1, 3, 5}
-    wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6}
-    wind.WS_len = length(wind.ramp_time_start);
-  case 4
-    wind.WS_len = 1; 
-end
-
-% Struct where to save the simulations results
-out_store = cell(1, wind.WS_len);
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
@@ -232,24 +163,16 @@ pitch_strategy = 0;  % 0     -> feathering
                      % else  -> no pitch control
 
 %% Airfoil parameters 
-filenames = [ "airfoil_data\cylinder", "airfoil_data\FFA-W3-600",  ...
-  "airfoil_data\FFA-W3-480", "airfoil_data\FFA-W3-360", ...
-  "airfoil_data\FFA-W3-301", "airfoil_data\FFA-W3-241"];
-blade_filename = "airfoil_data\bladedat.txt";
-thick_prof = [100 60 48 36 30.1 24.1]; % t/c ratio
-[aoa_mat, cl_mat, cd_mat] = load_airfoil_data(filenames);
-[r_vector, c_vector, beta_vector, thick_vector] = load_blade_data( ...
+filenames = [ "airfoil_data_NREL5MW\cylin1", "airfoil_data_NREL5MW\cylin2", "airfoil_data_NREL5MW\DU40_A17",... 
+  "airfoil_data_NREL5MW\DU35_A17", "airfoil_data_NREL5MW\DU30_A17", ...
+  "airfoil_data_NREL5MW\DU25_A17", "airfoil_data_NREL5MW\DU21_A17","airfoil_data_NREL5MW\NA64_A17"];
+blade_filename = "airfoil_data_NREL5MW\bladedat.txt";
+thick_prof = [100 99.99 40.5 35.09 30 25 21 18 ]; % t/c ratio
+[aoa_mat, cl_mat, cd_mat] = load_airfoil_data_NREL5MW(filenames);
+[r_vector, c_vector, beta_vector, thick_vector] = load_blade_data_NREL5MW( ...
   blade_filename);
 r_item = size(r_vector, 2); % number of cross sections along the blade
 r_item_no_tip = r_item - 1; % number of cross section without the tip
-
-%% Parameters from DTU reference turbine pag 33
-% column 1 -> windspeed [m/s]
-% column 2 -> pitch angle [°]
-% column 3 -> rotaional speed [rpm]
-% column 4 -> cP [-]
-% column 5 -> cT [-]
-reference = load('airfoil_data\DTU_10MW_reference.txt'); 
 
 %% Plotting options
 % colors
