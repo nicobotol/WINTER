@@ -61,6 +61,12 @@ else
     'Run lookup_pitch.m first']);
 end
 
+if exist('blade_schedule_gains.mat', 'file') 
+  load('blade_schedule_gains.mat');
+else
+   disp(['Attention: blade schedule gains values may not have been computed. ']);
+end
+
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
 font_size = 25;             % fontsize for plots
@@ -81,7 +87,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [180]; % max time to investigaste [s]
+simulation.stop_time = [200]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 6;        % 1 -> constant wind speed
@@ -107,7 +113,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
+rotor.omega_R = lambda_opt*4/rotor.R;  % initial rotational speed [rad/s]
 rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
@@ -161,8 +167,10 @@ blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
-blade.kp_schedule = 1.0e+04*[4.3543 -8.7196 7.3927 -3.4753 1.0017 -0.1871 0.0240 -0.0023 0.0002]; %[-59.871 46.281 -7.814 -2.541 1];
-blade.ki_schedule = 1.0e+04*[1.9792 -3.9634 3.3603 -1.5797 0.4553 -0.0851 0.0109 -0.0011 0.0001];%[27.689 -31.926 13.128 -2.405 0.351];
+blade.kp_schedule_report = [-59.871 46.281 -7.814 -2.541 1]; % from Olimpo's
+blade.ki_schedule_report = [27.689 -31.926 13.128 -2.405 0.351]; % from Olimpo's
+blade.kp_schedule = blade_schedule_gains{1};% 1.0e+04*[4.3543 -8.7196 7.3927 -3.4753 1.0017 -0.1871 0.0240 -0.0023 0.0002]; %
+blade.ki_schedule = blade_schedule_gains{2};%1.0e+04*[1.9792 -3.9634 3.3603 -1.5797 0.4553 -0.0851 0.0109 -0.0011 0.0001];%
 % blade.kp_schedule = 0.4;
 % blade.ki_schedule = 0.2;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
@@ -194,7 +202,7 @@ wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
 wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]

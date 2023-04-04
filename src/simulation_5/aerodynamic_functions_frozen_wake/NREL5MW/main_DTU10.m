@@ -11,7 +11,7 @@ addpath("..\..\")
 addpath("..\..\lookup")
 
 % load parameters
-parameters
+parameters_NREL5MW
 
 V0_vect = 12:0.5:25;
 V0_vect(end + 1) = V0_rated;
@@ -71,11 +71,11 @@ for v=1:length(V0_vect)
   M{v}(:) = Mr;
 
   % Differentiation of the power wrt the pitch angle
-  dPdtheta{v} = diff(P{v})/delta_theta*0.031; % 2*pi/180
+  dPdtheta{v} = diff(P{v})/delta_theta;
   dPdt(v) = dPdtheta{v}(theta_pos{v});
 
   % Differentiation of the torque wrt the pitch angle
-  dMdtheta{v} = diff(M{v})/delta_theta*0.031;
+  dMdtheta{v} = diff(M{v})/delta_theta;
   dMdt(v) = dMdtheta{v}(theta_pos{v});
 end
 
@@ -196,13 +196,13 @@ yyaxis left
 plot(theta_v, kp, 'DisplayName','kp', 'LineWidth',line_width, 'Color',colors_vect(1,:))
 hold on
 plot(theta_expanded, kp_expanded,'--', 'DisplayName','kp interp', 'LineWidth',line_width, 'Color',colors_vect(1,:))
-plot(theta_v, polyval(blade.kp_schedule_report, theta_v*pi/180), '.-', 'DisplayName','kp ref')
+% plot(theta_v, polyval(blade.kp_schedule_report, theta_v*pi/180)*180/pi, '.-', 'DisplayName','kp ref')
 ylabel('kp gains')
 yyaxis right
 plot(theta_v, ki, 'DisplayName','ki', 'LineWidth',line_width, 'Color',colors_vect(2,:))
 hold on
 plot(theta_expanded, ki_expanded,'--', 'DisplayName','ki interp', 'LineWidth',line_width, 'Color',colors_vect(2,:))
-plot(theta_v, polyval(blade.ki_schedule_report, theta_v*pi/180), '.-', 'DisplayName','ki ref')
+% plot(theta_v, polyval(blade.ki_schedule_report, theta_v*pi/180)*180/pi, '.-', 'DisplayName','ki ref')
 ylabel(' ki gains')
 legend()
 grid on
@@ -211,10 +211,10 @@ xlabel('[deg]')
 figure()
 plot(V0_vect, Torque);
 
-blade_schedule_gains = cell(2, 1);
-blade_schedule_gains{1} = coeff_kp;
-blade_schedule_gains{2} = coeff_ki;
-save 'C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\src\simulation_5\lookup\blade_schedule_gains.mat' blade_schedule_gains;
+% blade_schedule_gains = cell(2, 1);
+% blade_schedule_gains{1} = coeff_kp;
+% blade_schedule_gains{2} = coeff_ki;
+% save 'C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\src\simulation_5\lookup\blade_schedule_gains.mat' blade_schedule_gains;
 % figure()
 % for v=1:length(V0_vect)
 %   plot3(V0_vect(v)*ones(len_theta, 1), theta_vector{v}, P{v}/1e6);
