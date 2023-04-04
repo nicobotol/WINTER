@@ -4,11 +4,13 @@ clc
 
 parameters_NREL5MW;
 
-V0_vect = lookup_Pitch(1,:);
+V0_vect = 12:0.5:25;
+V0_vect(end + 1) = V0_rated;
+V0_vect = sort(V0_vect);
 theta_offset = 5*pi/180;
-delta_theta = 0.25*pi/180;
-P = cell(1, length(V0_vect)); % cell storing the power for each wind speed for each pitch 
-dPdtheta = cell(1, length(V0_vect)); % cell storing the derivative of the power for each wind speed for each pitch 
+delta_theta = 0.1*pi/180;
+P = cell(1, length(V0_vect)); %  power for each wind speed for each pitch 
+dPdtheta = cell(1, length(V0_vect)); % derivative of the power wrt to pitch 
 theta_vector = cell(1, length(V0_vect));
 theta_pos = cell(1, length(V0_vect));
 P_tot =  cell(1, length(V0_vect));
@@ -28,11 +30,12 @@ for v=1:length(V0_vect)
     c_vector, rotor.blades, a_guess, a_prime_guess, rotor.R, lambda, theta, ...
     aoa_mat, cl_mat, cd_mat, thick_prof, fake_zero, rho, V0, ...
     omega_rated, i_max);
-
+  
+  % Power coefficient and aerodynamical power produced
   cP_store{v} = lambda*rotor.blades/(rotor.A*rotor.R)*trapezoidal_integral(r_vector(1:r_item_no_tip), cp_part);
   P_tot{v} = 0.5*rho*V0^3*rotor.A*cP_store{v};
         
-
+  % Induction faction with "frozen wake" 
   theta_vector{v} = theta-theta_offset:delta_theta:theta+theta_offset;
   [~, theta_pos{v}] = min(abs(theta_vector{v} - theta));
   len_theta = length(theta_vector{v});
@@ -49,32 +52,35 @@ for v=1:length(V0_vect)
   P{v} = zeros(len_theta, 1);
   P{v}(:) = 0.5*rotor.A*cP*V0^3*rho;
 
+  % Differentiation of the power wrt the pitch angle
   dPdtheta{v} = diff(P{v})/delta_theta;
   dPdt(v) = dPdtheta{v}(theta_pos{v});
 end
 
-% poly interp wrt the wind speed
-A = ones(length(V0_vect), 2);
-A(:, 1) = V0_vect;
-coeff_V0 = (A'*A)\A'*dPdt;
-
-% poly coeff wrt the pitch
+% Interpolation of the power derivative wrt the pitch
 AA = ones(length(V0_vect), 2);
 AA(:, 1) = theta_store*180/pi;
 coeff_theta = (AA'*AA)\AA'*dPdt;
 
-pitch_eval = polyval(coeff_theta, theta_store*180/pi);
-
+% Find the KK value for the gain scheduling
 % solve(coeff(1)*t + coeff(2) == 2*coeff(2), t);
 KK_deg = coeff_theta(2)/coeff_theta(1); % [deg]
-KK = KK_deg*180/pi; % [rad]
+%KK = KK_deg*180/pi;                     % [rad]
 
-I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I; % inertia at the High Speed side
-theta_v = [0:1:25];      % [rad]
-GK = 1./(1 + theta_v/KK_deg);       % gain reduction
+% Gain schdeling
+I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;  % inertia at the High Speed side
+theta_v = [0:1:25];                               % [deg]
+GK = 1./(1 + theta_v/KK_deg);                     % gain reduction
 kp = 2*I_eq_HS*omega_rated*30/pi*blade.zeta_phi*blade.omega_phin/...
-  (-gearbox.ratio*coeff_theta(2))*GK;    % proportional gain
-ki = I_eq_HS*omega_rated*30/pi*blade.omega_phin^2/(-gearbox.ratio*coeff_theta(2))*GK; % [1/s]
+  (-gearbox.ratio*coeff_theta(2))*GK;             % proportional gain
+ki = I_eq_HS*omega_rated*30/pi*blade.omega_phin^2/...
+  (-gearbox.ratio*coeff_theta(2))*GK;             % integral gain [1/s]
+
+%% Plots
+% poly interp wrt the wind speed
+A = ones(length(V0_vect), 2);
+A(:, 1) = V0_vect;
+coeff_V0 = (A'*A)\A'*dPdt;
 
 figure()
 plot(V0_vect, dPdt, '-o')
@@ -85,6 +91,7 @@ xlabel('[m/s]')
 ylabel('[W/rad]')
 
 
+pitch_eval = polyval(coeff_theta, theta_store*180/pi);
 figure()
 plot(theta_store*180/pi, dPdt, '-o')
 hold on
@@ -92,8 +99,6 @@ plot(theta_store*180/pi, lookup_dPdtheta, '-o', 'DisplayName','Rated')
 plot(theta_store*180/pi, pitch_eval)
 xlabel('[deg]')
 ylabel('[W/rad]')
-
-
 
 cP_ref = interp1(cp_mat(:, 1), cp_mat(:, 3), V0_vect);
 figure()
