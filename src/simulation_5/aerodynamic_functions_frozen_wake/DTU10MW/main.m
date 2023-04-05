@@ -22,10 +22,10 @@ P = cell(1, length(V0_vect)); %  power for each wind speed for each pitch
 dPdtheta = cell(1, length(V0_vect)); % derivative of the power wrt to pitch 
 theta_vector = cell(1, length(V0_vect));
 theta_pos = cell(1, length(V0_vect));
-P_tot =  cell(1, length(V0_vect));
+P_store =  zeros(length(V0_vect), 1);
 dPdt =  zeros(length(V0_vect), 1);
-cP_store =  cell(1, length(V0_vect));
-theta_store =  zeros(length(V0_vect), 1);
+cP_store =  zeros(length(V0_vect), 1);
+theta =  zeros(length(V0_vect), 1); % angle to have the rated power [rad]
 M =  cell(1, length(V0_vect));
 Torque = zeros(length(V0_vect), 1);
 dMdt = zeros(length(V0_vect), 1);
@@ -34,34 +34,33 @@ dMdtheta  =  cell(1, length(V0_vect));
 for v=1:length(V0_vect)
   V0 = V0_vect(v);
   lambda = omega_rated*rotor.R/V0; 
-  theta = interp1(lookup_Pitch(1,:), lookup_Pitch(3,:), V0); % angle corresponding to the pitch one
-  theta_store(v) = theta; % [rad]
+  theta(v) = interp1(lookup_Pitch(1,:), lookup_Pitch(3,:), V0); % angle corresponding to the pitch one
 
   % Determine the values of the induction factors along the blade
   [cp_part, ~, ~, ~, a_store, a_prime_store] = ...
     cP_cT_partial(r_item_no_tip, r_vector, beta_vector, thick_vector, ...
-    c_vector, rotor.blades, a_guess, a_prime_guess, rotor.R, lambda, theta, ...
+    c_vector, rotor.blades, a_guess, a_prime_guess, rotor.R, lambda, theta(v), ...
     aoa_mat, cl_mat, cd_mat, thick_prof, fake_zero, rho, V0, ...
     omega_rated, i_max);
   
   % Power coefficient and aerodynamical power produced
-  cP_store{v} = lambda*rotor.blades/(rotor.A*rotor.R)*trapezoidal_integral(r_vector(1:r_item_no_tip), cp_part);
-  P_tot{v} = 0.5*rho*V0^3*rotor.A*cP_store{v};
+  cP_store(v) = lambda*rotor.blades/(rotor.A*rotor.R)*trapezoidal_integral(r_vector(1:r_item_no_tip), cp_part);
         
   % Induction faction with "frozen wake" 
-  theta_vector{v} = theta-theta_offset:delta_theta:theta+theta_offset;
-  [~, theta_pos{v}] = min(abs(theta_vector{v} - theta)); % position of the angle corresponding to the one of pitch
+  theta_vector{v}(:) = theta(v)-theta_offset:delta_theta:theta(v)+theta_offset; % vector to use for the derivative
+  [~, theta_pos(v)] = min(abs(theta_vector{v} - theta(v))); % position of the angle corresponding to the one of pitch
+  
   len_theta = length(theta_vector{v});
   cP = zeros(len_theta, 1);
   Mr = zeros(len_theta, 1);
   
   for t=1:len_theta
-    theta = theta_vector{v}(t);
     [cp_partial, ~, pt_partial, ~] = cP_cT_partial_FW( a_store, a_prime_store,...
       r_item_no_tip, r_vector, beta_vector, thick_vector, c_vector, rotor.R, ...
-      lambda, theta, aoa_mat, cl_mat, cd_mat, thick_prof, rho, V0, omega_rated);
+      lambda, theta_vector{v}(t), aoa_mat, cl_mat, cd_mat, thick_prof, rho, V0, omega_rated);
   
-    Mr(t) = rotor.blades*trapezoidal_integral(r_vector(1:r_item_no_tip), pt_partial.*r_vector(1:r_item_no_tip)); % torque
+    Mr(t) = rotor.blades*trapezoidal_integral(r_vector(1:r_item_no_tip),...
+      pt_partial.*r_vector(1:r_item_no_tip)); % torque for the range of pitch angles
     cP(t) = lambda*rotor.blades/(rotor.A*rotor.R)*...
         trapezoidal_integral(r_vector(1:r_item_no_tip), cp_partial); 
     Torque(v) = Mr(theta_pos{v});
@@ -71,13 +70,16 @@ for v=1:length(V0_vect)
   M{v}(:) = Mr;
 
   % Differentiation of the power wrt the pitch angle
-  dPdtheta{v} = diff(P{v})/delta_theta*0.031; % 2*pi/180
+  dPdtheta{v} = diff(P{v})/delta_theta*2*pi/180; % 0.031; % 2*pi/180
   dPdt(v) = dPdtheta{v}(theta_pos{v});
 
   % Differentiation of the torque wrt the pitch angle
   dMdtheta{v} = diff(M{v})/delta_theta*0.031;
   dMdt(v) = dMdtheta{v}(theta_pos{v});
 end
+
+% power produced at each velocity
+P_store = 0.5*rho*V0_vect.^3*rotor.A*cP_store;
 
 % Interpolation of the power derivative wrt the pitch
 A = ones(length(V0_vect), 2);
@@ -209,12 +211,31 @@ grid on
 xlabel('[deg]')
 
 figure()
-plot(V0_vect, Torque);
+yyaxis left
+plot(V0_vect, omega_rated*Torque/1e6);
+ylabel('Power [MW]')
+yyaxis right
+plot(V0_vect, Torque/1e6);
+xlabel('V0 [m/s]')
+ylabel('Torque [MNm]')
+title('Generator torque')
+
+figure()
+for v=1:length(V0_vect)
+  plot(theta_vector{v}, P{v}/1e6);
+  plot(theta_vector{v}(theta_pos{v}), omega_rated*Torque/1e6, 'o')
+  hold on
+end
+xlabel('$\theta$ [rad]')
+ylabel('P [MW]')
+grid on
 
 blade_schedule_gains = cell(2, 1);
 blade_schedule_gains{1} = coeff_kp;
 blade_schedule_gains{2} = coeff_ki;
 save 'C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\src\simulation_5\lookup\blade_schedule_gains.mat' blade_schedule_gains;
+
+
 % figure()
 % for v=1:length(V0_vect)
 %   plot3(V0_vect(v)*ones(len_theta, 1), theta_vector{v}, P{v}/1e6);
