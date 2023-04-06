@@ -66,6 +66,13 @@ if exist('blade_schedule_gains.mat', 'file')
 else
    disp(['Attention: blade schedule gains values may not have been computed. ']);
 end
+gs.V0_vect = 12:0.5:25;       % WS [m/s]
+gs.theta_offset = 5*pi/180;   % [rad]
+gs.delta_theta = 0.1*pi/180;  % [rad]
+gs.theta_v = [0:1:25]*pi/180; % [rad]
+gs.omega_phin = 0.6;          % res. freq of the PI controller [rad/s]
+gs.zeta_phi = 0.7;            % damping ratio of the PI controller [rad/s]
+
 
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
@@ -87,7 +94,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [200]; % max time to investigaste [s]
+simulation.stop_time = [80]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 6;        % 1 -> constant wind speed
@@ -113,12 +120,12 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = lambda_opt*4/rotor.R;  % initial rotational speed [rad/s]
-rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placeholder)
+rotor.omega_R = lambda_opt*10/rotor.R;  % initial rotational speed [rad/s]
+rotor.B  = 1000;            % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
-gearbox.ratio = 1;          % gearbox transmission ratio 
+gearbox.ratio = 1/50;          % gearbox transmission ratio 
 
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
@@ -193,8 +200,6 @@ blade.kpp = 4e-9;
 blade.ki = 0.133;
 blade.kip = 4e-9;
 blade.kd = 0;
-blade.omega_phin = 0.6; % resonance frequency of the PI controller [rad/s]
-blade.zeta_phi = 0.6;  % damping ratio of the PI controller [rad/s]
 
 % Wind parameters
 wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
@@ -202,8 +207,8 @@ wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 25;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_start = 10;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
@@ -223,6 +228,7 @@ out_store = cell(1, wind.WS_len);
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
 B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
+I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
 
 % Transform the struct of parameters into buses for simulink
 rotor_bus_info = Simulink.Bus.createObject(rotor); 
