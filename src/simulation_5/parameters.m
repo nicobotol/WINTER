@@ -120,8 +120,8 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = lambda_opt*10/rotor.R;  % initial rotational speed [rad/s]
-rotor.B  = 1000;            % rotational friction [kgm^2/s] (random placeholder)
+rotor.omega_R = lambda_opt*4/rotor.R;  % initial rotational speed [rad/s]
+rotor.B  = 0;            % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
@@ -135,7 +135,7 @@ generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
 generator.is = 1443.4;      % rated stator current [A]
 generator.fe = 26.66;       % rated stator frequency [Hz]
-generator.p = 320;          % number of poles
+generator.p = 320;          % number of poles 320
 generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
@@ -148,8 +148,7 @@ generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
 generator.omega_pm = 70;  % phase margin for the speed controller [°]
 generator.omega_omegaBP=generator.iq_omegaBP/10;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
-rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
-                                                          % const. [kgm^2]
+rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 generator.design_omega = 0; % 0 enables manual design of speed controller
@@ -207,8 +206,8 @@ wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 10;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 10;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
