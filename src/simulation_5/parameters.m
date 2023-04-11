@@ -120,12 +120,12 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = lambda_opt*4/rotor.R;  % initial rotational speed [rad/s]
+rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
 rotor.B  = 0;            % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
-gearbox.ratio = 1/50;          % gearbox transmission ratio 
+gearbox.ratio = 1;          % gearbox transmission ratio 
 
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
@@ -206,8 +206,8 @@ wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 10;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
