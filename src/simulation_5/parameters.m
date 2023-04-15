@@ -6,7 +6,7 @@ addpath("aerodynamic_functions\airfoil_data")
 addpath("lookup\")
 addpath("run")
 addpath("wind_series")
-addpath("PMSM")
+addpath("controllers")
 addpath("simulink\")
 addpath("plot\")
 
@@ -121,8 +121,8 @@ rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
 rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
-rotor.B  = 0;            % rotational friction [kgm^2/s] (random placeholder)
-rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
+rotor.B  = 0;               % rot. friction [kgm^2/s] (commputed later)
+rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % [Nms^2]
 
 % Gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 
@@ -145,15 +145,16 @@ generator.tau_c = 500e-6;   % q-axis control time constant [s]
 % generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
 generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
-generator.omega_pm = 70;  % phase margin for the speed controller [°]
-generator.omega_omegaBP=generator.iq_omegaBP/10;% speed controller crossover frequency [rad/s]
+generator.TG_pm = 70;  % phase margin for the speed controller [°]
+generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.design_omega = 0; % 0 enables manual design of speed controller
+generator.design_TG = 0; % 0 enables manual design of speed controller
                             % 1 enables pidtune design of the controller                          
 generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
+generator.bode_plot_TG = 1; % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain 0.5
 generator.power_ctrl_ki=5.5;% power controller gain
@@ -165,6 +166,7 @@ generator.omega2_min = 1.05*generator.omega1_min;
 generator.omega1_max = 0.90*generator.omega_rated;
 generator.omega2_max = 0.95*generator.omega_rated;
 generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
+generator.eta = 0.954;      % efficiency at rated power and speed
 
 % Blade parameters
 blade.mass = 4.3388e4;      % mass [kg]
@@ -223,6 +225,9 @@ end
 % Struct where to save the simulations results
 out_store = cell(1, wind.WS_len);
 
+% Transmission damping 
+rotor.B = rotor.K_opt*omega_rated*gearbox.ratio*(1 - gearbox.ratio*generator.eta); % [kgm^2/s]
+
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
@@ -230,14 +235,14 @@ B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
 
 % Transform the struct of parameters into buses for simulink
-rotor_bus_info = Simulink.Bus.createObject(rotor); 
-rotor_bus = evalin('base', rotor_bus_info.busName);
-generator_bus_info = Simulink.Bus.createObject(generator); 
-generator_bus = evalin('base', generator_bus_info.busName);
-gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
-gearbox_bus = evalin('base', gearbox_bus_info.busName);
-blade_bus_info = Simulink.Bus.createObject(blade); 
-blade_bus = evalin('base', blade_bus_info.busName);
+% rotor_bus_info = Simulink.Bus.createObject(rotor); 
+% rotor_bus = evalin('base', rotor_bus_info.busName);
+% generator_bus_info = Simulink.Bus.createObject(generator); 
+% generator_bus = evalin('base', generator_bus_info.busName);
+% gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
+% gearbox_bus = evalin('base', gearbox_bus_info.busName);
+% blade_bus_info = Simulink.Bus.createObject(blade); 
+% blade_bus = evalin('base', blade_bus_info.busName);
 
 % Pitching startegy (feathering or stall)
 pitch_strategy = 0;  % 0     -> feathering
