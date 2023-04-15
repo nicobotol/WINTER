@@ -4,39 +4,36 @@ function [wind_speed] = run_generated_wind_series(wind_mean, ...
 % parameters.m and runs the simulation for it
 
 parameters
+fs = wind.sample_f; % sampling frequency [Hz]
+T = stop_time;      % total time [s]
 
-% l parameter based on the height
-if wind.height <= 30 
-  l = 20;
-else
-  l = 600;
+% Generate the winds
+[wind_speed(:, 2), wind_speed(:, 1), PSD] = wind_series(wind_mean, wind_turbulence, fs, wind.height, stop_time);
+
+% Compute the PSD of the wind speed from the generated series
+if simulation.print_figure == 1
+  N = length(wind_speed(:, 2));
+  udft = fft(wind_speed(:, 2));
+  udft = udft(1:N/2+1);
+  psdx = (1/(fs*N)) * abs(udft).^2;
+  psdx(2:end-1) = 2*psdx(2:end-1);
+  freq = 0:fs/N:fs/2;
+
+  fig = figure('Color', 'w');
+  semilogx([1:1:N]/T, PSD, 'DisplayName', 'PSD from definition', ...
+    'LineWidth', line_width);
+  hold on
+  semilogx(freq, psdx, '--', 'DisplayName', 'PSD from data', ...
+    'LineWidth', line_width);
+  grid on
+  ylabel('PSD [$\frac{m^2}{s}$]', 'Interpreter','latex')
+  xlabel('Frequency [Hz]',  'Interpreter','latex')
+  title('Wind PSD')
+  legend('Location', 'northeast')
+
+  fig_name = strcat(path_images,'\', date_fig, 'wind_series_psd','.svg');
+  export_fig('fig', fig_name);
+
 end
 
-delta_ts = wind.sample_t; % sampling time [s]
-N = stop_time/delta_ts;           % number of samples
-
-I = wind_turbulence/wind_mean;  % turbulence intensity
-
-wind_speed(:, 1) = delta_ts*[1:1:N]; % [s] time  
-cos_v = zeros(N, 1);  % vector of cosines
-p_sum = 0;            % partial sum
-for n = 1:N/2
-  f_n = n/stop_time;                           % frequency [Hz]
-  PSD = I^2*wind_mean*l/(1 + 1.5*f_n*l/wind_mean)^(5/3);  % PSD
-  phi_n = rand(1)*2*pi;                                   % phase [rad]
-  cos_v = cos(2*pi*f_n.*wind_speed(:, 1) - phi_n);        % cosines
-  p_sum = p_sum + sqrt(2*PSD/stop_time)*cos_v; % partial sum
-end
-
-wind_speed(:, 2) = wind_mean + p_sum;  % add the mean to the WS [m/s]
-
-% Rescale the std
-wind_speed(:, 2) = wind_turbulence*wind_speed(:, 2) + ...
-  (1 - wind_turbulence)*wind_mean;
-
-% close all
-% figure()
-% plot(wind_speed(:, 1), wind_speed(:, 2))
-% yline(mean(wind_speed(:, 2)))
-% grid on
 end

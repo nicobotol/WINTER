@@ -5,8 +5,7 @@ close all
 addpath('\..')
 addpath('lookup\')
 
-date_fig = string(datetime('now','TimeZone','local','Format', ...
-        'y_MM_d_HH_mm_ss'));  % save the date to identify the figures
+
 [~, pos_4] = min(abs(lookup_static_values(1, :) - V0_cut_in)/ ...
   velocity_spacing); % position of the element coresponding to 4 [m/s]
 [~, pos_25] = min(abs(lookup_static_values(1, :) - V0_cut_out)/ ...

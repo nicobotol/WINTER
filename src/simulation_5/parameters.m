@@ -94,10 +94,10 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [80]; % max time to investigaste [s]
+simulation.stop_time = [40]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 6;        % 1 -> constant wind speed
+simulation.type = 5;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -120,7 +120,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
+rotor.omega_R = lambda_opt*6/rotor.R;  % initial rotational speed [rad/s]
 rotor.B  = 0;               % rot. friction [kgm^2/s] (commputed later)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % [Nms^2]
 
@@ -203,7 +203,7 @@ blade.kip = 4e-9;
 blade.kd = 0;
 
 % Wind parameters
-wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
+wind.mean = [6];                % 10 minutes mean wind speed [m/s]]
 wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
@@ -278,6 +278,9 @@ colors_vect = [[0 0.4470 0.7410]; [0.8500 0.3250 0.0980]; ...
 % pathe where to save the images
 path_images = ['C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\' ...
   '\report\images'];
+% save the date to identify the figures
+date_fig = string(datetime('now','TimeZone','local','Format', ...
+      'y_MM_d_HH_mm_ss'));  
 
 % parameters for the generator step response plot
 step_t_start = 0.4;

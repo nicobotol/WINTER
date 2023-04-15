@@ -1,4 +1,4 @@
-function [u, t] = wind_series(V10, V10_std, fs, h, T)
+function [u, t, PSD_store] = wind_series(V10, V10_std, fs, h, T)
 % This function produces a wind series provided:
 % V10     -> averaged wind speed blowing in 10 minutes [m/s]
 % V10_std -> std of the V10 [m/s]
@@ -31,19 +31,10 @@ for n = 1:N
   PSD = I^2*V10*l/(1 + 1.5*f_n*l/V10)^(5/3);  % PSD
   PSD_store(n) = PSD;
   phi_n = rand(1)*2*pi;                       % Random phase [rad]
-  cos_v = cos(2*pi*f_n.*t - phi_n);            % vector of cosines
+  cos_v = cos(2*pi*f_n.*t - phi_n);           % vector of cosines
   p_sum = p_sum + sqrt(2*PSD/T)*cos_v;        % partial sum
 end
 
 u = V10 + p_sum;  % add the mean to the windspeed [m/s]
-
-std(u)
-% Rescale the std
-% u = V10_std*u + (1 - V10_std)*V10;
-
-figure()
-plot([1:1:N], PSD_store);
-
-psd_integral = trapz([1:1:N]/T, PSD_store)
 
 end
