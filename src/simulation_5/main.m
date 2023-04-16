@@ -38,6 +38,10 @@ for i = 1:wind.WS_len
       [stop_time] = run_generator_step();
   end
 
+  % Set the initial conditions
+  [rotor, generator, blade] = initial_conditions(rotor, blade, ...
+  generator, gearbox, mean(wind_speed(1:100, 2)), rated_values, lookup_Pitch);
+
   % Run the simulation
   out = sim(in, 'ShowProgress','on'); 
   out_store{i} = out; % store the results of the simulation
@@ -47,7 +51,7 @@ for i = 1:wind.WS_len
 end
 toc
 
-%% Check if aby if the simulations ended with error
+%% Check if any of the simulations ended with error
 simulation_fails = uint8(0); 
 for i=1:wind.WS_len
   if out_store{1}.SimulationMetadata.ModelInfo.StopTime < simulation.stop_time(i);

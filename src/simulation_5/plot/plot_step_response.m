@@ -35,7 +35,7 @@ function plot_step_response(out_cell, date_fig)
   set(gca, 'FontSize', font_size)
 
   if simulation.print_figure == 1
-  fig_name = strcat(path_images,'\', date_fig, 'fig_gen_step','.png');
+  fig_name = strcat(path_images,'\', date_fig, 'fig_gen_step','.svg');
   export_fig('fig_gen_step', fig_name);
   end
 end

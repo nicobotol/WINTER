@@ -35,7 +35,7 @@ for i=1:length(G)
   end
 
   if simulation.print_figure == 1
-    fig_name = strcat(path_images, '\', plot_name,'.png');
+    fig_name = strcat(path_images, '\', plot_name,'.svg');
     export_fig(fig, fig_name);
   end
 

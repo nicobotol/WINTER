@@ -26,6 +26,6 @@ legend(leg, 'location', 'best', 'FontSize', font_size,...
 set(gca, 'FontSize', font_size)
 grid on
 if simulation.print_figure == 1
-  fig_name = strcat(path_images,'\', date_fig, plot_name,'.png');
+  fig_name = strcat(path_images,'\', date_fig, plot_name,'.svg');
   export_fig('fig', fig_name);
 end

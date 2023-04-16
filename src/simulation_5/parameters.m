@@ -94,7 +94,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [40]; % max time to investigaste [s]
+simulation.stop_time = [80 80 80]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 5;        % 1 -> constant wind speed
@@ -103,7 +103,7 @@ simulation.type = 5;        % 1 -> constant wind speed
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
                             % 6 -> ramp and parametrization plot
-simulation.plot_time = [];  % time from the end of the simulation to 
+simulation.plot_time = [60 60 60];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 1;% enables or disable plot's autosaving 
@@ -120,8 +120,7 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.omega_R = lambda_opt*6/rotor.R;  % initial rotational speed [rad/s]
-rotor.B  = 0;               % rot. friction [kgm^2/s] (commputed later)
+rotor.B  = 0;               % rot. friction [kgm^2/s] (computed later !!!!)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % [Nms^2]
 
 % Gearbox_parameters
@@ -130,19 +129,17 @@ gearbox.ratio = 1;          % gearbox transmission ratio
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
 generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
-generator.I = 4800;         % generator iniertia [kgm^2]
+generator.I = 0.0;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
-generator.vll = sqrt(3)*3500;        % rated line-to-line voltage [V]
-generator.is = 1926;      % rated stator current [A]
-generator.fe = 15.8;       % rated stator frequency [Hz]
+% generator.vll = sqrt(3)*3500;        % rated line-to-line voltage [V]
+% generator.is = 1926;      % rated stator current [A]
+% generator.fe = 15.8;       % rated stator frequency [Hz]
 generator.p = 198;          % number of poles 320
 generator.Ld = 5.29e-3;      % d-axis stator inductance [H]
 generator.Lq = 5.29e-3;      % q-axis stator inductance [H]
 generator.Rs = 36.6e-3;       % stator resistance [ohm]
 generator.Lambda = 4.47;   % magnet flux-linkage [Wb]
 generator.tau_c = 500e-6;   % q-axis control time constant [s]
-% generator.p_ctrl = 1e3;   % gain for the Ig reference
-% generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
 generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
 generator.TG_pm = 70;  % phase margin for the speed controller [°]
@@ -151,8 +148,8 @@ generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-generator.design_TG = 0; % 0 enables manual design of speed controller
-                            % 1 enables pidtune design of the controller                          
+% generator.design_TG = 0; % 0 enables manual design of speed controller
+%                             % 1 enables pidtune design of the controller                          
 generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.bode_plot_TG = 1; % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
@@ -161,11 +158,11 @@ generator.power_ctrl_ki=5.5;% power controller gain
 % generator.kp = 7.33e7;
 % generator.kd = 0;
 % generator.ki = 1.32e7;
-generator.omega1_min = 0;
-generator.omega2_min = 1.05*generator.omega1_min;
-generator.omega1_max = 0.90*generator.omega_rated;
-generator.omega2_max = 0.95*generator.omega_rated;
-generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
+% generator.omega1_min = 0;
+% generator.omega2_min = 1.05*generator.omega1_min;
+% generator.omega1_max = 0.90*generator.omega_rated;
+% generator.omega2_max = 0.95*generator.omega_rated;
+% generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
 generator.eta = 0.954;      % efficiency at rated power and speed
 
 % Blade parameters
@@ -196,20 +193,20 @@ blade.K1 = 164.13; % Linear coeff. in aero gain scheduling [deg]
 blade.K2 = 702.09; % Quadratic coeff. in aero gain scheduling [deg^2]
 blade.omega2omega0ratio = 1.3; % Relative speed for double nonlinear gain
 blade.pitch_min = 0;        % minimum pitch angle [rad]
-blade.kp = 0.592;
-blade.kpp = 4e-9;
-blade.ki = 0.133;
-blade.kip = 4e-9;
-blade.kd = 0;
+% blade.kp = 0.592;
+% blade.kpp = 4e-9;
+% blade.ki = 0.133;
+% blade.kip = 4e-9;
+% blade.kd = 0;
 
 % Wind parameters
-wind.mean = [6];                % 10 minutes mean wind speed [m/s]]
+wind.mean = [6 12 20];                % 10 minutes mean wind speed [m/s]]
 wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_stop = 20;         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 

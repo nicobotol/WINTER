@@ -1,4 +1,5 @@
-function [Yiq, Gc, Riq, GR, G_cl] = PMSM_TF_pid(design_method, enable_plot)
+function [Yiq, Gc, Riq, GR, G_cl, kp, ki, kd, tau_d1] = ...
+  PMSM_TF_pid(design_method, enable_plot)
 %% Tune a PID controller for the generator
 parameters
 
@@ -38,7 +39,12 @@ Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
 opts = pidtuneOptions('PhaseMargin', generator.iq_pm);
 Riq_pid = pidtune(G, 'pid', iq_omegaBP, opts);
-Riq = (Riq_pid.kp + Riq_pid.ki/s + Riq_pid.kd*s)/(1 + s/(10*iq_omegaBP));  
+kp = Riq_pid.kp;
+ki = Riq_pid.ki;
+kd = Riq_pid.kd;
+tau_d1 = 1/(10*iq_omegaBP);
+
+Riq = (kp + ki/s + kd*s)/(1 + s*tau_d1);  
 GR = G*Riq; % regulator
 
 fprintf('ki = %f\n', Riq_pid.ki);
