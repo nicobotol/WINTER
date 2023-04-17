@@ -39,9 +39,11 @@ lookup_Pitch =  zeros(3, 15);
 lookup_Pitch(1, 1) = 11.4;
 lookup_Pitch(1, 2:end) = 12:1:25; 
 lookup_Pitch(3, :) = [0 3.83 6.6 8.7 10.45 12.06 13.54 14.92 16.23 17.47 18.7 19.94 21.18 22.35 23.47]*pi/180;
-lookup_dPdtheta = -[28.24 43.73 51.66 58.44 64.44 70.46 76.53 83.94 90.67 94.71 99.04 105.90 114.30 120.20 125.30]*1e6;
+lookup_dPdtheta = -[28.24 43.73 51.66 58.44 64.44 70.46 76.53 83.94 90.67 94.71 99.04 105.90 114.30 120.20 125.30];
 cp_mat = readmatrix("airfoil_data_NREL5MW\cp_param.txt");
-
+theta_ref = [0:2.5:25];
+ki_ref = [0.008 0.006 0.0048 0.003 0.0025 0.0022 0.0021 0.002 0.002 0.0018 0.0018];
+kp_ref = [0.019 0.014 0.0105 0.008 0.0075 0.006 0.0055 0.005 0.0045 0.0042 0.004];
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
 font_size = 25;             % fontsize for plots
@@ -72,7 +74,7 @@ rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placehold
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
-gearbox.ratio = 97;          % gearbox transmission ratio 
+gearbox.ratio = 1/97;          % gearbox transmission ratio 
 
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]

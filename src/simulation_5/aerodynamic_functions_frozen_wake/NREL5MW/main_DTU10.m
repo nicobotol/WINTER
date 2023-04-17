@@ -141,16 +141,17 @@ close all
 
 % Power derivative vs pitch
 dPdtheta_eval = polyval(coeff_dPdt, theta);
-figure(1); clf;
+fig_dPdtheta = figure( 'Color','w'); clf;
 plot(theta*180/pi, dPdt/1e6, '-o', 'DisplayName', 'BEM FW', 'LineWidth', line_width)
 hold on
-% plot(theta*180/pi, lookup_dPdtheta, '-o', 'DisplayName','Rated')
+plot(lookup_Pitch(3, :)*180/pi, lookup_dPdtheta, '-x', 'DisplayName','Reference', 'LineWidth', line_width)
 plot(theta*180/pi, dPdtheta_eval/1e6, 'DisplayName', 'Interp. $1^{st}$','LineWidth', line_width)
 xlabel('Pitch [deg]')
 ylabel('$\frac{dP}{d\theta}$ [MW/rad]')
 legend()
 grid on
 title('Derivative of the power w.r.t. the pitch')
+export_fig(fig_dPdtheta, [path_images, 'dPdtheta_eval.svg'])
 
 % Torque deriative vs pitch
 dTdtheta_eval = polyval(coeff_dTdt, theta);   % [Nm/rad]
@@ -199,22 +200,26 @@ grid on
 %   hold on
 % end
 % title('Derivative of the torque wrt the pitch')
-
+%%
 % Gains vs pitch
-figure(4); clf;
+fig_gain_pitch = figure('Color', 'w'); clf;
 yyaxis left
 plot(theta_v*180/pi, GK, 'DisplayName','GK', 'LineWidth',line_width)
 ylabel('Gain reduction GK')
 yyaxis right
-plot(theta_v*180/pi, kp, 'DisplayName','kp [s]', 'LineWidth',line_width)
+plot(theta_v*180/pi, kp, '-','DisplayName','kp [s]', 'Color', colors_vect(3,:), 'LineWidth',line_width)
 hold on
-plot(theta_v*180/pi, ki, 'DisplayName','ki [-]', 'LineWidth',line_width)
+% plot(theta_ref, kp_ref, '--','DisplayName','ref. kp [s]', 'Color', colors_vect(3,:), 'LineWidth',line_width)
+plot(theta_v*180/pi, ki, '-', 'DisplayName','ki [-]', 'Color', colors_vect(2,:), 'LineWidth',line_width)
+% plot(theta_ref, ki_ref, '--', 'DisplayName','ref. ki [-]', 'Color', colors_vect(2,:), 'LineWidth',line_width)
 legend()
 grid on
 xlabel('[deg]')
 ylabel('kp, ki gains')
 title('Gain reduction and scheduling')
-
+%%
+export_fig(fig_gain_pitch, [path_images, 'dPdtheta_eval.svg'])
+%%
 % Gains vs pitch
 theta_expanded = pi/180*[-2:1:30]; % expand the range in order to see overfitting
 ki_expanded = polyval(coeff_ki, theta_expanded);  % [-]
