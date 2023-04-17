@@ -14,114 +14,100 @@ addpath("..\..\lookup")
 parameters_NREL5MW
 
 % wind speeds
-V0_vect = 12:0.5:25;
+V0_vect = gs.V0_vect;         % WS [m/s]
 V0_vect(end + 1) = V0_rated;
 V0_vect = sort(V0_vect);
 V0_len = length(V0_vect);
 
 % parameters for the angle generation
-theta_offset = 5*pi/180;
-delta_theta = 0.1*pi/180;
+theta_offset = gs.theta_offset;
+delta_theta = gs.delta_theta;
 
 % Initializations
-P = cell(1, V0_len); %  power for each wind speed for each pitch 
-dPdtheta = cell(1, V0_len); % derivative of the power wrt to pitch 
-theta_vector = cell(1, V0_len);
-theta_pos = zeros(V0_len, 1);
-P_rated =  zeros(V0_len, 1);
-dPdt =  zeros(V0_len, 1);
-cP_rated =  zeros(V0_len, 1);
-theta =  zeros(V0_len, 1); % angle to have the rated power [rad]
-M =  cell(1, V0_len);
-Torque = zeros(V0_len, 1);
-dMdt = zeros(V0_len, 1);
-dMdtheta  =  cell(1, V0_len);
-min_t = zeros(V0_len, 1);
-cP_th = zeros(V0_len, 1);
+dPdtheta = cell(1, V0_len);     % derivative of the power wrt to pitch 
+dTdtheta = cell(1, V0_len);     % derivative of the torque wrt to pitch
+theta_vector = cell(1, V0_len); % vector of pitch for each WS
+theta = zeros(V0_len, 1);       % pitch for rated power [rad]
+P = cell(1, V0_len);            % power for each wind speed for each pitch
+T = cell(1, V0_len);            % torque for each wind speed for each pitch
+theta_pos = zeros(V0_len, 1);   % position of rated pitch in theta_vector 
+dPdt = zeros(V0_len, 1);        % power derivative at rated pitch angle
+dTdt = zeros(V0_len, 1);        % torque derivative at rated pitch angle
 
 for v=1:V0_len
-  V0 = V0_vect(v);
-  lambda = omega_rated*rotor.R/V0; 
-  theta(v) = interp1(lookup_Pitch(1,:), lookup_Pitch(3,:), V0); % angle corresponding to the pitch one [rad]
+  V0 = V0_vect(v);                                             % [m/s]
+  lambda = omega_rated*rotor.R/V0;                             % TSR
+  theta(v) = interp1(lookup_Pitch(1,:), lookup_Pitch(3,:), V0);%pitch [rad]
 
-  % Determine the values of the induction factors along the blade
+  %% Induction factors in nominal conditions "standard BEM"
   [cp_part, ~, ~, ~, a_store, a_prime_store] = ...
     cP_cT_partial(r_item_no_tip, r_vector, beta_vector, thick_vector, ...
-    c_vector, rotor.blades, a_guess, a_prime_guess, rotor.R, lambda, theta(v), ...
-    aoa_mat, cl_mat, cd_mat, thick_prof, fake_zero, rho, V0, ...
+    c_vector, rotor.blades, a_guess, a_prime_guess, rotor.R, lambda, ...
+    theta(v), aoa_mat, cl_mat, cd_mat, thick_prof, fake_zero, rho, V0, ...
     omega_rated, i_max);
   
-  % Power coefficient and aerodynamical power produced
-%   cP_th(v) = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, theta(v)); % cP from the lookup
-  cP_rated(v) = lambda*rotor.blades/(rotor.A*rotor.R)*trapezoidal_integral(r_vector(1:r_item_no_tip), cp_part);
-  P_rated(v) = 0.5*rho*rotor.A*V0^3*cP_rated(v); % power produced at rated pitch [W]
-
-  % Induction faction with "frozen wake" 
-  theta_vector{v}(:) = theta(v)-theta_offset:delta_theta:theta(v)+theta_offset; % vector to use for the derivative
-%   theta_vector{v}(end + 1) = theta(v); % add the rated pitch angle
-%   theta_vector{v}(:) = sort(theta_vector{v}(:));
-  [~, theta_pos(v)] = min(abs(theta_vector{v}(:) - theta(v))); % position of the angle corresponding to the one of pitch
-  
+  %% Induction factors with "frozen wake BEM" 
+  theta_vector{v}(:) = theta(v)-theta_offset:delta_theta: ...
+    theta(v)+theta_offset; % [rad]
+  [~, theta_pos(v)] = min(abs(theta_vector{v}(:) - theta(v))); 
   len_theta = length(theta_vector{v});
   cP = zeros(len_theta, 1);
+  for t=1:len_theta                       % loop over the different angles
+    [cp_partial, ~, pt_partial, ~] = cP_cT_partial_FW( a_store, ...
+      a_prime_store, r_item_no_tip, r_vector, beta_vector, ...
+      thick_vector, c_vector, rotor.R, lambda, theta_vector{v}(t), ...
+      aoa_mat, cl_mat, cd_mat, thick_prof, rho, V0, omega_rated);
   
-  for t=1:len_theta % loop over the different angle
-    [cp_partial, ~, pt_partial, ~] = cP_cT_partial_FW( a_store, a_prime_store,...
-      r_item_no_tip, r_vector, beta_vector, thick_vector, c_vector, rotor.R, ...
-      lambda, theta_vector{v}(t), aoa_mat, cl_mat, cd_mat, thick_prof, rho, V0, omega_rated);
-  
-    M{v}(t) = rotor.blades*trapezoidal_integral(r_vector(1:r_item_no_tip),...
-      pt_partial.*r_vector(1:r_item_no_tip)); % torque for the range of pitch angles
+    T{v}(t) = rotor.blades*trapezoidal_integral( ...
+      r_vector(1:r_item_no_tip), pt_partial.*r_vector( ...
+      1:r_item_no_tip));                  % [Nm]
     cP(t) = lambda*rotor.blades/(rotor.A*rotor.R)*...
-        trapezoidal_integral(r_vector(1:r_item_no_tip), cp_partial); 
+        trapezoidal_integral(r_vector(1:r_item_no_tip), cp_partial); % [-]
   end
-  Torque(v) = M{v}(theta_pos(v)); % torque at rated pitch but extracted from the vector of multiple pitches
-  Power = Torque*omega_rated; % power at rated pitch but extracted from the vector of multiple pitches
-  P{v}(:) = 0.5*rotor.A*cP*V0^3*rho;
+  P{v}(:) = 0.5*rho*rotor.A*V0.^3.*cP;
 
+  %% Torque and power sensitivities
   % Differentiation of the power wrt the pitch angle
-  dPdtheta{v} = diff(P{v}(:))./diff(theta_vector{v}(:)); % 0.031; % 2*pi/180
-  dPdt(v) = dPdtheta{v}(theta_pos(v));
-
+  dPdtheta{v} = diff(P{v}(:))./diff(theta_vector{v}(:));  % [W/rad]
+  dPdt(v) = dPdtheta{v}(theta_pos(v));                    % [W/rad]
   % Differentiation of the torque wrt the pitch angle
-  dMdtheta{v} = diff(M{v})./diff(theta_vector{v}); %*0.031
-  dMdt(v) = dMdtheta{v}(theta_pos(v));
+  dTdtheta{v} = diff(T{v})./diff(theta_vector{v});        % [Nm/rad]
+  dTdt(v) = dTdtheta{v}(theta_pos(v));                    % [Nm/rad]
 end
 
-% power produced at each velocity
-P_store = 0.5*rho*V0_vect.^3*rotor.A*cP_rated;
-
+%% Interpolations
 % Interpolation of the power derivative wrt the pitch
+% 1st order interpolation
 A = ones(V0_len, 2);
-A(:, 1) = theta*180/pi; % [deg]
-coeff_dPdtheta = (A'*A)\A'*dPdt;
-
+A(:, 1) = theta;                  % [rad]
+coeff_dPdt = (A'*A)\A'*dPdt;      % pseudo inversion
+% 2nd order interpolation
 A2 = ones(V0_len, 3);
-A2(:, 1) = (theta*180/pi).^2; % [deg]
-A2(:, 2) = theta*180/pi; % [deg]
-coeff_dPdtheta2 = (A2'*A2)\A2'*dPdt;
+A2(:, 1) = theta.^2;              % [rad^2]
+A2(:, 2) = theta;                 % [rad]
+coeff_dPdt2 = (A2'*A2)\A2'*dPdt;  % pseudo inversion
 
 % Interpolation of the torque derivative wrt the pitch
-coeff_dMdtheta = (A'*A)\A'*dMdt;
+% 1st order interpolation
+coeff_dTdt = (A'*A)\A'*dTdt;      % pseudo inversion
+% 2nd order interpolation
+coeff_dTdt2 = (A2'*A2)\A2'*dTdt;  % pseudo inversion
 
-coeff_dMdtheta2 = (A2'*A2)\A2'*dMdt;
 
-
-% Find the KK value for the gain scheduling
+% KK value for the gain scheduling
 % solve(coeff(1)*t + coeff(2) == 2*coeff(2), t);
-KK_deg = coeff_dPdtheta(2)/coeff_dPdtheta(1); % [deg]
-%KK = KK_deg*180/pi;                     % [rad]
+KK = coeff_dPdt(2)/coeff_dPdt(1); % [rad]
 
 % Gain schdeling
-I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;  % inertia at the High Speed side
-theta_v = [0:1:25];                               % [deg]
-GK = 1./(1 + theta_v/KK_deg);                     % gain reduction
-kp = 2*I_eq_HS*omega_rated*30/pi*blade.zeta_phi*blade.omega_phin/...
-  (-gearbox.ratio*coeff_dPdtheta(2))*GK;             % proportional gain
-ki = I_eq_HS*omega_rated*30/pi*blade.omega_phin^2/...
-  (-gearbox.ratio*coeff_dPdtheta(2))*GK;             % integral gain [1/s]
+theta_v = gs.theta_v;                         % [rad]
+GK = 1./(1 + theta_v/KK);                     % gain reduction
+kp = 2*I_eq*omega_rated*gs.zeta_phi*gs.omega_phin/...
+  (-1/gearbox.ratio*coeff_dPdt(2))*GK;          % proportional gain [-]
+ki = I_eq*omega_rated*gs.omega_phin^2/...
+  (-1/gearbox.ratio*coeff_dPdt(2))*GK;          % integral gain [1/s]
 
-% Interpolating gain scheduling
+
+% Polinomial interpolation between angle and gain
 index_kp = 7; % index of the interpolation
 AA = ones(length(theta_v), index_kp);
 for i=1:index_kp
@@ -139,9 +125,9 @@ coeff_ki = (AA'*AA)\AA'*ki';
 %% Plots
 close all
 % poly interp wrt the wind speed
-A = ones(V0_len, 2);
-A(:, 1) = V0_vect;
-coeff_V0 = (A'*A)\A'*dPdt;
+% A = ones(V0_len, 2);
+% A(:, 1) = V0_vect;
+% coeff_V0 = (A'*A)\A'*dPdt;
 
 % Power derivative vs WS
 % figure()
@@ -154,30 +140,32 @@ coeff_V0 = (A'*A)\A'*dPdt;
 % title('Derivative of the power w.r.t. the pitch')
 
 % Power derivative vs pitch
-dPdtheta_eval = polyval(coeff_dPdtheta, theta*180/pi);
-figure()
-plot(theta*180/pi, dPdt, '-o', 'DisplayName', 'Computed')
+dPdtheta_eval = polyval(coeff_dPdt, theta);
+figure(1); clf;
+plot(theta*180/pi, dPdt/1e6, '-o', 'DisplayName', 'BEM FW', 'LineWidth', line_width)
 hold on
 % plot(theta*180/pi, lookup_dPdtheta, '-o', 'DisplayName','Rated')
-plot(theta*180/pi, dPdtheta_eval, 'DisplayName', 'Interpolation')
-xlabel('[deg]')
-ylabel('[W/rad]')
+plot(theta*180/pi, dPdtheta_eval/1e6, 'DisplayName', 'Interp. $1^{st}$','LineWidth', line_width)
+xlabel('Pitch [deg]')
+ylabel('$\frac{dP}{d\theta}$ [MW/rad]')
 legend()
+grid on
 title('Derivative of the power w.r.t. the pitch')
 
 % Torque deriative vs pitch
-dMdtheta_eval = polyval(coeff_dMdtheta, theta*180/pi);
-dMdtheta_eval2 = polyval(coeff_dMdtheta2, theta*180/pi);
-DTU10MW_ref = -2.8*(1 + theta_v/164.13 + theta_v.^2/702.09);
-figure()
-plot(theta*180/pi, dMdt/1e6, '-o', 'DisplayName', 'Computed')
+dTdtheta_eval = polyval(coeff_dTdt, theta);   % [Nm/rad]
+dTdtheta_eval2 = polyval(coeff_dTdt2, theta); % [Nm/rad]
+DTU10MW_ref = -2.8*(1 + (theta*180/pi)/164.13 + (theta*180/pi).^2/702.09); % [MNm/deg]
+figure(2); clf;
+plot(theta*180/pi, dTdt/1e6, '-o', 'DisplayName', 'BEM FW', 'LineWidth', line_width)
 hold on
-plot(theta*180/pi, dMdtheta_eval/1e6, 'DisplayName', 'Interpolation 1')
-plot(theta*180/pi, dMdtheta_eval2/1e6, 'DisplayName', 'Interpolation 2')
-plot(theta_v, DTU10MW_ref, 'DisplayName','DTU ref')
-xlabel('[deg]')
-ylabel('[MNm/rad]')
+plot(theta*180/pi, dTdtheta_eval/1e6, 'DisplayName', 'Interp. $1^{st}$', 'LineWidth', line_width)
+plot(theta*180/pi, dTdtheta_eval2/1e6, 'DisplayName', 'Interp. $2^{nd}$', 'LineWidth', line_width)
+% plot(theta*180/pi, DTU10MW_ref*pi/180, 'DisplayName','DTU ref', 'LineWidth', line_width)
+xlabel('Pitch [deg]')
+ylabel('$\frac{dT}{d\theta}$ [MNm/rad]')
 legend()
+grid on
 title('Derivative of the torque w.r.t. the pitch')
 
 % % cP_ref = interp1(lookup_cP(1, :), lookup_cP(2, :), V0_vect);
@@ -192,109 +180,59 @@ title('Derivative of the torque w.r.t. the pitch')
 % title('Power coefficient')
 
 % Power derivative for each WS
-figure()
+figure(3); clf;
 for i=1:V0_len
-  plot(theta_vector{i}(1:end-1)*180/pi, dPdtheta{i}, 'DisplayName',num2str(V0_vect(i)))
+  plot(theta_vector{i}(1:end-1)*180/pi, dPdtheta{i}/1e6, 'DisplayName',num2str(V0_vect(i)))
   hold on
 end
-title('Derivative of the power wrt the pitch')
+plot(theta*180/pi, dPdtheta_eval/1e6, 'DisplayName', 'Interp. $1^{st}$', 'LineWidth', line_width)
+xlabel('Pitch [deg]')
+ylabel('$\frac{dP}{d\theta}$ [MW/rad]')
+title('Derivative of the power w.r.t. the pitch')
+grid on
+
 
 % Torque deriviative for each WS
 % figure()
 % for i=1:V0_len
-%   plot(theta_vector{i}(1:end-1)*180/pi, dMdtheta{i}, 'DisplayName',num2str(V0_vect(i)))
+%   plot(theta_vector{i}(1:end-1)*180/pi, dTdtheta{i}, 'DisplayName',num2str(V0_vect(i)))
 %   hold on
 % end
 % title('Derivative of the torque wrt the pitch')
 
 % Gains vs pitch
-figure()
+figure(4); clf;
 yyaxis left
-plot(theta_v, GK, 'DisplayName','GK', 'LineWidth',line_width)
-ylabel('GK')
+plot(theta_v*180/pi, GK, 'DisplayName','GK', 'LineWidth',line_width)
+ylabel('Gain reduction GK')
 yyaxis right
-plot(theta_v, kp, 'DisplayName','kp', 'LineWidth',line_width)
+plot(theta_v*180/pi, kp, 'DisplayName','kp [s]', 'LineWidth',line_width)
 hold on
-plot(theta_v, ki, 'DisplayName','ki', 'LineWidth',line_width)
+plot(theta_v*180/pi, ki, 'DisplayName','ki [-]', 'LineWidth',line_width)
 legend()
 grid on
 xlabel('[deg]')
-ylabel('kp ki gains')
+ylabel('kp, ki gains')
+title('Gain reduction and scheduling')
 
 % Gains vs pitch
-theta_expanded = -5:1:30;
-ki_expanded = polyval(coeff_ki, theta_expanded);
-kp_expanded = polyval(coeff_kp, theta_expanded);
-figure()
+theta_expanded = pi/180*[-2:1:30]; % expand the range in order to see overfitting
+ki_expanded = polyval(coeff_ki, theta_expanded);  % [-]
+kp_expanded = polyval(coeff_kp, theta_expanded);  % [s]
+figure(5); clf;
 yyaxis left
-plot(theta_v, kp, 'DisplayName','kp', 'LineWidth',line_width, 'Color',colors_vect(1,:))
+plot(theta_v*180/pi, kp, 'DisplayName','BEM FW', 'LineWidth',line_width, 'Color',colors_vect(1,:))
 hold on
-plot(theta_expanded, kp_expanded,'--', 'DisplayName','kp interp', 'LineWidth',line_width, 'Color',colors_vect(1,:))
-% plot(theta_v, polyval(blade.kp_schedule_report, theta_v*pi/180), '.-', 'DisplayName','kp ref')
-ylabel('kp gains')
+plot(theta_expanded*180/pi, kp_expanded,'--', 'DisplayName','BEM FW interp.', 'LineWidth',line_width, 'Color',colors_vect(1,:))
+plot(theta_v*180/pi, polyval(blade.kp_schedule_report, theta_v), 'o-.', 'LineWidth',line_width, 'DisplayName','ref.')
+ylabel('kp [s]')
 yyaxis right
-plot(theta_v, ki, 'DisplayName','ki', 'LineWidth',line_width, 'Color',colors_vect(2,:))
+plot(theta_v*180/pi, ki, 'DisplayName','BEM FW', 'LineWidth',line_width, 'Color',colors_vect(2,:))
 hold on
-plot(theta_expanded, ki_expanded,'--', 'DisplayName','ki interp', 'LineWidth',line_width, 'Color',colors_vect(2,:))
-% plot(theta_v, polyval(blade.ki_schedule_report, theta_v*pi/180), '.-', 'DisplayName','ki ref')
-ylabel(' ki gains')
+plot(theta_expanded*180/pi, ki_expanded,'--', 'DisplayName','BEM FW interp.', 'LineWidth',line_width, 'Color',colors_vect(2,:))
+plot(theta_v*180/pi, polyval(blade.ki_schedule_report, theta_v), 'o-.', 'LineWidth',line_width, 'DisplayName','ref.')
+ylabel('ki [-]')
 legend()
 grid on
-xlabel('[deg]')
-
-% rated torque and power vs V0
-figure()
-yyaxis left
-plot(V0_vect, omega_rated*Torque/1e6);
-ylabel('Power [MW]')
-yyaxis right
-plot(V0_vect, Torque/1e6);
-xlabel('V0 [m/s]')
-ylabel('Torque [MNm]')
-title('Generator torque and power')
-
-figure()
-for v=1:V0_len
-  plot(theta_vector{v}, P{v}/1e6);
-  plot(theta_vector{v}(theta_pos(v)), omega_rated*Torque/1e6, 'o')
-  hold on
-end
-xlabel('$\theta$ [rad]')
-ylabel('P [MW]')
-grid on
-
-figure()
-plot(V0_vect, P_rated/1e6)
-hold on
-plot(V0_vect, Power/1e6, 'o')
-title('Power at rated pitch')
-
-% Comparison between my and rated cP
-figure()
-plot(V0_vect, cP_rated, 'o', 'DisplayName', 'Computed here')
-hold on
-plot(V0_vect, cP_th)
-title('cP at rated pitch')
-
-% Comparison between computed and lookup pitch
-figure()
-plot(V0_vect, theta, 'o')
-hold on
-plot(V0_vect, interp1(lookup_Pitch(1,:), lookup_Pitch(3,:), V0_vect))
-title('Pitch comparison')
-
-blade_schedule_gains = cell(2, 1);
-blade_schedule_gains{1} = coeff_kp;
-blade_schedule_gains{2} = coeff_ki;
-save 'C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\src\simulation_5\lookup\blade_schedule_gains.mat' blade_schedule_gains;
-
-
-% figure()
-% for v=1:V0_len
-%   plot3(V0_vect(v)*ones(len_theta, 1), theta_vector{v}, P{v}/1e6);
-%   hold on
-% end
-% xlabel('$V_0$ [m/s]')
-% ylabel('$\theta$ [rad]')
-% zlabel('P [MW]')
-% grid on
+xlabel('Pitch [deg]')
+title('Gain scheduling for pitch control')

@@ -22,6 +22,14 @@ pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
 % parameters read from the report
 
+gs.V0_vect = 12:0.5:25;       % WS [m/s]
+gs.theta_offset = 5*pi/180;   % [rad]
+gs.delta_theta = 0.1*pi/180;  % [rad]
+gs.theta_v = [0:1:25]*pi/180; % [rad]
+gs.omega_phin = 0.6;          % res. freq of the PI controller [rad/s]
+gs.zeta_phi = 0.7;            % damping ratio of the PI controller [rad/s]
+
+
 V0_rated = 11.4;               % rated windspeed [m/s]
 omega_rated = 12.1*pi/30;            % rated wind speed [rad/s]
 lambda_opt = 61.5*omega_rated/V0_rated;             % optimum TSR
