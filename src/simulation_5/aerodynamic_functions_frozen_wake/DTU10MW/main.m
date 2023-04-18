@@ -97,15 +97,16 @@ coeff_dTdt2 = (A2'*A2)\A2'*dTdt;  % pseudo inversion
 % KK value for the gain scheduling
 % solve(coeff(1)*t + coeff(2) == 2*coeff(2), t);
 KK = coeff_dPdt(2)/coeff_dPdt(1); % [rad]
+KK2 = (-coeff_dPdt2(2) - sqrt(coeff_dPdt2(2)^2 + ...
+  4*coeff_dPdt2(1)*coeff_dPdt2(3)))/2/coeff_dPdt2(1);
 
 % Gain schdeling
 theta_v = gs.theta_v;                         % [rad]
-GK = 1./(1 + theta_v/KK);                     % gain reduction
+GK = 1./(1 + theta_v/KK2);                     % gain reduction
 kp = 2*I_eq*omega_rated*gs.zeta_phi*gs.omega_phin/...
-  (-1/gearbox.ratio*coeff_dPdt(2))*GK;          % proportional gain [-]
+  (-1/gearbox.ratio*coeff_dPdt2(3))*GK;          % proportional gain [-]
 ki = I_eq*omega_rated*gs.omega_phin^2/...
-  (-1/gearbox.ratio*coeff_dPdt(2))*GK;          % integral gain [1/s]
-
+  (-1/gearbox.ratio*coeff_dPdt2(3))*GK;          % integral gain [1/s]
 
 % Polinomial interpolation between angle and gain
 index_kp = 7; % index of the interpolation
@@ -161,7 +162,7 @@ plot(theta*180/pi, dTdt/1e6, '-o', 'DisplayName', 'BEM FW', 'LineWidth', line_wi
 hold on
 plot(theta*180/pi, dTdtheta_eval/1e6, 'DisplayName', 'Interp. $1^{st}$', 'LineWidth', line_width)
 plot(theta*180/pi, dTdtheta_eval2/1e6, 'DisplayName', 'Interp. $2^{nd}$', 'LineWidth', line_width)
-plot(theta*180/pi, DTU10MW_ref*pi/180, 'DisplayName','DTU ref', 'LineWidth', line_width)
+plot(theta*180/pi, DTU10MW_ref*180/pi, 'DisplayName','DTU ref', 'LineWidth', line_width)
 xlabel('Pitch [deg]')
 ylabel('$\frac{dT}{d\theta}$ [MNm/rad]')
 legend()

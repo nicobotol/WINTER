@@ -43,7 +43,7 @@ lookup_dPdtheta = -[28.24 43.73 51.66 58.44 64.44 70.46 76.53 83.94 90.67 94.71 
 cp_mat = readmatrix("airfoil_data_NREL5MW\cp_param.txt");
 theta_ref = [0:2.5:25];
 ki_ref = [0.008 0.006 0.0048 0.003 0.0025 0.0022 0.0021 0.002 0.002 0.0018 0.0018];
-kp_ref = [0.019 0.014 0.0105 0.008 0.0075 0.006 0.0055 0.005 0.0045 0.0042 0.004];
+kp_ref = [0.019 0.014 0.010 0.008 0.0070 0.006 0.0055 0.005 0.0045 0.0042 0.004];
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
 font_size = 25;             % fontsize for plots
@@ -68,7 +68,7 @@ rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
 rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 5e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
-rotor.I = 534.116;         % inertia wrt rotational axis [kgm^2]
+rotor.I = 3*11776047;         % inertia wrt rotational axis [kgm^2]
 rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
 rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
@@ -79,7 +79,7 @@ gearbox.ratio = 1/97;          % gearbox transmission ratio
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
 generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
-generator.I = 0;         % generator iniertia [kgm^2]
+generator.I = 534.116;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
 generator.is = 1443.4;      % rated stator current [A]
