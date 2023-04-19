@@ -9,3 +9,6 @@
 *.log
 *.toc
 *.xml
+*.eps
+WINTER/src/slprj
+WINTER/src/garbage
