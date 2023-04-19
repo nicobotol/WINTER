@@ -10,5 +10,6 @@
 *.toc
 *.xml
 *.eps
-WINTER/src/slprj
-WINTER/src/garbage
+src/slprj
+src/garbage
+WINTER_report_2022_02_26.zip
