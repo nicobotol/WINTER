@@ -140,13 +140,19 @@ close all
 % ylabel('$\frac{dP}{d\theta}$ [W/rad]')
 % title('Derivative of the power w.r.t. the pitch')
 
+% torque from report
+DTU10MW_ref = -2.8*(1 + (theta*180/pi)/164.13 + (theta*180/pi).^2/702.09); % [MNm/deg]
+
 % Power derivative vs pitch
 dPdtheta_eval = polyval(coeff_dPdt, theta);
+dPdtheta2_eval = polyval(coeff_dPdt2, theta);
 figure(1); clf;
 plot(theta*180/pi, dPdt/1e6, '-o', 'DisplayName', 'BEM FW', 'LineWidth', line_width)
 hold on
 % plot(theta*180/pi, lookup_dPdtheta, '-o', 'DisplayName','Rated')
 plot(theta*180/pi, dPdtheta_eval/1e6, 'DisplayName', 'Interp. $1^{st}$','LineWidth', line_width)
+plot(theta*180/pi, dPdtheta2_eval/1e6, 'DisplayName', 'Interp. $2^{nd}$','LineWidth', line_width)
+plot(theta*180/pi, DTU10MW_ref*180/pi*omega_rated, 'DisplayName', 'DTU ref.','LineWidth', line_width)
 xlabel('Pitch [deg]')
 ylabel('$\frac{dP}{d\theta}$ [MW/rad]')
 legend()
@@ -156,7 +162,6 @@ title('Derivative of the power w.r.t. the pitch')
 % Torque deriative vs pitch
 dTdtheta_eval = polyval(coeff_dTdt, theta);   % [Nm/rad]
 dTdtheta_eval2 = polyval(coeff_dTdt2, theta); % [Nm/rad]
-DTU10MW_ref = -2.8*(1 + (theta*180/pi)/164.13 + (theta*180/pi).^2/702.09); % [MNm/deg]
 figure(2); clf;
 plot(theta*180/pi, dTdt/1e6, '-o', 'DisplayName', 'BEM FW', 'LineWidth', line_width)
 hold on

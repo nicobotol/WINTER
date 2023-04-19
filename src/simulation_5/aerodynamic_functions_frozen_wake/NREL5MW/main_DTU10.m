@@ -97,7 +97,8 @@ coeff_dTdt2 = (A2'*A2)\A2'*dTdt;  % pseudo inversion
 % KK value for the gain scheduling
 % solve(coeff(1)*t + coeff(2) == 2*coeff(2), t);
 KK = coeff_dPdt(2)/coeff_dPdt(1); % [rad]
-KK2 = (-coeff_dPdt2(2) - sqrt(coeff_dPdt2(2)^2 + 4*coeff_dPdt2(1)*coeff_dPdt2(3)))/2/coeff_dPdt2(1);
+KK2 = (-coeff_dPdt2(2) - sqrt(coeff_dPdt2(2)^2 + ...
+  4*coeff_dPdt2(1)*coeff_dPdt2(3)))/2/coeff_dPdt2(1);
 
 % Gain schdeling
 theta_v = gs.theta_v;                         % [rad]
@@ -154,7 +155,7 @@ ylabel('$\frac{dP}{d\theta}$ [MW/rad]')
 legend()
 grid on
 title('Derivative of the power w.r.t. the pitch')
-%export_fig(fig_dPdtheta, [path_images, 'dPdtheta_eval.svg'])
+export_fig(fig_dPdtheta, [path_images, 'fig_dPdtheta.svg'])
 
 % Torque deriative vs pitch
 dTdtheta_eval = polyval(coeff_dTdt, theta);   % [Nm/rad]
@@ -222,8 +223,8 @@ grid on
 xlabel('[deg]')
 ylabel('kp, ki gains')
 title('Gain reduction and scheduling')
-%%
-% export_fig(fig_gain_pitch, [path_images, 'dPdtheta_eval.svg'])
+export_fig(fig_gain_pitch, [path_images, 'fig_gain_pitch.svg'])
+
 %%
 % Gains vs pitch
 theta_expanded = pi/180*[-2:1:30]; % expand the range in order to see overfitting
