@@ -13,4 +13,48 @@ Lucy~Y. Pao and Kathryn~E. Johnson.
   farms.
 \newblock In {\em 2009 American Control Conference}, pages 2076--2089, 2009.
 
+\bibitem{SMILDEN2016386}
+Emil Smilden, Jan-Tore~H. Horn, Asgeir~J. Sørensen, and Jørgen Amdahl.
+\newblock Reduced order model for control applications in offshore wind
+  turbines.
+\newblock {\em IFAC-PapersOnLine}, 49(23):386--393, 2016.
+\newblock 10th IFAC Conference on Control Applications in Marine SystemsCAMS
+  2016.
+
+\bibitem{DTU_Wind_Energy_E_0028}
+{Morten Hartvig} Hansen and {Lars Christian} Henriksen.
+\newblock {\em Basic DTU Wind Energy controller}.
+\newblock Number 0028 in DTU Wind Energy E. DTU Wind Energy, Denmark, 2013.
+\newblock Contract Number: EUDP project Light Rotor; Project Number
+  46-43028-Xwp3 The report number is DTU-Wind-Energy-Report-E-0028 and not
+  DTU-Wind-Energy-Report-E-0018 as stated inside the report.
+
+\bibitem{NREL_5MW_reference}
+J~Jonkman, S~Butterfield, W~Musial, and G~Scott.
+\newblock Definition of a 5-mw reference wind turbine for offshore system
+  development.
+\newblock 2 2009.
+
+\bibitem{DTU_Wind_Energy_Report-I-0092}
+Christian Bak, Frederik Zahle, Robert Bitsche, Taeseong Kim, Anders Yde, {Lars
+  Christian} Henriksen, {Morten Hartvig} Hansen, {Jos{\'e} Pedro Albergaria
+  Amaral} Blasques, Mac Gaunaa, and Anand Natarajan.
+\newblock The dtu 10-mw reference wind turbine, 2013.
+\newblock Danish Wind Power Research 2013 ; Conference date: 27-05-2013 Through
+  28-05-2013.
+
+\bibitem{Variable-speed_Variable-pitch_control_for_a_wind_t}
+Alessandro Fontanella, Federico Taruffi, Ilmas Bayati, and Marco Belloli.
+\newblock Variable-speed variable-pitch control for a wind turbine scale model.
+\newblock {\em Journal of Physics: Conference Series}, 1356:012002, 10 2019.
+
+\bibitem{the_switch_datasheet}
+The switch pmm 1500 datasheet.
+
+\bibitem{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}
+Leandro Benhur~Klinger Fisch and Marcelo~Lobo Heldwein.
+\newblock 10-mw direct-drive pmsg-based wind energy conversion system model.
+\newblock In {\em 2020 IEEE 21st Workshop on Control and Modeling for Power
+  Electronics (COMPEL)}, pages 1--8, 2020.
+
 \end{thebibliography}

@@ -1,0 +1,32 @@
+\BOOKMARK [1][-]{section.1}{Torque and Pitch Angle Control for Variable Speed Wind Turbines in All Operating Regimes 5874598, pag. 3-4}{}% 1
+\BOOKMARK [1][-]{section.2}{Control of Wind Turbines 5160195}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Wind speed variation}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Sensors}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Actuators}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Control loops}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.4.1}{Generator torque control}{subsection.2.4}% 7
+\BOOKMARK [3][-]{subsubsection.2.4.2}{Pitch control}{subsection.2.4}% 8
+\BOOKMARK [3][-]{subsubsection.2.4.3}{Switching regime}{subsection.2.4}% 9
+\BOOKMARK [2][-]{subsection.2.5}{Control of wind farm}{section.2}% 10
+\BOOKMARK [1][-]{section.3}{Description of the DTU 10 MW Reference Wind Turbine}{}% 11
+\BOOKMARK [2][-]{subsection.3.1}{Drivetrain properties}{section.3}% 12
+\BOOKMARK [1][-]{section.4}{10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}{}% 13
+\BOOKMARK [2][-]{subsection.4.1}{Introduction}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.2}{System Description}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.3}{Proposed control system}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.4}{PMSG current control}{section.4}% 17
+\BOOKMARK [1][-]{section.5}{Offshore Wind Energy Technology OlimpoAnaya-Lara}{}% 18
+\BOOKMARK [2][-]{subsection.5.1}{Modeling and analysis if drivetrains in offshore wind turbines}{section.5}% 19
+\BOOKMARK [2][-]{subsection.5.2}{Offshore wind turbine controls}{section.5}% 20
+\BOOKMARK [3][-]{subsubsection.5.2.1}{5.1}{subsection.5.2}% 21
+\BOOKMARK [3][-]{subsubsection.5.2.2}{5.2}{subsection.5.2}% 22
+\BOOKMARK [3][-]{subsubsection.5.2.3}{5.3}{subsection.5.2}% 23
+\BOOKMARK [3][-]{subsubsection.5.2.4}{Vibration of the tower}{subsection.5.2}% 24
+\BOOKMARK [1][-]{section.6}{Comparison of the obtained cP with the reference ones}{}% 25
+\BOOKMARK [1][-]{section.7}{Reduce Order model for control applications in offshore wind turbine SMILDEN2016386}{}% 26
+\BOOKMARK [1][-]{section.8}{Basic DTU Wind Energy controller DTUWindEnergyE0028}{}% 27
+\BOOKMARK [1][-]{section.9}{Definition of a 5-MW Reference Wind Turbine for Offshore System Development NREL5MWreference}{}% 28
+\BOOKMARK [1][-]{section.10}{Simulation 4}{}% 29
+\BOOKMARK [2][-]{subsection.10.1}{Parameters for the simulation}{section.10}% 30
+\BOOKMARK [2][-]{subsection.10.2}{Characteristics of the simulation}{section.10}% 31
+\BOOKMARK [1][-]{section.11}{Wind series generation}{}% 32

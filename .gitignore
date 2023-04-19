@@ -5,3 +5,6 @@
 *.l
 *.htm
 *.pdf
+*.aux
+*.log
+*.toc
