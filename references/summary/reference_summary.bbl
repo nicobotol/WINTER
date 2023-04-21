@@ -13,6 +13,11 @@ Lucy~Y. Pao and Kathryn~E. Johnson.
   farms.
 \newblock In {\em 2009 American Control Conference}, pages 2076--2089, 2009.
 
+\bibitem{Olimpo_Anaya‐Lara}
+O.~Anaya-Lara, J.O. Tande, K.~Uhlen, and K.~Merz.
+\newblock {\em Offshore Wind Energy Technology}.
+\newblock Wiley, 2018.
+
 \bibitem{SMILDEN2016386}
 Emil Smilden, Jan-Tore~H. Horn, Asgeir~J. Sørensen, and Jørgen Amdahl.
 \newblock Reduced order model for control applications in offshore wind
@@ -47,14 +52,5 @@ Christian Bak, Frederik Zahle, Robert Bitsche, Taeseong Kim, Anders Yde, {Lars
 Alessandro Fontanella, Federico Taruffi, Ilmas Bayati, and Marco Belloli.
 \newblock Variable-speed variable-pitch control for a wind turbine scale model.
 \newblock {\em Journal of Physics: Conference Series}, 1356:012002, 10 2019.
-
-\bibitem{the_switch_datasheet}
-The switch pmm 1500 datasheet.
-
-\bibitem{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}
-Leandro Benhur~Klinger Fisch and Marcelo~Lobo Heldwein.
-\newblock 10-mw direct-drive pmsg-based wind energy conversion system model.
-\newblock In {\em 2020 IEEE 21st Workshop on Control and Modeling for Power
-  Electronics (COMPEL)}, pages 1--8, 2020.
 
 \end{thebibliography}

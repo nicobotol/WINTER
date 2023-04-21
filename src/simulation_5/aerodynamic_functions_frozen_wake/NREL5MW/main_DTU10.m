@@ -217,7 +217,6 @@ hold on
 plot(theta_ref, kp_ref, '--','DisplayName','ref. kp [s]', 'Color', colors_vect(3,:), 'LineWidth',line_width)
 plot(theta_v*180/pi, ki, '-', 'DisplayName','ki [-]', 'Color', colors_vect(2,:), 'LineWidth',line_width)
 plot(theta_ref, ki_ref, '--', 'DisplayName','ref. ki [-]', 'Color', colors_vect(2,:), 'LineWidth',line_width)
-plot(25, 0.025, 'o')
 legend()
 grid on
 xlabel('[deg]')

@@ -162,7 +162,7 @@ title('Derivative of the power w.r.t. the pitch')
 % Torque deriative vs pitch
 dTdtheta_eval = polyval(coeff_dTdt, theta);   % [Nm/rad]
 dTdtheta_eval2 = polyval(coeff_dTdt2, theta); % [Nm/rad]
-figure(2); clf;
+fig_torque_gain = figure(2); clf;
 plot(theta*180/pi, dTdt/1e6, '-o', 'DisplayName', 'BEM FW', 'LineWidth', line_width)
 hold on
 plot(theta*180/pi, dTdtheta_eval/1e6, 'DisplayName', 'Interp. $1^{st}$', 'LineWidth', line_width)
@@ -173,6 +173,7 @@ ylabel('$\frac{dT}{d\theta}$ [MNm/rad]')
 legend()
 grid on
 title('Derivative of the torque w.r.t. the pitch')
+export_fig(fig_torque_gain, 'images/fig_torque_gain_DTU10MW.eps')
 
 % % cP_ref = interp1(lookup_cP(1, :), lookup_cP(2, :), V0_vect);
 % figure()
@@ -225,7 +226,7 @@ title('Gain reduction and scheduling')
 theta_expanded = pi/180*[-2:1:30]; % expand the range in order to see overfitting
 ki_expanded = polyval(coeff_ki, theta_expanded);  % [-]
 kp_expanded = polyval(coeff_kp, theta_expanded);  % [s]
-figure(5); clf;
+fig_gain_sched = figure(5); clf;
 yyaxis left
 plot(theta_v*180/pi, kp, 'DisplayName','BEM FW', 'LineWidth',line_width, 'Color',colors_vect(1,:))
 hold on
@@ -242,6 +243,7 @@ legend()
 grid on
 xlabel('Pitch [deg]')
 title('Gain scheduling for pitch control')
+export_fig(fig_gain_sched, 'images/fig_gain_sched_DTU10MW.eps')
 
 %% Save the data
 blade_schedule_gains = cell(2, 1);
