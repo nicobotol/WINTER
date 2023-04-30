@@ -9,6 +9,7 @@ warning ('off','all');
 
 addpath("..\..\")
 addpath("..\..\lookup")
+addpath("..\..\plot")
 
 % load parameters
 parameters
@@ -173,7 +174,8 @@ ylabel('$\frac{dT}{d\theta}$ [MNm/rad]')
 legend()
 grid on
 title('Derivative of the torque w.r.t. the pitch')
-export_fig(fig_torque_gain, 'images/fig_torque_gain_DTU10MW.eps')
+export_IEEE_figure(['fig_torque_gain_DTU10MW', '.eps'], path_images); 
+% export_fig(fig_torque_gain, 'images/fig_torque_gain_DTU10MW.eps')
 
 % % cP_ref = interp1(lookup_cP(1, :), lookup_cP(2, :), V0_vect);
 % figure()
@@ -243,7 +245,8 @@ legend()
 grid on
 xlabel('Pitch [deg]')
 title('Gain scheduling for pitch control')
-export_fig(fig_gain_sched, 'images/fig_gain_sched_DTU10MW.eps')
+export_IEEE_figure(['fig_gain_sched_DTU10MW', '.eps'], path_images); 
+% export_fig(fig_gain_sched, 'images/fig_gain_sched_DTU10MW.eps')
 
 %% Save the data
 blade_schedule_gains = cell(2, 1);

@@ -155,7 +155,8 @@ ylabel('$\frac{dP}{d\theta}$ [MW/rad]')
 legend()
 grid on
 title('Derivative of the power w.r.t. the pitch')
-export_fig(fig_dPdtheta, [path_images, 'fig_dPdtheta.svg'])
+export_IEEE_figure(['fig_dPdtheta', '.eps'], path_images); 
+% export_fig(fig_dPdtheta, [path_images, 'fig_dPdtheta.svg'])
 
 % Torque deriative vs pitch
 dTdtheta_eval = polyval(coeff_dTdt, theta);   % [Nm/rad]
@@ -222,7 +223,8 @@ grid on
 xlabel('[deg]')
 ylabel('kp, ki gains')
 title('Gain reduction and scheduling')
-export_fig(fig_gain_pitch, [path_images, 'fig_gain_pitch.svg'])
+% export_fig(fig_gain_pitch, [path_images, 'fig_gain_pitch.svg'])
+export_IEEE_figure(['fig_gain_pitch', '.eps'], path_images); 
 
 %%
 % Gains vs pitch

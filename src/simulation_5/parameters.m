@@ -94,7 +94,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [80 80 80]; % max time to investigaste [s]
+simulation.stop_time = [150 150 150 ]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 5;        % 1 -> constant wind speed
@@ -103,7 +103,7 @@ simulation.type = 5;        % 1 -> constant wind speed
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
                             % 6 -> ramp and parametrization plot
-simulation.plot_time = [60 60 60];  % time from the end of the simulation to 
+simulation.plot_time = [100 100 100];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 1;% enables or disable plot's autosaving 
@@ -200,14 +200,14 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 % blade.kd = 0;
 
 % Wind parameters
-wind.mean = [6 12 20];                % 10 minutes mean wind speed [m/s]]
-wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [6 11 20 ];                % 10 minutes mean wind speed [m/s]]
+wind.turbulence = [0.6 1 1]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 20;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 12;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [1 1 1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -273,8 +273,7 @@ colors_vect = [[0 0.4470 0.7410]; [0.8500 0.3250 0.0980]; ...
                [0.4660 0.6740 0.1880]; [0.3010 0.7450 0.9330]; ...
                [0.6350 0.0780 0.1840]];
 % pathe where to save the images
-path_images = ['C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\' ...
-  '\report\images'];
+path_images = ["C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\report\images"];
 % save the date to identify the figures
 date_fig = string(datetime('now','TimeZone','local','Format', ...
       'y_MM_d_HH_mm_ss'));  

@@ -1,5 +1,5 @@
 % wind speed
-plot_time_series('fig_wind_TS',out_store, 'wind', 'Time [s]', ...
+plot_time_series("fig_wind_TS",out_store, 'wind', 'Time [s]', ...
   'Wind speed [m/s]', 'Wind speed time serie', 1, date_fig);
 
 % pitch dynamic
