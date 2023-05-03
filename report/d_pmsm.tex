@@ -1,0 +1,53 @@
+\centering
+\tikzstyle{block} = [draw, fill=white, rectangle, 
+    minimum height=2.5em, minimum width=3em]
+\tikzstyle{sum} = [draw, fill=white, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+\begin{tikzpicture}[auto, node distance=1.8cm,>=latex']
+
+    \node [input, name=input] {};
+    \node [sum, right of=input] (sum) {};
+    \node [block, right of=sum] (controller) {$R_{iq}$}; % controller
+    \node [block, right of=controller, node distance=2cm] (G_c) {$\frac{1}{1+\uptau_{c}s}$}; % elecrical delay
+    \node [sum, right of=G_c, node distance=2cm] (sum2) {};
+    \node [block, right of=sum2] (sys2) {$\frac{1}{sL+R}$};
+    \node [block, right of=sys2, node distance=2.3cm] (sys3) {$\frac{3}{2}p\Lambda_{mg}$};
+    \node [sum, right of=sys3, node distance=2cm] (sum3) {};
+    \node [block, right of=sum3, node distance=2cm] (sys4) {$\frac{1}{B_{eq}+sJ_{eq}}$};
+    \node [block, below of=sys2, node distance=2cm] (sys5) {$p\Lambda_{mg}$};
+    \node [input, name=T_L, above of=sum3] {};
+    \node [pinstyle, name=pin1, below of=G_c] {};
+    
+    \draw [->] (controller) -- node[name=u] {$U_q^{*'}$} (G_c);
+    \node [output, right of=sys4] (output) {};
+    %\node [block, below of=u] (measurements) {Measurements};
+    \coordinate [below of=u, node distance=1.5cm] (measurements) {};
+    \coordinate [above of=sum3] (tl) {};
+
+    \draw [draw,->] (input) -- node {$I_q^*$} (sum);
+    \draw [->] (sum) -- node {} (controller);
+    \draw [->] (G_c) -- node [] {$U_q'$}(sum2);
+    \draw [->] (sum2) -- node [name=sum2sys2] {} (sys2);
+    \draw [->] (sys2) -- node [name=sys2sys3] {$I_q$} (sys3);
+    \draw [->] (sys3) -- node [name=sys3sum3] {$T_G$} (sum3);
+    \draw [-] (sys2sys3) |- (measurements); 
+    \draw [->] (measurements) -| node [pos=0.9] {$-$} (sum); 
+    \draw [->] (sum3) -- node [name=sum3sys4] {} (sys4);
+    \draw [->] (sys4) -- node [name=sys4output] {$\Omega_G$} (output);
+    \draw [->] (sys5) -| node [name=sys5sum2] [pos=0.95] {$-$} (sum2);
+    \draw [->] (sys4output) |- node [near end] [name=outputsys5] {} (sys5);
+    \draw [draw, ->] (T_L) -- node[pos=0.9] {$-$} node {$T_{R}$} (sum3);
+
+    %\draw [->] (G_c) -- node [name=U_q] {$U_q'$}(output);
+    %\draw [->] (y) |- (measurements);
+    
+    %\draw [-] (U_q) |- (measurements);
+    
+    %\draw [->] (measurements) -| node[pos=0.95] {$-$} 
+    %\draw [->] (sys2sys3) |- {$y_m$} (sum);
+        
+    %\draw [->] 
+\end{tikzpicture}

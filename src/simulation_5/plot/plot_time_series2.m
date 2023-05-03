@@ -25,9 +25,10 @@ xlabel(x_label,'interpreter','latex')
 ylabel(y_label,'interpreter','latex')
 title(plot_title, 'Interpreter','latex')
 grid on
+box on
 set(gca, 'FontSize', font_size)
 if simulation.print_figure == 1
-%   fig_name = strcat(path_images,'\', date_fig, plot_name,'.svg');
-%   export_fig('fig', fig_name);
-  export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
+  fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
+  export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
+%   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
 end

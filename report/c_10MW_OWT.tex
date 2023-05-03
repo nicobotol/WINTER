@@ -1,0 +1,173 @@
+\newpage
+\section{Case study definition}\label{sec:c_10MW_OWT}
+\textcolor{red}{In this section the DTU 10 MW OWT is presented in terms of motivations that have led to its development, its main characteristics and its uses in the thesis. }
+
+\subsection{Definition of the control objective}
+
+\subsection{Characteristics of the DTU 10 MW OWT}
+Wind turbines are devices protected by patents and the manufactures are interested in protecting their intellectual property over them, and so technical characteristics of commercial \acrshort{WT} are not easy to be found. This is a problem for persons, institutions and companies involved in the wind turbine development because it reduces the amount of shared data. However there are some institutions around the world that have invented the so-called \textit{Reference turbines}, which are turbines not intended to be really built but are still useful as benchmark for the comparison of results. Among these turbines, in recent years the two most famous ones have been developed by the \acrfull{NREL} and \acrfull{DTU}, known as NREL 5 MW \cite{NREL_5MW_reference}, DTU 10 MW \cite{DTU_Wind_Energy_Report-I-0092}, and NREL 15 MW \cite{NREL_15MW} respectively. It must be noted that these  turbines have higher rated power than the one commercially available at the time of their presentation, since in the 2008 the rated power was 1.5 MW \cite{Wind_Energy_Technology_Current_Status_and_RD_Futur}, in 2012 around 5.5-6 MW \cite{European_offshore_statistics_2012}, while in 2020 the General Electric 12-MW Haliade-X was not launched in the market yet. \\
+The DTU 10 MW reference turbine has the following main characteristics reported in \autoref{tab:DTU_10_struct}.
+\begin{table}[htb]
+    \caption{Structural parameters of the DTU 10 MW \acrshort{WRT}}
+    \centering
+    \begin{tabular}{lcc}
+    \toprule
+    Number of blades & 3 & \\
+    Rotor orientation & Clockwise rotation - Upwind & \\
+    Control & Variable Speed, Collective Pitch & \\
+    Cut in wind speed & 4 & $\left[\si{\meter \per \second}\right]$ \\
+    Cut out wind speed & 25 & $\left[\si{\meter \per \second}\right]$ \\
+    Rotor diameter & 178.3 & $\left[\si{\meter}\right]$\\
+    Hub Height & 119 & $\mesunt{\meter}$\\
+    Air density & 1.225 & $\left[\si{\kilo\gram\per\cubic\meter}\right]$\\
+    \bottomrule
+    \end{tabular}
+    \label{tab:DTU_10_struct}
+\end{table}
+
+\subsection{Rotor inertia}
+The value of the rotor inertia is not declared in the report, and so it has been computed starting from the structural data reported in \cite{DTU_Wind_Energy_Report-I-0092}. In particular:
+\begin{gather}
+    \Delta m_i=\frac{\left(\rho_{i+1} + \rho_i\right)\left(r_{i+1} - r_i\right)}{2} \ \ \left[\si{\kilo\gram}\right] \\
+    m_{blade} = \sum_{i=1}^{N-1}\Delta m_i \ \ \left[\si{\kilo\gram}\right]\\
+    I_{blade}=\sum_{i=1}^{N-1}\Delta m_i\left(\frac{r_{i+1} - r_i}{2}\right)^2 \ \ \left[\si{\kilo\gram\square\meter}\right]\\
+    I_{rotor}=3I_{blade} \ \ \left[\si{\kilo\gram\square\meter}\right]
+\end{gather}
+$\rho_i$ in $ \left[\si{\kilo\gram\per\meter}\right]$ is the mass at section i, $r_i$ is the distance of section i from the rotor axes, N is the number of cross-sections for which data are available.\\
+Before being applied on the \acrshort{WT} under study, the method is validated on the NREL5MW. The results of the validation and the calculation of the inertia are reported in \autoref{tab:rotor_inertia}:
+
+\begin{table}[htb]
+ \caption{Validation of the rotor inertia and mass for the NREL 5MW and results for the DTU 10 MW}
+\centering
+	\begin{tabular}{cccc}
+		\toprule
+		              &             & Blade mass $\left[\si{\kilo\gram}\right]$ & Blade moment of inertia $\left[\si{\kilo\gram\square\meter}\right]$\\ \midrule
+                \multirow{2}{*}{NREL 5 MW}		     &  Computed 	& 16845	&  1.2267e7\\
+		              & Report	\cite{NREL_5MW_reference} & 17740 &  1.1776e7\\ \midrule
+            \multirow{2}{*}{DTU 10 MW}& Computed    &  43388 & 5.2056e7\\
+            & Reference \cite{review_of_scaling_low} & 41700 & -\\ 
+		\bottomrule
+	\end{tabular}
+ \label{tab:rotor_inertia}
+\end{table}
+
+\subsection{Power coefficient and other rated parameters}\label{subsec:lookup_cp}
+Even tough some values for the aerodynamic parameters are reported, they are recomputed starting from the airfoil characteristics. Among these, the first to be identified is the power coefficient $c_{P, opt}(\lambda_{opt}, \theta_{opt})$ that produces the maximum power extraction. To do so, a parametric study is carried out and the results are saved in a lookup table that will be used later on during the simulation: a given number of potential $\lambda$ and $\theta$ are distributed between suitable bounds, and then the \acrshort{BEM} code is run for all their combinations in order to compute a mesh of \acrshort{cp} and \acrshort{ct}. In particular, $\lambda \in \left[0, 18\right]$  and $\theta \in \left[-15, 90\right] \left[\si{\degree}\right]$. The results are the contour plots reported in \autoref{fig:contour_plot}, for a reduced set of the parameters around the optimal values. The optimal \acrlong{cp} is the highest among the computed ones, and the corresponding \acrshort{TSR} and pitch angle are the optimal ($\theta=0\si{\degree}$ and $\lambda=7.91$). 
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/contour_cp.png}
+    \caption{Power coefficient}
+    \label{fig:contour_cp}
+    \end{subfigure}
+    %\hfill
+    \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/contour_cT.png}
+    \caption{Thrust coefficient}
+    \label{fig:contour_cT}
+    \end{subfigure}
+    \caption{Contour plot of the power coefficient $c_P$ and  the thrust coefficient $c_T$ as function of the \acrlong{TSR} $\lambda$ and the pitch angle $\theta_p$}
+    \label{fig:contour_plot}
+\end{figure}
+
+Given the optimal power coefficient it is possible to compute the rated wind speed $V
+_{0,opt}$.
+\begin{equation}
+    V_{0, rated} = \sqrt[3]{\frac{2 \ P_{rated}}{A \rho c_{P, max}}} \ \ \left[\si{\meter \per \second}\right]
+\end{equation}
+Even tough the nominal power of the turbine is $P_{rated} = 10 \left[\si{\mega \watt}\right]$, then from the results presented in \cite{DTU_Wind_Energy_Report-I-0092} it could be seen that the mechanical power is slightly higher, and so a power of $P_{rated} = 10.64 \left[\si{\mega \watt}\right]$ is considered during the computations. In order to compare the different results, the computations are repeated twice, one for each of the two different $P_{rated}$: in \textit{Case 1} $P_{rated}=10 \ \left[\si{\mega \watt}\right]$ while in \textit{Case 2} $P_{rated}=10.64 \ \left[\si{\mega \watt}\right]$ and so the other values are recomputed by consequence. Furthermore, the \acrshort{TSR} from the DTU report is assumed to be 7.5 as design choice, while in the two computed cases they are the ones generating the maximum power coefficients, and are slightly higher. \\ 
+The results are reported in \autoref{tab:DTU_10_aero} and \autoref{fig:fig_cP_cT_comp}, alongside with the reference values from the DTU report. They are quite consistent and differences may be due to the reduced number of cross-sections along the blade taken into account in the implementation of the \acrshort{BEM} algorithm and in the choice of the discretization of the intervals for \acrshort{TSR} and $\theta$. \\
+In \autoref{fig:fig_cP_cT_comp} it is possible to see a great difference between the results below 7 $\left[\si{\meter \per \second}\right]$. To understand this behaviour, a further explanation about the vibration of the \acrshort{WT} is required. In general, the rotation of the rotor excite the tower at frequencies multiple of 3P, with \begin{equation}
+    P=\frac{n \ \left[\text{rpm}\right]}{60 \ \left[\si{\second \per \minute}\right]} \ \left[\si{\hertz}\right]
+\end{equation} 
+and n the rotational speed of the \acrshort{WT}, \cite{Olimpo_Anaya‐Lara}. In order to prevent the resonance between this periodic load and the tower lowest natural frequency, which in the case described in \cite{DTU_Wind_Energy_Report-I-0092} is reported to be 0.25 $\mesunt{\hertz}$, then a minimum rotational speed of 6 $\left[\text{rpm}\right]$ is imposed to excite at least at:
+\begin{equation}
+    3P = 3\frac{6}{60}=0.3 \ \ \mesunt{\hertz}
+\end{equation}
+
+Since below 7 $\mesunt{\meter\per\second}$ the control algorithm would have leaded the turbine to work below this minimum rotational speed, then the rated $c_P$ cannot be obtained, and so the results of \autoref{fig:fig_cP_cT_comp} are explained. A further implication of this choice regarding the imposed pitch angle will be discussed later.
+
+\begin{table}[htb]
+    \caption{Aerodynamical parameters of the DTU 10 MW \acrshort{WRT} as read from the report and from the computations made}
+    \centering
+    \begin{tabular}{lccc}
+    \toprule
+    Parameter & DTU report & Case 1 & Case 2\\ \midrule
+    Rated power $\left[\si{\mega \watt}\right]$ & 10 & 10 & 10.64  \\
+    Rated wind speed $\left[\si{\meter \per \second}\right]$ & 11.4 & 11.2 & 11.4 \\
+    Rated rotational speed $\left[\si{\radian \per \second}\right]$ & 1.005 & 0.997 & 1.014 \\
+    Rated rotational speed $\left[rpm\right]$ & 9.6 & 9.51 & 9.69\\
+    Optimum \acrshort{TSR} & 7.5 & 7.93 & 7.91\\
+    Optimum $\theta \left[\si{\degree}\right]$ & 0 & 0 & 0 \\
+    Max. power coefficient & 0.476 & 0.465 & 0.465 \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:DTU_10_aero}
+\end{table}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/fig_cP_cT_comp.png}
+    \caption{Comparison of the computed power and thrust coefficients with the one reported in \cite{DTU_Wind_Energy_Report-I-0092}, \textcolor{red}{print the grid}}
+    \label{fig:fig_cP_cT_comp}
+\end{figure}
+For the rest of the simulation, the parameters obtained in the case 2 will be used because it is based on the mechanical rated power expected from the turbine and uses the \acrlong{TSR} maximizing the \acrlong{cp} according to the computations done by me.
+
+A further validation of the results is shown in \autoref{fig:fig_cP_cT_comp_polimi}, where a parametric plot of the coefficients as function of the \acrshort{TSR} is proposed for some values of the pitch angle (dashed lines) and compared with the ones proposed in  \cite{Variable-speed_Variable-pitch_control_for_a_wind_t} (circle markers).
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/fig_cP_cT_comp_polimi.png}
+    \caption{Comparison of the computed power and thrust coefficients (dashed lines) with the one reported in \cite{Variable-speed_Variable-pitch_control_for_a_wind_t} (circle markers)}
+    \label{fig:fig_cP_cT_comp_polimi}
+\end{figure}
+
+The knowledge of the rated values is important because they define the working conditions allowing the harvesting of the maximum power, in other words to be able to produce the maximum power it is sufficient to ensure to work in the optimum condition.
+
+\subsection{Pitch angle for different wind speeds}
+Since the turbine is pitch regulated, the map between the wind speed and the corresponding pitch angle needs to be reconstructed in order to verify the static performance of the simulator. The process to build this map is straightforward: 
+\begin{itemize}
+    \item for each velocity between the rated and the cut-out one, a vector of possible pitch angles is generated by spacing them between an upper and lower limit, and the actual \acrshort{TSR} $\lambda_V$ is computed;
+    \item for each pitch angle $\theta_i$ the corresponding $c_{P,o}(\lambda_V, \theta_i)$ is found in the lookup table generated in \autoref{subsec:lookup_cp} and then it is used for computing the power $P_i(c_{P,i})$ 
+    \item applying a numerical method, the intersection between the generated power curve and the rated one is found; the angle at which the powers are the same is the one suitable for the control. Since the power curve is convex, two angles fulfil the power equation: the lower is the one used in the stall control method, while the higher is the one suitable for the feathering approach.
+\end{itemize}
+The results of this algorithm are reported in \autoref{fig:pitch}. In particular \autoref{fig:fig_power_vs_pitch} shows how increasing the \acrshort{WS} also the peak of the power curve increases, but the rated power is exceeded only for \acrshort{WSs} above the rated one. Furthermore \autoref{fig:fig_pitch_vs_V0} shows the pitch necessary for limiting the power to the rated one in case of feathering and stall control strategy, alongside with the angles proposed in the reference report \cite{DTU_Wind_Energy_Report-I-0092}. 
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/fig_power_vs_pitch.png}
+    \caption{Mechanical power curve as function of pitch angle}
+    \label{fig:fig_power_vs_pitch}
+    \end{subfigure}
+    %\hfill
+    \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{images/fig_pitch_vs_V0.png}
+    \caption{Pitch angle as function of the \acrshort{WSs}}
+    \label{fig:fig_pitch_vs_V0}
+    \end{subfigure}
+    \caption{Influence of the pitch angle on the mechanical power curve and pitch angle required to limit the mechanical power at the rated one for different \acrshort{WSs}}
+    \label{fig:pitch}
+\end{figure}
+In the report only the feathering strategy is taken into account since, even tough both methods limit the power to the same amount (see \autoref{fig:fig_power_vs_V0}), they have different implications on the thrust force generated by the wind on the rotor. In particular, stall generates an increasing of the force while thrust its decreasing (see \autoref{fig:fig_thrust_vs_V0}).
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/fig_power_vs_V0.png}
+    \caption{Mechanical power as function of wind speed}
+    \label{fig:fig_power_vs_V0}
+    \end{subfigure}
+    %\hfill
+    \begin{subfigure}{0.49\textwidth}
+    \includegraphics[width=\textwidth]{images/fig_thrust_vs_V0.png}
+    \caption{Thrust force as function of wind speed}
+    \label{fig:fig_thrust_vs_V0}
+    \end{subfigure}
+    \caption{Relation between the \acrshort{WS}, the power and the thrust for both feather and stall pitching}
+    \label{fig:P_T_vs_V0}
+\end{figure}
+
+In \autoref{fig:fig_pitch_vs_V0} it is possible to see again some differences at low \acrshort{WS}, and are related to the one of \ref{subsec:lookup_cp}. Since operating at a fixed rotational speed in that range of \acrshort{WS} is not optimal because the \acrshort{TSR} is fixed at a value lower than the rated, then the blades are pitched to obtain the highest $c_P$ allowed by the constraint on $\lambda$. Again this effect is not taken into account and the pitch is considered to be 0$\mesunt{\degree}$ below rated \acrlong{WS}.

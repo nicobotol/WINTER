@@ -1,0 +1,38 @@
+\centering
+\tikzstyle{block} = [draw, fill=white, rectangle, 
+    minimum height=2.5em, minimum width=3em]
+\tikzstyle{sum} = [draw, fill=white, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+
+    \node [input, name=input] {};
+    \node [block, right of=input] (inverse_gain) {$\frac{2}{3p\Lambda_{mg}}$};
+    \node [sum, right of=inverse_gain, node distance =2cm] (sum) {};
+    \node [block, right of=sum] (controller) {$R_{iq}$}; % controller
+    \node [block, right of=controller] (G_c) {$G_c$};
+    \node [block, right of=G_c] (Yq) {$Y_{iq}$};
+    \node [block, right of=Yq] (gain) {$\frac{3}{2}p\Lambda_{mg}$};
+    \node [output, right of=gain] (output) {};
+    \coordinate [below of=sum, node distance=1cm] (measurements) {};
+
+    \draw [draw,->] (input) -- node {$T_G^*$} (inverse_gain);
+    \draw [->] (inverse_gain) -- node {$I_q^*$} (sum);
+    \draw [->] (sum) -- node {}(controller);
+    \draw [->] (controller) -- node [name=controllerG_c] {} (G_c);
+    \draw [->] (G_c) -- node [name=G_cYq] {} (Yq);
+    \draw [->] (Yq) -- node [name=Yqgain] {$I_q$} (gain);
+    \draw [->] (gain) -- node [name=gainout] {$T_G$} (output); 
+    \draw [-] (Yqgain) |- (measurements);
+    \draw [->] (measurements) -- node[pos=0.8] {$-$} (sum);
+    
+    %\draw [->] (measurements) -| node [pos=0.99] {$-$} (sum); 
+    %\draw [->] (sum3) -- node [name=sum3sys4] {} (sys4);
+    %\draw [->] (sys4) -- node [name=sys4output] {$\Omega_m$} (output);
+    %\draw [->] (sys5) -| node [name=sys5sum2] [pos=0.99] {$-$} (sum2);
+    %\draw [->] (sys4output) |- node [near end] [name=outputsys5] {} (sys5);
+    %\draw [draw, ->] (T_L) -- node[pos=0.99] {$-$} node {$T_{areo}$} (sum3);
+
+\end{tikzpicture}

@@ -1,0 +1,145 @@
+\newpage
+\section{Control of the basic model}\label{sec:c_basic_model_control}
+
+\subsection{Generator's torque reference synthesis}\label{subsec:torque_reference}
+As presented in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, the generator's torque reference is computed starting from the rotational speed of the shaft. \\
+As said before, below rated wind speed the objective is to ensuring the maximum power extraction, and so working with the maximum power coefficient:
+\begin{gather}
+    T_G=\frac{P_G}{\omega_G}=\frac{\frac{1}{2}\rho c_{P,MAX} \pi R^2 V_0^3}{\omega_G} \ \ \left[\si{\newton\per\meter}\right]
+    \label{eq:T_G1}
+\end{gather}
+then the \acrshort{WS} can be rewritten as
+\begin{equation}
+    \lambda_{opt} = \frac{\omega_R R}{V_0} = \frac{n \omega_G R}{V_0} \Rightarrow V_0=\frac{n\omega_G R}{\lambda_{opt}}  \ \ \left[\si{\meter\per\second}\right]
+    \label{eq:lambda_opt}
+\end{equation}
+By replacing \autoref{eq:lambda_opt} into \autoref{eq:T_G1} then the drivetrain torque expressed on the generator side is:
+\begin{equation}
+    T^G=\frac{P_G}{\omega_G^G}=\frac{\frac{1}{2}\rho c_{P,MAX} \pi R^2 \left(\frac{n\omega_G R}{\lambda_{opt}}\right)^3}{\omega_G^G} = \frac{\rho c_{P, MAX} \pi R^5 }{2 \lambda_{opt}^3}n^3\omega_G^{G \ 2} = K_{opt}n^3\omega_G^{G \ 2}  \ \ \left[\si{\newton\per\meter}\right]
+    \label{eq:T_G2}
+\end{equation}
+
+\begin{table}[htb]
+    \centering
+    \begin{tabular}{ccc}
+    \toprule
+         & $\omega^R$ & $\omega^G$  \\ \midrule
+         P & $K_{opt} \left(\omega^{R}\right)^3$ & $K_{opt}\left(n \omega^{G}\right)^3$\\
+         $T^R$ & $K_{opt} \left( \omega^{R}\right)^2$ & $K_{opt}\left(n \omega^{G}\right)^2$\\
+         $T^G$ & $K_{opt} n \left(\omega^{R}\right)^2$ &  $K_{opt} n^3\left(\omega^{G}\right)^2$\\ \bottomrule
+    \end{tabular}
+    \caption{Map for the use of torque constant}
+    \label{tab:gain_map}
+\end{table}
+
+ For the differences discussed above, there is a small difference between the $K_{opt}$ proposed from \cite{DTU_Wind_Energy_Report-I-0092} and the one computed by me, and again the one compute will be used in the simulation:
+ \begin{gather*}
+     K_{opt, report} = 1.001 \cdot 10^7 \ \ \ \left[\si{\newton\meter\square\second}\right] \\
+     K_{opt, computed} = 1.020 \cdot 10^7 \ \ \ \left[\si{\newton\meter\square\second}\right] 
+ \end{gather*}
+
+Above rated wind speed the objective is to keep the constant rotational speed and so the command:
+\begin{equation}
+    T_G = \frac{P_{rated}}{\omega_{rated}^G} = \frac{nP_{rated}}{\omega_{rated}^R}\ \ \left[\si{\newton\per\meter}\right]
+    \label{eq:T_G3}
+\end{equation}
+is given.\\
+In the Simulink model the implementation of the generator's torque reference is done employing a proportional and a saturation blocks, limiting the torque when it goes above the rated speed.
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/torque_control.png}
+    \caption{Simulink block diagram for the torque control}
+    \label{fig:torque_control}
+\end{figure}
+
+\subsection{Pitch controller}
+In this simple model, the \textit{collective} pitching strategy is employed, meaning that all the blades are rotated of the same quantity.\\
+As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, the pitch controller has two different behaviours in the operational regions, and so in a wide sense it is a non-linear one: below rated \acrshort{WS}, it has not to be activated at all, while in the full load region it has to pitch the blade in order to drive the rotational speed to rated value. Its implementation is done as reported in \autoref{fig:pitch_control}.
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\textwidth]{images/pitch_control_2.png}
+    \caption{Block diagram of the pitch controller\textcolor{red}{Update this picture}}
+    \label{fig:pitch_control}
+\end{figure}
+
+The core part of the controller is a \acrfull{PI} action driven by the speed error defining the pitch angle. A saturation block on the pitch angle is used to impose the mechanical constraints, so to limit the blade rotation: $\theta \in \left[0, 90\right] \si{\degree}$. This threshold prevents that a negative speed error produces a pitching towards stalling.
+
+The tuning of this PI is not straightforward because the system to be controlled is not linear, and so the standard techniques cannot be implemented. In particular, at high wind speeds the aerodynamic loads are more sensitive to changes in the angles of attack, and so the change in pitch should be limited \cite{Aerodynamics_of_wind_turbines}. A possible solution is to schedule the gain during the operation of the mechanism.
+
+\subsubsection{Simplified approach from literature}\label{subsec:gain_poly}
+Since these aerodynamic considerations are out of the scope of this thesis, a simplified approach is followed, according what is presented in \cite{Olimpo_Anaya‐Lara}: the turbine is treated as a linear varying-parameter system and the gains are scheduled according to one state of the system itself. This is an advantageous choice, because the approach simplifies the description of the system and does not require a lot of measurements, but on the other hand it does not fully represent it. Under these considerations, \cite{Olimpo_Anaya‐Lara} proposes to schedule the gains based on a measurement of the pitch angle itself, meaning that the $\theta$ is taken as state representing the entire \acrshort{WT}, including the effective \acrshort{WS}. Specifically for the DTU 10 MW, \cite{Olimpo_Anaya‐Lara} proposes the schedule based on the polynomials in \autoref{eq:k_p_poly} and \ref{eq:k_i_poly}:
+\begin{gather}
+    k_p(\theta)=1.000-2.541 \ \theta-7.814 \ \theta^2+46.281 \ \theta^3-59.871 \ \theta^4
+    \label{eq:k_p_poly}\\
+    k_i(\theta)=0.351-2.405 \ \theta+13.128 \ \theta^2-31.926 \ \theta^3+27.689 \ \theta^4
+    \label{eq:k_i_poly}
+\end{gather}
+with $\theta$ in $\left[\si{\radian}\right]$. For a more practical visualization these polynomials have been plotted in \autoref{fig:fig_gain_schduling}, where it can be seen that a great variation of the coefficients happens in between the minimum and maximum angles. \textcolor{red}{Write how does they have compute these polynomials}\\
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/fig_gain_scheduling.png}
+    \caption{Proportional and integral gains for blade's controller as function of pitch angle}
+    \label{fig:fig_gain_schduling}
+\end{figure}
+
+Another option could have been to schedule the pitch based on the \acrshort{WS} itself, but this would have required a direct measurement of the resource. \\
+As final remark, it must be noted that using the actual pitch angle as scheduling variable, implies that 
+the controller dynamic are not slower compared to the system itself and so it may not behave exactly as expected in the vicinity of the rated wind speed.
+
+\subsubsection{Gain scheduling based on the aerodynamics}\label{subsec:gain_schdeuling_NREL5MW}
+
+As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference}, and \cite{ris_r_1500} applying a linearization of the \autoref{eq:mech_eq} and further mathematical manipulations that are out of the scope of this thesis, the gains may be expressed in close form as :
+\begin{gather}
+    k_P(\theta) = \frac{2J_{eq}\omega_{rated}\zeta_{\Phi}\omega_{\Phi\eta}}{\frac{1}{n}\left(-\frac{dP(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
+    \label{eq:kp}\\
+    k_I(\theta) = \frac{J_{eq}\omega_{rated}\omega_{\Phi\eta}^2}{\frac{1}{n}\left(-\frac{dP(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
+    \label{eq:ki}\\
+    GK(\theta) = \frac{1}{1+\frac{\theta}{\theta_K}} \label{eq:GK}
+\end{gather}
+where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, n is the gear ratio, $\zeta_{\Phi}$ and $\omega_{\Phi\eta}$ are the damping ratio and the resonant frequency of the dynamic response of the PI-regulator. \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6\mesunt{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power w.r.t. the pitch angle $-\frac{dP}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
+The procedure for computing these gains is implemented and validated on the NREL 5 MW turbine, since more intermediate steps are present in the literature. After the validation, the same steps are repeated using the aerodynamical properties of the DTU 10 MW blades. \\
+The frozen wake BEM is implemented in two steps, then repeated for all the windspeeds between the rated and the cut out one. In the first one, the standard BEM presented in \textcolor{red}{write where it was presented} is applied on the blade, considering that it is pitched as to produce the rated power (i.e. the pitch angle is the one scheduled in \textcolor{red}{Write where the pitch angle is scheduled}). In this step the induction coefficients \textit{a} and \textit{$a_{prime}$} (\textcolor{red}{See if this are called in the same way when the BEM is presented and if they are written with the correct font}) found are stored. In the second step, the previously described BEM is applied but the pitch angle is changed on a set around the optimal one, while the induction coefficients are kept constant (i.e. they are not computed with the iterative procedure). The power is then computed for each pitch angle and finally the power derivative wrt the pitch angle is obtained applying the finite difference method.
+\subsubsection{Validation of the procedure on the NREL 5MW}
+In order to validate the procedure, this described procedure is applied on the NREL 5MW turbine.\\
+The derivative of the power computed at the expected pitch angle is  reported in \autoref{fig:fig_dPdtheta}, alongside its interpolation done by a first and second order polynomials. It could be seen that the second order approximation seems to better follow the tendency of the computed points with respect to the first order one. 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/fig_dPdtheta.eps}
+    \caption{Aerodynamic power gain for the NREL 5MW WT}
+    \label{fig:fig_dPdtheta}
+\end{figure}
+
+The interpolations are used to find two important parameters, called $\theta_{K}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0}$. The first is the blade-pitch angle at which the pitch sensitivity has doubled from its value at the rated operating point, while the second is the pitch sensitivity at 0 pitch (i.e. the intercept of the interpolation). For the turbine under investigations, these two parameters are $\theta_K=10.25 \mesunt{\degree}$ and  $\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -29.15 \mesunt{\mega\watt\per\radian}$, while the ones reported in the report are $\theta_K=6.3 \mesunt{\degree}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -25.52\mesunt{\mega\watt\per\radian}$ (for the linear case). These values seems to be reasonably close each other.\\ 
+Once all the terms in \autoref{eq:ki}, \ref{eq:kp}, and \ref{eq:GK} are available and the gain scheduling can be determined, and the comparison reported in \autoref{fig:fig_gain_pitch}.
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/fig_gain_pitch.eps}
+    \caption{Coefficients for the gain scheduling of the NREL 5 MW }
+    \label{fig:fig_gain_pitch}
+\end{figure}
+
+
+\subsubsection{Use of the procedure on the DTU10MW}
+The procedure described in the \autoref{subsec:gain_schdeuling_NREL5MW} is applied on the DTU 10MW. For this turbine, there are less intermediate steps that can be used to cross check the procedure itself. The \cite{DTU_Wind_Energy_E_0028} reports the second order interpolation of the aerodynamic torque gain, \textcolor{red}{which is linked to the aerodynamic power gain since the velocity is constant above rated wind speed}. This is here reported in \autoref{fig:fig_torque_gain_DTU10MW}.
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/fig_torque_gain_DTU10MW.eps}
+    \caption{Aerodynamic torque gain for the DTU 10MW}
+    \label{fig:fig_torque_gain_DTU10MW}
+\end{figure}
+Furthermore the pitch gains are reported in  \autoref{fig:fig_gain_sched_DTU10MW} alongside the polynomial interpolations proposed by \cite{Olimpo_Anaya‐Lara}, and reported in \autoref{subsec:gain_poly}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/fig_gain_sched_DTU10MW.eps}
+    \caption{Comparison between the gains computed from the aerodynamic and the ones from the simplified approach}
+    \label{fig:fig_gain_sched_DTU10MW}
+\end{figure}
+
+\subsection{Low pass filtering of the rotor speed}
+As presented in \cite{Olimpo_Anaya‐Lara}, in order to prevent the feeding into the control loop of high frequency dynamic, the rotor rotational speed is low pass filtered before being used in both the torque and the pitch controllers. According to the same source, this filter has an important influence on the pitching dynamics since if it is tuned too low then the performance of the rotor speed control decays due to phase offset between the actual and filtered speed measurements but, on the other hand, if it is too high the pitch mechanism may react to aerodynamic excitation even when it would be not necessary. \\
+The proposed filter's transfer function is:
+\begin{equation}
+    G = \frac{1}{1+\frac{s}{\alpha_{\beta}}} =  \frac{1}{1+\frac{s}{2\pi0.4}}
+    \label{eq:filter_pitch}
+\end{equation}
+with the choice of $\alpha_{\beta}=0.4 \left[\si{\hertz}\right] = 2\pi0.4 \left[\si{\radian\per\second}\right]$. .

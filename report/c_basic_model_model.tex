@@ -1,0 +1,137 @@
+\newpage
+\section{Basic model}\label{sec:c_basic_model_model}
+\subsection{Aerodynamic}
+The inputs of this block are the wind speed, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor. \\
+In the block the actual \acrshort{TSR} is firstly computed, then the power coefficient is extracted from the lookup table obtained from the \autoref{subsec:lookup_cp} and finally the rotor torque is obtained by dividing the rotor power (\autoref{eq:power}) by the rotor speed:
+\begin{equation}
+    T_R = \frac{P_R}{\omega_R} \ \ \left[\si{\newton\per\meter}\right]
+\end{equation}
+
+\subsection{Mechanical transmission}
+In this simple simulation a mechanical transmission is not taken into account for what concerns the losses and the stiffness but a transmission ratio 
+\begin{equation}
+    n = \frac{\omega_{R}}{\omega_{G}} = \frac{1}{1}
+    \label{eq:transmission_ratio}
+\end{equation}
+is considered in order to make the system more general introducing a transmission ratio, where $\omega_{R} \ \left[\si{\radian\per\second}\right]$ is the rotational speed on the rotor side while $\omega_{G} \ \left[\si{\radian\per\second}\right]$is the one on the generator side.\\
+In this simulation the machine works as a direct drive.
+
+\subsection{Dynamical equation}
+The dynamical equation block solves the Newton's law written on the rotor side of the transmission:
+\begin{equation}
+    \begin{cases}
+      J_R \dot{\omega^R} = T_R^R - B_R\omega^R - T_T^R\\
+      J_G \dot{\omega^G} = T_T^G - B_G\omega^G - T_G^G\\
+      T_T^R\omega^R = T_T^G\omega^G\\
+    \end{cases}
+\end{equation}
+This system of equation may be solved and finally the mechanical dynamic equation can be written on the rotor side:
+\begin{gather}
+    \left(J_R + \frac{J_G}{n^2}\right) \dot{\omega^R} = T_R^R - \frac{T_G^G}{n} - \left(B_R + \frac{B_G}{n^2}\right)\omega^R \\
+    J_{eq} \dot{\omega^R} = T_R^R - T_G^R - B_{eq}\omega^R
+    \label{eq:mech_eq}
+\end{gather}
+Where the subscription indicates if the quantity is referred to the rotor or to the generator, while the apex indicates the side of the transmission in which it is expressed.
+
+\subsection{Electrical generator}
+The chosen generator is a \acrshort{PMSM}. Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values reported in \autoref{tab:generator_parameter} are used in this simulation.
+\begin{table}[htb]
+    \caption{Parameters for the \acrlong{PMSM} generator}
+    \centering
+    \begin{tabular}{lccc}
+    \toprule
+    Parameter & Value & & Source\\ \midrule
+    Inertia & 4800 & $\left[\si{\kilo\gram\square\meter}\right]$ & \cite{the_switch_datasheet} \\\midrule	
+    Poles & 320 & & \multirow{5}{*}{\cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}} \\
+    \textit{q-axis} inductance & 1.8 & $\left[\si{\milli\henry}\right]$ & \\
+    \textit{d-axis} inductance & 1.8 & $\left[\si{\milli\henry}\right]$ &\\
+    Stator resistance & 64 & $\left[\si{\milli\ohm}\right]$ &\\
+    Magnets flux & 19.49 & $\left[\si{\weber}\right]$ &\\ \midrule
+    Friction & \textcolor{red}{0} & $\left[\si{\kilo\gram\square\meter\per\second}\right]$ & \\
+    \textcolor{red}{Time delay introduced by the convert} & \textcolor{red}{500} & $\left[\si{\micro\second}\right]$ & \\
+    Inverter switching frequency & 1 & $\mesunt{\kilo\hertz}$ & \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:generator_parameter}
+\end{table}
+
+The Simulink implementation of the control loop presented in \autoref{fig:d_torque_control} is reported in \autoref{fig:iq_control}.
+\begin{figure}[htb]
+   \centering
+   \includegraphics[width=0.8\textwidth]{images/iq_control.png}
+   \caption{Feedback scheme of the \textit{q-axis} control loop}
+   \label{fig:iq_control}
+\end{figure}
+
+ Once the inverter switching frequency is defined \textcolor{red}{add some reference justifying the choice}, then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
+ \begin{gather}
+ \uptau_{c}=\frac{\frac{1}{f_{inverter}}}{2}=\frac{\frac{1}{1000}}{2}=500 \ \ \mesunt{\micro \second}
+ \end{gather}
+
+ For its simplicity the chosen controller is a \acrshort{PID} one, and the design method exposed in \autoref{sec:e_pid_tuning} is used on the open loop function $G(s) = G_c(s)Y_{iq}(s)$, after having specified the crossover frequency of $\omega_{cp}=$1500 $\mesunt{\radian\per\second}$, which is less than $\frac{1}{4}$ the switching one. This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
+ The tuning of the PID controller has been done following the procedures described  in the \autoref{sec:e_pid_tuning}. The resulting gains ($k_p$, $k_i$, $k_d$), the frequency of the added pole and the phase margin $\varphi$ are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \textit{pidtune}, that may be used to have at least the order of magnitude of the expected values.
+\begin{table}[htb]
+    \caption{Gains for the PMSM machine controller}
+     \centering
+     \begin{tabular}{cccccc}
+     \toprule
+          & $k_p$ & $k_i$ $\mesunt{\per\second}$ & $k_d$ $\mesunt{\second}$ & $\uptau_{d1} \ \mesunt{\radian\per\second}$ & $\varphi \mesunt{\degree}$\\ \midrule
+         manual & 8.05 & 165.4 & $3.99\cdot 10^{-3}$ & 15000 & 83.8\\
+         pidtune & 8.51 & 2037.4 & $4.3\cdot 10^{-3}$ &  15000 & 78.5\\ \bottomrule
+     \end{tabular}
+ 
+     \label{tab:tab_pid_tuning}
+ \end{table}
+ 
+ The Bode diagram of the open loop system without any controller (i.e. taking into account the shaft mechanical dynamic, the generator's electrical dynamic, and the inverter time delay), the open loop system with the controller and the controller itself are reported in \autoref{fig:fig_bode_generator}. The bode plot of the close loop is shown in \autoref{fig:fig_bode_cl}. Given G(s) the direct transfer function (i.e. from input to output) and H(s) the feedback one, then the close loop transfer function is given by:
+ \begin{gather}
+     G_{CL}=\frac{G(s)H(s)}{1+G(s)H(s)}=\frac{R_{iq}(s)G_c(s)Y_{iq}(s)}{1+R_{iq}(s)G_c(s)Y_{iq}(s)}
+     \label{eq:close_loop_TF}
+ \end{gather}
+ where $R_{iq}(s)$, $G_c(s)$, $Y_{iq}(s)$, have the meaning of \autoref{subsec:PMSM_control}, and $H(s)=1$ since there is no transfer function on the feedback line.
+ 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/fig_bode_generator.png}
+    \caption{Bode plots of the open loop system, the controller and the controlled open loop system}
+    \label{fig:fig_bode_generator}
+ \end{figure}
+
+ \begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/fig_bode_cl.png}
+    \caption{Bode plot of the generator close loop transfer function}
+    \label{fig:fig_bode_cl}
+ \end{figure}
+
+Furthermore, the response of the close loop system to a torque step input is reported in \autoref{fig:step_response}. It could be seen that the integral actions drives the steady state error to 0, while the produced overshoot is quite limited (around 4\%).
+ \begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/2023_03_14_18_06_09fig_gen_step.png}
+    \caption{Time response of the controlled generator at the input step torque}
+    \label{fig:step_response}
+\end{figure}
+
+
+ \subsection{Pitch actuation}
+In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. \\
+Even though the simplest mechanical model may have a first order dynamic, \cite{Olimpo_Anaya‐Lara} suggests using a second order one:
+\begin{equation}
+    \frac{\beta}{\hat{\beta}}=\frac{2\zeta_p \omega_p s +\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
+    \label{eq:beta_TF}
+\end{equation}
+with $\zeta_p=0.7$ and $\omega_p=2\pi \left[\si{\radian}\right]$.\\
+The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}\right]$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \left[\si{\degree\per\second}\right]$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \left[\si{\degree\per\second}\right]$ is placed after the actuation block. 
+
+This model is based on the one presented in the \autoref{sec:c_basic_model_model} but with a modification on the synthesis of the generator torque reference. In particular, following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power and the actual one to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
+\begin{figure}[htb]
+    \centering
+    \input{d_torque_control_2.tex}
+    \caption{Scheme of the implemented active power torque controller}
+    \label{fig:d_torque_control_2}
+\end{figure}
+
+The saturation block constraints the reference power in between $P_g^* \in \left[0, P_{rated}\right]$.
+The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
+
+\textcolor{red}{The response at the 4 simulations configurations presented in \autoref{tab:simulation_config} are reported in \autoref{fig:simulation_1_act_power}, \ref{fig:simulation_2_act_power},  \ref{fig:simulation_3_act_power}, \ref{fig:simulation_4_act_power}.}

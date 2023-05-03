@@ -34,10 +34,10 @@ for i=1:length(G)
     sgtitle(title, 'FontSize', font_size);
   end
 
-  if simulation.print_figure == 1
-%   fig_name = strcat(path_images,'\', date_fig, plot_name,'.svg');
-%   export_fig('fig', fig_name);
-  export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
-  end
+if simulation.print_figure == 1
+  fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
+  export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
+%   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
+end
 
 end

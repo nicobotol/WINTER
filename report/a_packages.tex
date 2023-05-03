@@ -1,0 +1,102 @@
+\usepackage[utf8]{inputenc}  
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{xfrac}
+\usepackage{caption}
+% \usepackage{mdwlist}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage[dvipsnames, table]{xcolor}
+% \usepackage{circuitikz}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{array}
+\usepackage{color}
+\usepackage[titletoc,title]{appendix}
+%\def\doubleunderline#1{\underline{\underline{#1}}}
+\usepackage{fancyref}
+%\usepackage{dsfont}
+\usepackage{graphicx,wrapfig,lipsum}
+%\usepackage{epstopdf}
+%\usepackage{blindtext}
+\usepackage{pdfpages}
+\usepackage{booktabs}
+\usepackage[acronym, toc, nonumberlist]{glossaries}
+\usepackage{geometry}
+\geometry{a4paper,tmargin=3cm,bmargin=3cm, lmargin=2cm,rmargin=2cm}
+%\renewcommand{\baselinestretch}{1.25}
+%\usepackage{chemformula}
+\usepackage{csquotes}
+%\usepackage[version=4]{mhchem}
+\usepackage{hyperref}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{document.bib}
+%\usepackage{mathptmx}
+\usepackage{siunitx}
+%\usepackage{dirtytalk}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{multicol}
+\usepackage{upgreek}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{svg}
+
+\usepackage{booktabs, multirow} % for borders and merged ranges
+\usepackage{soul}% for underlines
+%\usepackage[table]{xcolor} % for cell colors
+\usepackage{changepage,threeparttable} % for wide tables
+
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+%\usepackage[utf8]{inputenc}
+\usepackage{listingsutf8}
+\lstset{language=Matlab,%
+    %basicstyle=\color{red},
+    breaklines=true,
+    extendedchars=true,
+    morekeywords={matlab2tikz},
+    keywordstyle=\color{blue},%
+    morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+    identifierstyle=\color{black},%
+    stringstyle=\color{mylilas},
+    commentstyle=\color{mygreen},%
+    showstringspaces=false,%without this there will be a symbol in the places where there is a space
+    numbers=left,%
+    numberstyle={\tiny \color{black}},% size of the numbers
+    numbersep=9pt, % this defines how far the numbers are from the text
+    emph=[1]{for,end,break},emphstyle=[1]\color{blue}, %some words to emphasise
+    %emph=[2]{word1,word2}, emphstyle=[2]{style},    
+}
+
+% for measurement units
+\newcommand{\mesunt}[1]{\left[\si{#1}\right]}
+\newcommand{\rpm}{\left[\text{rpm}\right]}

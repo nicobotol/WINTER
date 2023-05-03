@@ -25,8 +25,9 @@ legend(leg, 'location', 'best', 'FontSize', font_size,...
   'interpreter','latex');
 set(gca, 'FontSize', font_size)
 grid on
+box on
 if simulation.print_figure == 1
-%   fig_name = strcat(path_images,'\', date_fig, plot_name,'.svg');
-%   export_fig('fig', fig_name);
-  export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
+  fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
+  export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
+%   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
 end

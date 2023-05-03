@@ -1,0 +1,105 @@
+\newpage
+\section{Basic model with active power control}\label{sec:c_active_power_control}
+This model is based on the one presented in the \autoref{sec:c_basic_model_model} but with a modification on the synthesis of the generator torque reference. In particular, following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power and the actual one to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
+\begin{figure}[htb]
+    \centering
+    \input{d_torque_control_2.tex}
+    \caption{Scheme of the implemented active power torque controller}
+    \label{fig:d_torque_control_2}
+\end{figure}
+
+The saturation block constraints the reference power in between $P_g^* \in \left[0, P_{rated}\right]$.
+The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
+
+The response at the 4 simulations configurations presented in \autoref{tab:simulation_config} are reported in \autoref{fig:simulation_1_act_power}, \ref{fig:simulation_2_act_power},  \ref{fig:simulation_3_act_power}, \ref{fig:simulation_4_act_power}.
+
+\begin{figure}[htb]
+%  \centering
+%  \begin{tabular}{@{}cc@{}}
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_21_23fig_omega_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_21_23fig_pitch_dynamic.png} \\
+%    (a)  & (b)  \\
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_21_23fig_power_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_21_23fig_wind_TS.png} \\
+%    (c) & (d) \\
+%  \end{tabular}
+  \caption{Results of simulation number I \textcolor{red}{To be replotted}}
+  \label{fig:simulation_1_act_power}
+\end{figure}
+
+\begin{figure}[htb]
+%  \centering
+%  \begin{tabular}{@{}cc@{}}
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_32_53fig_omega_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_32_53fig_pitch_dynamic.png} \\
+%    (a)  & (b)  \\
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_32_53fig_power_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_32_53fig_wind_TS.png} \\
+%    (c) & (d) \\
+%  \end{tabular}
+  \caption{Results of simulation number II \textcolor{red}{To be replotted}}
+  \label{fig:simulation_2_act_power}
+\end{figure}
+
+\begin{figure}[htb]
+%  \centering
+%  \begin{tabular}{@{}cc@{}}
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_41_13fig_omega_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_41_13fig_pitch_dynamic.png} \\
+%    (a)  & (b)  \\
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_41_13fig_power_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_41_13fig_wind_TS.png} \\
+%    (c) & (d) \\
+%  \end{tabular}
+  \caption{Results of simulation number III \textcolor{red}{To be replotted}}
+  \label{fig:simulation_3_act_power}
+\end{figure}
+
+\begin{figure}[htb]
+%  \centering
+%  \begin{tabular}{@{}cc@{}}
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_51_50fig_omega_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_51_50fig_pitch_dynamic.png} \\
+%    (a)  & (b)  \\
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_51_50fig_power_dynamic.png} &
+%    \includegraphics[width=0.45\textwidth]{images/2023_Feb_23_21_51_50fig_wind_TS.png} \\
+%    (c) & (d) \\
+%  \end{tabular}
+  \caption{Results of simulation number IV \textcolor{red}{To be replotted}}
+  \label{fig:simulation_4_act_power}
+\end{figure}
+
+\subsection{Generated wind speed}
+\subsubsection{Simulation settings}
+The same parameters of the previous model are used again with this one. It must be noted that the generated wind series is not deterministic, because the phase in \autoref{eq:wind_series} is randomly chosen. This means that it is not possible to generate twice exactly the same wind series in order to test different models.
+\subsubsection{Simulation results}
+The plots of the results are reported in \autoref{fig:simulation_rand_wind_PC}.
+\begin{figure}[htb]
+  \centering
+  \begin{tabular}{@{}cc@{}}
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_25_15_17_24fig_omega_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_25_15_17_24fig_omega.png} \\
+    %(a) Rotor speed & (b) Mean rotor speed  \\
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_25_15_17_24fig_pitch_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_25_15_17_24fig_pitch.png} \\
+    %(c) Pitch angle & (d) Mean pitch angle\\
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_25_15_17_24fig_power_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_25_15_17_24fig_power.png} \\
+    %(e) Wind and generator powers & (f) Mean generator power \\
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_25_15_17_24fig_wind_TS.png}  \\
+    %(g) Wind series\\
+  \end{tabular}
+  \caption{Results of simulation with a generated wind series}
+  \label{fig:simulation_rand_wind_PC}
+\end{figure}
+
+\subsection{Comparison between the two models}
+\subsubsection{Ramp}
+Case I has the same behaviour in the two simulations.\\
+For the other cases, the speed fluctuations are higher in the power controlled case and the initial model converges faster.\\
+The rotor powers fluctuate more with the power control, but the generator ones never exceed the rated. \\
+The pitch dynamic is similar in the two models, even though in cases III and IV the pitch angle reaches an higher value with the power control.
+\subsubsection{Generated wind series}
+The rotor speed remains bounded between almost the same values for both the models.\\
+The blades pitch angle remains 0$\si{\degree}$ for both the models in the 10 $\left[\si{\meter\per\second}\right]$ simulations. In the 15 $\left[\si{\meter\per\second}\right]$ cases, the pitch angle has a deep valley at the corresponding to a decreasing of the wind speed. More in detail, in the second model the series goes below rated \acrshort{WS}, and so correctly the pitch decreases up to  0$\si{\degree}$.\\
+Also with this input condition, the presence of a power controller avoids that the generator exceeds the rated output.

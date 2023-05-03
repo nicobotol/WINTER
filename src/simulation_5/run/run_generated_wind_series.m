@@ -31,8 +31,8 @@ if simulation.print_figure == 1
   title('Wind PSD')
   legend('Location', 'northeast')
 
-  fig_name = strcat(path_images,'\', date_fig, 'wind_series_psd','.svg');
-  export_fig('fig', fig_name);
+  fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
+  export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
 
 end
 

@@ -1,0 +1,8 @@
+\section{Implementation of the DTU controller }
+In this section the DTU controller is implemented, as proposed by \cite{DTU_Wind_Energy_E_0028}.\\
+
+\textcolor{red}{A first consideration is that the rotor rotational speed has to be limited not only in the upper value but also in the lower one. In particular the lower rotor speed value has to be set in order to avoid the excitation of the lowest tower resonant frequency \cite{Olimpo_Anaya‐Lara}. To prevent this effect, \cite{DTU_Wind_Energy_Report-I-0092} constraints the minimum rotational speed to be 6 $\left[\text{rpm}\right]$ for all the \acrshort{WS} between $\left[4, 7\right] \ \left[\si{\meter \per \second}\right]$. In that way, 
+\begin{gather}
+    P=\frac{6 \left[\text{rpm}\right]}{60 \left[\si{\second\per\minute}\right]}=0.1\ \ \left[\si{\hertz}\right]\\
+    f_r = 3P = 3 \cdot 0.1 = 0.3 \ \ \left[\si{\hertz}\right]
+\end{gather}}

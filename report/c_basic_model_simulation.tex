@@ -1,0 +1,140 @@
+\newpage
+\section{Basic model simulation}\label{sec:c_basic_model_simulation}
+
+\subsection{Simulation with velocity ramp}
+\subsubsection{Simulation setting}
+The model is tested providing as wind input a ramp starting at time 0 $\left[\si{\second}\right]$. Other four parameters may be changed in the simulation: starting and finishing wind speeds, time length of the ramp, and the initial rotor velocity.\\
+It is decided to test 4 wind velocity conditions, and for each of them simulate 3 rising time, as stated in \autoref{tab:simulation_config}. For each of them, the initial rotational speed is set to be compatible with the initial \acrshort{WS}:
+
+\begin{table}[htb]
+    \caption{Configuration parameters for the simulation}
+    \centering
+    \begin{tabular}{lccccc}
+    \toprule
+      Number & Regime  & WS & Ramp length & Initial rotational speed \\ 
+       & & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\second}\right]$ & $\left[\si{\radian\per\second}\right]$ \\ \midrule       
+       I & Only below  rated & 4-10 & 10, 20, 40 & 0.33 \\
+       II & Only above rated & 12-25 & 10, 20, 40 & 1.01 \\
+       III & Below $\rightarrow$ above rated & 10-15 & 10, 20, 40 & 0.89 \\
+       IV & Above $\rightarrow$ below rated & 15-10 & 10, 20, 40 & 1.01 \\
+       \bottomrule
+    \end{tabular}
+    \label{tab:simulation_config}
+\end{table}
+
+In the Simulink options the solver is set to use a fix step time of $\Delta_t=0.001 \left[\si{\second}\right]$.
+
+\subsubsection{Simulation results}
+The results of the simulations are reported in \autoref{fig:simulation_1}, \ref{fig:simulation_2}, \ref{fig:simulation_3}, and \ref{fig:simulation_4}. 
+\begin{figure}[htb]
+  \centering
+  %\begin{tabular}{@{}cc@{}}
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_omega_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_pitch_dynamic.png} \\
+    %(a) Rotor speed  & (b) Pitch angle \textcolor{red}{On the x axis there should be time, I'll fix it} \\
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_power_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_wind_TS.png} \\
+    %(c) Mechanical and generator power & (d) Wind ramp \\
+  %\end{tabular}
+  \caption{Results of simulation number I \textcolor{red}{To be replotted}}
+  \label{fig:simulation_1}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\begin{tabular}{@{}cc@{}}
+   % \includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_omega_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_pitch_dynamic.png} \\
+    %(a) Rotor speed  & (b) Pitch angle \\
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_power_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_wind_TS.png} \\
+    %(c) Mechanical and generator power & (d) Wind ramp \\
+  %\end{tabular}
+  \caption{Results of simulation number II \textcolor{red}{To be replotted}}
+  \label{fig:simulation_2}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\begin{tabular}{@{}cc@{}}
+   % \includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_omega_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_pitch_dynamic.png} \\
+    %(a) Rotor speed  & (b) Pitch angle \\
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_power_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_wind_TS.png} \\
+    %(c) Mechanical and generator power & (d) Wind ramp \\
+  %\end{tabular}
+  \caption{Results of simulation number III \textcolor{red}{To be replotted}}
+  \label{fig:simulation_3}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\begin{tabular}{@{}cc@{}}
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_omega_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_pitch_dynamic.png} \\
+    %(a) Rotor speed  & (b) Pitch angle \\
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_power_dynamic.png} &
+    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_wind_TS.png} \\
+    %(c) Mechanical and generator power & (d) Wind ramp \\
+  %\end{tabular}
+  \caption{Results of simulation number IV \textcolor{red}{To be replotted}}
+  \label{fig:simulation_4}
+\end{figure}
+
+The generator power exceeds the rated one in the cases when the \acrshort{WS} exceeds the rated one. \textcolor{red}{Explain the motivations}\\
+
+An interesting post-process check can be done on the powers, in particular one can check that the power provided by the wind is equal to the sum between the one processed by the generator, the one stored in the inertia and the one lost in the damping. In particular the power equations to the rotor side of the transmission can be written starting from \ref{eq:mech_eq}:
+\begin{gather}
+    J_{eq}\dot{\omega^{R}} = T_R^R - T_G^R-B_{eq}\omega_R\\
+    J_{eq}\dot{\omega^{R}} + T_G^R + B_{eq}\omega^R = T_R^R\\
+    \left(J_{eq}\dot{\omega^{R}} + T_G^R + B_{eq}\omega^R\right)\dot{\omega^R} = \left(T_R^R\right)\dot{\omega^R}\\
+    J_{eq}\dot{\omega^{R}}^2 + T_G^R\dot{\omega^R} + B_{eq}\omega^R\dot{\omega^R} = T_R^R\dot{\omega^R}\\
+    P_{inertia} + P_{generator} + P_{damping} = P_{rotor} 
+    \label{eq:power_balance}
+\end{gather}
+
+As an example of this power check, \autoref{fig:fig_power_check} reports the simulation results for a wind ramp between 4 and 12 $\mesunt{\meter\per\second}$ in 170 $\mesunt{\second}$.
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/vectorial/2023_04_30_17_15_36power_check}
+    \caption{Check of the powers}
+    \label{fig:fig_power_check}
+\end{figure}
+
+\subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
+\subsubsection{Simulation settings}
+The model is tested with an input wind time series. In particular, the simulation is run three times, the first with mean \acrshort{WS} of 6 $\left[\si{\meter\per\second}\right]$, the second with  11 $\left[\si{\meter\per\second}\right]$, and the third with 20. These values are chosen to test the simulator in the three characteristics wind regimes. In the first simulation the turbulence is chosen to be $\sigma=0.6 \mesunt{\meter\per\second}$ while for the other $\sigma=1 \mesunt{\meter\per\second}$. The simulation is run for $t=150\ \mesunt{\second}$ and the results of the last 100 $\mesunt{\second}$ are plotted in order to get rid of the transient behaviour. The sampling frequency for the wind series generation is set to be $f_s=50 \left[\si{\hertz}\right]$.
+
+\subsubsection{Simulation results}
+The results of this simulation are reported in \autoref{fig:simulation_rand_wind_NPC}, where the wind series and the parametrizations in time of some quantities are reported. Since in the plots the initial transient dynamic is removed, the expected results of the parametrization in case of zero turbulence is that the simulations results perfectly follow the static behaviour. Since a certain turbulence is included in the picture, then the expected results are some groups of points centred around the static curve.
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_52_01fig_wind_TS.eps}
+    \caption{Wind time series}
+    \label{fig:2023_05_1_00_55_48fig_wind_TS.eps}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_39_46fig_pitch_param.eps}
+    \caption{Pitch angle time series}
+    \label{fig:2023_05_1_00_50_19fig_power_param}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_40_32fig_omega_param.eps}
+    \caption{Power}
+    \label{fig:2023_05_1_00_51_17fig_omega_param}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_40_32fig_omega_param.eps}
+    \caption{Rotational speed}
+    \label{fig:2023_05_1_00_50_58fig_pitch_param}
+  \end{subfigure}
+  \caption{Results of simulation with a generated wind series}
+  \label{fig:simulation_rand_wind_NPC}
+\end{figure}
+
+
