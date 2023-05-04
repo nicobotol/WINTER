@@ -14,3 +14,11 @@ src/slprj
 src/garbage
 WINTER_report_2022_02_26.zip
 *.fig
+*.acn
+*.bcf
+*.fls
+*.glo
+*.ist
+*.gz
+*.jpg
+*.emf
