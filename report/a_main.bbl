@@ -1,0 +1,740 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{Aerodynamics_of_wind_turbines}{book}{}
+      \name{author}{1}{}{%
+        {{hash=29326466f8cb350ea6fb2171dba1703c}{%
+           family={Hansen},
+           familyi={H\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Routledge}%
+      }
+      \strng{namehash}{29326466f8cb350ea6fb2171dba1703c}
+      \strng{fullhash}{29326466f8cb350ea6fb2171dba1703c}
+      \strng{bibnamehash}{29326466f8cb350ea6fb2171dba1703c}
+      \strng{authorbibnamehash}{29326466f8cb350ea6fb2171dba1703c}
+      \strng{authornamehash}{29326466f8cb350ea6fb2171dba1703c}
+      \strng{authorfullhash}{29326466f8cb350ea6fb2171dba1703c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Aerodynamics of Wind Turbines}
+      \field{year}{2015}
+    \endentry
+    \entry{Olimpo_Anaya‐Lara}{book}{}
+      \name{author}{4}{}{%
+        {{hash=37bc733166f311ce7eac4d82f2f7f21a}{%
+           family={Anaya-Lara},
+           familyi={A\bibinithyphendelim L\bibinitperiod},
+           given={O.},
+           giveni={O\bibinitperiod}}}%
+        {{hash=c2a47ec438071bf10ae3e79c2295cf26}{%
+           family={Tande},
+           familyi={T\bibinitperiod},
+           given={J.O.},
+           giveni={J\bibinitperiod}}}%
+        {{hash=34df5dace838f2bf135ad9e0d52b95b6}{%
+           family={Uhlen},
+           familyi={U\bibinitperiod},
+           given={K.},
+           giveni={K\bibinitperiod}}}%
+        {{hash=14596b8ef46e6c814482cc963e66772a}{%
+           family={Merz},
+           familyi={M\bibinitperiod},
+           given={K.},
+           giveni={K\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=b509b361f8d7741155032e8ddc8e6caf}{%
+           family={Wiley},
+           familyi={W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{ffbfea619e5065103d6f94472b8b01e7}
+      \strng{fullhash}{ddb5732527042da9e140e9125c18f8dc}
+      \strng{bibnamehash}{ffbfea619e5065103d6f94472b8b01e7}
+      \strng{authorbibnamehash}{ffbfea619e5065103d6f94472b8b01e7}
+      \strng{authornamehash}{ffbfea619e5065103d6f94472b8b01e7}
+      \strng{authorfullhash}{ddb5732527042da9e140e9125c18f8dc}
+      \strng{editorbibnamehash}{b509b361f8d7741155032e8ddc8e6caf}
+      \strng{editornamehash}{b509b361f8d7741155032e8ddc8e6caf}
+      \strng{editorfullhash}{b509b361f8d7741155032e8ddc8e6caf}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Offshore Wind Energy Technology}
+      \field{year}{2018}
+    \endentry
+    \entry{5874598}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=97289d8f8f763c76327620081a747759}{%
+           family={Merabet},
+           familyi={M\bibinitperiod},
+           given={Adel},
+           giveni={A\bibinitperiod}}}%
+        {{hash=3ea084b32528969cfb097fd287161b3d}{%
+           family={Thongam},
+           familyi={T\bibinitperiod},
+           given={Jogendra},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d7793ad8cc1bcf81f6c523625df31a0d}{%
+           family={Gu},
+           familyi={G\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{fullhash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{bibnamehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{authorbibnamehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{authornamehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{authorfullhash}{c0c493176302fdb32a60b0d27c566f5d}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2011 10th International Conference on Environment and Electrical Engineering}
+      \field{title}{Torque and pitch angle control for variable speed wind turbines in all operating regimes}
+      \field{year}{2011}
+      \field{pages}{1\bibrangedash 5}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/EEEIC.2011.5874598
+      \endverb
+    \endentry
+    \entry{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=401f53a6d9c640dc30cd13ab6494b723}{%
+           family={Fisch},
+           familyi={F\bibinitperiod},
+           given={Leandro\bibnamedelimb Benhur\bibnamedelima Klinger},
+           giveni={L\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=aaef9f0ab0bd474cbc2e78e0d1e41785}{%
+           family={Heldwein},
+           familyi={H\bibinitperiod},
+           given={Marcelo\bibnamedelima Lobo},
+           giveni={M\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{fullhash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{bibnamehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{authorbibnamehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{authornamehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{authorfullhash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2020 IEEE 21st Workshop on Control and Modeling for Power Electronics (COMPEL)}
+      \field{title}{10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}
+      \field{year}{2020}
+      \field{pages}{1\bibrangedash 8}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/COMPEL49091.2020.9265784
+      \endverb
+    \endentry
+    \entry{1-s2.0-S0040162519313691-main}{article}{}
+      \name{author}{4}{}{%
+        {{hash=c62297a45d6b8ed2755f622bf4a180ac}{%
+           family={{van de Kaa}},
+           familyi={v\bibinitperiod},
+           given={Geerten},
+           giveni={G\bibinitperiod}}}%
+        {{hash=580fccd3d0cbafd6353201b1148e089f}{%
+           family={{van Ek}},
+           familyi={v\bibinitperiod},
+           given={Martijn},
+           giveni={M\bibinitperiod}}}%
+        {{hash=4a3ccae00a186d44eb964c09a5d2aeff}{%
+           family={Kamp},
+           familyi={K\bibinitperiod},
+           given={Linda\bibnamedelima M.},
+           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=6f2777320c55fbdf5ea340180a932bab}{%
+           family={Rezaei},
+           familyi={R\bibinitperiod},
+           given={Jafar},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ed788ffdf52cd35088aa0e48cb3828c}
+      \strng{fullhash}{44a7f53e0310391e1080be3772050b76}
+      \strng{bibnamehash}{8ed788ffdf52cd35088aa0e48cb3828c}
+      \strng{authorbibnamehash}{8ed788ffdf52cd35088aa0e48cb3828c}
+      \strng{authornamehash}{8ed788ffdf52cd35088aa0e48cb3828c}
+      \strng{authorfullhash}{44a7f53e0310391e1080be3772050b76}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0040-1625}
+      \field{journaltitle}{Technological Forecasting and Social Change}
+      \field{title}{Wind turbine technology battles: Gearbox versus direct drive - opening up the black box of technology characteristics}
+      \field{volume}{153}
+      \field{year}{2020}
+      \field{pages}{119933}
+      \range{pages}{1}
+      \verb{doi}
+      \verb https://doi.org/10.1016/j.techfore.2020.119933
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S0040162519313691
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S0040162519313691
+      \endverb
+    \endentry
+    \entry{NREL_5MW_reference}{article}{}
+      \name{author}{4}{}{%
+        {{hash=f8d09c62e7d673c36ba7963e24615aee}{%
+           family={Jonkman},
+           familyi={J\bibinitperiod},
+           given={J},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d33b8ec4b8d8b439bfd5e69c4aa1eae6}{%
+           family={Butterfield},
+           familyi={B\bibinitperiod},
+           given={S},
+           giveni={S\bibinitperiod}}}%
+        {{hash=059b41fa48f31395e5c15e4e04780b6b}{%
+           family={Musial},
+           familyi={M\bibinitperiod},
+           given={W},
+           giveni={W\bibinitperiod}}}%
+        {{hash=2c76a97a740a41948f5f38bf9f337e28}{%
+           family={Scott},
+           familyi={S\bibinitperiod},
+           given={G},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{66a6b411bd1eb985dae681987553fe21}
+      \strng{fullhash}{3a47e0b2032188b28a736a77c0032161}
+      \strng{bibnamehash}{66a6b411bd1eb985dae681987553fe21}
+      \strng{authorbibnamehash}{66a6b411bd1eb985dae681987553fe21}
+      \strng{authornamehash}{66a6b411bd1eb985dae681987553fe21}
+      \strng{authorfullhash}{3a47e0b2032188b28a736a77c0032161}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{2}
+      \field{title}{Definition of a 5-MW Reference Wind Turbine for Offshore System Development}
+      \field{year}{2009}
+      \verb{doi}
+      \verb 10.2172/947422
+      \endverb
+      \verb{urlraw}
+      \verb https://www.osti.gov/biblio/947422
+      \endverb
+      \verb{url}
+      \verb https://www.osti.gov/biblio/947422
+      \endverb
+    \endentry
+    \entry{DTU_Wind_Energy_Report-I-0092}{misc}{}
+      \name{author}{10}{}{%
+        {{hash=2b33aeb841bdd9b254bc0f6b0f7f9511}{%
+           family={Bak},
+           familyi={B\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=0606c223eb535225466a789463e0650e}{%
+           family={Zahle},
+           familyi={Z\bibinitperiod},
+           given={Frederik},
+           giveni={F\bibinitperiod}}}%
+        {{hash=b1e99b9be068509bd40ca09ca24364d1}{%
+           family={Bitsche},
+           familyi={B\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{hash=792a966d871e077ab5c7fd3ade00848b}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={Taeseong},
+           giveni={T\bibinitperiod}}}%
+        {{hash=a027a1b0b31947d69eb8278d2514eb42}{%
+           family={Yde},
+           familyi={Y\bibinitperiod},
+           given={Anders},
+           giveni={A\bibinitperiod}}}%
+        {{hash=dad00ec7aca525f3ba63d9f2160cc6ba}{%
+           family={Henriksen},
+           familyi={H\bibinitperiod},
+           given={{Lars Christian}},
+           giveni={L\bibinitperiod}}}%
+        {{hash=2177d9593fb69fe19509eaa4095057d6}{%
+           family={Hansen},
+           familyi={H\bibinitperiod},
+           given={{Morten Hartvig}},
+           giveni={M\bibinitperiod}}}%
+        {{hash=74b6148d5ed451238dcb156c75476940}{%
+           family={Blasques},
+           familyi={B\bibinitperiod},
+           given={{José Pedro Albergaria Amaral}},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0e39caa0a60cded59f3dcebcd77250de}{%
+           family={Gaunaa},
+           familyi={G\bibinitperiod},
+           given={Mac},
+           giveni={M\bibinitperiod}}}%
+        {{hash=f3c581aa63707baf1f2badee57d1842e}{%
+           family={Natarajan},
+           familyi={N\bibinitperiod},
+           given={Anand},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {English}%
+      }
+      \strng{namehash}{f5c1cc33cff447148b79c87e6cdf1a16}
+      \strng{fullhash}{a6a2231da1cb868c9650a0317b82bdb5}
+      \strng{bibnamehash}{f5c1cc33cff447148b79c87e6cdf1a16}
+      \strng{authorbibnamehash}{f5c1cc33cff447148b79c87e6cdf1a16}
+      \strng{authornamehash}{f5c1cc33cff447148b79c87e6cdf1a16}
+      \strng{authorfullhash}{a6a2231da1cb868c9650a0317b82bdb5}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Danish Wind Power Research 2013 ; Conference date: 27-05-2013 Through 28-05-2013}
+      \field{title}{The DTU 10-MW Reference Wind Turbine}
+      \field{year}{2013}
+    \endentry
+    \entry{NREL_15MW}{article}{}
+      \name{author}{17}{}{%
+        {{hash=868a46250682fae725286e2d90574b83}{%
+           family={Gaertner},
+           familyi={G\bibinitperiod},
+           given={Evan},
+           giveni={E\bibinitperiod}}}%
+        {{hash=6432d6b4a1145377c1d60c04f37516e8}{%
+           family={Rinker},
+           familyi={R\bibinitperiod},
+           given={Jennifer},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ab6becb180c6142b9b115b44ea7d23d5}{%
+           family={Sethuraman},
+           familyi={S\bibinitperiod},
+           given={Latha},
+           giveni={L\bibinitperiod}}}%
+        {{hash=0606c223eb535225466a789463e0650e}{%
+           family={Zahle},
+           familyi={Z\bibinitperiod},
+           given={Frederik},
+           giveni={F\bibinitperiod}}}%
+        {{hash=371cf706618ece598dce1ba43c3f7a6e}{%
+           family={Anderson},
+           familyi={A\bibinitperiod},
+           given={Benjamin},
+           giveni={B\bibinitperiod}}}%
+        {{hash=756f1a52ac7ba372d636d0afd6127c74}{%
+           family={Barter},
+           familyi={B\bibinitperiod},
+           given={Garrett\bibnamedelima E},
+           giveni={G\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=7f8eae86e18948d3926d5432897bfb52}{%
+           family={Abbas},
+           familyi={A\bibinitperiod},
+           given={Nikhar\bibnamedelima J},
+           giveni={N\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=be37016330854292018ab5a3c44a9027}{%
+           family={Meng},
+           familyi={M\bibinitperiod},
+           given={Fanzhong},
+           giveni={F\bibinitperiod}}}%
+        {{hash=a289dcc26075c17c2c82f379aaa9c1cc}{%
+           family={Bortolotti},
+           familyi={B\bibinitperiod},
+           given={Pietro},
+           giveni={P\bibinitperiod}}}%
+        {{hash=38eeafcfc5b56069328fd3a4cc681bbb}{%
+           family={Skrzypinski},
+           familyi={S\bibinitperiod},
+           given={Witold},
+           giveni={W\bibinitperiod}}}%
+        {{hash=38acb4b3340420891456faedeb4eed90}{%
+           family={Scott},
+           familyi={S\bibinitperiod},
+           given={George\bibnamedelima N},
+           giveni={G\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=125feb7e4a2e570a15097446edcc8117}{%
+           family={Feil},
+           familyi={F\bibinitperiod},
+           given={Roland},
+           giveni={R\bibinitperiod}}}%
+        {{hash=db8fb36939bbf1a4ac1c3c90f9fde673}{%
+           family={Bredmose},
+           familyi={B\bibinitperiod},
+           given={Henrik},
+           giveni={H\bibinitperiod}}}%
+        {{hash=467d68f1fcae3f75ebf683a6d9268f3c}{%
+           family={Dykes},
+           familyi={D\bibinitperiod},
+           given={Katherine},
+           giveni={K\bibinitperiod}}}%
+        {{hash=4f24ad0a718c6d236b546276b8829d75}{%
+           family={Shields},
+           familyi={S\bibinitperiod},
+           given={Matthew},
+           giveni={M\bibinitperiod}}}%
+        {{hash=776524adfe56bf143a51e3fceaa1d45c}{%
+           family={Allen},
+           familyi={A\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+        {{hash=91afd0d7746570456c2d3e173a56ed68}{%
+           family={Viselli},
+           familyi={V\bibinitperiod},
+           given={Anthony},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{af5d2cebefe8b2a4cb25658845a2c9c8}
+      \strng{fullhash}{832f0e409f50f472e59997381fa49cc6}
+      \strng{bibnamehash}{af5d2cebefe8b2a4cb25658845a2c9c8}
+      \strng{authorbibnamehash}{af5d2cebefe8b2a4cb25658845a2c9c8}
+      \strng{authornamehash}{af5d2cebefe8b2a4cb25658845a2c9c8}
+      \strng{authorfullhash}{832f0e409f50f472e59997381fa49cc6}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{3}
+      \field{title}{IEA Wind TCP Task 37: Definition of the IEA 15-Megawatt Offshore Reference Wind Turbine}
+      \field{year}{2020}
+      \verb{doi}
+      \verb 10.2172/1603478
+      \endverb
+      \verb{urlraw}
+      \verb https://www.osti.gov/biblio/1603478
+      \endverb
+      \verb{url}
+      \verb https://www.osti.gov/biblio/1603478
+      \endverb
+    \endentry
+    \entry{Wind_Energy_Technology_Current_Status_and_RD_Futur}{article}{}
+      \name{author}{3}{}{%
+        {{hash=e5f8799fef96271f021ee721adb5c6ac}{%
+           family={Thresher},
+           familyi={T\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{hash=ac9dc9813ef8f7b0edb627361cc3eb4b}{%
+           family={Robinsion},
+           familyi={R\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=4c5df24e1d348a8299bd4a26daa27aaf}{%
+           family={Veers},
+           familyi={V\bibinitperiod},
+           given={Paul},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{0496334630c9fedac5360b282703d045}
+      \strng{fullhash}{0496334630c9fedac5360b282703d045}
+      \strng{bibnamehash}{0496334630c9fedac5360b282703d045}
+      \strng{authorbibnamehash}{0496334630c9fedac5360b282703d045}
+      \strng{authornamehash}{0496334630c9fedac5360b282703d045}
+      \strng{authorfullhash}{0496334630c9fedac5360b282703d045}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{05}
+      \field{title}{Wind Energy Technology: Current Status and R\&D Future}
+      \field{year}{2008}
+    \endentry
+    \entry{European_offshore_statistics_2012}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=89d1bd686e2ebf9ff6134278fa38bf5b}{%
+           family={association},
+           familyi={a\bibinitperiod},
+           given={The\bibnamedelima European},
+           giveni={T\bibinitperiod\bibinitdelim E\bibinitperiod},
+           prefix={wind\bibnamedelima energy},
+           prefixi={w\bibinitperiod\bibinitdelim e\bibinitperiod}}}%
+      }
+      \strng{namehash}{89d1bd686e2ebf9ff6134278fa38bf5b}
+      \strng{fullhash}{89d1bd686e2ebf9ff6134278fa38bf5b}
+      \strng{bibnamehash}{89d1bd686e2ebf9ff6134278fa38bf5b}
+      \strng{authorbibnamehash}{89d1bd686e2ebf9ff6134278fa38bf5b}
+      \strng{authornamehash}{89d1bd686e2ebf9ff6134278fa38bf5b}
+      \strng{authorfullhash}{89d1bd686e2ebf9ff6134278fa38bf5b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{\url{https://www.ewea.org/fileadmin/files/library/publications/statistics/European_offshore_statistics_2012.pdf}}
+      \field{title}{The European offshore wind industry-key trends and statistics 2012}
+      \field{year}{2013}
+    \endentry
+    \entry{review_of_scaling_low}{article}{}
+      \name{author}{6}{}{%
+        {{hash=316b2c7da3ff10d7bdae2d749d97ab78}{%
+           family={Sergiienko},
+           familyi={S\bibinitperiod},
+           given={Nataliia},
+           giveni={N\bibinitperiod}}}%
+        {{hash=4d584fe0a339e6752ddc205d6aee05ae}{%
+           family={Souza\bibnamedelimb Pinheiro\bibnamedelimb Da\bibnamedelima Silva},
+           familyi={S\bibinitperiod\bibinitdelim P\bibinitperiod\bibinitdelim D\bibinitperiod\bibinitdelim S\bibinitperiod},
+           given={Leandro},
+           giveni={L\bibinitperiod}}}%
+        {{hash=90ff1bea5147c747260f19d89e47e0fc}{%
+           family={Bachynski-Polić},
+           familyi={B\bibinithyphendelim P\bibinitperiod},
+           given={Erin},
+           giveni={E\bibinitperiod}}}%
+        {{hash=0536589ea15430305b9d926d8e4aa2d7}{%
+           family={Cazzolato},
+           familyi={C\bibinitperiod},
+           given={Ben},
+           giveni={B\bibinitperiod}}}%
+        {{hash=59175b9b24f4e0f9b881664d3bb1dbe0}{%
+           family={Arjomandi},
+           familyi={A\bibinitperiod},
+           given={Maziar},
+           giveni={M\bibinitperiod}}}%
+        {{hash=dad95ee482888cbec75d0ac907c939d3}{%
+           family={Ding},
+           familyi={D\bibinitperiod},
+           given={Boyin},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{78ea19f4aa01f5f8dc27d5320386b4fc}
+      \strng{fullhash}{58fecfd10a7cae67531f24596a03d5d5}
+      \strng{bibnamehash}{78ea19f4aa01f5f8dc27d5320386b4fc}
+      \strng{authorbibnamehash}{78ea19f4aa01f5f8dc27d5320386b4fc}
+      \strng{authornamehash}{78ea19f4aa01f5f8dc27d5320386b4fc}
+      \strng{authorfullhash}{58fecfd10a7cae67531f24596a03d5d5}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Renewable and Sustainable Energy Reviews}
+      \field{month}{07}
+      \field{title}{Review of scaling laws applied to floating offshore wind turbines}
+      \field{volume}{162}
+      \field{year}{2022}
+      \field{pages}{112477}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.rser.2022.112477
+      \endverb
+    \endentry
+    \entry{Variable-speed_Variable-pitch_control_for_a_wind_t}{article}{}
+      \name{author}{4}{}{%
+        {{hash=0876a7073e317e4b8d623854e2956f67}{%
+           family={Fontanella},
+           familyi={F\bibinitperiod},
+           given={Alessandro},
+           giveni={A\bibinitperiod}}}%
+        {{hash=c67df4cf156a1ef4e9cf9aa3149cd9d5}{%
+           family={Taruffi},
+           familyi={T\bibinitperiod},
+           given={Federico},
+           giveni={F\bibinitperiod}}}%
+        {{hash=f77d62f46b6efb76cc210bde5e64486a}{%
+           family={Bayati},
+           familyi={B\bibinitperiod},
+           given={Ilmas},
+           giveni={I\bibinitperiod}}}%
+        {{hash=babdd2d8c9f7795d2e583469edd9549d}{%
+           family={Belloli},
+           familyi={B\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{c440b1f74a0fb4321f8331fa322f3870}
+      \strng{fullhash}{07c0c99eb17e4ab96c8e906adec74836}
+      \strng{bibnamehash}{c440b1f74a0fb4321f8331fa322f3870}
+      \strng{authorbibnamehash}{c440b1f74a0fb4321f8331fa322f3870}
+      \strng{authornamehash}{c440b1f74a0fb4321f8331fa322f3870}
+      \strng{authorfullhash}{07c0c99eb17e4ab96c8e906adec74836}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Physics: Conference Series}
+      \field{month}{10}
+      \field{title}{Variable-speed Variable-pitch control for a wind turbine scale model}
+      \field{volume}{1356}
+      \field{year}{2019}
+      \field{pages}{012002}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1088/1742-6596/1356/1/012002
+      \endverb
+    \endentry
+    \entry{the_switch_datasheet}{misc}{}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{title}{The switch PMM 1500 datasheet}
+    \endentry
+    \entry{SMILDEN2016386}{article}{}
+      \name{author}{4}{}{%
+        {{hash=4842e9c4d981b0adce56ef3893c84772}{%
+           family={Smilden},
+           familyi={S\bibinitperiod},
+           given={Emil},
+           giveni={E\bibinitperiod}}}%
+        {{hash=4f97ac7a5e2fe0b9d40f5b393856dc71}{%
+           family={Horn},
+           familyi={H\bibinitperiod},
+           given={Jan-Tore\bibnamedelima H.},
+           giveni={J\bibinithyphendelim T\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=e9244ccc00ddc47b26340b70b0895c1c}{%
+           family={Sørensen},
+           familyi={S\bibinitperiod},
+           given={Asgeir\bibnamedelima J.},
+           giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=dd5ebe51b6a7bf04afa501fa55db5f32}{%
+           family={Amdahl},
+           familyi={A\bibinitperiod},
+           given={Jørgen},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{b2abbfb94cdf6343a0a9173985b24431}
+      \strng{fullhash}{87db3d6751505999894611a96b08ec75}
+      \strng{bibnamehash}{b2abbfb94cdf6343a0a9173985b24431}
+      \strng{authorbibnamehash}{b2abbfb94cdf6343a0a9173985b24431}
+      \strng{authornamehash}{b2abbfb94cdf6343a0a9173985b24431}
+      \strng{authorfullhash}{87db3d6751505999894611a96b08ec75}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{2405-8963}
+      \field{journaltitle}{IFAC-PapersOnLine}
+      \field{note}{10th IFAC Conference on Control Applications in Marine SystemsCAMS 2016}
+      \field{number}{23}
+      \field{title}{Reduced Order Model for Control Applications in Offshore Wind Turbines}
+      \field{volume}{49}
+      \field{year}{2016}
+      \field{pages}{386\bibrangedash 393}
+      \range{pages}{8}
+      \verb{doi}
+      \verb https://doi.org/10.1016/j.ifacol.2016.10.435
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S2405896316320237
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S2405896316320237
+      \endverb
+    \endentry
+    \entry{ris_r_1500}{article}{}
+      \name{author}{6}{}{%
+        {{hash=2c5d9464aed8e4405487855099a2da01}{%
+           family={Hansen},
+           familyi={H\bibinitperiod},
+           given={Morten},
+           giveni={M\bibinitperiod}}}%
+        {{hash=efb479755172bf79d418df7c262c29ad}{%
+           family={Anca},
+           familyi={A\bibinitperiod},
+           given={Daniela},
+           giveni={D\bibinitperiod}}}%
+        {{hash=72431d835eeb0017090be7e4493e3852}{%
+           family={Larsen},
+           familyi={L\bibinitperiod},
+           given={Torben},
+           giveni={T\bibinitperiod}}}%
+        {{hash=7ed0e1a055c1cab9a9dc7eb192d7b791}{%
+           family={Stig},
+           familyi={S\bibinitperiod},
+           given={O},
+           giveni={O\bibinitperiod}}}%
+        {{hash=f6cd91310b763734574bb714aca69022}{%
+           family={Sorensen},
+           familyi={S\bibinitperiod},
+           given={Poul},
+           giveni={P\bibinitperiod}}}%
+        {{hash=13ccdfc9e5a589b6352428f9272bf9f1}{%
+           family={Fuglsang},
+           familyi={F\bibinitperiod},
+           given={P},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{8d7d8f73b563c9852e4d91ef9e823acf}
+      \strng{fullhash}{dc519aec9580599221057e5342718c59}
+      \strng{bibnamehash}{8d7d8f73b563c9852e4d91ef9e823acf}
+      \strng{authorbibnamehash}{8d7d8f73b563c9852e4d91ef9e823acf}
+      \strng{authornamehash}{8d7d8f73b563c9852e4d91ef9e823acf}
+      \strng{authorfullhash}{dc519aec9580599221057e5342718c59}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{01}
+      \field{title}{Control Design for a Pitch-Regulated, Variable Speed Wind Turbine}
+      \field{year}{2005}
+    \endentry
+    \entry{DTU_Wind_Energy_E_0028}{book}{}
+      \name{author}{2}{}{%
+        {{hash=2177d9593fb69fe19509eaa4095057d6}{%
+           family={Hansen},
+           familyi={H\bibinitperiod},
+           given={{Morten Hartvig}},
+           giveni={M\bibinitperiod}}}%
+        {{hash=dad00ec7aca525f3ba63d9f2160cc6ba}{%
+           family={Henriksen},
+           familyi={H\bibinitperiod},
+           given={{Lars Christian}},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {English}%
+      }
+      \list{location}{1}{%
+        {Denmark}%
+      }
+      \list{publisher}{1}{%
+        {DTU Wind Energy}%
+      }
+      \strng{namehash}{e11f1baf0ac28d4a6731902a60ee6620}
+      \strng{fullhash}{e11f1baf0ac28d4a6731902a60ee6620}
+      \strng{bibnamehash}{e11f1baf0ac28d4a6731902a60ee6620}
+      \strng{authorbibnamehash}{e11f1baf0ac28d4a6731902a60ee6620}
+      \strng{authornamehash}{e11f1baf0ac28d4a6731902a60ee6620}
+      \strng{authorfullhash}{e11f1baf0ac28d4a6731902a60ee6620}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Contract Number: EUDP project Light Rotor; Project Number 46-43028-Xwp3 The report number is DTU-Wind-Energy-Report-E-0028 and not DTU-Wind-Energy-Report-E-0018 as stated inside the report}
+      \field{number}{0028}
+      \field{series}{DTU Wind Energy E}
+      \field{title}{Basic DTU Wind Energy controller}
+      \field{year}{2013}
+      \keyw{DTU-Wind-Energy-E-0028,DTU-Wind-Energy-Report-E-0028}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
