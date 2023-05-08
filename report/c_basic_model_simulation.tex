@@ -9,80 +9,19 @@ It is decided to test 4 wind velocity conditions, and for each of them simulate 
 \begin{table}[htb]
     \caption{Configuration parameters for the simulation}
     \centering
-    \begin{tabular}{lccccc}
+    \begin{tabular}{lcccc}
     \toprule
-      Number & Regime  & WS & Ramp length & Initial rotational speed \\ 
-       & & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\second}\right]$ & $\left[\si{\radian\per\second}\right]$ \\ \midrule       
-       I & Only below  rated & 4-10 & 10, 20, 40 & 0.33 \\
-       II & Only above rated & 12-25 & 10, 20, 40 & 1.01 \\
-       III & Below $\rightarrow$ above rated & 10-15 & 10, 20, 40 & 0.89 \\
-       IV & Above $\rightarrow$ below rated & 15-10 & 10, 20, 40 & 1.01 \\
+      Number & Regime  & WS & Ramp length \\ 
+       & & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\second}\right]$ \\ \midrule       
+       I & Below & 4-10 & 200  \\
+       II & Below $\rightarrow$ above rated & 10-14 & 200 \\
+       III & Above & 14-20 & 200  \\
        \bottomrule
     \end{tabular}
     \label{tab:simulation_config}
 \end{table}
 
 In the Simulink options the solver is set to use a fix step time of $\Delta_t=0.001 \left[\si{\second}\right]$.
-
-\subsubsection{Simulation results}
-The results of the simulations are reported in \autoref{fig:simulation_1}, \ref{fig:simulation_2}, \ref{fig:simulation_3}, and \ref{fig:simulation_4}. 
-\begin{figure}[htb]
-  \centering
-  %\begin{tabular}{@{}cc@{}}
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_omega_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_pitch_dynamic.png} \\
-    %(a) Rotor speed  & (b) Pitch angle \textcolor{red}{On the x axis there should be time, I'll fix it} \\
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_power_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_18_58_52fig_wind_TS.png} \\
-    %(c) Mechanical and generator power & (d) Wind ramp \\
-  %\end{tabular}
-  \caption{Results of simulation number I \textcolor{red}{To be replotted}}
-  \label{fig:simulation_1}
-\end{figure}
-
-\begin{figure}[htb]
-  \centering
-  %\begin{tabular}{@{}cc@{}}
-   % \includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_omega_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_pitch_dynamic.png} \\
-    %(a) Rotor speed  & (b) Pitch angle \\
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_power_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_44_59fig_wind_TS.png} \\
-    %(c) Mechanical and generator power & (d) Wind ramp \\
-  %\end{tabular}
-  \caption{Results of simulation number II \textcolor{red}{To be replotted}}
-  \label{fig:simulation_2}
-\end{figure}
-
-\begin{figure}[htb]
-  \centering
-  %\begin{tabular}{@{}cc@{}}
-   % \includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_omega_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_pitch_dynamic.png} \\
-    %(a) Rotor speed  & (b) Pitch angle \\
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_power_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_19_56_42fig_wind_TS.png} \\
-    %(c) Mechanical and generator power & (d) Wind ramp \\
-  %\end{tabular}
-  \caption{Results of simulation number III \textcolor{red}{To be replotted}}
-  \label{fig:simulation_3}
-\end{figure}
-
-\begin{figure}[htb]
-  \centering
-  %\begin{tabular}{@{}cc@{}}
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_omega_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_pitch_dynamic.png} \\
-    %(a) Rotor speed  & (b) Pitch angle \\
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_power_dynamic.png} &
-    %\includegraphics[width=0.45\textwidth]{images/2023_02_24_20_11_36fig_wind_TS.png} \\
-    %(c) Mechanical and generator power & (d) Wind ramp \\
-  %\end{tabular}
-  \caption{Results of simulation number IV \textcolor{red}{To be replotted}}
-  \label{fig:simulation_4}
-\end{figure}
-
-The generator power exceeds the rated one in the cases when the \acrshort{WS} exceeds the rated one. \textcolor{red}{Explain the motivations}\\
 
 An interesting post-process check can be done on the powers, in particular one can check that the power provided by the wind is equal to the sum between the one processed by the generator, the one stored in the inertia and the one lost in the damping. In particular the power equations to the rotor side of the transmission can be written starting from \ref{eq:mech_eq}:
 \begin{gather}
@@ -94,13 +33,17 @@ An interesting post-process check can be done on the powers, in particular one c
     \label{eq:power_balance}
 \end{gather}
 
-As an example of this power check, \autoref{fig:fig_power_check} reports the simulation results for a wind ramp between 4 and 12 $\mesunt{\meter\per\second}$ in 170 $\mesunt{\second}$.
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/2023_04_30_17_15_36power_check}
-    \caption{Check of the powers}
-    \label{fig:fig_power_check}
-\end{figure}
+\subsubsection{Simulation results}
+The results of the simulations are reported in \autoref{fig:simulation_1}, \ref{fig:simulation_2}, \ref{fig:simulation_3}. \\
+In particular, the figure a) reports the wind velocity as function of the simulation time. b), c), and d) are the parametrizations of the rotor rotational speed, the power, and the pitch angle as function of the wind speed. e) is the power check, as described in \autoref{eq:power_balance}. Finally, f) is the torque that the controller imposes at the generator as function of the rotor rotational speed. 
+% plots of the results
+\include{c_basic_model_results}
+
+The generator power exceeds the rated one in the cases when the \acrshort{WS} exceeds the rated one. \textcolor{red}{Explain the motivations}\\
+
+
+\subsubsection[]{Disabling of the pitch angle gain scheduling}
+In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, two constant values are replaced instead of the polynomial gains. In particular, the value $k_p=2 \ \mesunt{\second}$ and $k_i=0.9 \left[-\right]$ are chosen since they are close to the gains at low pitch where the turbine is expected to work for more time.  
 
 \subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
 \subsubsection{Simulation settings}
@@ -138,3 +81,31 @@ The results of this simulation are reported in \autoref{fig:simulation_rand_wind
 \end{figure}
 
 
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_19fig_wind_TS.eps}
+    \caption{Wind time series}
+    \label{fig:2023_05_8_22_43_35fig_wind_TS.eps}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_46fig_pitch_param.eps}
+    \caption{Pitch angle time series}
+    \label{fig:2023_05_8_22_44_05fig_pitch_param}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_24fig_power_param.eps}
+    \caption{Power}
+    \label{fig:2023_05_8_22_44_15fig_power_param}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_57fig_omega_param.eps}
+    \caption{Rotational speed}
+    \label{fig:2023_05_1_00_50_58fig_pitch_param}
+  \end{subfigure}
+  \caption{Results of simulation with a generated wind series}
+  \label{fig:simulation_rand_wind_NPC}
+\end{figure}

@@ -30,7 +30,8 @@ if simulation.print_figure == 1
   xlabel('Frequency [Hz]',  'Interpreter','latex')
   title('Wind PSD')
   legend('Location', 'northeast')
-
+  
+  plot_name = 'wind_EPS';
   fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
   export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
 

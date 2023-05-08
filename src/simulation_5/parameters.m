@@ -94,7 +94,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [150 150 150 ]; % max time to investigaste [s]
+simulation.stop_time = [150 150 150]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 5;        % 1 -> constant wind speed
@@ -176,8 +176,8 @@ blade.kp_schedule_report = [-59.871 46.281 -7.814 -2.541 1]; % from Olimpo's
 blade.ki_schedule_report = [27.689 -31.926 13.128 -2.405 0.351]; % from Olimpo's
 blade.kp_schedule = blade_schedule_gains{1};% 1.0e+04*[4.3543 -8.7196 7.3927 -3.4753 1.0017 -0.1871 0.0240 -0.0023 0.0002]; %
 blade.ki_schedule = blade_schedule_gains{2};%1.0e+04*[1.9792 -3.9634 3.3603 -1.5797 0.4553 -0.0851 0.0109 -0.0011 0.0001];%
-% blade.kp_schedule = 0.4;
-% blade.ki_schedule = 0.2;
+blade.kp_schedule = 2;
+blade.ki_schedule = 0.9;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
 %                       25,26,27;
 %                    2.35,2.35,1.5,1.25,1.08,0.98,0.9,0.82,0.78,0.71,0.68,...
@@ -205,9 +205,9 @@ wind.turbulence = [0.6 1 1]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 12;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [1 1 1]; % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 10;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 20;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -223,7 +223,7 @@ end
 out_store = cell(1, wind.WS_len);
 
 % Transmission damping 
-rotor.B = rotor.K_opt*omega_rated*gearbox.ratio*(1 - gearbox.ratio*generator.eta); % [kgm^2/s]
+rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission

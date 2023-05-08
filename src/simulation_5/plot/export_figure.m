@@ -15,11 +15,11 @@ function export_figure(fig, file_name, folder_name, v_size)
   
   export_fig(fig, fullfile(figure_folder_name, "vectorial" ,file_name));
 
-  file_name = char(file_name);
-  file_name = string(file_name(1:end-4)) + ".emf";
-  export_fig(fig, fullfile(figure_folder_name, "presentation" ,file_name));
-  file_name = char(file_name);
-  file_name = string(file_name(1:end-4)) + ".fig";
-  savefig(fig, fullfile(figure_folder_name, "matlab", file_name));
+%   file_name = char(file_name);
+%   file_name = string(file_name(1:end-4)) + ".emf";
+%   export_fig(fig, fullfile(figure_folder_name, "presentation" ,file_name));
+%   file_name = char(file_name);
+%   file_name = string(file_name(1:end-4)) + ".fig";
+%   savefig(fig, fullfile(figure_folder_name, "matlab", file_name));
 
 end

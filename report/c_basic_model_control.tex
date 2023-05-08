@@ -78,7 +78,7 @@ with $\theta$ in $\left[\si{\radian}\right]$. For a more practical visualization
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{images/fig_gain_scheduling.png}
-    \caption{Proportional and integral gains for blade's controller as function of pitch angle}
+    \caption{Proportional and integral gains for blade's controller as function of pitch angle, simplified approach from \cite{Olimpo_Anaya‐Lara}}
     \label{fig:fig_gain_schduling}
 \end{figure}
 
@@ -143,3 +143,15 @@ The proposed filter's transfer function is:
     \label{eq:filter_pitch}
 \end{equation}
 with the choice of $\alpha_{\beta}=0.4 \left[\si{\hertz}\right] = 2\pi0.4 \left[\si{\radian\per\second}\right]$. .
+
+\subsection{Active power controller}
+Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power and the actual one to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
+\begin{figure}[htb]
+    \centering
+    \input{d_torque_control_2.tex}
+    \caption{Scheme of the implemented active power torque controller}
+    \label{fig:d_torque_control_3}
+\end{figure}
+
+The saturation block constraints the reference power in between $P_g^* \in \left[0, P_{rated}\right]$.
+The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.

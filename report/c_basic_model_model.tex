@@ -33,6 +33,36 @@ This system of equation may be solved and finally the mechanical dynamic equatio
 \end{gather}
 Where the subscription indicates if the quantity is referred to the rotor or to the generator, while the apex indicates the side of the transmission in which it is expressed.
 
+\subsection{Transmission damping}
+Finding informations on the damping to be used in the \autoref{eq:mech_eq} is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be necessary. Since a damping value is necessary to make the simulation more realistic (at least conceptually) then the system of equation in \autoref{eq:damping_sys} may be setted up to try to recover it. The former equation is the power balance between rotor and genrator side of the transmission, while the latter is the torque balance.
+\begin{gather}
+\left\{
+\begin{aligned}
+\eta T_R^R \omega^{R} = T_G^G\omega^{G} \\
+T_G^R =T_R^{R} - B_{eq}^R \omega^R
+\end{aligned}
+\right. ;
+\left\{
+\begin{aligned}
+T_G^G\frac{\cancel{\omega^{R}}}{n}=\eta T_R^R \cancel{\omega^{R}} \\
+\frac{T_G^G}{n}=T_R^R-B_{eq}^R\omega^R
+\end{aligned}
+\right. ;
+\left\{
+\begin{aligned}
+T_G^G = \eta n T_R^R \\
+\eta T_R^R\frac{\cancel{n}}{\cancel{n}} = T_R^R-B_{eq}^R\omega^R
+\end{aligned}
+\right. 
+\label{eq:damping_sys}\\
+B_{eq}^R= \frac{T_R^R}{\omega^R}(1 - \eta)= \frac{K_{opt}(\omega^R)^R}{\omega^R}(1 - \eta) = K_{opt}\omega^R(1 - \eta) \ \ \mesunt{\kilo\gram\square\meter}
+\label{eq:damping}
+\end{gather} 
+where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the units of $\mesunt{\newton \meter \square\second }$.\\
+It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature informations at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these conditions in mind, the damping becomes:
+\begin{equation}
+  B_{eq}^R = K_{opt}\omega^R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
+\end{equation}
 \subsection{Electrical generator}
 The chosen generator is a \acrshort{PMSM}. Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values reported in \autoref{tab:generator_parameter} are used in this simulation.
 \begin{table}[htb]
