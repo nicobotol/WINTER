@@ -94,16 +94,17 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [150 150 150]; % max time to investigaste [s]
+simulation.stop_time = [200 200 200]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 5;        % 1 -> constant wind speed
+simulation.type = 7;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
                             % 6 -> ramp and parametrization plot
-simulation.plot_time = [100 100 100];  % time from the end of the simulation to 
+                            % 7 -> with/without blade gain scheduling
+simulation.plot_time = [150 150 150];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 1;% enables or disable plot's autosaving 
@@ -200,18 +201,18 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 % blade.kd = 0;
 
 % Wind parameters
-wind.mean = [6 11 20 ];                % 10 minutes mean wind speed [m/s]]
-wind.turbulence = [0.6 1 1]; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [15 15 15];                % 10 minutes mean wind speed [m/s]]
+wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 10;        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 20;         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
+wind.ramp_WS_start = [11 11 ];        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = [22 22];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [1 1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
-  case {1, 3, 5}
+  case {1, 3, 5, 7}
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
   case {2, 6}
     wind.WS_len = length(wind.ramp_time_start);

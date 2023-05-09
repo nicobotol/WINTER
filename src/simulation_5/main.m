@@ -33,15 +33,29 @@ for i = 1:wind.WS_len
         stop_time);
     case {3, 5} % generated time series
       wind_speed = run_generated_wind_series(wind.mean(i), ...
-        wind.turbulence(i), wind_speed, stop_time);
+        wind.turbulence(i), wind_speed, stop_time, simulation.seed);
     case 4 % generator step response
       [stop_time] = run_generator_step();
+    case 7 % with or without gain schdeuling
+      wind_speed = run_generated_wind_series(wind.mean(i), ...
+        wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      if i == 1 % with gain scheduling
+        blade.kp_schedule = blade_schedule_gains{1};
+        blade.ki_schedule = blade_schedule_gains{2};
+      elseif i==2 % without scheduling
+        blade.kp_schedule = 2;
+        blade.ki_schedule = 0.9;
+      elseif i==3
+        blade.kp_schedule= [-59.871 46.281 -7.814 -2.541 1]; % from Olimpo's
+blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351]; % from Olimpo's
+      end
+
   end
 
   % Set the initial conditions
   [rotor, generator, blade] = initial_conditions(rotor, blade, ...
-  generator, gearbox, mean(wind_speed(1:100, 2)), rated_values, lookup_Pitch);
-
+  generator, gearbox, 1, rated_values, lookup_Pitch);
+%mean(wind_speed(1:100, 2))
   % Run the simulation
   out = sim(in, 'ShowProgress','on'); 
   out_store{i} = out; % store the results of the simulation

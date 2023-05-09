@@ -42,8 +42,39 @@ In particular, the figure a) reports the wind velocity as function of the simula
 The generator power exceeds the rated one in the cases when the \acrshort{WS} exceeds the rated one. \textcolor{red}{Explain the motivations}\\
 
 
-\subsubsection[]{Disabling of the pitch angle gain scheduling}
+\subsubsection{Disabling of the pitch angle gain scheduling}
 In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, two constant values are replaced instead of the polynomial gains. In particular, the value $k_p=2 \ \mesunt{\second}$ and $k_i=0.9 \left[-\right]$ are chosen since they are close to the gains at low pitch where the turbine is expected to work for more time.  
+\begin{figure}[htb]
+  \centering
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_30fig_wind_TS.eps}
+    \label{fig:2023_05_9_20_55_30fig_wind_TS}
+    \caption{Wind time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_37fig_pitch_dynamic.eps}
+    \label{fig:2023_05_9_20_55_30fig_pitch_dynamic}
+    \caption{Pitch angle time series}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_46fig_omega_dynamic.eps}
+    \label{fig:2023_05_9_20_55_46fig_omega_dynamic}
+    \caption{Pitch angle time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_56_15fig_torque_dynamic.eps}
+    \label{fig:2023_05_9_20_56_15fig_torque_dynamic}
+    \caption{Torque time series}
+  \end{subfigure}
+  \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
+\end{figure}
 
 \subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
 \subsubsection{Simulation settings}
@@ -66,7 +97,7 @@ The results of this simulation are reported in \autoref{fig:simulation_rand_wind
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_40_32fig_omega_param.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_37_59fig_power_param.eps}
     \caption{Power}
     \label{fig:2023_05_1_00_51_17fig_omega_param}
   \end{subfigure}
@@ -104,8 +135,8 @@ The results of this simulation are reported in \autoref{fig:simulation_rand_wind
     \centering
     \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_57fig_omega_param.eps}
     \caption{Rotational speed}
-    \label{fig:2023_05_1_00_50_58fig_pitch_param}
+    \label{fig:2023_05_8_23_17_57fig_omega_param}
   \end{subfigure}
-  \caption{Results of simulation with a generated wind series}
-  \label{fig:simulation_rand_wind_NPC}
+  \caption{Results of simulation with a generated wind series, no blade gain scheduling}
+  \label{fig:simulation_rand_wind_no_gain_scheduling}
 \end{figure}

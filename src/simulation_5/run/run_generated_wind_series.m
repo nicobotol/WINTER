@@ -1,12 +1,12 @@
 function [wind_speed] = run_generated_wind_series(wind_mean, ...
-  wind_turbulence, wind_speed, stop_time)
+  wind_turbulence, wind_speed, stop_time, seed)
 % This function generates s wind series based on the parameters setted in
 % parameters.m and runs the simulation for it
 
 parameters
 fs = wind.sample_f; % sampling frequency [Hz]
 T = stop_time;      % total time [s]
-
+rng(seed)
 % Generate the winds
 [wind_speed(:, 2), wind_speed(:, 1), PSD] = wind_series(wind_mean, wind_turbulence, fs, wind.height, stop_time);
 

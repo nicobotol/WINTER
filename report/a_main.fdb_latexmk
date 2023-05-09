@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber a_main"] 0 "a_main.bcf" "a_main.bbl" "a_main" 1683580991 -1
+["biber a_main"] 0 "a_main.bcf" "a_main.bbl" "a_main" 1683670263 -1
   "./document.bib" 1683122266 6707 a6e5cf4f3736b161ec93a8d927f850ce ""
-  "a_main.bcf" 1683580990 112354 08dfe08aec3aeddbb4e20189021f8189 "pdflatex"
+  "a_main.bcf" 1683670261 112354 08dfe08aec3aeddbb4e20189021f8189 "pdflatex"
   (generated)
   "a_main.bbl"
   "a_main.blg"
   (rewritten before read)
-["pdflatex"] 1683580966 "c:/Users/Niccolò/Documents/UNIVERSITA/TESI_MAGISTRALE/report/a_main.tex" "a_main.pdf" "a_main" 1683580991 0
+["pdflatex"] 1683670216 "c:/Users/Niccolò/Documents/UNIVERSITA/TESI_MAGISTRALE/report/a_main.tex" "a_main.pdf" "a_main" 1683670263 0
   "C:/Users/Niccolò/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1683549001 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/Niccolò/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1095.pk" 1682114185 12668 2e080a7187e00d4975ba92b598044fe0 ""
   "C:/Users/Niccolò/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1440.pk" 1682114187 16968 ff79c9c06ef632d8c563e0b87796e364 ""
@@ -319,12 +319,12 @@
   "C:/Users/Niccolò/AppData/Local/Programs/MiKTeX/tex/latex/xfor/xfor.sty" 1233853356 2689 44855b72da58344b1c1d9b3087bce6ca ""
   "C:/Users/Niccolò/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
   "a_main.acr" 0 -1 0 ""
-  "a_main.aux" 1683580990 34889 4f219f31ef12ff8bca32dc954442bf66 "pdflatex"
-  "a_main.bbl" 1683579150 30349 1db8c12fb476479675e754e6935b9fd8 "biber a_main"
-  "a_main.out" 1683580990 9243 caf498a6b13e385e79b56af797df5cdb "pdflatex"
-  "a_main.run.xml" 1683580990 2317 f9444e1c3c91a7333e5e976ced8d4168 "pdflatex"
+  "a_main.aux" 1683670261 36539 678a486a9e1f53aebc5e4e08387cc882 "pdflatex"
+  "a_main.bbl" 1683645781 30349 1db8c12fb476479675e754e6935b9fd8 "biber a_main"
+  "a_main.out" 1683670261 9489 10016b6e57879839f2876c7fb360334c "pdflatex"
+  "a_main.run.xml" 1683670261 2317 f9444e1c3c91a7333e5e976ced8d4168 "pdflatex"
   "a_main.tex" 1683579112 503 329192755eb065cf67d2d12b05632e7c ""
-  "a_main.toc" 1683580990 4560 cd51658232dc4d4b2e48f97a43e0b6fc "pdflatex"
+  "a_main.toc" 1683670261 4604 bfb27490387c361979a547939671b214 "pdflatex"
   "a_packages.tex" 1683548967 2991 1ab69a4d494b347e7f982fff84146508 ""
   "b_front_page.tex" 1683182809 663 518350c24c655bbee477241a5bbdec81 ""
   "b_glossary.tex" 1683122266 808 5c0b1171fdb29b65d0db1eb044281fb3 ""
@@ -334,9 +334,9 @@
   "c_WT_characteristics.tex" 1683137799 23992 fd1dd17f0d356cd47987daa0ff9a3618 ""
   "c_basic_model_control.tex" 1683579104 14866 07e7da84e76a528b0bd84e76905fabba ""
   "c_basic_model_model.tex" 1683558315 12552 f2cd172da3e72fd4d5297cf873e500d4 ""
-  "c_basic_model_results.aux" 1683580988 8104 a391b05c7dc24d84fada6788fe9a7baf "pdflatex"
+  "c_basic_model_results.aux" 1683670259 8104 a391b05c7dc24d84fada6788fe9a7baf "pdflatex"
   "c_basic_model_results.tex" 1683548867 4709 0096348dd788b989a1a041760fb1d38a ""
-  "c_basic_model_simulation.tex" 1683580932 6992 6f9076b139769e097a310fef6655326f ""
+  "c_basic_model_simulation.tex" 1683670139 8258 022d1037bbd17d5def7da738e231268b ""
   "d_pmsm.tex" 1683122266 2506 71d3508fe62203718cb055a26ffed0f0 ""
   "d_table_review_transmission.tex" 1683122266 1271 19a6e91d3a65ce93511e07abcd499c3b ""
   "d_torque_control.tex" 1683122266 1836 dc1bdc8fd22880e8350955bd20ae59c1 ""
@@ -363,6 +363,7 @@
   "images/operating_reagions.png" 1676560025 14033 e3604da262f0c1ca1508aa1f5b82278c ""
   "images/pitch_control_2.png" 1677314518 46939 017c1015f9bd56c2077f6f42e1f4409d ""
   "images/torque_control.png" 1676581331 32973 f554aa429368247bc8a204971f06a025 ""
+  "images/vectorial/2023_05_3_17_37_59fig_power_param.eps" 1683128299 5020053 b577d9b479d9c2fa6b2f318d379591b7 ""
   "images/vectorial/2023_05_3_17_39_46fig_pitch_param.eps" 1683128396 4659221 7e803378ba6b4c680467c14054191cb9 ""
   "images/vectorial/2023_05_3_17_40_32fig_omega_param.eps" 1683128442 5022255 563e4776037bcdd53a81f0ac1f8da4a8 ""
   "images/vectorial/2023_05_3_17_52_01fig_wind_TS.eps" 1683129127 534136 e2d303951c716cb1c83f99fa792726a4 ""
@@ -390,6 +391,10 @@
   "images/vectorial/2023_05_8_23_17_24fig_power_param.eps" 1683580653 5017496 c9938dea75e9bce488c33dd2b88ce1d4 ""
   "images/vectorial/2023_05_8_23_17_46fig_pitch_param.eps" 1683580676 4658379 42f4f0a644e042c144f86f758ef31546 ""
   "images/vectorial/2023_05_8_23_17_57fig_omega_param.eps" 1683580687 5031700 ef88dc863e0903886b69ed773ccc82ac ""
+  "images/vectorial/2023_05_9_20_55_30fig_wind_TS.eps" 1683658536 700560 186b18c88c3e4d239a60e6635fad70ac ""
+  "images/vectorial/2023_05_9_20_55_37fig_pitch_dynamic.eps" 1683658545 286283 143e45fe74ef53eec090cb5e8bbcc3e5 ""
+  "images/vectorial/2023_05_9_20_55_46fig_omega_dynamic.eps" 1683658558 323728 9e158b5183a36d90404aa68bd96ac8bb ""
+  "images/vectorial/2023_05_9_20_56_15fig_torque_dynamic.eps" 1683658590 596326 459da5cf86f4594f77e8caf3d8925cc8 ""
   "images/velocity_triangle.png" 1677832505 37092 8094969ae300ed907b4d461b13c3b96e ""
   (generated)
   "a_main.acn"
