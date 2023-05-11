@@ -7,7 +7,11 @@ leg = cell(1, wind.WS_len);
 fig = figure('Color','w');
 hold on
 for i=1:wind.WS_len
-  plot(out_cell{i}.(series_x).Data/scaling_x, out_cell{i}.(series_y).Data/scaling_y, ...
+  % Time from where start to print
+  t_start = out_cell{i}.(series_x).Time(end) - simulation.plot_time(i); % [s]
+  [~, s_start] = min(abs(out_cell{i}.(series_x).Time - t_start)); % sample from where to start
+
+  plot(out_cell{i}.(series_x).Data(s_start:end)/scaling_x, out_cell{i}.(series_y).Data(s_start:end)/scaling_y, ...
     'LineWidth', line_width, 'Color', colors_vect(i,:));
   leg{i} = ['Sim. ', num2str(i)];
 end

@@ -42,39 +42,7 @@ In particular, the figure a) reports the wind velocity as function of the simula
 The generator power exceeds the rated one in the cases when the \acrshort{WS} exceeds the rated one. \textcolor{red}{Explain the motivations}\\
 
 
-\subsubsection{Disabling of the pitch angle gain scheduling}
-In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, two constant values are replaced instead of the polynomial gains. In particular, the value $k_p=2 \ \mesunt{\second}$ and $k_i=0.9 \left[-\right]$ are chosen since they are close to the gains at low pitch where the turbine is expected to work for more time.  
-\begin{figure}[htb]
-  \centering
-  \begin{subfigure}{0.48\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_30fig_wind_TS.eps}
-    \label{fig:2023_05_9_20_55_30fig_wind_TS}
-    \caption{Wind time series}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}{0.48\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_37fig_pitch_dynamic.eps}
-    \label{fig:2023_05_9_20_55_30fig_pitch_dynamic}
-    \caption{Pitch angle time series}
-  \end{subfigure}
-  \vskip\baselineskip
-  \begin{subfigure}{0.48\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_46fig_omega_dynamic.eps}
-    \label{fig:2023_05_9_20_55_46fig_omega_dynamic}
-    \caption{Pitch angle time series}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}{0.48\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_56_15fig_torque_dynamic.eps}
-    \label{fig:2023_05_9_20_56_15fig_torque_dynamic}
-    \caption{Torque time series}
-  \end{subfigure}
-  \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
-\end{figure}
+
 
 \subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
 \subsubsection{Simulation settings}
@@ -111,7 +79,49 @@ The results of this simulation are reported in \autoref{fig:simulation_rand_wind
   \label{fig:simulation_rand_wind_NPC}
 \end{figure}
 
+\subsection{Disabling of the pitch angle gain scheduling}
+In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, two constant values are replaced instead of the polynomial gains. In particular, the value $k_p=2 \ \mesunt{\second}$ and $k_i=0.9 \left[-\right]$ are chosen since they are close to the gains at low pitch where the turbine is expected to work for more time. \\
+\autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque. In particular data from three different simulations are reported. The first is run with the gain scheduling discussed in the subsection \ref{subsec:gain_schdeuling_DTU10MW}, the second with the constant gains here chosen, and the third with the the gain schdeuling reported by \cite{Olimpo_Anaya‐Lara}.
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_30fig_wind_TS.eps}
+    \label{fig:2023_05_9_20_55_30fig_wind_TS}
+    \caption{Wind time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_37fig_pitch_dynamic.eps}
+    \label{fig:2023_05_9_20_55_30fig_pitch_dynamic}
+    \caption{Pitch angle time series}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_46fig_omega_dynamic.eps}
+    \label{fig:2023_05_9_20_55_46fig_omega_dynamic}
+    \caption{Pitch angle time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_56_15fig_torque_dynamic.eps}
+    \label{fig:2023_05_9_20_56_15fig_torque_dynamic}
+    \caption{Torque time series}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_59fig_power_dynamic.eps}
+    \label{fig:2023_05_9_20_55_59fig_power_dynamic}
+    \caption{Power time series}
+  \end{subfigure}
+  \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
+  \label{fig:gain_scheduling_time_dependency}
+\end{figure}
 
+Another between the use or not of the gain scheduling may be done repeating the simulations done in \autoref{sec:wind_series_sim} but disabling the blade gain schdeuling. The corresponding results are reported in \autoref{fig:simulation_rand_wind_no_gain_scheduling}
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
@@ -140,3 +150,5 @@ The results of this simulation are reported in \autoref{fig:simulation_rand_wind
   \caption{Results of simulation with a generated wind series, no blade gain scheduling}
   \label{fig:simulation_rand_wind_no_gain_scheduling}
 \end{figure}
+
+\newpage

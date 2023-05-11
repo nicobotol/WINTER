@@ -39,16 +39,7 @@ for i = 1:wind.WS_len
     case 7 % with or without gain schdeuling
       wind_speed = run_generated_wind_series(wind.mean(i), ...
         wind.turbulence(i), wind_speed, stop_time, simulation.seed);
-      if i == 1 % with gain scheduling
-        blade.kp_schedule = blade_schedule_gains{1};
-        blade.ki_schedule = blade_schedule_gains{2};
-      elseif i==2 % without scheduling
-        blade.kp_schedule = 2;
-        blade.ki_schedule = 0.9;
-      elseif i==3
-        blade.kp_schedule= [-59.871 46.281 -7.814 -2.541 1]; % from Olimpo's
-blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351]; % from Olimpo's
-      end
+      [blade.kp_schedule, blade.ki_schedule] = run_blade_gains(blade, i);
 
   end
 

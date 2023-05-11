@@ -2,7 +2,7 @@
 plot_time_series("fig_wind_TS",out_store, 'wind', 'Time [s]', ...
   'Wind speed [m/s]', 'Wind speed time serie', 1, date_fig);
 
-%% pitch dynamic
+% pitch dynamic
 plot_time_series('fig_pitch_dynamic', out_store, 'pitch','Time [s]',...
    '$\theta \ [deg.]$', 'Pitch angle time serie', pi/180, date_fig); 
 
@@ -19,4 +19,20 @@ plot_time_series2('fig_power_dynamic',out_store,'P_R','P_G', ...
 plot_time_series2('fig_torque_dynamic',out_store,'T_G_reference','T_G', ...
   'none','Time [s]','T [MNm]','Generator torque', ...
   1e6,'Ref.','',date_fig)
+
+% generator power dynamic
+plot_time_series2('fig_generator_power_dynamic',out_store,'P_GE','P_G', ...
+  rotor.P_rated,'Time [s]','P [MW]','Rotor and generator powers', ...
+  1e6,'Electro','Mech.',date_fig)
+
+% for i=1:wind.WS_len % sum the electrical and joule losses
+%   out_store{i}.P_GEJoule =  out_store{i}.P_GE +  out_store{i}.P_GJoule + out_store{i}.P_GInductance;
+% end
+data = string(3);
+data = ["P_GE","P_G", "P_GSum", "P_GMech"];
+leg = string(3);
+leg = ["Electro","Mech.", "Sum", "P_GMech"];
+plot_time_seriesN('fig_generator_power_dynamic',out_store, data, ...
+  rotor.P_rated,'Time [s]','P [MW]','Rotor and generator powers', ...
+  1e6,leg,date_fig)
 
