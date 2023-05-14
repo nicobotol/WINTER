@@ -22,7 +22,7 @@ tic
 for i = 1:wind.WS_len
   stop_time = simulation.stop_time(i); % set the stop time 
   wind_speed = zeros(stop_time/wind.sample_t, 2);
-  
+
   switch simulation.type
     case 1  % constant wind speed  
       wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, ...
@@ -44,7 +44,7 @@ for i = 1:wind.WS_len
   end
 
   % Set the initial conditions
-  [rotor, generator, blade] = initial_conditions(rotor, blade, ...
+  [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
   generator, gearbox, 1, rated_values, lookup_Pitch);
 %mean(wind_speed(1:100, 2))
   % Run the simulation
@@ -67,5 +67,5 @@ end
 if simulation_fails == 0
   plots
 else
-  fprintf('Smulation ended with error\n');
+  fprintf('Simulation ended with error\n');
 end

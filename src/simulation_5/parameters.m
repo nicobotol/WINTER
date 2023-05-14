@@ -94,7 +94,7 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [50]; % max time to investigaste [s]
+simulation.stop_time = [20]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 5;        % 1 -> constant wind speed
@@ -104,7 +104,7 @@ simulation.type = 5;        % 1 -> constant wind speed
                             % 5 -> generated WS and parametrization plot
                             % 6 -> ramp and parametrization plot
                             % 7 -> with/without blade gain scheduling
-simulation.plot_time = [50];  % time from the end of the simulation to 
+simulation.plot_time = [20];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 

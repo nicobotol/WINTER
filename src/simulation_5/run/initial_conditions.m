@@ -1,4 +1,5 @@
-function [rotor, generator, blade] = initial_conditions(rotor, blade, ...
+function [rotor, generator, blade, T_R0] = initial_conditions(rho, ...
+  lambda_vector, pitch_vector, lookup_cP, rotor, blade, ...
   generator, gearbox, V0_0, rated_values, lookup_Pitch)
 % This functions sets the initial conditions fo the simulation
 % V0_0 -> initial windspeed [m/s]
@@ -20,5 +21,12 @@ generator.P_G0 = generator.K_opt*rotor.omega_R0^3; % [W]
 
 % initial blade pitch angle
 blade.pitch0 = interp1(lookup_Pitch(1,:), lookup_Pitch(3,:), V0_0);
+
+% Intial aero torque
+lambda0 = rotor.omega_R0*rotor.R/V0_0;
+cP0 = interp2(lambda_vector, pitch_vector, lookup_cP, lambda0, blade.pitch0);
+
+P_R0 = 0.5*rho*V0_0^3*pi*rotor.R^2*cP0; % rotor power [W]
+T_R0 = P_R0/rotor.omega_R0;            % rotor torque [Nm]
 
 end

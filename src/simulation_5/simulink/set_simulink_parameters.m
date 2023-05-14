@@ -9,7 +9,6 @@ set_param(strcat(simulation_mdl,'/PMSM/Gain1'),'SampleTime', ...
 set_param(strcat(simulation_mdl,'/PMSM/Sum1'),'SampleTime', ...
   'simulation.time_step_L');
 
-
 % In case of generator step response set also other parameters
 if simulation_type == 4
   % Get all blocks in the current model

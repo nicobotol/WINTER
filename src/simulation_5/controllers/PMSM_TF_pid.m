@@ -18,14 +18,14 @@ iq_omegaBP = generator.iq_omegaBP;
 if design_method == 0
 % Define the transfer function as symbol
 syms s ki kd
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
+Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
 [kp, ki, kd, tau_d1] = pid_tune(G, iq_omegaBP);           % tune the gains
 
 % Redefine the transfer function as 'transfer function' type 
 s = tf('s');
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
+Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
 Riq = (kp + ki/s + kd*s)/(1 + s*tau_d1);                   % regulator
