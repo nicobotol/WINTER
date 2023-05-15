@@ -15,7 +15,7 @@ for i = 1:wind.WS_len
     'LineWidth', line_width);
   leg{i} = ['Sim. ', num2str(i)];
 end
-legend(leg, 'Location', 'best', 'FontSize', font_size,...
+legend(leg, 'Location', 'northwest', 'FontSize', font_size,...
   'interpreter','latex');
 xlabel(x_label,'interpreter','latex')
 ylabel(y_label,'interpreter','latex')

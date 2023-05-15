@@ -33,7 +33,7 @@ switch simulation.type
     plot_all_parametrizations_wind
     plot_all_parametrizations
 
-  case {6, 7} % ramp and parametrization plot
+  case {6, 7, 8} % ramp and parametrization plot
     plot_all_dynamic
     plot_all_parametrizations_wind
     plot_all_parametrizations

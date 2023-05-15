@@ -40,6 +40,10 @@ for i = 1:wind.WS_len
       wind_speed = run_generated_wind_series(wind.mean(i), ...
         wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [blade.kp_schedule, blade.ki_schedule] = run_blade_gains(blade, i);
+    case 8 % with gain schdeuling or stall regulated
+    wind_speed = run_generated_wind_series(wind.mean(i), ...
+      wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+    [blade.kp_schedule, blade.ki_schedule] = run_stall_regulation(blade, i);
 
   end
 

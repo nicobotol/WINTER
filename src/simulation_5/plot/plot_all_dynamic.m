@@ -25,14 +25,18 @@ plot_time_series2('fig_generator_power_dynamic',out_store,'P_GE','P_G', ...
   rotor.P_rated,'Time [s]','P [MW]','Rotor and generator powers', ...
   1e6,'Electro','Mech.',date_fig)
 
-% for i=1:wind.WS_len % sum the electrical and joule losses
-%   out_store{i}.P_GEJoule =  out_store{i}.P_GE +  out_store{i}.P_GJoule + out_store{i}.P_GInductance;
-% end
-data = string(3);
-data = ["P_GE","P_G", "P_GSum", "P_GMech"];
-leg = string(3);
-leg = ["Electro","Mech.", "Sum", "P_GMech"];
+for i=1:wind.WS_len % sum the electrical and joule losses
+  out_store{i}.P_check = [];
+  out_store{i}.P_check.Data = out_store{i}.P_GE.Data + ...
+    out_store{i}.P_GJoule.Data + out_store{i}.P_GInductance.Data;
+  out_store{i}.P_check.Time = out_store{i}.P_GE.Time;
+end
+
+data = string(4);
+data = ["P_GE","P_GJoule", "P_check", "P_G"];
+leg = string(4);
+leg = ["Electro","Joule loss", "Check", "Input"];
 plot_time_seriesN('fig_generator_power_dynamic',out_store, data, ...
-  rotor.P_rated,'Time [s]','P [MW]','Rotor and generator powers', ...
+  rotor.P_rated,'Time [s]','P [MW]','Generator powers', ...
   1e6,leg,date_fig)
 

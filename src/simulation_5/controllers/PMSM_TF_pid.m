@@ -34,7 +34,7 @@ GR = G*Riq;
 %% Automatic design of the controller
 elseif design_method == 1
 s = tf('s');
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
+Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
 opts = pidtuneOptions('PhaseMargin', generator.iq_pm);

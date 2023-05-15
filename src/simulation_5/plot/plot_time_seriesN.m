@@ -24,7 +24,7 @@ if strcmp(y_line, 'none') == 0
     'Color', colors_vect(i + 1, :));
   leg{N*wind.WS_len + 1} = ['Rated'];
 end
-legend(leg, 'Location', 'south', 'FontSize', font_size,...
+legend(leg, 'Location', 'northwest', 'FontSize', font_size,...
   'interpreter','latex','NumColumns',wind.WS_len);
 xlabel(x_label,'interpreter','latex')
 ylabel(y_label,'interpreter','latex')
