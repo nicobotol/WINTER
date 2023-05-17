@@ -64,7 +64,7 @@ It could be noticed that, for a chosen value of efficiency $\eta$, then the damp
   B_{eq}^R = K_{opt}\omega^R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
 \end{equation}
 \subsection{Electrical generator}
-The chosen generator is a \acrshort{PMSM}. Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values reported in \autoref{tab:generator_parameter} are used in this simulation.
+The chosen generator is a \acrshort{PMSM}. Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are used in this simulation.
 \begin{table}[htb]
     \caption{Parameters for the \acrlong{PMSM} generator}
     \centering
@@ -101,7 +101,7 @@ The Simulink implementation of the control loop presented in \autoref{fig:d_torq
  For its simplicity the chosen controller is a \acrshort{PID} one, and the design method exposed in \autoref{sec:e_pid_tuning} is used on the open loop function $G(s) = G_c(s)Y_{iq}(s)$, after having specified the crossover frequency of $\omega_{cp}=$1500 $\mesunt{\radian\per\second}$, which is less than $\frac{1}{4}$ the switching one. This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
  The tuning of the PID controller has been done following the procedures described  in the \autoref{sec:e_pid_tuning}. The resulting gains ($k_p$, $k_i$, $k_d$), the frequency of the added pole and the phase margin $\varphi$ are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \textit{pidtune}, that may be used to have at least the order of magnitude of the expected values.
 \begin{table}[htb]
-    \caption{Gains for the PMSM machine controller}
+    \caption{Gains for the PMSM machine controller, \textcolor{red}{These values are not correct, and so they have to be rewritten according to the results of the simulation}}
      \centering
      \begin{tabular}{cccccc}
      \toprule

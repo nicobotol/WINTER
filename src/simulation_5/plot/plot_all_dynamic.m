@@ -32,6 +32,7 @@ for i=1:wind.WS_len % sum the electrical and joule losses
   out_store{i}.P_check.Time = out_store{i}.P_GE.Time;
 end
 
+% check on the generator powers
 data = string(4);
 data = ["P_GE","P_GJoule", "P_check", "P_G"];
 leg = string(4);
@@ -40,3 +41,12 @@ plot_time_seriesN('fig_generator_power_dynamic',out_store, data, ...
   rotor.P_rated,'Time [s]','P [MW]','Generator powers', ...
   1e6,leg,date_fig)
 
+% generator efficiency
+for i=1:wind.WS_len % sum the electrical and joule losses
+  out_store{i}.generator_eta = [];
+  out_store{i}.generator_eta.Data = out_store{i}.P_GE.Data ./...
+  out_store{i}.P_G.Data;
+  out_store{i}.generator_eta.Time = out_store{i}.P_GE.Time;
+end
+plot_time_series("fig_generator_eta",out_store, 'generator_eta', 'Time [s]', ...
+  'Generator efficiency [-]', 'Generator efficiency', 1, date_fig);

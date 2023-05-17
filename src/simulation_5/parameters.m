@@ -94,10 +94,10 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [50 50]; % max time to investigaste [s]
+simulation.stop_time = [50]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 8;        % 1 -> constant wind speed
+simulation.type = 5;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -105,7 +105,7 @@ simulation.type = 8;        % 1 -> constant wind speed
                             % 6 -> ramp and parametrization plot
                             % 7 -> with/without blade gain scheduling
                             % 8 -> with gain scheduling or stall regulation
-simulation.plot_time = [50 50];  % time from the end of the simulation to 
+simulation.plot_time = [50];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
@@ -138,11 +138,18 @@ generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 % generator.fe = 15.8;       % rated stator frequency [Hz]
 
 % Olimpo
-generator.p = 198;          % number of poles 320
-generator.Ld = 5.29e-3;      % d-axis stator inductance [H]
-generator.Lq = 5.29e-3;      % q-axis stator inductance [H]
-generator.Rs = 36.6e-3;       % stator resistance [ohm]
-generator.Lambda = 4.47;   % magnet flux-linkage [Wb]
+% generator.p = 198/2;          % number of poles 320
+% generator.Ld = 5.29e-3;      % d-axis stator inductance [H]
+% generator.Lq = 5.29e-3;      % q-axis stator inductance [H]
+% generator.Rs = 36.6e-3;       % stator resistance [ohm]
+% generator.Lambda = 4.47;   % magnet flux-linkage [Wb]
+
+% Marcelo Lobo
+generator.p = 320/2;          % number of poles 320
+generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
+generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
+generator.Rs = 64e-3;       % stator resistance [ohm]
+generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
 
 generator.tau_c = 500e-6;   % q-axis control time constant [s]
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
@@ -203,8 +210,8 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 % blade.kd = 0;
 
 % Wind parameters
-wind.mean = [15 15];                % 10 minutes mean wind speed [m/s]]
-wind.turbulence = [1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [15];                % 10 minutes mean wind speed [m/s]]
+wind.turbulence = [1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
