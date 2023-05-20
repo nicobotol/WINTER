@@ -11,7 +11,7 @@ It is decided to test 4 wind velocity conditions, and for each of them simulate 
     \centering
     \begin{tabular}{lcccc}
     \toprule
-      Number & Regime  & WS & Ramp length \\ 
+      Simulation & Regime  & WS & Ramp length \\ 
        & & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\second}\right]$ \\ \midrule       
        I & Below & 4-10 & 200  \\
        II & Below $\rightarrow$ above rated & 10-14 & 200 \\
@@ -79,17 +79,20 @@ The results of this simulation are reported in \autoref{fig:simulation_rand_wind
   \label{fig:simulation_rand_wind_NPC}
 \end{figure}
 
-\subsection{Disabling of the pitch angle gain scheduling}
+\subsection{Disabling of the pitch angle gain scheduling}\label{subsec:gain_scheduling_disabling}
 In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, three simulations with differnt wind speeds are proposed, $V_{10} = 11.5, 15, 20 \ \mesunt{\meter\per\second}$. For each of them four different gains are used. The settings for all of them are reported in  \autoref{tab:simulation_config_variable_gains2}, \autoref{tab:simulation_config_variable_gains}, and \autoref{tab:simulation_config_variable_gains3}. \\
 In particular, the first and the fourth simulations use the gain scheduling paradigm while the other two have a fixed gain. The specific numerical value chosen in the constant case are representative of two very different reagions of the scheduling case since \textit{simulation 2} has values close to the ones used at low wind speeds, while \textit{3} has value close to the high wind speeds. 
 
 \subsubsection{Wind speed of  $V_{10} = 11.5 \ \mesunt{\meter\per\second}$}
+The first of the three simulations is run at $V_{10} = 11.5 \ \mesunt{\meter\per\second}$. Here an intermitting activation of the pitching mechanism is expected since the wind speed fluctuates around its nominal value.\\
+\autoref{tab:simulation_config_variable_gains2} reports the simulation settings while \autoref{fig:gain_scheduling_time_dependency2} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque obtained from the simulations. 
+
 \begin{table}[htb]
   \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency2}}
   \centering
   \begin{tabular}{ccccc}
   \toprule
-    Number & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
+    Simulation & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
      & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\meter\per\second}\right]$ & \\ \midrule       
      1 & 11.5 & 1 & As in \autoref{subsec:gain_schdeuling_DTU10MW}  \\
      2 & 11.5 & 1 & $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$ \\
@@ -100,13 +103,11 @@ In particular, the first and the fourth simulations use the gain scheduling para
   \label{tab:simulation_config_variable_gains2}
 \end{table}
 
-\autoref{fig:gain_scheduling_time_dependency2} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque for these settings. 
-
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
     \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_47_54fig_wind_TS.eps}
-    \label{}
+    \label{fig:fig_wind_15ms}
     \caption{Wind time series}
   \end{subfigure}
   \hfill
@@ -147,8 +148,9 @@ In particular, the first and the fourth simulations use the gain scheduling para
   \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
   \label{fig:gain_scheduling_time_dependency2}
 \end{figure}
-After the simualtion and in order to evaluate quantitativelly them, the RMS error between the steady state value (i.e. the last 40 seconds of the simulation) and the corresponding expected nominal values above rated wind speed are reported in \autoref{tab:res_variable_gains_2}.\\
-In that case these error metrices are not so representative since the wind is not always above the rated one and therefore the corresponding power, torque and rotational speed are not always expected to be reached. They are reported anyway in order to be then compared with the other two simulations.  
+After the simualtion and in order to evaluate it quantitativelly, the RMS error between the steady state quantities (i.e. the last 40 seconds of the simulation) and the corresponding expected nominal values above rated wind speed are computed, and reported in \autoref{tab:res_variable_gains_2}.\\
+
+In this simulation these error metrices are not so representative since the wind is not always above the rated one and therefore the corresponding power, torque and rotational speed are not always expected to be reached. They are reported anyway in order to be then compared with the simulations proposed later on.  
 
 \begin{table}[htb]
   \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
@@ -168,12 +170,13 @@ In that case these error metrices are not so representative since the wind is no
 The first two simulations are very close each other, since the static gain of \textit{sim. 2} is almost the same of the scheduling at rated speed. Furthermore, the results of the fourth simulation are not too different from the first two. Finally, it could be also noticed that the gain in case \textit{3} is very different from the other one, suggesting that this choice is not suitable for this condition. 
 
 \subsubsection{Wind speed of $V_{10}=15 \ \mesunt{\meter\per\second}$}
+The second simualtion is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and so the wind speed is expected to be always above the rated one. The simulation settings are reported in \ref{tab:simulation_config_variable_gains}.
 \begin{table}[htb]
   \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency}}
   \centering
   \begin{tabular}{ccccc}
   \toprule
-    Number & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
+    Simulation & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
      & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\meter\per\second}\right]$ & \\ \midrule       
      1 & 15 & 1 & As in \autoref{subsec:gain_schdeuling_DTU10MW}  \\
      2 & 15 & 1 & $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$ \\
@@ -232,7 +235,7 @@ The first two simulations are very close each other, since the static gain of \t
   \label{fig:gain_scheduling_time_dependency}
 \end{figure}
 
-The RMS error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains}.
+The \acrshort{RMS} error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains}.
 \begin{table}[htb]
   \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
   \centering
@@ -252,12 +255,14 @@ The RMS error between the steady state value and the corresponding expected stat
 As could be seen from the root mean square errors, the gain scheduling simulations performs better than the fixed one. In fact, even tough \textit{simulation 2} has lowest error value, the ones of \textit{4} are almost double than the \textit{1}. This means that a fixed gain may perform well in a certain wind reagion (i.e. the one corresponding at the same gain in the scheduling approach) but probably it will underperform in another different from that one.  
 
 \subsubsection{Wind speed with $V_{10} =  20 \ \mesunt{\meter\per\second}$}
+The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation parameters are reported in \autoref{tab:simulation_config_variable_gains3} while the results in \autoref{fig:gain_scheduling_time_dependency3} and \autoref{tab:res_variable_gains3}.
+
 \begin{table}[htb]
-  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency}}
+  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency3}}
   \centering
   \begin{tabular}{ccccc}
   \toprule
-    Number & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
+    Simulation & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
      & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\meter\per\second}\right]$ & \\ \midrule       
      1 & 20 & 2.0 & As in \autoref{subsec:gain_schdeuling_DTU10MW}  \\
      2 & 20 & 2.0 & $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$ \\
@@ -267,8 +272,6 @@ As could be seen from the root mean square errors, the gain scheduling simulatio
   \end{tabular}
   \label{tab:simulation_config_variable_gains3}
 \end{table}
-
-\autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque. 
 
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
@@ -316,7 +319,6 @@ As could be seen from the root mean square errors, the gain scheduling simulatio
   \label{fig:gain_scheduling_time_dependency3}
 \end{figure}
 
-After the simualtion in order to evaluate quantitativelly them, the RMS error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains}.
 \begin{table}[htb]
   \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
   \centering
@@ -333,9 +335,9 @@ After the simualtion in order to evaluate quantitativelly them, the RMS error be
   \label{tab:res_variable_gains3}
 \end{table}
 
-\subsubsection{Another test}
+\subsubsection{Gain disabled and parametrization plot}
 
-Another between the use or not of the gain scheduling may be done repeating the simulations done in \autoref{sec:wind_series_sim} but disabling the blade gain schdeuling. The corresponding results are reported in \autoref{fig:simulation_rand_wind_no_gain_scheduling}
+Another comparison between the use or not of the gain scheduling may be done repeating the simulations done in \autoref{sec:wind_series_sim} but disabling the blade gain schdeuling, and letting the gains of the previos \textit{simulation 2} (i.e. $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$). The corresponding results are reported in \autoref{fig:simulation_rand_wind_no_gain_scheduling}.
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
@@ -365,4 +367,40 @@ Another between the use or not of the gain scheduling may be done repeating the 
   \label{fig:simulation_rand_wind_no_gain_scheduling}
 \end{figure}
 
+\subsubsection{Conclusions}
+The results obtained in \autoref{subsec:gain_scheduling_disabling} show that the choice of the gain highly influences the performance of the system. In particular the gain used in the \text{sim. 3} seems to be always the worst choice in the tested cases. Between the scheduling rule, the one proposed in \autoref{subsec:gain_schdeuling_DTU10MW} seems to perform better than the one of \cite{Olimpo_Anaya‐Lara}. Finally, it seems that the constant gain used in \textit{sim. 2} is always the best choice, probably because it is the highest one and so produces the response with the highest effort. \textcolor{red}{Maybe a better explanation can be found.}
+
+\subsection{Disasbling of the pitch angle controller}
+In order to show the effectivness of the blade pitch controller one can disable it at all and let the turbine working as as a purely stall regulate one (see \autoref{subsec:stall_regulation_theory}). In the simulations, the disabling is performed setting $k_p=0 \ \mesunt{\second}$ and $k_i=0 \ [-]$. \textcolor{red}{WRITE IT BETTER, SUMMARIZING WHAT IT IS WRITTEN IN THE THEORETICAL PART - It is expected that increasing the wind speed above the rated one, the rotor rotational speeds increase (and consequently the extracted power), up to the drag becomes so high to let the rotor speed to decrease on its own. }\\
+This test case is run with the same input velocity used in \autoref{fig:fig_wind_15ms}, and some of the results of the simualtions are reported in \autoref{fig:simulation_rand_wind_no_pitch_control}, alongside the case of blade pitch schdeuling for better understanding the differences. In particular the \textit{sim. 1} uses the sceduling of \autoref{subsec:gain_schdeuling_DTU10MW} while the \textit{sim. 2} is the one with disabled gain.\\
+More in detail, \autoref{fig:pitch_dynamic_no_ctrl} shows that in \text{sim. 2} the pitch is not changed, menaging that the blade remains in its initial position for the entire simulation. \autoref{fig:omega_dynamic_no_ctrl} shows that the rotational speed is limited at the rated value in the second, while grows up to a much higher value in the second.\\
+For what concerns the extracted power, \autoref{fig:power_dynamic_no_ctrl} shows that the extracted mechanical one is much more higher in the second simulation. In both the cases the mechanical power at the generator is the same, because as could be seen in \autoref{fig:torque_dynamic_no_ctrl} there is a strong torque reduction.  
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_30_17fig_pitch_dynamic.eps}
+    \caption{Pitch angle time series}
+    \label{fig:pitch_dynamic_no_ctrl}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_30_24fig_omega_dynamic.eps}
+    \caption{Rotor rotational speed time series}
+    \label{fig:omega_dynamic_no_ctrl}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_45_11fig_power_dynamic.eps}
+    \caption{Rotor power and gnerator input power}
+    \label{fig:power_dynamic_no_ctrl}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_30_44fig_torque_dynamic.eps}
+    \caption{Rotational speed}
+    \label{fig:torque_dynamic_no_ctrl}
+  \end{subfigure}
+  \caption{Results of simulation with a generated wind series, no blade control}
+  \label{fig:simulation_rand_wind_no_pitch_control}
+\end{figure}
 \newpage
