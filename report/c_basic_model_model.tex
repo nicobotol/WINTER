@@ -105,9 +105,9 @@ The Simulink implementation of the control loop presented in \autoref{fig:d_torq
      \centering
      \begin{tabular}{cccccc}
      \toprule
-          & $k_p$ & $k_i$ $\mesunt{\per\second}$ & $k_d$ $\mesunt{\second}$ & $\uptau_{d1} \ \mesunt{\radian\per\second}$ & $\varphi \mesunt{\degree}$\\ \midrule
-         manual & 8.05 & 165.4 & $3.99\cdot 10^{-3}$ & 15000 & 83.8\\
-         pidtune & 8.51 & 2037.4 & $4.3\cdot 10^{-3}$ &  15000 & 78.5\\ \bottomrule
+          & $k_p$ & $k_i$ $\mesunt{\per\second}$ & $k_d$ $\mesunt{\second}$ & $\uptau_{d1} \ \mesunt{\second}$ & $\varphi \mesunt{\degree}$\\ \midrule
+         manual & \GenkpMacroMan & \GenkiMacroMan & \GenkdMacroMan & \GentaudOneMacroMan & \GenMarginMan\\
+         pidtune & \GenkpMacroAuto & \GenkiMacroAuto & \GenkdMacroAuto & \GentaudOneMacroAuto & \GenMarginAuto\\ \bottomrule
      \end{tabular}
  
      \label{tab:tab_pid_tuning}
@@ -138,7 +138,7 @@ Furthermore, the response of the close loop system to a torque step input is rep
  \begin{figure}[htb]
     \centering
     \includegraphics[width=0.75\textwidth]{images/2023_03_14_18_06_09fig_gen_step.png}
-    \caption{Time response of the controlled generator at the input step torque}
+    \caption{Time response of the controlled generator at the input step torque, \textcolor{red}{This step response has to be replotted with the new generator}}
     \label{fig:step_response}
 \end{figure}
 

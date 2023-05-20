@@ -1,5 +1,5 @@
 function plot_time_series2(plot_name,out_cell,series1,series2,y_line, ...
-  x_label,y_label,plot_title,scaling,leg1,leg2,date_fig)
+  x_label,y_label,plot_title,scaling,leg1,leg2,date_fig, leg_loc)
 
 parameters
 
@@ -23,7 +23,7 @@ if strcmp(y_line, 'none') == 0
     'Color', colors_vect(i + 1, :));
   leg{2*wind.WS_len + 1} = ['Rated'];
 end
-legend(leg, 'Location', 'northwest', 'FontSize', font_size,...
+legend(leg, 'Location', leg_loc, 'FontSize', font_size,...
   'interpreter','latex','NumColumns',wind.WS_len);
 xlabel(x_label,'interpreter','latex')
 ylabel(y_label,'interpreter','latex')

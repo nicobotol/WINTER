@@ -1,5 +1,5 @@
 function plot_time_dataN(plot_name,out_cell,data,y_line, ...
-  x_label,y_label,plot_title,scaling,leg,date_fig)
+  x_label,y_label,plot_title,scaling,leg,date_fig,leg_loc)
 
 line_style = ["-", "--", ":", "-."];
 
@@ -24,7 +24,7 @@ if strcmp(y_line, 'none') == 0
     'Color', colors_vect(i + 1, :));
   leg{N*wind.WS_len + 1} = ['Rated'];
 end
-legend(leg, 'Location', 'northwest', 'FontSize', font_size,...
+legend(leg, 'Location', leg_loc, 'FontSize', font_size,...
   'interpreter','latex','NumColumns',wind.WS_len);
 xlabel(x_label,'interpreter','latex')
 ylabel(y_label,'interpreter','latex')

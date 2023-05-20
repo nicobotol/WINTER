@@ -28,28 +28,36 @@ s = tf('s');
 Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
-Riq = (kp + ki/s + kd*s)/(1 + s*tau_d1);                   % regulator
+Riq = -(kp + ki/s + kd*s)/(1 + s*tau_d1);                   % regulator
 GR = G*Riq;
+
+% Save the gains as latex macro
+names = ["GenkpMacroMan", "GenkiMacroMan", "GenkdMacroMan", "GentaudOneMacroMan", "GenMarginMan"];
 
 %% Automatic design of the controller
 elseif design_method == 1
-s = tf('s');
-Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
-Gc = 1/(1 + s*tau_c);                                  % power converter TF
-G = Yiq*Gc;  
-opts = pidtuneOptions('PhaseMargin', generator.iq_pm);
-Riq_pid = pidtune(G, 'pid', iq_omegaBP, opts);
-kp = Riq_pid.kp;
-ki = Riq_pid.ki;
-kd = Riq_pid.kd;
-tau_d1 = 1/(10*iq_omegaBP);
-
-Riq = (kp + ki/s + kd*s)/(1 + s*tau_d1);  
-GR = G*Riq; % regulator
-
-fprintf('ki = %f\n', Riq_pid.ki);
-fprintf('kp = %f\n', Riq_pid.kp);
-fprintf('kd = %f\n', Riq_pid.kd);
+  s = tf('s');
+  Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
+  Gc = 1/(1 + s*tau_c);                                  % power converter TF
+  G = Yiq*Gc;  
+  opts = pidtuneOptions('PhaseMargin', generator.iq_pm);
+  Riq_pid = pidtune(G, 'pid', iq_omegaBP, opts);
+  kp = Riq_pid.kp;
+  ki = Riq_pid.ki;
+  kd = Riq_pid.kd;
+  tau_d1 = 1/(10*iq_omegaBP);
+  
+  Riq = (kp + ki/s + kd*s)/(1 + s*tau_d1);  
+  GR = G*Riq; % regulator
+  
+  fprintf('ki = %f\n', Riq_pid.ki);
+  fprintf('kp = %f\n', Riq_pid.kp);
+  fprintf('kd = %f\n', Riq_pid.kd);
+  
+  kp = -kp;
+  ki = -ki;
+  kd = -kd;
+  names = ["GenkpMacroAuto", "GenkiMacroAuto", "GenkdMacroAuto", "GentaudOneMacroAuto", "GenMarginAuto"];
 end
 
 % Plot the phase margin
@@ -77,10 +85,16 @@ if enable_plot == 1
   TF = [G, GR, Riq];                                      % TF to plot
   legends = {'Not regulated', 'Regulated', 'Regulator'};  % legends names
   bode_plot(TF, legends, 'Open loop Bode plot', 'fig_bode_generator')
-
+  
   % Close loop
-%   bode_plot([G_cl, G_cl_simply], {'Close loop', 'Simplified'}, 'Close loop Bode plot', 'fig_bode_cl')
+  %   bode_plot([G_cl, G_cl_simply], {'Close loop', 'Simplified'}, 'Close loop Bode plot', 'fig_bode_cl')
   bode_plot(G_cl, {'Close loop'}, 'Close loop Bode plot', 'fig_bode_cl')
 end
+
+file_name = "C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\report\macro\macro.tex";
+mode = "a";
+data = [kp, ki, kd, tau_d1, PM];
+% write_latex_macro(file_name, names, data, mode)
+
 
 end

@@ -73,3 +73,6 @@ if simulation_fails == 0
 else
   fprintf('Simulation ended with error\n');
 end
+
+%% Post processing
+RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation);

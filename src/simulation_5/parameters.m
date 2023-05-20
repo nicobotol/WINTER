@@ -94,10 +94,10 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [50]; % max time to investigaste [s]
+simulation.stop_time = [120 120 120 120]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 5;        % 1 -> constant wind speed
+simulation.type = 7;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -105,14 +105,14 @@ simulation.type = 5;        % 1 -> constant wind speed
                             % 6 -> ramp and parametrization plot
                             % 7 -> with/without blade gain scheduling
                             % 8 -> with gain scheduling or stall regulation
-simulation.plot_time = [50];  % time from the end of the simulation to 
+simulation.plot_time = [120 120 120 120];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 0;% enables or disable plot's autosaving 
+simulation.print_figure = 1;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-
+simulation.post_process_time = [40 40 40 40]; % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -210,8 +210,8 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 % blade.kd = 0;
 
 % Wind parameters
-wind.mean = [15];                % 10 minutes mean wind speed [m/s]]
-wind.turbulence = [1.0]; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [20 20 20 20];           % 10 minutes mean wind speed [m/s]]
+wind.turbulence = [2.0 2.0 2.0 2.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]

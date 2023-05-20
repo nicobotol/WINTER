@@ -80,46 +80,260 @@ The results of this simulation are reported in \autoref{fig:simulation_rand_wind
 \end{figure}
 
 \subsection{Disabling of the pitch angle gain scheduling}
-In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, two constant values are replaced instead of the polynomial gains. In particular, the value $k_p=2 \ \mesunt{\second}$ and $k_i=0.9 \left[-\right]$ are chosen since they are close to the gains at low pitch where the turbine is expected to work for more time. \\
-\autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque. In particular data from three different simulations are reported. The first is run with the gain scheduling discussed in the subsection \ref{subsec:gain_schdeuling_DTU10MW}, the second with the constant gains here chosen, and the third with the the gain schdeuling reported by \cite{Olimpo_Anaya‐Lara}.
+In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, three simulations with differnt wind speeds are proposed, $V_{10} = 11.5, 15, 20 \ \mesunt{\meter\per\second}$. For each of them four different gains are used. The settings for all of them are reported in  \autoref{tab:simulation_config_variable_gains2}, \autoref{tab:simulation_config_variable_gains}, and \autoref{tab:simulation_config_variable_gains3}. \\
+In particular, the first and the fourth simulations use the gain scheduling paradigm while the other two have a fixed gain. The specific numerical value chosen in the constant case are representative of two very different reagions of the scheduling case since \textit{simulation 2} has values close to the ones used at low wind speeds, while \textit{3} has value close to the high wind speeds. 
+
+\subsubsection{Wind speed of  $V_{10} = 11.5 \ \mesunt{\meter\per\second}$}
+\begin{table}[htb]
+  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency2}}
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule
+    Number & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
+     & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\meter\per\second}\right]$ & \\ \midrule       
+     1 & 11.5 & 1 & As in \autoref{subsec:gain_schdeuling_DTU10MW}  \\
+     2 & 11.5 & 1 & $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$ \\
+     3 & 11.5 & 1 & $k_p = 0.25 \ \mesunt{\second}$, $k_i=0.2 \ [-]$  \\
+     4 & 11.5 & 1 & As reported in \cite{Olimpo_Anaya‐Lara}  \\
+     \bottomrule
+  \end{tabular}
+  \label{tab:simulation_config_variable_gains2}
+\end{table}
+
+\autoref{fig:gain_scheduling_time_dependency2} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque for these settings. 
+
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_30fig_wind_TS.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_47_54fig_wind_TS.eps}
+    \label{}
+    \caption{Wind time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_02fig_pitch_dynamic.eps}
+    \label{}
+    \caption{Pitch angle time series}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_13fig_omega_dynamic.eps}
+    \label{}
+    \caption{Rptor rotational speed time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_43fig_torque_dynamic.eps}
+    \label{}
+    \caption{Torque time series}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_24fig_power_dynamic.eps}
+    \label{}
+    \caption{Power time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_49_17fig_generator_power_check.eps}
+    \label{}
+    \caption{Generator power time series}
+  \end{subfigure}
+  \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
+  \label{fig:gain_scheduling_time_dependency2}
+\end{figure}
+After the simualtion and in order to evaluate quantitativelly them, the RMS error between the steady state value (i.e. the last 40 seconds of the simulation) and the corresponding expected nominal values above rated wind speed are reported in \autoref{tab:res_variable_gains_2}.\\
+In that case these error metrices are not so representative since the wind is not always above the rated one and therefore the corresponding power, torque and rotational speed are not always expected to be reached. They are reported anyway in order to be then compared with the other two simulations.  
+
+\begin{table}[htb]
+  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule
+    Simulation & $\omega_R$  & $P_G$ & $T_G$ \\ 
+     & $\left[\si{\radian\per\second}\right]$ & $\left[\si{\mega\watt}\right]$ &$\left[\si{\mega\newton\meter}\right]$ \\ \midrule       
+     1 & 0.031 & 0.833 & 0.563 \\
+     2 & 0.030 & 0.832 & 0.557 \\
+     3 & 0.047 & 1.128 & 0.802 \\
+     4 & 0.036 & 0.902 & 0.629 \\
+     \bottomrule
+  \end{tabular}
+  \label{tab:res_variable_gains_2}
+\end{table}
+The first two simulations are very close each other, since the static gain of \textit{sim. 2} is almost the same of the scheduling at rated speed. Furthermore, the results of the fourth simulation are not too different from the first two. Finally, it could be also noticed that the gain in case \textit{3} is very different from the other one, suggesting that this choice is not suitable for this condition. 
+
+\subsubsection{Wind speed of $V_{10}=15 \ \mesunt{\meter\per\second}$}
+\begin{table}[htb]
+  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency}}
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule
+    Number & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
+     & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\meter\per\second}\right]$ & \\ \midrule       
+     1 & 15 & 1 & As in \autoref{subsec:gain_schdeuling_DTU10MW}  \\
+     2 & 15 & 1 & $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$ \\
+     3 & 15 & 1 & $k_p = 0.25 \ \mesunt{\second}$, $k_i=0.2 \ [-]$  \\
+     4 & 15 & 1 & As reported in \cite{Olimpo_Anaya‐Lara}  \\
+     \bottomrule
+  \end{tabular}
+  \label{tab:simulation_config_variable_gains}
+\end{table}
+
+\autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque. 
+
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_06fig_wind_TS.eps}
     \label{fig:2023_05_9_20_55_30fig_wind_TS}
     \caption{Wind time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_37fig_pitch_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_11fig_pitch_dynamic.eps}
     \label{fig:2023_05_9_20_55_30fig_pitch_dynamic}
     \caption{Pitch angle time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_46fig_omega_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_21fig_omega_dynamic.eps}
     \label{fig:2023_05_9_20_55_46fig_omega_dynamic}
     \caption{Pitch angle time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_56_15fig_torque_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_52fig_torque_dynamic.eps}
     \label{fig:2023_05_9_20_56_15fig_torque_dynamic}
     \caption{Torque time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_9_20_55_59fig_power_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_32fig_power_dynamic.eps}
     \label{fig:2023_05_9_20_55_59fig_power_dynamic}
     \caption{Power time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_07_04fig_generator_power_check.eps}
+    \label{fig:2023_05_20_15_07_04fig_generator_power_check}
+    \caption{Generator power time series}
   \end{subfigure}
   \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
   \label{fig:gain_scheduling_time_dependency}
 \end{figure}
+
+The RMS error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains}.
+\begin{table}[htb]
+  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule
+    Simulation & $\omega_R$  & $P_G$ & $T_G$ \\ 
+     & $\left[\si{\radian\per\second}\right]$ & $\left[\si{\mega\watt}\right]$ &$\left[\si{\mega\newton\meter}\right]$ \\ \midrule       
+     1 & 0.011 & 0.262 & 0.190 \\
+     2 & 0.009 & 0.171 & 0.138 \\
+     3 & 0.020 & 0.486 & 0.349 \\
+     4 & 0.016 & 0.406 & 0.288 \\
+     \bottomrule
+  \end{tabular}
+  \label{tab:res_variable_gains}
+\end{table}
+
+As could be seen from the root mean square errors, the gain scheduling simulations performs better than the fixed one. In fact, even tough \textit{simulation 2} has lowest error value, the ones of \textit{4} are almost double than the \textit{1}. This means that a fixed gain may perform well in a certain wind reagion (i.e. the one corresponding at the same gain in the scheduling approach) but probably it will underperform in another different from that one.  
+
+\subsubsection{Wind speed with $V_{10} =  20 \ \mesunt{\meter\per\second}$}
+\begin{table}[htb]
+  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency}}
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule
+    Number & $V_{10}$  & $\sigma_{V_{10}}$ & Gains schedule \\ 
+     & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\meter\per\second}\right]$ & \\ \midrule       
+     1 & 20 & 2.0 & As in \autoref{subsec:gain_schdeuling_DTU10MW}  \\
+     2 & 20 & 2.0 & $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$ \\
+     3 & 20 & 2.0 & $k_p = 0.25 \ \mesunt{\second}$, $k_i=0.2 \ [-]$  \\
+     4 & 20 & 2.0 & As reported in \cite{Olimpo_Anaya‐Lara}  \\
+     \bottomrule
+  \end{tabular}
+  \label{tab:simulation_config_variable_gains3}
+\end{table}
+
+\autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque. 
+
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_31_57fig_wind_TS.eps}
+    \label{}
+    \caption{Wind time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_05fig_pitch_dynamic.eps}
+    \label{}
+    \caption{Pitch angle time series}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_15fig_omega_dynamic.eps}
+    \label{}
+    \caption{Pitch angle time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_45fig_torque_dynamic.eps}
+    \label{}
+    \caption{Torque time series}
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_26fig_power_dynamic.eps}
+    \label{}
+    \caption{Power time series}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_33_21fig_generator_power_check.eps}
+    \label{}
+    \caption{Generator power time series}
+  \end{subfigure}
+  \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
+  \label{fig:gain_scheduling_time_dependency3}
+\end{figure}
+
+After the simualtion in order to evaluate quantitativelly them, the RMS error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains}.
+\begin{table}[htb]
+  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule
+    Simulation & $\omega_R$  & $P_G$ & $T_G$ \\ 
+     & $\left[\si{\radian\per\second}\right]$ & $\left[\si{\mega\watt}\right]$ &$\left[\si{\mega\newton\meter}\right]$ \\ \midrule       
+     1 & 0.023 & 0.483 & 0.359 \\
+     2 & 0.018 & 0.319 & 0.257 \\
+     3 & 0.033 & 0.769 & 0.556 \\
+     4 & 0.031 & 0.742 & 0.533 \\
+     \bottomrule
+  \end{tabular}
+  \label{tab:res_variable_gains3}
+\end{table}
+
+\subsubsection{Another test}
 
 Another between the use or not of the gain scheduling may be done repeating the simulations done in \autoref{sec:wind_series_sim} but disabling the blade gain schdeuling. The corresponding results are reported in \autoref{fig:simulation_rand_wind_no_gain_scheduling}
 \begin{figure}[htb]
