@@ -44,6 +44,10 @@ for i = 1:wind.WS_len
     wind_speed = run_generated_wind_series(wind.mean(i), ...
       wind.turbulence(i), wind_speed, stop_time, simulation.seed);
     [blade.kp_schedule, blade.ki_schedule] = run_stall_regulation(blade, i);
+    case 9 % with or without gain schdeuling
+      wind_speed = run_generated_wind_series(wind.mean(i), ...
+        wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      [blade] = run_pitch_dynamics(blade, i);
 
   end
 

@@ -94,10 +94,10 @@ if simulation.model == 1    % without power controller
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 end
-simulation.stop_time = [120 120]; % max time to investigaste [s]
+simulation.stop_time = [120 120 120]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 8;        % 1 -> constant wind speed
+simulation.type = 9;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -105,14 +105,15 @@ simulation.type = 8;        % 1 -> constant wind speed
                             % 6 -> ramp and parametrization plot
                             % 7 -> with/without blade gain scheduling
                             % 8 -> with gain scheduling or stall regulation
-simulation.plot_time = [120 120];  % time from the end of the simulation to 
+                            % 9 -> with different pitching dynamics
+simulation.plot_time = [120 120 120];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 1;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = [40 40]; % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = [120 120 120]; % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -203,15 +204,12 @@ blade.K1 = 164.13; % Linear coeff. in aero gain scheduling [deg]
 blade.K2 = 702.09; % Quadratic coeff. in aero gain scheduling [deg^2]
 blade.omega2omega0ratio = 1.3; % Relative speed for double nonlinear gain
 blade.pitch_min = 0;        % minimum pitch angle [rad]
-% blade.kp = 0.592;
-% blade.kpp = 4e-9;
-% blade.ki = 0.133;
-% blade.kip = 4e-9;
-% blade.kd = 0;
+blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*...
+  blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [15 15];           % 10 minutes mean wind speed [m/s]]
-wind.turbulence = [1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [15 15 15];           % 10 minutes mean wind speed [m/s]]
+wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
@@ -221,7 +219,7 @@ wind.ramp_time_start = [1 1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
-  case {1, 3, 5, 7, 8}
+  case {1, 3, 5, 7, 8, 9}
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
   case {2, 6}
     wind.WS_len = length(wind.ramp_time_start);

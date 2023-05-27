@@ -128,7 +128,31 @@ It is possible to notice that Siemens Gamesa and General Electric use direct dri
 
 \subsection{Electrical machines model}
 As said before, nowadays the \acrfull{PMSM} are the most commonly employed machines, because they can operate in a range of speed, and so this kind of machine will be studied here.\\
-According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations in a reference frame synchronous with the rotor, named \textit{dq frame}. This choice makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, named $I_q$.
+According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
+In this frame the equations of the machine are:
+\begin{gather}
+  0=u_d-Li_d\omega_{me}+L\frac{di_d}{dt}+Ri_d 
+  \label{eq:d_axis_eq}\\
+  \omega_{me}\Lambda_{mg}=u_q+Li_d\omega_{me}+L\frac{di_q}{dt}+Ri_q
+  \label{eq:q_axis_eq}
+\end{gather}
+where $u_d$ and $u_q$ are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), $i_d$ and $i_q$ are the current in the dq frame (transformed in the same way as the the voltage), $\omega_{me}$ is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega$), L is the inductance and R the resistance of the stator, $\Lambda_{mg}$ is the flux linkage of the permanent magnets, and p the number of pole pairs.\\
+By multiplying both sides of \autoref{eq:q_axis_eq} by $i_q$, \autoref{eq:d_axis_eq} by $i_d$ and then summing them together is it possible to obtain the following power balance:
+\begin{equation}
+  p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R(i_d^2 + i_q^2)
+  \label{eq:gen_power_balance}
+\end{equation}
+then knowing that $i_d=0$ one can rewrite:
+\begin{equation}
+  \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{Ri_q^2}_{Joule}
+  \label{eq:gen_power_balance2}
+\end{equation}
+Since the power is not invariant in the transformation from the abc frame to the dq but $P_{dq} = \frac{3}{2}P_{abc}$, \autoref{eq:gen_power_balance2} has to be rewritten as:
+\begin{equation}
+  P_G = T_G\omega = \frac{3}{2}p\omega\Lambda_{mg}i_q = \frac{3}{2}u_qi_q + \frac{3}{2}L i_q\frac{di_q}{dt} + \frac{3}{2}R i_q^2
+  \label{eq:gen_power_balance3}
+\end{equation}
+The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0$.
 \begin{figure}[htb]
 \input{d_pmsm.tex}
 \caption{Block diagram of the q-axis of a PMSM}
@@ -138,7 +162,7 @@ According to the position of the magnets in the rotor, two families of \acrshort
 \autoref{fig:PMSM} represents the block diagram of the q-axis of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the electrical converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the rotor imposed by the wind on the rotor.\\
 It could be seen that the aerodynamical torque enters as a disturb in the block diagram. This model is not a description of the real behaviour of the \acrshort{WT}, because the $T_R$ is affected by the $\Omega_G$, and so in principle some sort of interaction between these quantities should have been introduced. Unfortunately, this dependency is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved observing that this mechanical dynamic evolves slowly compared to the electrical one, and so the electrical part sees the slowly varying dynamic as an almost-constant disturb. Finally for the sake of completeness, it must be remembered that the interactions between rotational speed and aero torque is taken into account into the aerodynamical block of the simulation.
 
-\subsection{PSMS control}\label{subsec:PMSM_control}
+\subsection{PMSM control}\label{subsec:PMSM_control}
 In general, control of these machines may be focused on two objectives: the speed or the torque, and the first includes the second as a nested loop. For the sake of the thesis, a torque control has to be implemented because it is easy to synthetize this signal in the two control regions. \\
 The Newton's law applied to the rotor can be written in the simplest form as:
 \begin{equation}
@@ -173,7 +197,7 @@ The transfer functions inside the loop are the regulator, the power electronic n
     \label{eq:R_iq}\\
     G_c = \frac{1}{1+\uptau_cs}
     \label{eq:G_c}\\
-    Y_{iq} = \frac{B_{eq} + J_{eq}s}{LJ_{eq}s^2+\left(RI_{eq} + L B\right)s + RB + \frac{3}{2}(p\Lambda_{mg})^2}
+    Y_{iq} = -\frac{B_{eq} + J_{eq}s}{LJ_{eq}s^2+\left(RI_{eq} + L B\right)s + RB + \frac{3}{2}(p\Lambda_{mg})^2}
     \label{eq:Y_iq}
 \end{gather}
 \textcolor{red}{Mettere funzioni di trasferimento aggiornate ed aggiornare i diagrammi a blocchi}\\
