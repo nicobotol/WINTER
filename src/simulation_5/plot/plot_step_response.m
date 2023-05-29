@@ -35,6 +35,7 @@ function plot_step_response(out_cell, date_fig)
   set(gca, 'FontSize', font_size)
 
 if simulation.print_figure == 1
+  plot_name = 'generator_step_input';
   fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
   export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
 %   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
