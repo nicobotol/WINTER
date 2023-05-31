@@ -1,6 +1,6 @@
 %% Plot of the results
 % This file is used for print the results of the simulation
-close all
+% close all
 
 addpath('\..')
 addpath('lookup\')
