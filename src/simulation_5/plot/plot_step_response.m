@@ -31,13 +31,14 @@ function plot_step_response(out_cell, date_fig)
   xlim([step_t_start step_t_stop])
   ylim([step_y_min step_y_max]);
   grid on
+  grid minor
   title('Overshoot of the response')
   set(gca, 'FontSize', font_size)
 
 if simulation.print_figure == 1
   plot_name = 'generator_step_input';
   fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
-  export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
+  export_figure(fig_gen_step, strcat(date_fig, plot_name, '.eps'), path_images);
 %   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
 end
 end

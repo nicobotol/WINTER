@@ -34,7 +34,7 @@ This system of equation may be solved and finally the mechanical dynamic equatio
 Where the subscription indicates if the quantity is referred to the rotor or to the generator, while the apex indicates the side of the transmission in which it is expressed.
 
 \subsection{Transmission damping}
-Finding informations on the damping to be used in the \autoref{eq:mech_eq} is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be necessary. Since a damping value is necessary to make the simulation more realistic (at least conceptually) then the system of equation in \autoref{eq:damping_sys} may be setted up to try to recover it. The former equation is the power balance between rotor and genrator side of the transmission, while the latter is the torque balance.
+Finding information on the damping to be used in the \autoref{eq:mech_eq} is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be necessary. Since a damping value is necessary to make the simulation more realistic (at least conceptually) then the system of equation in \autoref{eq:damping_sys} may be setted up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, while the latter is the torque balance.
 \begin{gather}
 \left\{
 \begin{aligned}
@@ -59,7 +59,7 @@ B_{eq}^R= \frac{T_R^R}{\omega^R}(1 - \eta)= \frac{K_{opt}(\omega^R)^R}{\omega^R}
 \label{eq:damping}
 \end{gather} 
 where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the units of $\mesunt{\newton \meter \square\second }$.\\
-It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature informations at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these conditions in mind, the damping becomes:
+It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature information at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these conditions in mind, the damping becomes:
 \begin{equation}
   B_{eq}^R = K_{opt}\omega^R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
 \end{equation}
@@ -71,14 +71,14 @@ The chosen generator is a \acrshort{PMSM}. Obtaining the electrical parameters o
     \begin{tabular}{lccc}
     \toprule
     Parameter & Value & & Source\\ \midrule
-    Inertia & 4800 & $\left[\si{\kilo\gram\square\meter}\right]$ & \cite{the_switch_datasheet} \\\midrule	
+    Inertia & 4800 & $\left[\si{\kilo\gram\square\meter}\right]$ & \cite{the_switch_datasheet} \\ \midrule	
     Poles & 320 & & \multirow{5}{*}{\cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}} \\
     \textit{q-axis} inductance & 1.8 & $\left[\si{\milli\henry}\right]$ & \\
     \textit{d-axis} inductance & 1.8 & $\left[\si{\milli\henry}\right]$ &\\
     Stator resistance & 64 & $\left[\si{\milli\ohm}\right]$ &\\
     Magnets flux & 19.49 & $\left[\si{\weber}\right]$ &\\ \midrule
     Friction & \textcolor{red}{0} & $\left[\si{\kilo\gram\square\meter\per\second}\right]$ & \\
-    \textcolor{red}{Time delay introduced by the convert} & \textcolor{red}{500} & $\left[\si{\micro\second}\right]$ & \\
+    Time delay introduced by the convert & 500 & $\left[\si{\micro\second}\right]$ & \\
     Inverter switching frequency & 1 & $\mesunt{\kilo\hertz}$ & \\
     \bottomrule
     \end{tabular}
@@ -99,9 +99,9 @@ The Simulink implementation of the control loop presented in \autoref{fig:d_torq
  \end{gather}
 
  For its simplicity the chosen controller is a \acrshort{PID} one, and the design method exposed in \autoref{sec:e_pid_tuning} is used on the open loop function $G(s) = G_c(s)Y_{iq}(s)$, after having specified the crossover frequency of $\omega_{cp}=$1500 $\mesunt{\radian\per\second}$, which is less than $\frac{1}{4}$ the switching one. This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
- The tuning of the PID controller has been done following the procedures described  in the \autoref{sec:e_pid_tuning}. The resulting gains ($k_p$, $k_i$, $k_d$), the frequency of the added pole and the phase margin $\varphi$ are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \textit{pidtune}, that may be used to have at least the order of magnitude of the expected values.
+ The tuning of the PID controller has been done following the procedures described in the \autoref{sec:e_pid_tuning}, but the proportional gain has been halved to have a better transient response. The resulting gains ($k_p$, $k_i$, $k_d$), the frequency of the added pole and the phase margin $\varphi$ are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \textit{pidtune}, that may be used to have at least the order of magnitude of the expected values.
 \begin{table}[htb]
-    \caption{Gains for the PMSM machine controller, \textcolor{red}{These values are not correct, and so they have to be rewritten according to the results of the simulation}}
+    \caption{Gains for the PMSM machine controller}
      \centering
      \begin{tabular}{cccccc}
      \toprule
@@ -122,14 +122,14 @@ The Simulink implementation of the control loop presented in \autoref{fig:d_torq
  
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/fig_bode_generator.png}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_06_7_22_23_27fig_bode_generator.eps}
     \caption{Bode plots of the open loop system, the controller and the controlled open loop system}
     \label{fig:fig_bode_generator}
  \end{figure}
 
  \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/fig_bode_cl.png}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_06_7_22_24_12fig_bode_cl.eps}
     \caption{Bode plot of the generator close loop transfer function}
     \label{fig:fig_bode_cl}
  \end{figure}
@@ -137,17 +137,17 @@ The Simulink implementation of the control loop presented in \autoref{fig:d_torq
 Furthermore, the response of the close loop system to a torque step input is reported in \autoref{fig:step_response}. It could be seen that the integral actions drives the steady state error to 0, while the produced overshoot is quite limited (around 4\%).
  \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/2023_03_14_18_06_09fig_gen_step.png}
-    \caption{Time response of the controlled generator at the input step torque, \textcolor{red}{This step response has to be replotted with the new generator}}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_06_7_22_26_18generator_step_input.eps}
+    \caption{Time response of the controlled generator at the input step torque}
     \label{fig:step_response}
 \end{figure}
 
 
  \subsection{Pitch actuation}
 In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. \\
-Even though the simplest mechanical model may have a first order dynamic, \cite{Olimpo_Anaya‐Lara} suggests using a second order one:
+The simplest mechanical model have a first order dynamic, as suggested by \cite{Olimpo_Anaya‐Lara} :
 \begin{equation}
-    \frac{\beta}{\hat{\beta}}=\frac{2\zeta_p \omega_p s +\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
+    \frac{\beta}{\hat{\beta}}=\frac{\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
     \label{eq:beta_TF}
 \end{equation}
 with $\zeta_p=0.7$ and $\omega_p=2\pi \left[\si{\radian}\right]$.\\
@@ -163,5 +163,3 @@ This model is based on the one presented in the \autoref{sec:c_basic_model_model
 
 The saturation block constraints the reference power in between $P_g^* \in \left[0, P_{rated}\right]$.
 The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
-
-\textcolor{red}{The response at the 4 simulations configurations presented in \autoref{tab:simulation_config} are reported in \autoref{fig:simulation_1_act_power}, \ref{fig:simulation_2_act_power},  \ref{fig:simulation_3_act_power}, \ref{fig:simulation_4_act_power}.}

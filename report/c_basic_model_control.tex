@@ -21,6 +21,7 @@ By replacing \autoref{eq:lambda_opt} into \autoref{eq:T_G1} then the drivetrain 
 
 \begin{table}[htb]
     \centering
+    \caption{Map for the use of torque constant}
     \begin{tabular}{ccc}
     \toprule
          & $\omega^R$ & $\omega^G$  \\ \midrule
@@ -28,7 +29,6 @@ By replacing \autoref{eq:lambda_opt} into \autoref{eq:T_G1} then the drivetrain 
          $T^R$ & $K_{opt} \left( \omega^{R}\right)^2$ & $K_{opt}\left(n \omega^{G}\right)^2$\\
          $T^G$ & $K_{opt} n \left(\omega^{R}\right)^2$ &  $K_{opt} n^3\left(\omega^{G}\right)^2$\\ \bottomrule
     \end{tabular}
-    \caption{Map for the use of torque constant}
     \label{tab:gain_map}
 \end{table}
 
@@ -54,7 +54,7 @@ In the Simulink model the implementation of the generator's torque reference is 
 
 \subsection{Pitch controller}
 In this simple model, the \textit{collective} pitching strategy is employed, meaning that all the blades are rotated of the same quantity.\\
-As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, the pitch controller has two different behaviours in the operational regions, and so in a wide sense it is a non-linear one: below rated \acrshort{WS}, it has not to be activated at all, while in the full load region it has to pitch the blade in order to drive the rotational speed to rated value. Its implementation is done as reported in \autoref{fig:pitch_control}.
+As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, the pitch controller has two different behaviors in the operational regions, and so in a wide sense it is a non-linear one: below rated \acrshort{WS}, it has not to be activated at all, while in the full load region it has to pitch the blade in order to drive the rotational speed to rated value. Its implementation is done as reported in \autoref{fig:pitch_control}.
 \begin{figure}[htb]
     \centering
     \includegraphics[width=\textwidth]{images/pitch_control_2.png}
@@ -88,7 +88,7 @@ the controller dynamic are not slower compared to the system itself and so it ma
 
 \subsubsection{Gain scheduling based on the aerodynamics}\label{subsec:gain_schdeuling_NREL5MW}
 
-As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference}, and \cite{ris_r_1500} applying a linearization of the \autoref{eq:mech_eq} and further mathematical manipulations that are out of the scope of this thesis, the gains may be expressed in close form as :
+As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference}, and \cite{ris_r_1500} applying a linearization of the \autoref{eq:mech_eq} and further mathematical manipulations that are out of the scope of this thesis,  the gains may be expressed in close form as :
 \begin{gather}
     k_P(\theta) = \frac{2J_{eq}\omega_{rated}\zeta_{\Phi}\omega_{\Phi\eta}}{\frac{1}{n}\left(-\frac{dP(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
     \label{eq:kp}\\
