@@ -1,19 +1,51 @@
+\section{BEM Code}
+\begin{table}[htb]
+  \caption{List of parameters used for the BEM code}
+  \centering
+  \begin{tabular}{cccc}
+  \toprule
+  Symbol & Name & MU & Source \\ \midrule
+  $\lambda$ & Tip Speed Ratio & $\left[-\right]$ & Input \\
+  $\theta_p$ & Pitch angle & $\mesunt{\radian}$ & Input \\
+  r & Distance of a section from root & $\mesunt{\meter}$ & Input \\
+  R & Blade length & $\mesunt{\meter}$ & Input \\
+  B & Number of blades & $\left[-\right]$ & Input \\
+  $\phi$ & Flow angle & $\mesunt{\radian}$ & Computed \\
+  $\alpha$ &  & $\mesunt{\radian}$ & Computed \\
+  $c_l$ & & & Load from table\\
+  $c_d$ & & & Load from table\\
+  F & & & Computed\\
+  a & Induction coefficient & $\left[-\right]$ & Computed \\
+  a' & Induction coefficient & $\left[-\right]$ & Computed \\
+  $\sigma$ & & $\left[-\right]$ & Computed\\
+  $\epsilon$ & Low threshold & $\left[-\right]$  & Constant \\
+  $c_{P,r}$ & Power coeff. for a section & \textcolor{red}{} & Computed\\
+  $c_{P}$ & Power coeff. & \textcolor{red}{} & Computed\\
+  $c_{T,r}$ & Thrust coeff. for a section & \textcolor{red}{} & Computed\\
+  $c_{T}$ & Thrust coeff. & \textcolor{red}{} & Computed\\
+  \bottomrule
+  \end{tabular}
+  \label{tab:DTU_10_struct}
+\end{table}
+
+
 \begin{algorithm}
 \caption{Algorithm for the application of the BEM on the entire blade}\label{alg:MainBEM}
 \begin{algorithmic}
 \State load airfoil data
 \State load blade parameters
 \State initialize a vector of lambda
-\State initialize a vector of $\Theta_p$
+\State initialize a vector of $\theta_p$
 
 % Main code
 \For{ $\lambda \in \left[\lambda_{MIN}, \lambda_{MAX}\right]$ }
-  \For{ $\Theta_p \in \left[\Theta_{p,MIN}, \Theta_{p,MAX}\right] $ }
-    \For{ $r \in \left[0, r_{MAX}\right]$ }
+  \For{ $\theta_p \in \left[\Theta_{p,MIN}, \Theta_{p,MAX}\right] $ }
+    \For{ $r \in \left[r_{in}, R\right]$ }
     \State run BEM code
     \EndFor 
-    \State integrate the partial results of different r
-    \State store $\lambda$, $\Theta_p$, cP, cT
+    \State $c_P = \int_{r_{in}}^{R}c_{P,r}dr$
+    \State $c_T = \int_{r_{in}}^{R}c_{T,r}dr$
+    \State store $\lambda$, $\theta_p$, cP, cT
  \EndFor
 \EndFor 
 \end{algorithmic}
@@ -23,35 +55,37 @@
 \caption{BEM code pseudo algorithm}\label{alg:BEM}
 \begin{algorithmic}
 % BEM code
-\State INPUT: $r, \Theta_p, \lambda$
-\State OUTPUT: $a, a'$
-\State CONSTANT: $\beta, c, B$
+\State INPUT: $r, \theta_p, \lambda$
+\State OUTPUT: $c_{P,r}, \ c_{T,r}$
+\State CONSTANT: $\beta, \ c, \ B$
 \State initialize a, a'
 
 \For {$i < i_{MAX}$}
-  \State $a_{OLD}=a; \ a'_{OLD}=a'$
-  \State  $\phi=atan\left(\frac{(1-a)R}{(1+a')\lambda r}\right)$ 
-  \State  $\Theta=\beta + \Theta_p$
+  \State  $a_{OLD}=a; \ a'_{OLD}=a'$
+  \State  $\phi = \arctan\left(\frac{(1-a)R}{(1+a')\lambda r}\right)$ 
+  \State  $\Theta = \beta + \theta_p$
   \State  $\alpha = \phi - \Theta$
-  \State interpolate $c_l$ and $c_d$ from the table
+  \State  interpolate $c_l$ and $c_d$ from the table
   \State  $c_n = c_l cos(\phi) + c_d sin(\phi)$
   \State  $c_t = c_l sin(\phi) - c_d cos(\phi)$
   \State  $F = \frac{2}{\pi} acos \left[\exp\left(\frac{-B(R - r)}{2r\sin(\left|\phi\right|)}\right)\right]$
-  \State $\sigma = \frac{cB}{2\pi r}$
-  \If {$a < \frac{1}{3}$}
-  \State a = $\frac{\sigma c_n (1 - a)}{4 F \sin(\phi)^2}$
+  \State  $\sigma = \frac{cB}{2\pi r}$
+  \If     {$a < \frac{1}{3}$}
+  \State  a = $\frac{\sigma c_n (1 - a)}{4 F \sin(\phi)^2}$
   \Else
-    \State $c_T = \frac{(1 - a)^2c_n\sigma}{\sin(\phi)^2}$
-    \State $\beta_c = 0.1$
-    \State $a_s = \frac{c_T}{4F(1 - 1/4(5 - 3a)a)}$
-    \State $a = \beta_c a_s + (1 - \beta_c)a$
+    \State  $c_T = \frac{(1 - a)^2c_n\sigma}{\sin(\phi)^2}$
+    \State  $\beta_c = 0.1$
+    \State  $a_s = \frac{c_T}{4F(1 - 1/4(5 - 3a)a)}$
+    \State  $a = \beta_c a_s + (1 - \beta_c)a$
   \EndIf
-  \State $a' = \frac{\sigma*c_T*(1 + a')}{4F\sin(\phi)\cos(\phi)}$
-  \If {$\left|a - a_{OLD}\right| < \varepsilon \ \& \ \left|a' - a'_{OLD}\right| < \varepsilon$} % epsilon = 1e-8
+  \State  $a' = \frac{\sigma*c_T*(1 + a')}{4F\sin(\phi)\cos(\phi)}$
+  \If     {$\left|a - a_{OLD}\right| < \varepsilon \ \& \ \left|a' - a'_{OLD}\right| < \varepsilon$} % epsilon = 1e-8
     \State break
   \Else
     \State go on
   \EndIf
 \EndFor
+\State  $c_{P,r} = r \ c \ c_t\left[(1 - a)^2 + \frac{\lambda r}{R(1 + a')^2}\right]$
+\State  $c_{T,r} = c \ c_n\left[(1 - a)^2 + \lambda \frac{r}{R} (1 + a')\right]^2$
 \end{algorithmic}
 \end{algorithm}
