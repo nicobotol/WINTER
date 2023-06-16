@@ -46,8 +46,8 @@ theta_t = [-3, 0, 3, 6, 9, 12];
 LegS = cell(1, pitch_i);
 cP_interp = zeros(lambda_i, 1);
 cT_interp = zeros(lambda_i, 1);
-fig_cP_cT_comp_polimi = figure('Position', get(0, 'Screensize'));
-% result from the look up table
+fig_cP_cT_comp_polimi = figure('Color','w');
+%% result from the look up table
 for p = 1:pitch_i
   cP_interp = interp2(lambda_vector, pitch_vector, lookup_cP, ...
     lambda_v(:), pitch_v(p));
@@ -63,7 +63,7 @@ for p = 1:pitch_i
   plot(lambda_v, cT_interp, '--', 'Color', colors_vect(p, :), ...
     'LineWidth', line_width);
   hold on
-  LegS{p} = ['\theta {',num2str(rad2deg(pitch_v(p))),'°}'];
+  LegS{p} = ['$\theta$ = ',num2str(rad2deg(pitch_v(p))),'[deg]'];
 end
 % results from the pubblication
 for p = 1:pitch_i
@@ -76,21 +76,20 @@ for p = 1:pitch_i
       'MarkerSize', marker_size, 'LineWidth', line_width);
     hold on
 end
-legend(LegS, 'location', 'best', 'Interpreter','tex');
+legend(LegS, 'location', 'best');
 subplot(121)
-xlabel('\lambda [-]','Interpreter','tex')
-ylabel('cP [-]','Interpreter','latex')
+xlabel('$\lambda$ [-]')
+ylabel('cP [-]')
 set(gca, 'FontSize', font_size)
 title('Power coefficient')
 grid on
 subplot(122)
-xlabel('\lambda [-]','Interpreter','tex')
-ylabel('cT [-]','Interpreter','latex')
+xlabel('$\lambda$ [-]')
+ylabel('cT [-]')
 title('Thrust coefficient')
 grid on
 set(gca, 'FontSize', font_size)
-saveas(fig_cP_cT_comp_polimi,strcat(path_images,...
-  '\fig_cP_cT_comp_polimi.png'),'png');
+export_figure(fig_cP_cT_comp_polimi, '\fig_cP_cT_comp_polimi.eps', path_images);
 
 %% Comparison between the results and the DTU report pag.34
 V0_v = 4:1:25;                  % windspeed [m/s]
@@ -113,27 +112,27 @@ for v=1:length(V0_v)
   cT_v(v) = interp2(lambda_vector, pitch_vector, lookup_cT, lambda, pitch);
 end
 
-fig_cP_cT_comp = figure('Position', get(0, 'Screensize'));
+fig_cP_cT_comp = figure('Color','w');
 subplot(121)
 plot(V0_v, cP_v, 'LineWidth', line_width)
 hold on 
 plot(V0_v, cP_ref, 'o', 'LineWidth', line_width)
 grid on
-xlabel('Wind speed [m/s]','Interpreter','latex')
-ylabel('cP [-]','Interpreter','latex')
+xlabel('Wind speed [m/s]')
+ylabel('cP [-]')
 title('Power coefficient')
 set(gca, 'FontSize', font_size)
 subplot(122)
 plot(V0_v, cT_v, 'LineWidth', line_width)
 hold on 
 plot(V0_v, cT_ref, 'o', 'LineWidth', line_width)
-xlabel('Wind speed [m/s]','Interpreter','latex')
-ylabel('cT [-]','Interpreter','latex')
-legend('Computed', 'DTU report', 'location', 'best','Interpreter','latex')
+xlabel('Wind speed [m/s]')
+ylabel('cT [-]')
+legend('Computed', 'DTU report', 'location', 'best')
 title('Thrust coefficient')
 grid on
 set(gca, 'FontSize', font_size)
-saveas(fig_cP_cT_comp,strcat(path_images,'\fig_cP_cT_comp.png'),'png');
+export_figure(fig_cP_cT_comp, '\fig_cP_cT_comp.eps', path_images);
 
 %% Plot the power and thrust as functions of the wind speed
 stall = zeros(length(V0_v), 1);
@@ -158,6 +157,8 @@ for v=1:length(V0_v)
   end
 end
 
+omega = lambda.*V0_v'/rotor.R; % [rad/s] rotional speed
+
 stall(:) = interp1(lookup_Pitch(1, :), lookup_Pitch(2, :), V0_v); % [rad]
 feather(:) = interp1(lookup_Pitch(1, :), lookup_Pitch(3, :), V0_v);%[rad]
 
@@ -171,26 +172,48 @@ P_f(:) = 0.5*rotor.A*rho.*cP_f.*V0_v'.^3; % [W]
 T_s(:) = 0.5*rotor.A*rho.*cT_s.*V0_v'.^2; % [N]
 T_f(:) = 0.5*rotor.A*rho.*cT_f.*V0_v'.^2; % [N]
 
-fig_power_vs_V0 = figure('Position', get(0, 'Screensize'));
-plot(V0_v, P_s, 'LineWidth', line_width*2, 'Color', colors_vect(3,:));
+fig_power_vs_V0 = figure('Color','w');
+plot(V0_v, P_s/1e6, 'LineWidth', line_width*2, 'Color', colors_vect(3,:));
 hold on
-plot(V0_v, P_f, '--', 'LineWidth', line_width, 'Color', colors_vect(1,:));
-legend('Stall', 'Feather', 'Location', 'best','Interpreter','latex');
+plot(V0_v, P_f/1e6, '--', 'LineWidth', line_width, 'Color', colors_vect(1,:));
+legend('Stall', 'Feather', 'Location', 'best');
 grid on
-xlabel('V_0 [m/s]','Interpreter','latex')
-ylabel('Power [W]','Interpreter','latex')
+xlabel('$V_0$ [m/s]')
+ylabel('Power [MW]')
 title('Power as function of the wind speed')
 set(gca, 'FontSize', font_size)
-saveas(fig_power_vs_V0,strcat(path_images,'\fig_power_vs_V0.png'),'png');
+export_figure(fig_power_vs_V0, '\fig_power_vs_V0.eps', path_images);
 
-fig_thrust_vs_V0 = figure('Position', get(0, 'Screensize'));
-plot(V0_v, T_s, 'LineWidth', line_width, 'Color', colors_vect(3,:));
+fig_thrust_vs_V0 = figure('Color','w');
+plot(V0_v, T_s/1e6, 'LineWidth', line_width, 'Color', colors_vect(3,:));
 hold on
-plot(V0_v, T_f, '--', 'LineWidth', line_width, 'Color', colors_vect(1,:));
-legend('Stall', 'Feather', 'Location', 'best','Interpreter','latex');
+plot(V0_v, T_f/1e6, '--', 'LineWidth', line_width, 'Color', colors_vect(1,:));
+legend('Stall', 'Feather', 'Location', 'best');
 grid on
-xlabel('V_0 [m/s]','Interpreter','latex')
-ylabel('Thrust [N]','Interpreter','latex')
+xlabel('$V_0$ [m/s]')
+ylabel('Thrust [MN]')
 title('Thrust as function of the wind speed')
 set(gca, 'FontSize', font_size)
-saveas(fig_thrust_vs_V0,strcat(path_images,'\fig_thrust_vs_V0.png'),'png');
+export_figure(fig_thrust_vs_V0, '\fig_thrust_vs_V0.eps', path_images);
+
+%% Steady state powers
+iq = 2/3*P_s./(generator.Lambda.*omega*generator.p); % [A] generator current
+uq =  omega*generator.p*generator.Lambda - generator.Rs*iq; % [V] generator voltage
+P_electro = 1.5*uq.*iq; % [W] electrical power
+P_joule = 1.5*generator.Rs*iq.^2; % [W] Joule losses
+P_electro_eta = 1.5*uq.*iq*generator.eta; % [W] electrical power
+P_joule_eta = 1.5*generator.Rs*(iq*generator.eta).^2; % [W] Joule losses
+
+fig_static_electro_power = figure('Color','w');
+hold on
+plot(V0_v, P_s/1e6, 'LineWidth', line_width, 'DisplayName', 'Mech.', 'Color', colors_vect(1,:));
+plot(V0_v, P_electro/1e6, 'LineWidth', line_width, 'DisplayName', 'Electro $\eta$=1', 'Color', colors_vect(3,:));
+plot(V0_v, P_joule/1e6, '--','LineWidth', line_width, 'DisplayName', 'Joule loss $\eta$=1', 'Color', colors_vect(3,:));
+plot(V0_v, P_electro_eta/1e6, 'LineWidth', line_width, 'DisplayName', ['Electro $\eta$=', num2str(generator.eta)], 'Color', colors_vect(2,:));
+plot(V0_v, P_joule_eta/1e6, '--', 'LineWidth', line_width, 'DisplayName', ['Joule loss $\eta$=', num2str(generator.eta)], 'Color', colors_vect(2,:));
+legend('Location', 'northwest');
+xlabel('$V_0$ [m/s]')
+ylabel('P [MW]')
+grid on
+box on
+export_figure(fig_static_electro_power, '\fig_static_electro_power.eps', path_images);

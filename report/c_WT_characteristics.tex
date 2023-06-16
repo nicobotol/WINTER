@@ -84,12 +84,12 @@ The thrust force, usually denoted as T, is the force produced by the rotor in th
 \end{equation}
 The thrust coefficient $c_T$ is obtained similarly to the power one.
 
-\subsection{BEM algorithm}
+\subsection{BEM algorithm}\label{subsec:BEM_algorithm}
 The relationship between the \acrshort{cp}, the \acrshort{TSR} and the pitch angle is not linear, and involves the aerodynamic interaction between the incoming wind and the airfoil characteristics. Different tools are available for computing this interactions, with different levels of complexity and fidelity. A common analytical method is the so called \acrfull{BEM}, solving the problem by providing the tangential and normal forces to the blade. The assumptions on which it is based are the absence of radial dependency of the blade-wind interaction and a constant force from the blades on the flow. The last assumption corresponds to having a rotor with an infinite number of blades, and so it is later corrected with a coefficient taking into account their finite number \cite{Aerodynamics_of_wind_turbines}.\\
 At the basis of the computations done in this work there is a \acrshort{BEM} algorithm implemented in Matlab.\\
 Other methods that may be cited but not further discussed because not used here are the vortex theory, 2D/3D actuator line theory, 2D/3D full CFD models.
 
-\textcolor{red}{Write how does BEM works}
+A pseudo-code describing the BEM code implementation in details is reported in \autoref{app:BEM_code}. In particular, \autoref{alg:main_BEM} reports the main functions that loops between the different TSR, pitch, and cross sections, while \autoref{alg:detailed_BEM} reports the implementation details leading to the computation of the local (i.e. for a cross section) thrust and power coefficients. A list of the main terms used in the code is reported in \autoref{tab:BEM_code_notation}. 
 
 \subsection{Power control}
 As could be seen in \autoref{eq:power}, the mechanical power scales with the cubic of the wind speed, meaning that operating at the maximum power coefficient ($c_{P, max}$) may quickly lead to exceed the maximum load for which the blades are designed and the power manageable by the different subsystems. In order to limit these loads, control actions have to be taken. The most common ones are the stall regulation and the variable-speed pitch regulation, as reported in \cite{Aerodynamics_of_wind_turbines}.
@@ -131,7 +131,7 @@ As said before, nowadays the \acrfull{PMSM} are the most commonly employed machi
 According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
 In this frame the equations of the machine are:
 \begin{gather}
-  0=u_d-Li_d\omega_{me}+L\frac{di_d}{dt}+Ri_d 
+  0=u_d-Li_q\omega_{me}+L\frac{di_d}{dt}+Ri_d 
   \label{eq:d_axis_eq}\\
   \omega_{me}\Lambda_{mg}=u_q+Li_d\omega_{me}+L\frac{di_q}{dt}+Ri_q
   \label{eq:q_axis_eq}

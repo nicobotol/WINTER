@@ -135,13 +135,22 @@ The Simulink implementation of the control loop presented in \autoref{fig:d_torq
  \end{figure}
 
 Furthermore, the response of the close loop system to a torque step input is reported in \autoref{fig:step_response}. It could be seen that the integral actions drives the steady state error to 0, while the produced overshoot is quite limited (around 4\%).
- \begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_06_7_22_26_18generator_step_input.eps}
-    \caption{Time response of the controlled generator at the input step torque}
-    \label{fig:step_response}
-\end{figure}
 
+It is possible to derive the steady state power curve for the chosen generator starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, considering both a unit or lower efficiency.
+  \begin{figure}[htb]
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/vectorial/2023_06_7_22_26_18generator_step_input.eps}
+      \caption{Time response of the controlled generator at the input step torque}
+      \label{fig:step_response}
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{images/vectorial/fig_static_electro_power.eps}
+      \caption{Incoming mechanical, outgoing electrical, and lost power as function of the WS}
+      \label{fig:fig_static_electro_power}
+    \end{subfigure}
+\end{figure}
 
  \subsection{Pitch actuation}
 In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. \\

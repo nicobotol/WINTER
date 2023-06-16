@@ -82,10 +82,10 @@ In particular, the first and the fourth simulations use the gain scheduling para
 
 \subsubsection{Wind speed of  $V_{10} = 11.5 \ \mesunt{\meter\per\second}$}
 The first of the three simulations is run at $V_{10} = 11.5 \ \mesunt{\meter\per\second}$. Here an intermitting activation of the pitching mechanism is expected since the wind speed fluctuates around its nominal value.\\
-\autoref{tab:simulation_config_variable_gains2} reports the simulation settings while \autoref{fig:gain_scheduling_time_dependency2} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque obtained from the simulations. 
+\autoref{tab:simulation_config_variable_gains} reports the simulation settings while \autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque obtained from the simulations. 
 
 \begin{table}[htb]
-  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency2}}
+  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency}}
   \centering
   \begin{tabular}{ccccc}
   \toprule
@@ -97,7 +97,7 @@ The first of the three simulations is run at $V_{10} = 11.5 \ \mesunt{\meter\per
      4 & 11.5 & 1 & As reported in \cite{Olimpo_Anaya‐Lara}  \\
      \bottomrule
   \end{tabular}
-  \label{tab:simulation_config_variable_gains2}
+  \label{tab:simulation_config_variable_gains}
 \end{table}
 
 \begin{figure}[htb]
@@ -143,9 +143,9 @@ The first of the three simulations is run at $V_{10} = 11.5 \ \mesunt{\meter\per
     \caption{Generator power time series}
   \end{subfigure}
   \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
-  \label{fig:gain_scheduling_time_dependency2}
+  \label{fig:gain_scheduling_time_dependency}
 \end{figure}
-After the simulation and in order to evaluate it quantitatively, the RMS error between the steady state quantities (i.e. the last 40 seconds of the simulation) and the corresponding expected nominal values above rated wind speed are computed, and reported in \autoref{tab:res_variable_gains_2}.\\
+After the simulation and in order to evaluate it quantitatively, the RMS error between the steady state quantities (i.e. the last 40 seconds of the simulation) and the corresponding expected nominal values above rated wind speed are computed, and reported in \autoref{tab:res_variable_gains}.\\
 
 In this simulation these error metrics are not so representative since the wind is not always above the rated one and therefore the corresponding power, torque and rotational speed are not always expected to be reached. They are reported anyway in order to be then compared with the simulations proposed later on.  
 
@@ -162,14 +162,14 @@ In this simulation these error metrics are not so representative since the wind 
      4 & 0.036 & 0.902 & 0.629 \\
      \bottomrule
   \end{tabular}
-  \label{tab:res_variable_gains_2}
+  \label{tab:res_variable_gains}
 \end{table}
 The first two simulations are very close each other, since the static gain of \textit{sim. 2} is almost the same of the scheduling at rated speed. Furthermore, the results of the fourth simulation are not too different from the first two. Finally, it could be also noticed that the gain in case \textit{3} is very different from the other one, suggesting that this choice is not suitable for this condition. 
 
 \subsubsection{Wind speed of $V_{10}=15 \ \mesunt{\meter\per\second}$}
-The second simualtion is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and so the wind speed is expected to be always above the rated one. The simulation settings are reported in \ref{tab:simulation_config_variable_gains}.
+The second simualtion is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and so the wind speed is expected to be always above the rated one. The simulation settings are reported in \autoref{tab:simulation_config_variable_gains2}.
 \begin{table}[htb]
-  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency}}
+  \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency2}}
   \centering
   \begin{tabular}{ccccc}
   \toprule
@@ -181,10 +181,10 @@ The second simualtion is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and 
      4 & 15 & 1 & As reported in \cite{Olimpo_Anaya‐Lara}  \\
      \bottomrule
   \end{tabular}
-  \label{tab:simulation_config_variable_gains}
+  \label{tab:simulation_config_variable_gains2}
 \end{table}
 
-\autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque. 
+\autoref{fig:gain_scheduling_time_dependency2} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque. 
 
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
@@ -229,12 +229,12 @@ The second simualtion is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and 
     \caption{Generator power time series}
   \end{subfigure}
   \caption{Comparison of the simulation with generated time series and three different gain scheduling strategies}
-  \label{fig:gain_scheduling_time_dependency}
+  \label{fig:gain_scheduling_time_dependency2}
 \end{figure}
 
-The \acrshort{RMS} error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains}.
+The \acrshort{RMS} error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains2}.
 \begin{table}[htb]
-  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
+  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency2}}
   \centering
   \begin{tabular}{ccccc}
   \toprule
@@ -246,7 +246,7 @@ The \acrshort{RMS} error between the steady state value and the corresponding ex
      4 & 0.016 & 0.406 & 0.288 \\
      \bottomrule
   \end{tabular}
-  \label{tab:res_variable_gains}
+  \label{tab:res_variable_gains2}
 \end{table}
 
 As could be seen from the root mean square errors, the gain scheduling simulations performs better than the fixed one. In fact, even tough \textit{simulation 2} has lowest error value, the ones of \textit{4} are almost double than the \textit{1}. This means that a fixed gain may perform well in a certain wind region (i.e. the one corresponding at the same gain in the scheduling approach) but probably it will underperform in another different from that one.  
@@ -317,7 +317,7 @@ The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation
 \end{figure}
 
 \begin{table}[htb]
-  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
+  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency3}}
   \centering
   \begin{tabular}{ccccc}
   \toprule

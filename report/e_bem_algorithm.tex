@@ -1,6 +1,6 @@
-\section{BEM Code}
+\section{BEM Code}\label{app:BEM_code}
 \begin{table}[htb]
-  \caption{List of parameters used for the BEM code}
+  \caption{List of parameters used for the BEM code, where \textit{load from table} means that the value depends on the airfoil characteristics and so its loaded from the specific table containing them according to the position along the blade span.}
   \centering
   \begin{tabular}{cccc}
   \toprule
@@ -8,29 +8,31 @@
   $\lambda$ & Tip Speed Ratio & $\left[-\right]$ & Input \\
   $\theta_p$ & Pitch angle & $\mesunt{\radian}$ & Input \\
   r & Distance of a section from root & $\mesunt{\meter}$ & Input \\
+  $r_{in}$ & Distance of the inner section from root & $\mesunt{\meter}$ & Load from table \\
   R & Blade length & $\mesunt{\meter}$ & Input \\
   B & Number of blades & $\left[-\right]$ & Input \\
   $\phi$ & Flow angle & $\mesunt{\radian}$ & Computed \\
-  $\alpha$ &  & $\mesunt{\radian}$ & Computed \\
-  $c_l$ & & & Load from table\\
-  $c_d$ & & & Load from table\\
-  F & & & Computed\\
+  $\alpha$ & Angle of attack & $\mesunt{\radian}$ & Computed \\
+  $c_l$ & Lift coeff. & $\left[-\right]$ & Load from table\\
+  $c_d$ & Drag coeff. & $\left[-\right]$ & Load from table\\
+  F & Tip loss correction & $\left[-\right]$ & Computed\\
   a & Induction coefficient & $\left[-\right]$ & Computed \\
   a' & Induction coefficient & $\left[-\right]$ & Computed \\
-  $\sigma$ & & $\left[-\right]$ & Computed\\
-  $\epsilon$ & Low threshold & $\left[-\right]$  & Constant \\
-  $c_{P,r}$ & Power coeff. for a section & \textcolor{red}{} & Computed\\
-  $c_{P}$ & Power coeff. & \textcolor{red}{} & Computed\\
-  $c_{T,r}$ & Thrust coeff. for a section & \textcolor{red}{} & Computed\\
-  $c_{T}$ & Thrust coeff. & \textcolor{red}{} & Computed\\
+  $\sigma$ & Solidity & $\left[-\right]$ & Computed\\
+  $\varepsilon$ & Low threshold & $\left[-\right]$  & Constant \\
+  $c_{P,r}$ & Section power coeff. & $\left[-\right]$ & Computed\\
+  $c_{P}$ & Blade power coeff. & $\left[-\right]$ & Computed\\
+  $c_{T,r}$ & Section thrust coeff. & $\left[-\right]$ & Computed\\
+  $c_{T}$ & Blade thrust coeff.& $\left[-\right]$ & Computed\\
   \bottomrule
   \end{tabular}
-  \label{tab:DTU_10_struct}
+  \label{tab:BEM_code_notation}
 \end{table}
 
 
 \begin{algorithm}
-\caption{Algorithm for the application of the BEM on the entire blade}\label{alg:MainBEM}
+\caption{Algorithm for the application of the BEM on the entire blade}
+\label{alg:main_BEM}
 \begin{algorithmic}
 \State load airfoil data
 \State load blade parameters
@@ -39,25 +41,25 @@
 
 % Main code
 \For{ $\lambda \in \left[\lambda_{MIN}, \lambda_{MAX}\right]$ }
-  \For{ $\theta_p \in \left[\Theta_{p,MIN}, \Theta_{p,MAX}\right] $ }
+  \For{ $\theta_p \in \left[\theta_{p,MIN}, \theta_{p,MAX}\right] $ }
     \For{ $r \in \left[r_{in}, R\right]$ }
     \State run BEM code
     \EndFor 
     \State $c_P = \int_{r_{in}}^{R}c_{P,r}dr$
     \State $c_T = \int_{r_{in}}^{R}c_{T,r}dr$
-    \State store $\lambda$, $\theta_p$, cP, cT
+    \State store $\lambda$, $\theta_p$, $c_P$, $c_T$
  \EndFor
 \EndFor 
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}
-\caption{BEM code pseudo algorithm}\label{alg:BEM}
+\caption{BEM code pseudo algorithm}
+\label{alg:detailed_BEM}
 \begin{algorithmic}
 % BEM code
 \State INPUT: $r, \theta_p, \lambda$
 \State OUTPUT: $c_{P,r}, \ c_{T,r}$
-\State CONSTANT: $\beta, \ c, \ B$
 \State initialize a, a'
 
 \For {$i < i_{MAX}$}
@@ -68,7 +70,7 @@
   \State  interpolate $c_l$ and $c_d$ from the table
   \State  $c_n = c_l cos(\phi) + c_d sin(\phi)$
   \State  $c_t = c_l sin(\phi) - c_d cos(\phi)$
-  \State  $F = \frac{2}{\pi} acos \left[\exp\left(\frac{-B(R - r)}{2r\sin(\left|\phi\right|)}\right)\right]$
+  \State  $F = \frac{2}{\pi} \arccos \left[\exp\left(\frac{-B(R - r)}{2r\sin(\left|\phi\right|)}\right)\right]$
   \State  $\sigma = \frac{cB}{2\pi r}$
   \If     {$a < \frac{1}{3}$}
   \State  a = $\frac{\sigma c_n (1 - a)}{4 F \sin(\phi)^2}$
@@ -78,14 +80,14 @@
     \State  $a_s = \frac{c_T}{4F(1 - 1/4(5 - 3a)a)}$
     \State  $a = \beta_c a_s + (1 - \beta_c)a$
   \EndIf
-  \State  $a' = \frac{\sigma*c_T*(1 + a')}{4F\sin(\phi)\cos(\phi)}$
+  \State  $a' = \frac{\sigma*c_t*(1 + a')}{4F\sin(\phi)\cos(\phi)}$
   \If     {$\left|a - a_{OLD}\right| < \varepsilon \ \& \ \left|a' - a'_{OLD}\right| < \varepsilon$} % epsilon = 1e-8
     \State break
   \Else
     \State go on
   \EndIf
 \EndFor
-\State  $c_{P,r} = r \ c \ c_t\left[(1 - a)^2 + \frac{\lambda r}{R(1 + a')^2}\right]$
-\State  $c_{T,r} = c \ c_n\left[(1 - a)^2 + \lambda \frac{r}{R} (1 + a')\right]^2$
+\State  $c_{P,r} = r \ c \ c_t\left[(1 - a)^2 + \left(\frac{\lambda r}{R}(1 + a')\right)^2\right]$
+\State  $c_{T,r} = c \ c_n\left[(1 - a)^2 + \left(\frac{\lambda r}{R}(1 + a')\right)^2\right]$
 \end{algorithmic}
 \end{algorithm}

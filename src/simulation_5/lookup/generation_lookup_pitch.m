@@ -88,38 +88,38 @@ save('lookup_pitch.mat', 'lookup_Pitch');
 %% Plot the results
 
 % Plot the pitch angles
-fig_pitch_vs_V0 = figure('Position', get(0, 'Screensize'));
+fig_pitch_vs_V0 = figure('Color','w');
 plot(velocity_vector', feathering_deg, 'LineWidth', line_width)
 hold on
 plot(velocity_vector', stall_deg, 'LineWidth', line_width)
 plot(reference(:, 1), reference(:, 2), 'ro', 'LineWidth', line_width)
 legend('Feather', 'Stall', 'Validation','Location', 'southwest' ...
-  ,'Interpreter','latex')
+  )
 grid on
-xlabel('Wind speed [m/s]','Interpreter','latex')
-ylabel('Pitch [deg.]','Interpreter','latex')
+box on
+xlabel('Wind speed [m/s]')
+ylabel('Pitch [deg.]')
 title('Pitch as function of windspeed')
 set(gca, 'FontSize', font_size)
-fig_name = strcat(path_images,'\fig_pitch_vs_V0','.png');
-saveas(fig_pitch_vs_V0, fig_name,'png');
+export_figure(fig_pitch_vs_V0, '\fig_pitch_vs_V0.eps', path_images);
 
 %% Plot the power curve for some velocities
-fig_power_vs_pitch = figure('Position', get(0, 'Screensize'));
+fig_power_vs_pitch = figure('Color','w');
 hold on;
 leg = cell(v_plot_len + 1, 1);
 for i = 1:v_plot_len
-  plot(p_vector'*180/pi, P_plot(:, i), 'LineWidth', line_width);
-  leg{i} = ['V0 = ', num2str(v_plot(i)), ' [m/s]'];
+  plot(p_vector'*180/pi, P_plot(:, i)/1e6, 'LineWidth', line_width);
+  leg{i} = ['$V_0$ = ', num2str(v_plot(i)), ' [m/s]'];
 end
-yline(rotor.P_rated, '--r', 'LineWidth', line_width); 
+yline(rotor.P_rated/1e6, '--r', 'LineWidth', line_width); 
 leg{end} = 'Rated power';
-legend(leg, 'location', 'best', 'FontSize', font_size, ...
-  'Interpreter','latex');
-xlabel('Pitch [deg.]','Interpreter','latex')
-ylabel('Power [W]','Interpreter','latex')
-ylim([-1e6, 6e7]);
+legend(leg, 'location', 'southwest', 'FontSize', font_size, ...
+  'Interpreter','latex','NumColumns',3);
+xlabel('Pitch [deg.]')
+ylabel('Power [MW]')
+% ylim([-1e6, 6e7]);
 grid on
+box on
 title('Mechanical power as function of pitch angle')
 set(gca, 'FontSize', font_size)
-fig_name = strcat(path_images,'\fig_power_vs_pitch','.png');
-saveas(fig_power_vs_pitch, fig_name,'png');
+export_figure(fig_power_vs_pitch, '\fig_power_vs_pitch.eps', path_images);
