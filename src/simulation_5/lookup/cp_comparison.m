@@ -196,24 +196,5 @@ title('Thrust as function of the wind speed')
 set(gca, 'FontSize', font_size)
 export_figure(fig_thrust_vs_V0, '\fig_thrust_vs_V0.eps', path_images);
 
-%% Steady state powers
-iq = 2/3*P_s./(generator.Lambda.*omega*generator.p); % [A] generator current
-uq =  omega*generator.p*generator.Lambda - generator.Rs*iq; % [V] generator voltage
-P_electro = 1.5*uq.*iq; % [W] electrical power
-P_joule = 1.5*generator.Rs*iq.^2; % [W] Joule losses
-P_electro_eta = 1.5*uq.*iq*generator.eta; % [W] electrical power
-P_joule_eta = 1.5*generator.Rs*(iq*generator.eta).^2; % [W] Joule losses
 
-fig_static_electro_power = figure('Color','w');
-hold on
-plot(V0_v, P_s/1e6, 'LineWidth', line_width, 'DisplayName', 'Mech.', 'Color', colors_vect(1,:));
-plot(V0_v, P_electro/1e6, 'LineWidth', line_width, 'DisplayName', 'Electro $\eta$=1', 'Color', colors_vect(3,:));
-plot(V0_v, P_joule/1e6, '--','LineWidth', line_width, 'DisplayName', 'Joule loss $\eta$=1', 'Color', colors_vect(3,:));
-plot(V0_v, P_electro_eta/1e6, 'LineWidth', line_width, 'DisplayName', ['Electro $\eta$=', num2str(generator.eta)], 'Color', colors_vect(2,:));
-plot(V0_v, P_joule_eta/1e6, '--', 'LineWidth', line_width, 'DisplayName', ['Joule loss $\eta$=', num2str(generator.eta)], 'Color', colors_vect(2,:));
-legend('Location', 'northwest');
-xlabel('$V_0$ [m/s]')
-ylabel('P [MW]')
-grid on
-box on
-export_figure(fig_static_electro_power, '\fig_static_electro_power.eps', path_images);
+

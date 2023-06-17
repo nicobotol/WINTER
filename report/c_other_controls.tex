@@ -1,0 +1,29 @@
+\section{Other Controls}\label{sec:other_controls}
+In this section another approach to the pitch control is proposed. The methodology is similar to the one presented in \autoref{sec:c_basic_model_control}, but here also the driveline and generator are taken into account for the definition of the new set of pitch angle at which the turbine has to work in order to maximize the energy extraction below rated and limit it at the rated one above the critical WS. \\
+To do so, the equations used are:
+\begin{gather}
+  T_G = T_W + B_{eq}\omega = \frac{P_W}{\omega} + B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} + B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \\
+  iq = \frac{2}{3p\Lambda_{mg}}\left(\frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} + B_{eq}\omega\right) \\ 
+  P_{G, out} = P_{G, in} - R_s i_q^2 = \eta P_R - R_s i_q^2 = \eta frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2} - \frac{R_s \left(A c_P(\theta, V_0, \omega) \rho V_0^3 + 2 B_{eq}\omega^2 \right)^2}{9p^2\Lambda_{mg}^2\omega^2} \label{eq:P_G_out} 
+\end{gather}
+
+\autoref{eq:P_G_out} express the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient. Unfortunately, the wind and rotor speed contribution cannot be expressed with only one adimensional parameter, such as the tip speed ratio, but they have to be left separately. \\
+Given that expression of the output power, the problem is similar to the one already presented taking into account the aerodynamic power only: which is the best combination of $\omega$ and $\theta$ to maximize the power output? The problem can be again separated below and above rated wind speed, since the behavior is quite different. The results are reported in \autoref{fig:fig_generator_new_map}. \\
+\textcolor{red}{Write what has been done below rated wind speed}\\ 
+Above rated a parametric study in the pitch angle has been done. In particular, for each wind speed, \autoref{eq:P_G_out} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (since the closer the to null pitch the higher the power extraction).
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/fig_generator_new_map.eps}
+    \caption{Comparison of the powers}
+    \label{fig:fig_generator_new_map}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/fig_new_pitch_map.eps}
+    \caption{Comparison of the pitch angles for feathering control}
+    \label{fig:fig_new_pitch_map}
+  \end{subfigure}
+  \caption{Power and pitch angle comparison between the control based on the aerodynamical power and the one based on the power output at the generator side}
+  \label{fig:fig_blade_control_gen_side}
+\end{figure}
