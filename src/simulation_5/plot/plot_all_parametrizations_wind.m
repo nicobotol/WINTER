@@ -21,6 +21,19 @@ plot_parametrization_wind('fig_pitch_param',out_store,'pitch', ...
   lookup_Pitch(1,pos_4:pos_25),lookup_Pitch(3,pos_4:pos_25)*180/pi, ...
   'Wind speed [m/s]','$\theta$ [deg.]','Pitch angle',pi/180,simulation,date_fig)
 
+% pitch parametrization with map made based on P_GE
+x_my_ref = cell(2);
+y_my_ref = cell(2);
+x_my_ref{1} = lookup_Pitch(1,pos_4:pos_25);
+y_my_ref{1} = lookup_Pitch(3,pos_4:pos_25)*180/pi; 
+x_my_ref{2} = lookup_pitch_P_GE(1,:);
+y_my_ref{2} = lookup_pitch_P_GE(2,:)*180/pi;
+leg = string(2);
+leg = ["Ref. rotor", "Ref. generator"];
+plot_parametrization_windN('fig_pitch_param',out_store,'pitch', ...
+  x_my_ref,y_my_ref, ...
+  'Wind speed [m/s]','$\theta$ [deg.]','Pitch angle',pi/180,simulation,leg,date_fig)
+
 % rotational speed
 plot_parametrization_wind('fig_omega_param',out_store,'omega_R', ...
   lookup_static_values(1,pos_4:pos_25), ...

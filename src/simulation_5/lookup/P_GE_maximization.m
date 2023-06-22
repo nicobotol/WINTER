@@ -1,6 +1,6 @@
-clear 
-close all
-clc
+% clear 
+% close all
+% clc
 
 parameters;
 Rs = generator.Rs; % [Ohm] stator resistance
@@ -147,3 +147,7 @@ grid on
 box on
 export_figure(fig_new_pitch_map, '\fig_new_pitch_map.eps', path_images);
 
+%% Save the data in a lookup table
+lookup_pitch_P_GE(1, :) = V0_a;
+lookup_pitch_P_GE(2, :) = feather_a;
+save('lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
