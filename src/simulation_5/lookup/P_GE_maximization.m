@@ -1,6 +1,6 @@
-% clear 
-% close all
-% clc
+clear 
+close all
+clc
 
 parameters;
 Rs = generator.Rs; % [Ohm] stator resistance
@@ -9,6 +9,85 @@ B = B_eq; % [kgm^2] transmission equiuvalent damping
 p = generator.p; % [-] number of pole pairs
 Lambda = generator.Lambda; % [Wb] generator flux linkage
 eta = generator.eta; % [-] generator efficiency
+R = rotor.R; % [m]
+
+%% Below rated wind speed
+omega = 0.3:0.001:1.2; % [rad/s]
+pitch = [0:0.001:1]*pi/180; % [rad]
+V0_vec = 4:0.01:V0_rated;
+cP_max = zeros(length(V0_vec), 1);
+theta_opt = zeros(length(V0_vec), 1);
+omega_opt = zeros(length(V0_vec), 1);
+Pg_max_out = zeros(length(V0_vec), 1);
+for i = 1:length(V0_vec)
+    V0 = V0_vec(i);
+    lambda = omega'*R/V0;
+    cp = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, pitch);
+    Pg_out = -Rs*(A*V0^3.*cp*rho + 2*B*omega.^2).^2./(9*omega.^2*p^2*Lambda^2) + A.*cp*rho*V0^3*eta/2;
+
+    max_tmp = max(Pg_out, [], 2);       
+    [~, theta_pos] = max(max_tmp);               % omega corresponding to the maximum                  
+    [~, omega_pos] = max(Pg_out(theta_pos, :));  % max cP
+    omega_opt(i) = omega(omega_pos);               % TSR for cP_max
+    theta_opt(i) = pitch(theta_pos);                  % pitch for cP_max
+end
+
+% Recompute some values
+omega_rotor =  lambda_opt.*V0_vec/R; % [rad/s] omega based on the maximization of the rotor power
+lambda_gen =  omega_opt'*R./V0_vec;  % new optimal TSR
+lambda_gen_mean = mean(lambda_gen);
+cp_gen = interp2(lambda_vector, pitch_vector, lookup_cP, lambda_gen, theta_opt'); % cp for the maximization of the generator
+cp_gen_mean = mean(cp_gen);
+
+%% Plot of the values b
+figure('Color', 'w')
+hold on; box on; grid on;
+plot(V0_vec, omega_opt, 'LineWidth',line_width, 'DisplayName','Generator ')
+plot(V0_vec, omega_rotor, 'LineWidth',line_width, 'DisplayName','Rotor')
+title('Rotor rotational speed')
+xlabel('$V_0$ [m/s]')
+ylabel('$\omega$ [rad/s]')
+legend('location', 'northwest')
+
+figure('Color', 'w')
+hold on; box on; grid on;
+plot(V0_vec, theta_opt*180/pi, 'LineWidth',line_width)
+title('Pitch angle')
+xlabel('$V_0$ [m/s]')
+ylabel('$\theta$ [deg]')
+
+figure('Color', 'w')
+hold on; box on; grid on;
+plot(V0_vec, lambda_gen, 'LineWidth',line_width, 'DisplayName','Generator','Color',colors_vect(1,:))
+yline(lambda_gen_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(2,:))
+yline(lambda_opt, '--','LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(3,:))
+title('Tip speed ratio')
+xlabel('$V_0$ [m/s]')
+ylabel('$\lambda$ [-]')
+legend('location', 'northeast')
+
+figure('Color', 'w')
+hold on; box on; grid on;
+plot(V0_vec, cp_gen, 'LineWidth',line_width, 'DisplayName','Generator')
+yline(cp_gen_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(2,:))
+yline(cp_max, '--', 'LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(3,:))
+title('Power coefficient')
+xlabel('$V_0$ [m/s]')
+ylabel('$c_P$ [-]')
+legend('location', 'northeast')
+
+%%
+cp_max_gen = -((-9*Lambda^2*eta*p^2 + 8*B*Rs).*lambda.^3)./(4*A*rho*R^3.*omega*Rs);
+figure()
+hold on; box on; grid on;
+for i=1:length(lambda)
+    plot(omega, cp_max_gen(i, :), 'LineWidth', line_width, 'DisplayName',['$\lambda$ = ',num2str(lambda(i))])
+end
+yline(cp_max, '--', 'DisplayName', '$c_{P, max}^{aero}$', 'LineWidth', line_width)
+ylim([0,1])
+xlabel('$\omega$ [rad/s]')
+ylabel('$c_P$ [-]')
+legend('Location','northeast')
 
 %% Static generator power curve
 V0_v = 4:1:25;                    % windspeed [m/s]

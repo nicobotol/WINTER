@@ -66,75 +66,6 @@
       \field{title}{Offshore Wind Energy Technology}
       \field{year}{2018}
     \endentry
-    \entry{5874598}{inproceedings}{}
-      \name{author}{3}{}{%
-        {{hash=97289d8f8f763c76327620081a747759}{%
-           family={Merabet},
-           familyi={M\bibinitperiod},
-           given={Adel},
-           giveni={A\bibinitperiod}}}%
-        {{hash=3ea084b32528969cfb097fd287161b3d}{%
-           family={Thongam},
-           familyi={T\bibinitperiod},
-           given={Jogendra},
-           giveni={J\bibinitperiod}}}%
-        {{hash=d7793ad8cc1bcf81f6c523625df31a0d}{%
-           family={Gu},
-           familyi={G\bibinitperiod},
-           given={Jason},
-           giveni={J\bibinitperiod}}}%
-      }
-      \strng{namehash}{c0c493176302fdb32a60b0d27c566f5d}
-      \strng{fullhash}{c0c493176302fdb32a60b0d27c566f5d}
-      \strng{bibnamehash}{c0c493176302fdb32a60b0d27c566f5d}
-      \strng{authorbibnamehash}{c0c493176302fdb32a60b0d27c566f5d}
-      \strng{authornamehash}{c0c493176302fdb32a60b0d27c566f5d}
-      \strng{authorfullhash}{c0c493176302fdb32a60b0d27c566f5d}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{2011 10th International Conference on Environment and Electrical Engineering}
-      \field{title}{Torque and pitch angle control for variable speed wind turbines in all operating regimes}
-      \field{year}{2011}
-      \field{pages}{1\bibrangedash 5}
-      \range{pages}{5}
-      \verb{doi}
-      \verb 10.1109/EEEIC.2011.5874598
-      \endverb
-    \endentry
-    \entry{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}{inproceedings}{}
-      \name{author}{2}{}{%
-        {{hash=401f53a6d9c640dc30cd13ab6494b723}{%
-           family={Fisch},
-           familyi={F\bibinitperiod},
-           given={Leandro\bibnamedelimb Benhur\bibnamedelima Klinger},
-           giveni={L\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
-        {{hash=aaef9f0ab0bd474cbc2e78e0d1e41785}{%
-           family={Heldwein},
-           familyi={H\bibinitperiod},
-           given={Marcelo\bibnamedelima Lobo},
-           giveni={M\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
-      }
-      \strng{namehash}{4550ec51bf2f5d7cfc477782baef3a96}
-      \strng{fullhash}{4550ec51bf2f5d7cfc477782baef3a96}
-      \strng{bibnamehash}{4550ec51bf2f5d7cfc477782baef3a96}
-      \strng{authorbibnamehash}{4550ec51bf2f5d7cfc477782baef3a96}
-      \strng{authornamehash}{4550ec51bf2f5d7cfc477782baef3a96}
-      \strng{authorfullhash}{4550ec51bf2f5d7cfc477782baef3a96}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{2020 IEEE 21st Workshop on Control and Modeling for Power Electronics (COMPEL)}
-      \field{title}{10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}
-      \field{year}{2020}
-      \field{pages}{1\bibrangedash 8}
-      \range{pages}{8}
-      \verb{doi}
-      \verb 10.1109/COMPEL49091.2020.9265784
-      \endverb
-    \endentry
     \entry{Aerodynamics_of_wind_turbines}{book}{}
       \name{author}{1}{}{%
         {{hash=29326466f8cb350ea6fb2171dba1703c}{%
@@ -152,8 +83,8 @@
       \strng{authorbibnamehash}{29326466f8cb350ea6fb2171dba1703c}
       \strng{authornamehash}{29326466f8cb350ea6fb2171dba1703c}
       \strng{authorfullhash}{29326466f8cb350ea6fb2171dba1703c}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Aerodynamics of Wind Turbines}
@@ -207,6 +138,75 @@
       \endverb
       \verb{url}
       \verb https://www.sciencedirect.com/science/article/pii/S0040162519313691
+      \endverb
+    \endentry
+    \entry{5874598}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=97289d8f8f763c76327620081a747759}{%
+           family={Merabet},
+           familyi={M\bibinitperiod},
+           given={Adel},
+           giveni={A\bibinitperiod}}}%
+        {{hash=3ea084b32528969cfb097fd287161b3d}{%
+           family={Thongam},
+           familyi={T\bibinitperiod},
+           given={Jogendra},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d7793ad8cc1bcf81f6c523625df31a0d}{%
+           family={Gu},
+           familyi={G\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{fullhash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{bibnamehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{authorbibnamehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{authornamehash}{c0c493176302fdb32a60b0d27c566f5d}
+      \strng{authorfullhash}{c0c493176302fdb32a60b0d27c566f5d}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2011 10th International Conference on Environment and Electrical Engineering}
+      \field{title}{Torque and pitch angle control for variable speed wind turbines in all operating regimes}
+      \field{year}{2011}
+      \field{pages}{1\bibrangedash 5}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/EEEIC.2011.5874598
+      \endverb
+    \endentry
+    \entry{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=401f53a6d9c640dc30cd13ab6494b723}{%
+           family={Fisch},
+           familyi={F\bibinitperiod},
+           given={Leandro\bibnamedelimb Benhur\bibnamedelima Klinger},
+           giveni={L\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=aaef9f0ab0bd474cbc2e78e0d1e41785}{%
+           family={Heldwein},
+           familyi={H\bibinitperiod},
+           given={Marcelo\bibnamedelima Lobo},
+           giveni={M\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{fullhash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{bibnamehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{authorbibnamehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{authornamehash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \strng{authorfullhash}{4550ec51bf2f5d7cfc477782baef3a96}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2020 IEEE 21st Workshop on Control and Modeling for Power Electronics (COMPEL)}
+      \field{title}{10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model}
+      \field{year}{2020}
+      \field{pages}{1\bibrangedash 8}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/COMPEL49091.2020.9265784
       \endverb
     \endentry
     \entry{NREL_5MW_reference}{article}{}

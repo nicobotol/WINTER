@@ -111,7 +111,7 @@ Since below 7 $\mesunt{\meter\per\second}$ the control algorithm would have lead
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.8\textwidth]{images/vectorial/fig_cP_cT_comp.eps}
-    \caption{Comparison of the computed power and thrust coefficients with the one reported in \cite{DTU_Wind_Energy_Report-I-0092}, \textcolor{red}{print the grid}}
+    \caption{Comparison of the computed power and thrust coefficients with the one reported in \cite{DTU_Wind_Energy_Report-I-0092}}
     \label{fig:fig_cP_cT_comp}
 \end{figure}
 For the rest of the simulation, the parameters obtained in the case 2 will be used because it is based on the mechanical rated power expected from the turbine and uses the \acrlong{TSR} maximizing the \acrlong{cp} according to the computations done by me.
@@ -171,3 +171,4 @@ In the report only the feathering strategy is taken into account since, even tou
 \end{figure}
 
 In \autoref{fig:fig_pitch_vs_V0} it is possible to see again some differences at low \acrshort{WS}, and are related to the one of \ref{subsec:lookup_cp}. Since operating at a fixed rotational speed in that range of \acrshort{WS} is not optimal because the \acrshort{TSR} is fixed at a value lower than the rated, then the blades are pitched to obtain the highest $c_P$ allowed by the constraint on $\lambda$. Again this effect is not taken into account and the pitch is considered to be 0$\mesunt{\degree}$ below rated \acrlong{WS}.
+\newpage

@@ -70,9 +70,9 @@ The response at the 4 simulations configurations presented in \autoref{tab:simul
 \end{figure}
 
 \subsection{Generated wind speed}
-\subsubsection{Simulation settings}
+\subsection{Simulation settings}
 The same parameters of the previous model are used again with this one. It must be noted that the generated wind series is not deterministic, because the phase in \autoref{eq:wind_series} is randomly chosen. This means that it is not possible to generate twice exactly the same wind series in order to test different models.
-\subsubsection{Simulation results}
+\subsection{Simulation results}
 The plots of the results are reported in \autoref{fig:simulation_rand_wind_PC}.
 \begin{figure}[htb]
   \centering
@@ -94,12 +94,12 @@ The plots of the results are reported in \autoref{fig:simulation_rand_wind_PC}.
 \end{figure}
 
 \subsection{Comparison between the two models}
-\subsubsection{Ramp}
+\subsection{Ramp}
 Case I has the same behaviour in the two simulations.\\
 For the other cases, the speed fluctuations are higher in the power controlled case and the initial model converges faster.\\
 The rotor powers fluctuate more with the power control, but the generator ones never exceed the rated. \\
 The pitch dynamic is similar in the two models, even though in cases III and IV the pitch angle reaches an higher value with the power control.
-\subsubsection{Generated wind series}
+\subsection{Generated wind series}
 The rotor speed remains bounded between almost the same values for both the models.\\
 The blades pitch angle remains 0$\si{\degree}$ for both the models in the 10 $\left[\si{\meter\per\second}\right]$ simulations. In the 15 $\left[\si{\meter\per\second}\right]$ cases, the pitch angle has a deep valley at the corresponding to a decreasing of the wind speed. More in detail, in the second model the series goes below rated \acrshort{WS}, and so correctly the pitch decreases up to  0$\si{\degree}$.\\
 Also with this input condition, the presence of a power controller avoids that the generator exceeds the rated output.

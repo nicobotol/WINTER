@@ -1,5 +1,37 @@
 \newpage
-\section{Basic model}\label{sec:c_basic_model_model}
+\section{Implemented model}\label{sec:c_basic_model_model}
+
+\subsection{Wind speed generation}
+In this section, the generation of a realistic \acrshort{WS} time series is addressed. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
+Calling $\Delta_t$ $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of $f_s$ $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time T $\left[\si{\second}\right]$ is N. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
+Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum:
+\begin{equation}
+    PSD(f) = \frac{I^2V_{10}l}{\left(1+1.5\frac{f \ l}{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
+    \label{eq:PSD}
+\end{equation}
+where $I=\sigma/V_{10}$ is the turbulence intensity, $\sigma$ is the wind standard deviation $\left[\si{\meter\per\second}\right]$, $f$ is the frequency $\left[\si{\hertz}\right]$, $V_{10}$ is the 10 minutes average wind speed, $l$ is the length scale (said $h \ \left[\si{\meter}\right]$ the height above ground, $l=20h$ for $h<30 \ \left[\si{\meter}\right]$, and  $l=600 \ \left[\si{\meter}\right]$ otherwise).\\
+A wind series that fulfils the prescribed \acrshort{PSD} is:
+\begin{gather}
+    u(t) = \bar{u}+\sum_{n=1}^{N}\sqrt{\frac{2PSD(f_n)}{T}}\cos{(\omega_nt-\varphi_n)} \ \ \left[\si{\meter \per \second}\right]
+    \label{eq:wind_series}
+\end{gather}
+with $t = i\Delta_t$ for $i=1,\dots,N$ and $\varphi$ randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
+An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \mesunt{\meter\per\second}$, height above ground of $h=150 
+ \ \mesunt{\meter}$, and for a time horizon of $T = 300 \ \mesunt{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which is the interval where the 99\% of the generated data are expected to be. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation.eps}
+    \caption{Example of generated wind series with $V_{10}=10\mesunt{\meter\per\second}$ and $\sigma_{V_{10}}=1\mesunt{\meter\per\second}$ }
+    \label{fig:wind_generation}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation_PSD.eps}
+    \caption{Comparison between the PSD used during the generation phase and the one computed on the series itself}
+    \label{fig:wind_generation_PSD}
+\end{figure}
+
 \subsection{Aerodynamic}
 The inputs of this block are the wind speed, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor. \\
 In the block the actual \acrshort{TSR} is firstly computed, then the power coefficient is extracted from the lookup table obtained from the \autoref{subsec:lookup_cp} and finally the rotor torque is obtained by dividing the rotor power (\autoref{eq:power}) by the rotor speed:
@@ -63,8 +95,45 @@ It could be noticed that, for a chosen value of efficiency $\eta$, then the damp
 \begin{equation}
   B_{eq}^R = K_{opt}\omega^R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
 \end{equation}
+
+
 \subsection{Electrical generator}
-The chosen generator is a \acrshort{PMSM}. Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are used in this simulation.
+As said before, nowadays the \acrfull{PMSM} are the most commonly employed machines, because they can operate in a range of speed, and so this kind of machine will be studied here.\\
+According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
+In this frame the equations of the machine are:
+\begin{gather}
+  0=u_d-Li_q\omega_{me}+L\frac{di_d}{dt}+Ri_d 
+  \label{eq:d_axis_eq}\\
+  \omega_{me}\Lambda_{mg}=u_q+Li_d\omega_{me}+L\frac{di_q}{dt}+Ri_q
+  \label{eq:q_axis_eq}
+\end{gather}
+where $u_d$ and $u_q$ are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), $i_d$ and $i_q$ are the current in the dq frame (transformed in the same way as the the voltage), $\omega_{me}$ is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega$), L is the inductance and R the resistance of the stator, $\Lambda_{mg}$ is the flux linkage of the permanent magnets, and p the number of pole pairs.\\
+By multiplying both sides of \autoref{eq:q_axis_eq} by $i_q$, \autoref{eq:d_axis_eq} by $i_d$ and then summing them together is it possible to obtain the following power balance:
+\begin{equation}
+  p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R(i_d^2 + i_q^2)
+  \label{eq:gen_power_balance}
+\end{equation}
+then knowing that $i_d=0$ one can rewrite:
+\begin{equation}
+  \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{Ri_q^2}_{Joule}
+  \label{eq:gen_power_balance2}
+\end{equation}
+Since the power is not invariant in the transformation from the abc frame to the dq but $P_{dq} = \frac{3}{2}P_{abc}$, \autoref{eq:gen_power_balance2} has to be rewritten as:
+\begin{equation}
+  P_G = T_G\omega = \frac{3}{2}p\omega\Lambda_{mg}i_q = \frac{3}{2}u_qi_q + \frac{3}{2}L i_q\frac{di_q}{dt} + \frac{3}{2}R i_q^2
+  \label{eq:gen_power_balance3}
+\end{equation}
+The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0$.
+\begin{figure}[htb]
+\input{d_pmsm.tex}
+\caption{Block diagram of the q-axis of a PMSM}
+\label{fig:PMSM}
+\end{figure}
+
+\autoref{fig:PMSM} represents the block diagram of the q-axis of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the electrical converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the rotor imposed by the wind on the rotor.\\
+It could be seen that the aerodynamical torque enters as a disturb in the block diagram. This model is not a description of the real behaviour of the \acrshort{WT}, because the $T_R$ is affected by the $\Omega_G$, and so in principle some sort of interaction between these quantities should have been introduced. Unfortunately, this dependency is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved observing that this mechanical dynamic evolves slowly compared to the electrical one, and so the electrical part sees the slowly varying dynamic as an almost-constant disturb. Finally for the sake of completeness, it must be remembered that the interactions between rotational speed and aero torque is taken into account into the aerodynamical block of the simulation. \\
+
+ Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are used in this simulation.
 \begin{table}[htb]
     \caption{Parameters for the \acrlong{PMSM} generator}
     \centering
@@ -85,13 +154,13 @@ The chosen generator is a \acrshort{PMSM}. Obtaining the electrical parameters o
     \label{tab:generator_parameter}
 \end{table}
 
-The Simulink implementation of the control loop presented in \autoref{fig:d_torque_control} is reported in \autoref{fig:iq_control}.
-\begin{figure}[htb]
-   \centering
-   \includegraphics[width=0.8\textwidth]{images/iq_control.png}
-   \caption{Feedback scheme of the \textit{q-axis} control loop}
-   \label{fig:iq_control}
-\end{figure}
+% The Simulink implementation of the control loop presented in \autoref{fig:d_torque_control} is reported in \autoref{fig:iq_control}.
+% \begin{figure}[htb]
+%    \centering
+%    \includegraphics[width=0.8\textwidth]{images/iq_control.png}
+%    \caption{Feedback scheme of the \textit{q-axis} control loop}
+%    \label{fig:iq_control}
+% \end{figure}
 
  Once the inverter switching frequency is defined \textcolor{red}{add some reference justifying the choice}, then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
  \begin{gather}

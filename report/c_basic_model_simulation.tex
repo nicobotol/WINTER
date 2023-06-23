@@ -1,5 +1,5 @@
 \newpage
-\section{Basic model simulation}\label{sec:c_basic_model_simulation}
+\section{Simulation for standard control techniques}\label{sec:c_basic_model_simulation}
 
 \subsection{Simulation with velocity ramp}
 \subsubsection{Simulation setting}
@@ -459,4 +459,37 @@ The results of the simulations are reported in \autoref{fig:simulation_with_diff
   \label{fig:simulation_with_different_pitch_dynamic}
 \end{figure}
 The results shows how the second mechanism enters faster in the dynamic but also produces an higher oscillation of the pitch angle itself. Furthermore the power and rotational speed have higher fluctuations from the rated value.
+
+\subsection{Simulation with the controller based on generator output power}\label{subsec:validation_control_P_GE}
+The test has been done in steady state conditions, with a velocity ramp between 8 and 15 $\mesunt{\meter\per\second}$ lasting 150 seconds.\\
+The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}. \autoref{fig:2023_06_22_21_03_26fig_pitch_param} shows how the actual pitch angle follows what is predicted from the static map of \autoref{fig:fig_new_pitch_map}. As expected, since the blade are rotated less then what was required before the mechanical power extracted from the resource is slightly higher. This is also visible in \autoref{fig:2023_06_22_21_02_45fig_generator_power_check}, where it is also highlighted that the generator produced electrical power is kept constant at the rated value above the rated WS. Finally, \autoref{fig:2023_06_22_20_58_01power_check} shows how does the presence of the inertia made the power available at the input of the generator lower than the rotor one, and so in principle the controller could be less responsive due to a small lag in reaching the rated value. 
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_22_21_03_26fig_pitch_param.eps}
+    \caption{Pitch angle}
+    \label{fig:2023_06_22_21_03_26fig_pitch_param}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_22_21_03_05fig_power_param.eps}
+    \caption{Mechanical power at the rotor side}
+    \label{fig:2023_06_22_21_03_05fig_power_param}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_22_21_02_45fig_generator_power_check.eps}
+    \caption{Incoming and outgoing power at the generator side}
+    \label{fig:2023_06_22_21_02_45fig_generator_power_check}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_22_20_58_01power_check.eps}
+    \caption{Check of the powers}
+    \label{fig:2023_06_22_20_58_01power_check}
+  \end{subfigure}
+
+  \caption{Results of the validation of the control based on the power output at the generator side}
+  \label{fig:fig_blade_control_gen_side_validation}
+\end{figure}
 \newpage

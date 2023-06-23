@@ -1,7 +1,45 @@
 \newpage
-\section{Control of the basic model}\label{sec:c_basic_model_control}
+\section{Control of the implemented model}\label{sec:c_basic_model_control}
 
 \subsection{Generator's torque reference synthesis}\label{subsec:torque_reference}
+The Newton's law applied to the rotor can be written in the simplest form as:
+\begin{equation}
+    J_R\frac{d\omega_R}{dt}=T_R-T_G
+    \label{eq:simple_dynamic}
+\end{equation}
+where $J_R$ is the rotor inertia, $\omega_R$ is the rotor rotational speed, $T_R$ is the torque produced by the wind, and $T_G$ is the torque used by the generator. At each time step the controller has to read the rotor rotational speed $\omega_R$ and generate a proper command. In particular, below rated wind speed for each measured speed there is an univocal torque ensuring the maximum power extraction (as will be further explained in \autoref{subsec:torque_reference}), and so it is imposed as control target. Then if the aero torque overcomes the generator's one the rotor will start to accelerate, while in the other case the velocity will decrease. This feedback scheme will go on until the equilibrium between the two torques at the correct velocity. In the other control region, the torque command works in combination with the pitch mechanism: by turning the blade the harvested power is limited to the rated value and since the rotational speed have to be kept constant, then the torque ensuring the equilibrium is univocally defined as: 
+\begin{equation}
+    T_G=\frac{P_{rated}}{\omega_G}
+    \label{eq:simple_torque}
+\end{equation}
+where $\omega_G$ is the rated rotational speed at the generator side of the transmission. \\
+
+Once the desired torque is generated according to the desired working point, the first operation of the control scheme is to transform it in a $I_q \ \left[\si{\ampere}\right]$ current reference knowing that:
+\begin{equation}
+    T_G = \frac{3}{2}\Lambda_{mg} p I_q \ \ \left[\si{\newton\meter}\right]
+    \label{eq:T_G4}
+\end{equation}
+where $\Lambda_{mg}$ is the permanent magnets flux $\left[\si{\weber}\right]$ and p is the number of poles of the machine.\\
+Then the current is stabilized with the proper controller and finally the \autoref{eq:T_G4} is backwards applied to transform again $I_q$ into $T_G$. The feedback scheme has the structure reported in \autoref{fig:d_torque_control}.
+
+\begin{figure}[htb]
+    \centering
+    \input{d_torque_control.tex}
+    \caption{Feedback scheme for torque control}
+    \label{fig:d_torque_control}
+\end{figure}
+
+The transfer functions inside the loop are the regulator, the power electronic necessary to the machine and the generator itself. They are modelled as follow:
+\begin{gather}
+    R_{iq}=k_P + \frac{k_I}{s}=k_I\frac{1+\uptau_{iq}s}{s}
+    \label{eq:R_iq}\\
+    G_c = \frac{1}{1+\uptau_cs}
+    \label{eq:G_c}\\
+    Y_{iq} = -\frac{B_{eq} + J_{eq}s}{LJ_{eq}s^2+\left(RI_{eq} + L B\right)s + RB + \frac{3}{2}(p\Lambda_{mg})^2}
+    \label{eq:Y_iq}
+\end{gather}
+Where $k_P$ and $k_I$ are the proportional and integral gain respectively, $\uptau_c$ is a time delay introduced by the power electronic, and $J_{eq}$ and $B_{eq}$ are the inertia and damping of the drivetrain respectively, for example as expressed in \autoref{eq:mech_eq}.\\
+In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches in a synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually at three half of the switching delay.\\
 As presented in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, the generator's torque reference is computed starting from the rotational speed of the shaft. \\
 As said before, below rated wind speed the objective is to ensuring the maximum power extraction, and so working with the maximum power coefficient:
 \begin{gather}
@@ -156,3 +194,49 @@ Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block
 
 The saturation block constraints the reference power in between $P_g^* \in \left[0, P_{rated}\right]$.
 The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
+
+\subsection{Active power controller based on the generator output}\label{subsec:method_control_P_GE}
+In this section another approach to the pitch control is proposed. 
+Below rated windspeed nothing can be done further than what was already presented, since the limitation to the output power is the maximum amount that the blade can extract. Since this limit is given by the $c_P$, once it is maximized the most favorable condition is achieved. \\
+On the other hand, above rated the driveline and generator can be taken into account for the definition of the new set of pitch angle at which the turbine has to work in order to maximize the energy extraction. The methodology to find it is similar to the one presented in \autoref{sec:c_basic_model_control}.  \\
+First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient has been found in \autoref{eq:P_G_out}.  Unfortunately, the wind and rotor speed contribution cannot be expressed with only one adimensional parameter, such as the tip speed ratio, but they have to be left separately. However the use of $\lambda$ may be useful for the imposing constrains for example on the sound noise of the turbine.
+\begin{gather} 
+  T_G = T_W + B_{eq}\omega = \frac{P_W}{\omega} + B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} + B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \\ \notag
+  \Rightarrow iq = \frac{2}{3p\Lambda_{mg}}\left(\frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} + B_{eq}\omega\right) \\ 
+  P_{G, out} = P_{G, in} - R_s i_q^2 = \eta P_R - R_s i_q^2 = \\ \notag
+   = \eta \frac{A \, \rho V_0^3 c_P(\theta, V_0, \omega)}{2} - \frac{R_s \left(A c_P \rho V_0^3 + 2 B_{eq}\omega^2 \right)^2}{9p^2\Lambda_{mg}^2\omega^2} \label{eq:P_G_out} \\
+   P_{G, out} = \frac{-Rs(\frac{A\,c_P\,\rho\,\omega^3\,R^3}{\lambda^3} + 2\,B_{eq}\,\omega^2)^2}{9\,\omega^2\,p^2\,\Lambda^2} + \frac{A\,c_P\,\rho\,\omega^3\,R^3\,\eta}{2\,\lambda^3}\label{eq:P_G_out_lambda}
+\end{gather}
+
+\subsubsection{Below rated wind speed}
+in this operation region we can see \autoref{eq:P_G_out_lambda} as a function of only the power coefficient $c_P$ that has to be maximised. By deriving \autoref{eq:P_G_out_lambda} twice it could be seen that it is always a concave function, meaning that all the possible local minima are maximum. By differencing \autoref{eq:P_G_out_lambda} once and posing it to 0 one can found the value of the maximum
+\begin{equation}
+  \frac{dP_{G,out}}{d c_P} = 0 \Rightarrow c_{P, max}^{gen} = -\frac{(-9\,\Lambda^2\,\eta\,p^2 + 8\,B_{eq}\,Rs)\lambda^3}{4\,A\,\rho\,R^3\,\omega\,Rs}
+  \label{eq:cp_max}
+\end{equation}
+This expression of the maximum power coefficient has to take into account the previously found limitation $c_{P, max}^{aero} = 0.465$ given by the aerodynamic in \autoref{subsec:lookup_cp}: 
+\begin{equation}
+  c_{P, max} = \min\left(c_{P, max}^{aero}, c_{P, max}^{gen}\right)
+  \label{eq:cp_max_final}
+\end{equation}\\
+Now one can try to identify the combinations of $\lambda$ and $\omega$ that make $c_{P, max}^{gen} > c_{P, max}^{aero}$. This is done by a graphical method
+
+\subsubsection{Above rated wind speed}
+Then a parametric study in the pitch angle has been done, meaning that for each wind speed, \autoref{eq:P_G_out} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (since the closer we are the to null pitch, then the higher the power extracted).
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/fig_generator_new_map.eps}
+    \caption{Comparison of the powers}
+    \label{fig:fig_generator_new_map}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/fig_new_pitch_map.eps}
+    \caption{Comparison of the pitch angles for feathering control}
+    \label{fig:fig_new_pitch_map}
+\end{subfigure}
+  \caption{Power and pitch angle comparison between the control based on the aerodynamical power and the one based on the power output at the generator side}
+  \label{fig:fig_blade_control_gen_side}
+\end{figure}
+In order to validate these strategy the controller has been implemented in the simulator. In particular, the feedback power to the generator controller (i.e. $P_G$ in \autoref{fig:d_torque_control_3}) has been connected to the output power of the generator itself rather than with the mechanical incoming form the rotor.
