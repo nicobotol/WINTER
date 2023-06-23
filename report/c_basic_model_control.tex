@@ -121,7 +121,7 @@ Once all the terms in \autoref{eq:ki}, \ref{eq:kp}, and \ref{eq:GK} are availabl
 
 
 \subsubsection{Use of the procedure on the DTU10MW}\label{subsec:gain_schdeuling_DTU10MW}
-The procedure described in the \autoref{subsec:gain_schdeuling_NREL5MW} is applied on the DTU 10MW. For this turbine, there are less intermediate steps that can be used to cross check the procedure itself. The \cite{DTU_Wind_Energy_E_0028} reports the second order interpolation of the aerodynamic torque gain, \textcolor{red}{which is linked to the aerodynamic power gain since the velocity is constant above rated wind speed}. This is here reported in \autoref{fig:fig_torque_gain_DTU10MW}.
+The procedure described in the \autoref{subsec:gain_schdeuling_NREL5MW} is applied on the DTU 10MW. For this turbine, there are less intermediate steps that can be used to cross check the procedure itself. The \cite{DTU_Wind_Energy_E_0028} reports the second order interpolation of the aerodynamic torque gain,which is linked to the aerodynamic power gain since the velocity is constant above rated wind speed. This is here reported in \autoref{fig:fig_torque_gain_DTU10MW}.
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/fig_torque_gain_DTU10MW.eps}
@@ -135,7 +135,7 @@ Furthermore the pitch gains are reported in  \autoref{fig:fig_gain_sched_DTU10MW
     \caption{Comparison between the gains computed from the aerodynamic and the ones from the simplified approach}
     \label{fig:fig_gain_sched_DTU10MW}
 \end{figure}
-
+Even though the results of the aerodynamic torque gain and the pitch gains are not exactly the same as the reference cited in \autoref{fig:fig_torque_gain_DTU10MW} and \autoref{fig:fig_gain_sched_DTU10MW}, they are very close to the one presented by \cite{Galinos_2019}, which also has made the same assumption of stiff blade. This can be taken as a proof of the validity of the procedure.
 \subsection{Low pass filtering of the rotor speed}
 As presented in \cite{Olimpo_Anaya‐Lara}, in order to prevent the feeding into the control loop of high frequency dynamic, the rotor rotational speed is low pass filtered before being used in both the torque and the pitch controllers. According to the same source, this filter has an important influence on the pitching dynamics since if it is tuned too low then the performance of the rotor speed control decays due to phase offset between the actual and filtered speed measurements but, on the other hand, if it is too high the pitch mechanism may react to aerodynamic excitation even when it would be not necessary. \\
 The proposed filter's transfer function is:

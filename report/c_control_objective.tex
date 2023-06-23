@@ -1,0 +1,63 @@
+\section{General control objective and structure} \label{sec:control_objective}
+\subsection{Power control}
+As could be seen in \autoref{eq:power}, the mechanical power scales with the cubic of the wind speed, meaning that operating at the maximum power coefficient ($c_{P, max}$) may quickly lead to exceed the maximum load for which the blades are designed and the power manageable by the different subsystems. In order to limit these loads, control actions have to be taken. The most common ones are the stall regulation and the variable-speed pitch regulation, as reported in \cite{Aerodynamics_of_wind_turbines}.
+\subsubsection{Stall regulation}\label{subsec:stall_regulation_theory}
+The \acrshort{WT} employing this method are the simplest ones from the mechanical point of view because blades are bolted to the hub and cannot be pitched one they are setted. The electrical generator often employed is the robust asynchronous machine, requiring an almost constant rotational speed.\\
+When the incoming wind increases its speed, then the \acrshort{AOA} decreases reducing the lift and increasing the drag. \textcolor{red}{Since then this conol method is employed, maybe is better to go a little bit furter in this explanation}\\
+The construction has two main drawbacks: the rigidity of the operations and the extreme load rejection. Even though the mechanical construction is reliable, it is not very flexible since the maximum power reduction is limited by the initial positioning of the blades, and their setting is possible only by unbolting and repositioning them.\\
+Furthermore, whenever the generator stops to produce a resisting torque, it is possible that the stalling would not be effective enough to avoid the acceleration of the drivetrain, increasing the risks of breakage for the components. In that case aerodynamic safety systems are activated, for example by turning the outer part of the blades of 90$\si{\degree}$ w.r.t. the rotor plane. 
+
+\subsubsection{Pitch regulation with constant rotor rotational speed}
+In this type of \acrshort{WT} the pitch angle can be actively controlled along the blade. The pitching mechanism may be implemented with different kind of mechanical systems, such as hydraulic pistons, hydraulic motors, or electrical motors. \\
+Since the dynamic of the wind fluctuations are faster than the ones of the blade pitching system, then it is possible that the pitch regulated behaves like a stall regulated \acrshort{WT} for some time and so the output power locally exceeds the rated one.
+
+\subsubsection{Variable-speed pitch regulation}
+This is the most common type nowadays, and the \acrshort{WT} investigated in this work belongs to this kind. Their working philosophy in partial load regime is to vary the rotor speed in order to keep $\lambda = \lambda_{MAX}$ in \autoref{eq:TSR}, and consequently $c_p=c_{p,max}$. On the other hand, in the full load region the rotational speed is kept constant at $\omega = \omega_{rated}$ while the power is limited by acting on the pitch angle, and so on the $c_P$ in the relation $c_P(\lambda, \theta)$. The switching between the regions may be done using some smoothing functions \textcolor{red}{not implemented yet}. \\
+Since the rotational speed of the rotor is not fixed anymore, as it was in the stall regulated machine, here the electrical generator should be able to operate in a wide range of velocities. Such a kind of machines cannot be directly connected to the electrical grid, because the produced voltage would have a frequency proportional to the operating speed. The problem may be solved by employing an electrical conditioning interface firstly rectifying the voltage, and then converting the DC voltage to AC with desired frequency. \\
+In addition to the classification done in \autoref{subsec:mech_pow_and_pow_coeff} (i.e. feather/stall) another one can be done based on the number of blades simultaneously controlled. In fact, both feathering and stalling can be implemented either as collective or individual. In the first one the same pitching angle is applied to all the blades, while in the second one a specific angle is set to each blade according its azimuthal position (which have to be known from measurements).
+
+\subsubsection{Yaw control}
+The yaw controller rotates the nacelle in order to set the orientation of the rotor-plane w.r.t. the incoming wind speed. In stall and pitch controlled \acrshort{WT} this is done in order to align the rotational axis with the incoming stream and so maximizing the air passing through the rotor. \\
+According to \cite{Aerodynamics_of_wind_turbines}, some attempts to develop a power controller based only on the yaw has been done in the past, but with low implications nowadays. 
+
+\subsection{PMSM control}\label{subsec:PMSM_control}
+In general, control of these machines may be focused on two objectives: the speed or the torque, and the first includes the second as a nested loop. For the sake of the thesis, a torque control has to be implemented because it is easy to synthetize this signal in the two control regions. \\
+The Newton's law applied to the rotor can be written in the simplest form as:
+\begin{equation}
+    J_R\frac{d\omega_R}{dt}=T_R-T_G
+    \label{eq:simple_dynamic}
+\end{equation}
+where $J_R$ is the rotor inertia, $\omega_R$ is the rotor rotational speed, $T_R$ is the torque produced by the wind, and $T_G$ is the torque used by the generator. At each time step the controller has to read the rotor rotational speed $\omega_R$ and generate a proper command. In particular, below rated wind speed for each measured speed there is an univocal torque ensuring the maximum power extraction (as will be further explained in \autoref{subsec:torque_reference}), and so it is imposed as control target. Then if the aero torque overcomes the generator's one the rotor will start to accelerate, while in the other case the velocity will decrease. This feedback scheme will go on until the equilibrium between the two torques at the correct velocity. In the other control region, the torque command works in combination with the pitch mechanism: by turning the blade the harvested power is limited to the rated value and since the rotational speed have to be kept constant, then the torque ensuring the equilibrium is univocally defined as: 
+\begin{equation}
+    T_G=\frac{P_{rated}}{\omega_G}
+    \label{eq:simple_torque}
+\end{equation}
+where $\omega_G$ is the rated rotational speed at the generator side of the transmission. \\
+
+Once the desired torque is generated according to the desired working point, the first operation of the control scheme is to transform it in a $I_q \ \left[\si{\ampere}\right]$ current reference knowing that:
+\begin{equation}
+    T_G = \frac{3}{2}\Lambda_{mg} p I_q \ \ \left[\si{\newton\meter}\right]
+    \label{eq:T_G4}
+\end{equation}
+where $\Lambda_{mg}$ is the permanent magnets flux $\left[\si{\weber}\right]$ and p is the number of poles of the machine.\\
+Then the current is stabilized with the proper controller and finally the \autoref{eq:T_G4} is backwards applied to transform again $I_q$ into $T_G$. The feedback scheme has the structure reported in \autoref{fig:d_torque_control}.
+
+\begin{figure}[htb]
+    \centering
+    \input{d_torque_control.tex}
+    \caption{Feedback scheme for torque control}
+    \label{fig:d_torque_control}
+\end{figure}
+
+The transfer functions inside the loop are the regulator, the power electronic necessary to the machine and the generator itself. They are modelled as follow:
+\begin{gather}
+    R_{iq}=k_P + \frac{k_I}{s}=k_I\frac{1+\uptau_{iq}s}{s}
+    \label{eq:R_iq}\\
+    G_c = \frac{1}{1+\uptau_cs}
+    \label{eq:G_c}\\
+    Y_{iq} = -\frac{B_{eq} + J_{eq}s}{LJ_{eq}s^2+\left(RI_{eq} + L B\right)s + RB + \frac{3}{2}(p\Lambda_{mg})^2}
+    \label{eq:Y_iq}
+\end{gather}
+\textcolor{red}{Mettere funzioni di trasferimento aggiornate ed aggiornare i diagrammi a blocchi}\\
+Where $k_P$ and $k_I$ are the proportional and integral gain respectively, $\uptau_c$ is a time delay introduced by the power electronic, and $J_{eq}$ and $B_{eq}$ are the inertia and damping of the drivetrain respectively, for example as expressed in \autoref{eq:mech_eq}.\\
+In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches in a synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually at three half of the switching delay.

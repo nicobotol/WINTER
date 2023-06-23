@@ -1,205 +1,22 @@
 \newpage
-\section{State of the art of the Wind Turbine}\label{sec:c_WT_characteristics}
-In this section the most important characteristics of a wind turbine are exposed, with a particular focus on the control aspects. The aerodynamic aspects will be treated only at high level. 
-
-\subsection{Definition of the resource - Wind speed generation}
-In this section, the generation of a realistic \acrshort{WS} time series is addressed. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighbourhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
-Calling $\Delta_t$ $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of $f_s$ $\left[\si{\hertz}\right]$, the total number of samples collected in the total time T $\left[\si{\second}\right]$ is N. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
-Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, knowing the \acrfull{PSD} the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum:
-\begin{equation}
-    PSD(f) = \frac{I^2V_{10}l}{\left(1+1.5\frac{f \ l}{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
-    \label{eq:PSD}
-\end{equation}
-where $I=\sigma/V_{10}$ is the turbulence intensity, $\sigma$ is the wind standard deviation $\left[\si{\meter\per\second}\right]$, f is the frequency $\left[\si{\hertz}\right]$, $V_{10}$ is the 10 minutes average wind speed, $l$ is the length scale (said $h \ \left[\si{\meter}\right]$ the height above ground, $l=20h$ for $h<30 \ \left[\si{\meter}\right]$, and  $l=600 \ \left[\si{\meter}\right]$ otherwise).\\
-A wind series that fulfils the prescribed \acrshort{PSD} is:
-\begin{gather}
-    u(t) = \bar{u}+\sum_{n=1}^{N}\sqrt{\frac{2PSD(f_n)}{T}}\cos{(\omega_nt-\varphi_n)} \ \ \left[\si{\meter \per \second}\right]
-    \label{eq:wind_series}
-\end{gather}
-with $t = i\Delta_t$ for $i=1,\dots,N$ and $\varphi$ randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
-An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \mesunt{\meter\per\second}$, height above ground of $h=150 
- \ \mesunt{\meter}$, and for a time horizon of $T = 300 \ \mesunt{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which is the interval where the 99\% of the generated data are expected to be. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation.eps}
-    \caption{Example of generated wind series with $V_{10}=10\mesunt{\meter\per\second}$ and $\sigma_{V_{10}}=1\mesunt{\meter\per\second}$ }
-    \label{fig:wind_generation}
+\section{Introduction to the Wind Turbines}\label{sec:c_WT_characteristics}
+\subsection{State of the art of the WT technologies}
+\subsection{General structure of the energy conversion chain}
+A general schema of a WT energy conversion chain is reported in \autoref{fig:fig_drivetrain} (source \cite{Olimpo_Anaya‐Lara}). \\
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{images/fig_drivetrain.jpg}
+  \caption{General structure of a wind turbine drive train (source \cite{Olimpo_Anaya‐Lara})}
+  \label{fig:fig_drivetrain}
 \end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation_PSD.eps}
-    \caption{Comparison between the PSD used during the generation phase and the one computed on the series itself}
-    \label{fig:wind_generation_PSD}
-\end{figure}
-
-\subsection{General structure of the drive train}
-\textcolor{red}{Find an images of the drivetrain schema in order to show which are the functional blocks between the wind and the grid, in particular highlight the drivetrain, the generator, the power electronic, the grid connection}
-Since the rotational speed of the generator is usually higher than the rotor one, then a gearbox is necessary to step up the rpm between the low speed and high speed shafts.
+The incoming wind power makes the blades rotate at a reasonably low rotational speed (around 10 $\left[rpm\right]$ to give an order of magnitude). This rotation is then transmitted to the generator with or without a step up gearbox, according to the requirement of the electrical machine. Finally, a power electronic converter conditions the power before the injection to the grid. Agin, the function and structure of this component depends on the employed generator type.
 
 \subsection{Operational regions of a WT}
 Even thought the scope of a \acrlong{WT} is usually to harvest as much mechanical energy as possible by reducing the wind's kinetic one, different working regions and corresponding wind speeds levels may be identified depending on the followed literature. For example \cite{Olimpo_Anaya‐Lara} uses two regions (called I and II), \cite{5874598} uses three (called 1, 2, 3), while \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} uses five (called I, II, III, IV, and V). A common denominator is that in all of them the \textit{partial load} and the \textit{full load} regions are identified. The \textit{partial load} is bounded between the \textit{cut-in wind speed} (i.e. the minimum wind speed required to enabling the blade rotation) and the \textit{rated wind speed} (i.e. the lowest velocity at which the rated mechanical power is produced), and the mechanical power is below the rated one. Complementary, in the \textit{full load} the mechanical power would exceed the rated one, but it is limited by the controller. The boundaries of this regime are the rated wind speed and the \textit{cut-out} one (i.e. the maximum one taken into account during the design phase). \\
-The further identified region in \cite{5874598} and region I in \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} is the one below cut-in, when the rotor is kept still by the brakes. Region III in \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} is the switching between the partial and full load, while IV is the region above cut-out when the rotor is kept locked by the brakes. Even though the division in 5 zones is more complete, the one with 2 is the most practical one, because it is sufficient for identifying the conceptual differences. 
+The further identified region in \cite{5874598} and region I in \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} is the one below cut-in, when the rotor is kept still by the brakes. Region III in \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} is the switching between the partial and full load, while IV is the region above cut-out when the rotor is kept locked by the brakes. Even though the division in 5 zones is more complete, the one with 2 is sufficient for identifying the conceptual differences. 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\textwidth]{images/operating_reagions.png}
     \caption{Wind speed division in 5 different operating regions according to \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}}
     \label{fig:operating_reagions}
 \end{figure}
-
-
-\subsection{Mechanical power and power coefficient}\label{subsec:mech_pow_and_pow_coeff}
-The mechanical power that a \acrshort{WT} can extract from the wind is expressed by the well known equation:
-\begin{gather}
-    P = \frac{1}{2}\ A \ \rho c_P V_0^3 \ \ \left[\si{\watt}\right] \label{eq:power} \\
-    V_0 = \sqrt[3]{\frac{2 \ P}{A \rho c_P}} \ \ \left[\si{\meter \per \second}\right] 
-\end{gather}
-where A is the rotor swept area $\left[\si{\square \meter}\right]$, $\rho$ is the air density in $\left[\si{\kilo\gram\per\cubic\meter}\right]$, and $c_P$ is the power coefficient. 
-
-The \acrfull{cp} is defined as the ratio between the power extracted by the \acrshort{WT} divided by the available from the source one:
-\begin{equation}
-    c_P = \frac{P_{extracted}}{P_{available}} \ \ \left[-\right]
-    \label{eq:c_P}
-\end{equation}
-and it is computed from the analysis of the elementary blade cross section. More in detail, the $c_P$ is a function of the \acrfull{TSR} $\lambda$ and the pitch angle $\theta$. The \acrshort{TSR} is defined as:
-\begin{equation}
-    \lambda = \frac{\omega R}{V_0} \ \ \left[-\right]
-    \label{eq:TSR}
-\end{equation}
-with $\omega$ the rotor rotational speed in $\left[\si{\radian \per \second}\right]$, R is the rotor radius in $\left[\si{\meter}\right]$, and $V_0$ is the incoming wind speed in  $\left[\si{\meter \per \second}\right]$. The pitch angle is the rotation angle of the blade around its main axes, and by adjusting it the \acrfull{AOA} of the entire blade changes, producing a modification of the harvested power. The \acrshort{AOA} is the one between the incoming wind flow and blade's chordline, denoted as $\alpha$ in \autoref{fig:velocity_triangle}. 
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/velocity_triangle.png}
-    \caption{Airfoil cross-section of chord length $c$. The Angle of attack $\alpha$ is the one between the incoming \acrshort{WS} $V_0$ and the chordline. $D$ and $L$ are the produced drag and lift forces. F and M are the total force and torque on the cross section. Source \cite{Aerodynamics_of_wind_turbines}}
-    \label{fig:velocity_triangle}
-\end{figure}
-
-Usually the power is reduced by decreasing the \acrshort{AOA} by pitching the leading edge of the blades up against the wind, but also the opposite is possible \cite{Aerodynamics_of_wind_turbines}. The first strategy is called feathering while the second stalling.
-
-\subsection{Thrust force and thrust coefficient}
-The thrust force, usually denoted as T, is the force produced by the rotor in the streamwise direction. It produces the wind speed reduction from the incoming one to the one in the wake:
-\begin{equation}
-    T = \frac{1}{2} A \rho c_T V_0^2 \ \ \left[\si{\newton}\right]
-    \label{eq:thrust_coeff}
-\end{equation}
-The thrust coefficient $c_T$ is obtained similarly to the power one.
-
-\subsection{BEM algorithm}\label{subsec:BEM_algorithm}
-The relationship between the \acrshort{cp}, the \acrshort{TSR} and the pitch angle is not linear, and involves the aerodynamic interaction between the incoming wind and the airfoil characteristics. Different tools are available for computing this interactions, with different levels of complexity and fidelity. A common analytical method is the so called \acrfull{BEM}, solving the problem by providing the tangential and normal forces to the blade. The assumptions on which it is based are the absence of radial dependency of the blade-wind interaction and a constant force from the blades on the flow. The last assumption corresponds to having a rotor with an infinite number of blades, and so it is later corrected with a coefficient taking into account their finite number \cite{Aerodynamics_of_wind_turbines}.\\
-At the basis of the computations done in this work there is a \acrshort{BEM} algorithm implemented in Matlab.\\
-Other methods that may be cited but not further discussed because not used here are the vortex theory, 2D/3D actuator line theory, 2D/3D full CFD models.
-
-A pseudo-code describing the BEM code implementation in details is reported in \autoref{app:BEM_code}. In particular, \autoref{alg:main_BEM} reports the main functions that loops between the different TSR, pitch, and cross sections, while \autoref{alg:detailed_BEM} reports the implementation details leading to the computation of the local (i.e. for a cross section) thrust and power coefficients. A list of the main terms used in the code is reported in \autoref{tab:BEM_code_notation}. 
-
-\subsection{Power control}
-As could be seen in \autoref{eq:power}, the mechanical power scales with the cubic of the wind speed, meaning that operating at the maximum power coefficient ($c_{P, max}$) may quickly lead to exceed the maximum load for which the blades are designed and the power manageable by the different subsystems. In order to limit these loads, control actions have to be taken. The most common ones are the stall regulation and the variable-speed pitch regulation, as reported in \cite{Aerodynamics_of_wind_turbines}.
-\subsubsection{Stall regulation}\label{subsec:stall_regulation_theory}
-The \acrshort{WT} employing this method are the simplest ones from the mechanical point of view because blades are bolted to the hub and cannot be pitched one they are setted. The electrical generator often employed is the robust asynchronous machine, requiring an almost constant rotational speed.\\
-When the incoming wind increases its speed, then the \acrshort{AOA} decreases reducing the lift and increasing the drag. \textcolor{red}{Since then this conol method is employed, maybe is better to go a little bit furter in this explanation}\\
-The construction has two main drawbacks: the rigidity of the operations and the extreme load rejection. Even though the mechanical construction is reliable, it is not very flexible since the maximum power reduction is limited by the initial positioning of the blades, and their setting is possible only by unbolting and repositioning them.\\
-Furthermore, whenever the generator stops to produce a resisting torque, it is possible that the stalling would not be effective enough to avoid the acceleration of the drivetrain, increasing the risks of breakage for the components. In that case aerodynamic safety systems are activated, for example by turning the outer part of the blades of 90$\si{\degree}$ w.r.t. the rotor plane. 
-
-\subsubsection{Pitch regulation with constant rotor rotational speed}
-In this type of \acrshort{WT} the pitch angle can be actively controlled along the blade. The pitching mechanism may be implemented with different kind of mechanical systems, such as hydraulic pistons, hydraulic motors, or electrical motors. \\
-Since the dynamic of the wind fluctuations are faster than the ones of the blade pitching system, then it is possible that the pitch regulated behaves like a stall regulated \acrshort{WT} for some time and so the output power locally exceeds the rated one.
-
-\subsubsection{Variable-speed pitch regulation}
-This is the most common type nowadays, and the \acrshort{WT} investigated in this work belongs to this kind. Their working philosophy in partial load regime is to vary the rotor speed in order to keep $\lambda = \lambda_{MAX}$ in \autoref{eq:TSR}, and consequently $c_p=c_{p,max}$. On the other hand, in the full load region the rotational speed is kept constant at $\omega = \omega_{rated}$ while the power is limited by acting on the pitch angle, and so on the $c_P$ in the relation $c_P(\lambda, \theta)$. The switching between the regions may be done using some smoothing functions \textcolor{red}{not implemented yet}. \\
-Since the rotational speed of the rotor is not fixed anymore, as it was in the stall regulated machine, here the electrical generator should be able to operate in a wide range of velocities. Such a kind of machines cannot be directly connected to the electrical grid, because the produced voltage would have a frequency proportional to the operating speed. The problem may be solved by employing an electrical conditioning interface firstly rectifying the voltage, and then converting the DC voltage to AC with desired frequency. \\
-In addition to the classification done in \autoref{subsec:mech_pow_and_pow_coeff} (i.e. feather/stall) another one can be done based on the number of blades simultaneously controlled. In fact, both feathering and stalling can be implemented either as collective or individual. In the first one the same pitching angle is applied to all the blades, while in the second one a specific angle is set to each blade according its azimuthal position (which have to be known from measurements).
-
-\subsubsection{Yaw control}
-The yaw controller rotates the nacelle in order to set the orientation of the rotor-plane w.r.t. the incoming wind speed. In stall and pitch controlled \acrshort{WT} this is done in order to align the rotational axis with the incoming stream and so maximizing the air passing through the rotor. \\
-According to \cite{Aerodynamics_of_wind_turbines}, some attempts to develop a power controller based only on the yaw has been done in the past, but with low implications nowadays. 
-
-\subsection{Drivetrain}
-The term \textit{drivetrain} identifies all the components of the mechanical system used to transfer the power from the rotor to the generator.
-The classical components of a drivetrain are the \textit{main shaft} (i.e. the shaft connected to the rotor) which usually rotates at low speed, the \textit{gearbox} (which is not always present), and the generator. According to \cite{Olimpo_Anaya‐Lara}, in 85\% of the drivetrains a gearbox is present but this value may be biased by the older installed machines. Its primary use is to step up the rotational speed, and so to use high speed machines. According to the gearbox ratio, they may be divided between \textit{medium speed} (around 1/10) and \textit{high speed} (which can reach the range 1/90-1/120).\\
-The other possibility is to have a \textit{gearless} configuration, and the direct drive is the most common, while hydraulic transmission are under development, \cite{Olimpo_Anaya‐Lara}.\\
-The geared concept is the older one since it has been available since 1970s, and it amplifies the inertia of the generator by the square of the inverse of the gear ratio, reducing the torque variations sensitivity. The gear-less concept was introduced in 1991, requires a lower number of components, eliminates transmission losses and gearbox failure. On the other hand the electrical machine has higher dimensions and weights because more space for the poles is necessary. Two kinds of electrical machine may be used: the permanent magnet or the electrically excited. The popularity of one or the other depends also on the cost of the magnets \cite{1-s2.0-S0040162519313691-main}. \\
-In the market it is not clear which of the two solutions will be the dominant, since both are available. \autoref{tab:transmission_review} summarises some interesting features of multi mega-watt \acrshort{WT} produced by some of the most important manufacturer currently in the market. 
-
-\begin{table}[htp]\centering
-    \caption{Review of some machine available on the market} \label{tab:transmission_review}
-    \input{d_table_review_transmission}
-\end{table}
-
-It is possible to notice that Siemens Gamesa and General Electric use direct drive concepts, while Vestas still prefers a geared solution even tough with the same kind of electrical machine.
-
-\subsection{Electrical machines model}
-As said before, nowadays the \acrfull{PMSM} are the most commonly employed machines, because they can operate in a range of speed, and so this kind of machine will be studied here.\\
-According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
-In this frame the equations of the machine are:
-\begin{gather}
-  0=u_d-Li_q\omega_{me}+L\frac{di_d}{dt}+Ri_d 
-  \label{eq:d_axis_eq}\\
-  \omega_{me}\Lambda_{mg}=u_q+Li_d\omega_{me}+L\frac{di_q}{dt}+Ri_q
-  \label{eq:q_axis_eq}
-\end{gather}
-where $u_d$ and $u_q$ are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), $i_d$ and $i_q$ are the current in the dq frame (transformed in the same way as the the voltage), $\omega_{me}$ is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega$), L is the inductance and R the resistance of the stator, $\Lambda_{mg}$ is the flux linkage of the permanent magnets, and p the number of pole pairs.\\
-By multiplying both sides of \autoref{eq:q_axis_eq} by $i_q$, \autoref{eq:d_axis_eq} by $i_d$ and then summing them together is it possible to obtain the following power balance:
-\begin{equation}
-  p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R(i_d^2 + i_q^2)
-  \label{eq:gen_power_balance}
-\end{equation}
-then knowing that $i_d=0$ one can rewrite:
-\begin{equation}
-  \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{Ri_q^2}_{Joule}
-  \label{eq:gen_power_balance2}
-\end{equation}
-Since the power is not invariant in the transformation from the abc frame to the dq but $P_{dq} = \frac{3}{2}P_{abc}$, \autoref{eq:gen_power_balance2} has to be rewritten as:
-\begin{equation}
-  P_G = T_G\omega = \frac{3}{2}p\omega\Lambda_{mg}i_q = \frac{3}{2}u_qi_q + \frac{3}{2}L i_q\frac{di_q}{dt} + \frac{3}{2}R i_q^2
-  \label{eq:gen_power_balance3}
-\end{equation}
-The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0$.
-\begin{figure}[htb]
-\input{d_pmsm.tex}
-\caption{Block diagram of the q-axis of a PMSM}
-\label{fig:PMSM}
-\end{figure}
-
-\autoref{fig:PMSM} represents the block diagram of the q-axis of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the electrical converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the rotor imposed by the wind on the rotor.\\
-It could be seen that the aerodynamical torque enters as a disturb in the block diagram. This model is not a description of the real behaviour of the \acrshort{WT}, because the $T_R$ is affected by the $\Omega_G$, and so in principle some sort of interaction between these quantities should have been introduced. Unfortunately, this dependency is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved observing that this mechanical dynamic evolves slowly compared to the electrical one, and so the electrical part sees the slowly varying dynamic as an almost-constant disturb. Finally for the sake of completeness, it must be remembered that the interactions between rotational speed and aero torque is taken into account into the aerodynamical block of the simulation.
-
-\subsection{PMSM control}\label{subsec:PMSM_control}
-In general, control of these machines may be focused on two objectives: the speed or the torque, and the first includes the second as a nested loop. For the sake of the thesis, a torque control has to be implemented because it is easy to synthetize this signal in the two control regions. \\
-The Newton's law applied to the rotor can be written in the simplest form as:
-\begin{equation}
-    J_R\frac{d\omega_R}{dt}=T_R-T_G
-    \label{eq:simple_dynamic}
-\end{equation}
-where $J_R$ is the rotor inertia, $\omega_R$ is the rotor rotational speed, $T_R$ is the torque produced by the wind, and $T_G$ is the torque used by the generator. At each time step the controller has to read the rotor rotational speed $\omega_R$ and generate a proper command. In particular, below rated wind speed for each measured speed there is an univocal torque ensuring the maximum power extraction (as will be further explained in \autoref{subsec:torque_reference}), and so it is imposed as control target. Then if the aero torque overcomes the generator's one the rotor will start to accelerate, while in the other case the velocity will decrease. This feedback scheme will go on until the equilibrium between the two torques at the correct velocity. In the other control region, the torque command works in combination with the pitch mechanism: by turning the blade the harvested power is limited to the rated value and since the rotational speed have to be kept constant, then the torque ensuring the equilibrium is univocally defined as: 
-\begin{equation}
-    T_G=\frac{P_{rated}}{\omega_G}
-    \label{eq:simple_torque}
-\end{equation}
-where $\omega_G$ is the rated rotational speed at the generator side of the transmission. \\
-
-Once the desired torque is generated according to the desired working point, the first operation of the control scheme is to transform it in a $I_q \ \left[\si{\ampere}\right]$ current reference knowing that:
-\begin{equation}
-    T_G = \frac{3}{2}\Lambda_{mg} p I_q \ \ \left[\si{\newton\meter}\right]
-    \label{eq:T_G4}
-\end{equation}
-where $\Lambda_{mg}$ is the permanent magnets flux $\left[\si{\weber}\right]$ and p is the number of poles of the machine.\\
-Then the current is stabilized with the proper controller and finally the \autoref{eq:T_G4} is backwards applied to transform again $I_q$ into $T_G$. The feedback scheme has the structure reported in \autoref{fig:d_torque_control}.
-
-\begin{figure}[htb]
-    \centering
-    \input{d_torque_control.tex}
-    \caption{Feedback scheme for torque control}
-    \label{fig:d_torque_control}
-\end{figure}
-
-The transfer functions inside the loop are the regulator, the power electronic necessary to the machine and the generator itself. They are modelled as follow:
-\begin{gather}
-    R_{iq}=k_P + \frac{k_I}{s}=k_I\frac{1+\uptau_{iq}s}{s}
-    \label{eq:R_iq}\\
-    G_c = \frac{1}{1+\uptau_cs}
-    \label{eq:G_c}\\
-    Y_{iq} = -\frac{B_{eq} + J_{eq}s}{LJ_{eq}s^2+\left(RI_{eq} + L B\right)s + RB + \frac{3}{2}(p\Lambda_{mg})^2}
-    \label{eq:Y_iq}
-\end{gather}
-\textcolor{red}{Mettere funzioni di trasferimento aggiornate ed aggiornare i diagrammi a blocchi}\\
-Where $k_P$ and $k_I$ are the proportional and integral gain respectively, $\uptau_c$ is a time delay introduced by the power electronic, and $J_{eq}$ and $B_{eq}$ are the inertia and damping of the drivetrain respectively, for example as expressed in \autoref{eq:mech_eq}.\\
-In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches in a synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually at three half of the switching delay.
