@@ -24,3 +24,6 @@ WINTER_report_2022_02_26.zip
 *.emf
 src/simulation_5/result.mat
 *.blg
+*.fdb_latexmk
+*.aux 
+*.log
