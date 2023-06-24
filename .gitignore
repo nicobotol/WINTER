@@ -27,3 +27,5 @@ src/simulation_5/result.mat
 *.fdb_latexmk
 *.aux 
 *.log
+src/simulation_5/slprj
+*.slxc
