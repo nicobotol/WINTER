@@ -41,19 +41,24 @@ for i = 1:wind.WS_len
         wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [blade.kp_schedule, blade.ki_schedule] = run_blade_gains(blade, i);
     case 8 % with gain schdeuling or stall regulated
-    wind_speed = run_generated_wind_series(wind.mean(i), ...
-      wind.turbulence(i), wind_speed, stop_time, simulation.seed);
-    [blade.kp_schedule, blade.ki_schedule] = run_stall_regulation(blade, i);
+      wind_speed = run_generated_wind_series(wind.mean(i), ...
+        wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      [blade.kp_schedule, blade.ki_schedule] = run_stall_regulation(blade, i);
     case 9 % with or without gain schdeuling
       wind_speed = run_generated_wind_series(wind.mean(i), ...
         wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [blade] = run_pitch_dynamics(blade, i);
+    case 10 % test with K_opt and K_opt_GE
+      wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, ...
+        wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, ...
+        stop_time);
+      [generator] = run_Kopt_KoptGE(generator, i);
 
   end
 
   % Set the initial conditions
   [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
-  generator, gearbox, 1, rated_values, lookup_Pitch);
+  generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
 %mean(wind_speed(1:100, 2))
   % Run the simulation
   out = sim(in, 'ShowProgress','on'); 

@@ -209,17 +209,31 @@ First of all, an expression of the power at the output of the generator as funct
 \end{gather}
 
 \subsubsection{Below rated wind speed}
-in this operation region we can see \autoref{eq:P_G_out_lambda} as a function of only the power coefficient $c_P$ that has to be maximised. By deriving \autoref{eq:P_G_out_lambda} twice it could be seen that it is always a concave function, meaning that all the possible local minima are maximum. By differencing \autoref{eq:P_G_out_lambda} once and posing it to 0 one can found the value of the maximum
-\begin{equation}
-  \frac{dP_{G,out}}{d c_P} = 0 \Rightarrow c_{P, max}^{gen} = -\frac{(-9\,\Lambda^2\,\eta\,p^2 + 8\,B_{eq}\,Rs)\lambda^3}{4\,A\,\rho\,R^3\,\omega\,Rs}
-  \label{eq:cp_max}
-\end{equation}
-This expression of the maximum power coefficient has to take into account the previously found limitation $c_{P, max}^{aero} = 0.465$ given by the aerodynamic in \autoref{subsec:lookup_cp}: 
-\begin{equation}
-  c_{P, max} = \min\left(c_{P, max}^{aero}, c_{P, max}^{gen}\right)
-  \label{eq:cp_max_final}
-\end{equation}\\
-Now one can try to identify the combinations of $\lambda$ and $\omega$ that make $c_{P, max}^{gen} > c_{P, max}^{aero}$. This is done by a graphical method
+In this operating region we are interested in identify a \acrlong{TSR} and a pitch that maximize the power extraction from the resource. As said before, since in the expression of the power $\omega$ and $V_0$ are decouple, in general it is not guarantee to find an univocal $\lambda$ for all the \acrshort{WS}, and so the control strategy used so far and based only on the $K_{opt}$.\\
+To study the problem, a numerical approach is followed. First of all, a vector of windspeed, pitch angle, and rotational speed are defied. Then, for each wind speed, the power produced for each combinations of rotational speed and pitch is computed and the maximum among then is extracted. At this point the corresponding $\lambda$ and $\theta$ are extracted and can be analysed 
+\begin{figure}[htb]
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_lambda_GE.eps}
+    \caption{Tip speed ratio}
+    \label{fig:2023_06_24_15_57_04fig_lambda_GE}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_pitch_GE.eps}
+    \caption{Optimal pitch angle}
+    \label{fig:2023_06_24_15_57_04fig_pitch_GE}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_cP_GE.eps}
+    \caption{Power coefficient}
+    \label{fig:2023_06_24_15_57_04fig_cP_GE}
+  \end{subfigure}
+  \caption{Comparison of the most important parameters for the operation below rated wind speed, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power.}
+  \label{fig:parameters_for_below_rated}
+\end{figure}
+It could be seen that the 
 
 \subsubsection{Above rated wind speed}
 Then a parametric study in the pitch angle has been done, meaning that for each wind speed, \autoref{eq:P_G_out} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (since the closer we are the to null pitch, then the higher the power extracted).

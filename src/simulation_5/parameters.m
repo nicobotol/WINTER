@@ -64,6 +64,10 @@ end
 
 if exist('lookup_pitch_P_GE.mat', 'file') 
   load('lookup_pitch_P_GE.mat');
+  load('rated_values_P_GE.mat');
+  load('lookup_P_GE.mat');
+  lambda_GE = rated_values_P_GE(1); % TSR for the maximization of P_GE
+  cp_GE = rated_values_P_GE(2);     % max power coefficients
 else
    disp(['Attention: pitch angle values may not have been computed. ' ...
     'Run P_GE_maximization.m first']);
@@ -118,14 +122,15 @@ simulation.type = 6;        % 1 -> constant wind speed
                             % 7 -> with/without blade gain scheduling
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
-simulation.plot_time = [250];  % time from the end of the simulation to 
+                            % 10 -> comparison with K_opt and K_opt_GE
+simulation.plot_time = [100];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = [60 120 120]; % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = [130 130]; % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -171,11 +176,12 @@ generator.TG_pm = 70;  % phase margin for the speed controller [°]
 generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
+generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 % generator.design_TG = 0; % 0 enables manual design of speed controller
 %                             % 1 enables pidtune design of the controller                          
-generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.bode_plot_TG = 1; % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain 0.5
@@ -227,13 +233,13 @@ wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = [8];        % wind speed at the start of the ramp [m/s]
 wind.ramp_WS_stop = [15];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [20]; % time speed at the start of the ramp [s]
+wind.ramp_time_start = [20 ]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
   case {1, 3, 5, 7, 8, 9}
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6}
+  case {2, 6, 10}
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 
@@ -250,6 +256,9 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
 B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
+
+% Rated rotational speed with generator control
+omega_rated_GE = lambda_GE*V0_rated/rotor.R; % [rad/s] rotational speed
 
 % Transform the struct of parameters into buses for simulink
 % rotor_bus_info = Simulink.Bus.createObject(rotor); 

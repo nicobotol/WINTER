@@ -10,9 +10,9 @@ lambda_opt = rated_values(4);   % optimal TSR
 
 % initial rotational speed [rad/s]
 if V0_0 < V0_rated
-  rotor.omega_R0 = lambda_opt*V0_0/rotor.R - 0.5*pi/30; 
+  rotor.omega_R0 = lambda_opt*V0_0/rotor.R; 
 else
-  rotor.omega_R0 = omega_rated + 0.5*pi/30;
+  rotor.omega_R0 = omega_rated;
 end
 
 % initial generator torque (generator side)

@@ -1,4 +1,4 @@
-function [P_R, P_G, P_inertia, P_damping, P_sum, time] = ...
+function [E_R, E_G, E_GE] = ...
   power_check(out_cell, I, B, n_series, line_width, date_fig, plot_name,...
   simulation, font_size, path_images)
 % This fucntion checks the sum of the power of the system:
@@ -13,16 +13,24 @@ time = cell(1, n_series);
 P_inertia = cell(1, n_series);
 P_damping = cell(1, n_series);
 P_sum = cell(1, n_series);
+P_GE = cell(1, n_series);
 
 for i = 1:n_series
   P_R{i} = out_cell{i}.P_R.Data;        % rotor power [W]
-  P_G{i} = out_cell{i}.P_G.Data;        % generator power [W]
+  P_G{i} = out_cell{i}.P_G.Data;        % generator input power [W]
+  P_GE{i} = out_cell{i}.P_GE.Data;      % generator output power [W]
   omega_R = out_cell{i}.omega_R.Data;   % rotor speed [rad/s]
   time{i} = out_cell{i}.tout;           % time [s]
   domega_R = diff(omega_R)./diff(time{i}); % rotor speed derivative [rad/s^2]
   P_inertia{i} = I.*omega_R(1:end - 1).*domega_R;  % inertia power [W]
   P_damping{i} = B.*omega_R(1:end - 1).^2;         % damping power [W]
   P_sum{i} = P_G{i}(1:end-1) + P_damping{i};          % sum of the power [W]
+
+  % compute the energy
+  E_R{i} = trapz(time{i}, P_R{i});         % rotor energy [J]
+  E_G{i} = trapz(time{i}, P_G{i});         % generator energy [J]
+  E_GE{i} = trapz(time{i}, P_GE{i});       % generator energy [J]
+
 end
 
 fig = figure('Color', 'w');
