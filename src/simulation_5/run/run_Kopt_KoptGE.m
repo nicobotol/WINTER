@@ -1,4 +1,4 @@
-function [generator] = run_Kopt_KoptGE(generator, i)
+function [generator] = run_Kopt_KoptGE(generator, simulation, i)
 % This test runs the coparison between the genrator control below rate with
 % the K_opt based on the rotor and generator maximization
 

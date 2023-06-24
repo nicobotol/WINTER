@@ -52,7 +52,7 @@ for i = 1:wind.WS_len
       wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, ...
         wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, ...
         stop_time);
-      [generator] = run_Kopt_KoptGE(generator, i);
+      [generator] = run_Kopt_KoptGE(generator, simulation, i);
 
   end
 

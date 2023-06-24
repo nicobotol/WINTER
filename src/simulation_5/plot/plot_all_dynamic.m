@@ -48,5 +48,5 @@ for i=1:wind.WS_len % sum the electrical and joule losses
   out_store{i}.P_G.Data;
   out_store{i}.generator_eta.Time = out_store{i}.P_GE.Time;
 end
-plot_time_series("fig_generator_eta",out_store, 'generator_eta', 'Time [s]', ...
-  'Generator efficiency [-]', 'Generator efficiency', 1, date_fig, 'southeast');
+% plot_time_series("fig_generator_eta",out_store, 'generator_eta', 'Time [s]', ...
+%   'Generator efficiency [-]', 'Generator efficiency', 1, date_fig, 'southeast');

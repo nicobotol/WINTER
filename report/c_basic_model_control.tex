@@ -210,19 +210,19 @@ First of all, an expression of the power at the output of the generator as funct
 
 \subsubsection{Below rated wind speed}
 In this operating region we are interested in identify a \acrlong{TSR} and a pitch that maximize the power extraction from the resource. As said before, since in the expression of the power $\omega$ and $V_0$ are decouple, in general it is not guarantee to find an univocal $\lambda$ for all the \acrshort{WS}, and so the control strategy used so far and based only on the $K_{opt}$.\\
-To study the problem, a numerical approach is followed. First of all, a vector of windspeed, pitch angle, and rotational speed are defied. Then, for each wind speed, the power produced for each combinations of rotational speed and pitch is computed and the maximum among then is extracted. At this point the corresponding $\lambda$ and $\theta$ are extracted and can be analysed 
+To study the problem, a numerical approach is followed. First of all, a vector of windspeed, pitch angle, and rotational speed are defied. Then, for each wind speed, the power produced for each combinations of rotational speed and pitch is computed and the maximum among then is extracted. At this point the corresponding $\lambda$ and $\theta$ are extracted and can be analysed, as done in \autoref{fig:parameters_for_below_rated}.
 \begin{figure}[htb]
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_lambda_GE.eps}
-    \caption{Tip speed ratio}
-    \label{fig:2023_06_24_15_57_04fig_lambda_GE}
-  \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_pitch_GE.eps}
     \caption{Optimal pitch angle}
     \label{fig:2023_06_24_15_57_04fig_pitch_GE}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_lambda_GE.eps}
+    \caption{Tip speed ratio}
+    \label{fig:2023_06_24_15_57_04fig_lambda_GE}
   \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \centering
@@ -233,7 +233,9 @@ To study the problem, a numerical approach is followed. First of all, a vector o
   \caption{Comparison of the most important parameters for the operation below rated wind speed, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power.}
   \label{fig:parameters_for_below_rated}
 \end{figure}
-It could be seen that the 
+
+In particular, the pitch angle is constant and could be considered as 0 $\mesunt{\degree}$. The tip speed ratio and the $c_P$ show some variability due to the discretization done in the choice of the vectors, but in general they can be assumed as constant and equal to they means. \\
+This result is quite interesting because it allow us to use the same approach used in \ref{eq:T_G2} to control the turbine even in this case. 
 
 \subsubsection{Above rated wind speed}
 Then a parametric study in the pitch angle has been done, meaning that for each wind speed, \autoref{eq:P_G_out} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (since the closer we are the to null pitch, then the higher the power extracted).
@@ -253,4 +255,9 @@ Then a parametric study in the pitch angle has been done, meaning that for each 
   \caption{Power and pitch angle comparison between the control based on the aerodynamical power and the one based on the power output at the generator side}
   \label{fig:fig_blade_control_gen_side}
 \end{figure}
-In order to validate these strategy the controller has been implemented in the simulator. In particular, the feedback power to the generator controller (i.e. $P_G$ in \autoref{fig:d_torque_control_3}) has been connected to the output power of the generator itself rather than with the mechanical incoming form the rotor.
+\subsubsection{Implementation details}
+In order to validate these strategy, the two controller has been modified as follows:
+\begin{itemize}
+  \item PMSM control: in the schema \autoref{fig:d_torque_control_3}, the newly computed  $K_opt$ has been used, and the mechanical input power to the generator $P_G$ has been replaced by the electrical power $P_{G, out}$ in the feedback line
+  \item Blade pitch control: the new value of rated rotational speed has been replaced to the old one in \autoref{fig:pitch_control}
+\end{itemize}
