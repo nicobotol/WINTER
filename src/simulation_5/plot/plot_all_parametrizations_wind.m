@@ -49,4 +49,21 @@ plot_parametrization_wind('fig_omega_param',out_store,'omega_R', ...
 
   if simulation.type == 10 % comparison K_opt and K_opt_GE
     plot_parametrization_wind_zoom_P_GE('fig_electrical_power_param_zoom',out_store,'P_GE', lookup_P_GE(1,:), lookup_P_GE(2,:)/1e6,'Wind speed [m/s]','$P_{GE}$ [MW]','Generator electrical power', 1e6,simulation,date_fig)
+
+    plot_parametrization_wind_zoom_P_GE('fig_power_param_zoom',out_store,'P_G', lookup_static_values(1,pos_4:pos_25), ...
+    lookup_static_values(6,pos_4:pos_25)/1e6,'Wind speed [m/s]','P [MW]', ...
+    'Generator input power', 1e6,simulation,date_fig)
+
+    plot_parametrization_wind_zoom_P_GE('fig_power_param_zoom',out_store,'P_R', lookup_static_values(1,pos_4:pos_25), ...
+    lookup_static_values(6,pos_4:pos_25)/1e6,'Wind speed [m/s]','P [MW]', ...
+    'Generator input power', 1e6,simulation,date_fig)
   end
+
+  cP1 = out_store{1}.cP.Data;
+  cP2=out_store{2}.cP.Data;
+  t1 =  out_store{1}.cP.Time;
+  t2 = out_store{2}.cP.Time;
+  figure();hold on;
+  plot(t1, cP1,'DisplayName','Sim1');
+  plot(t2, cP2,'DisplayName','Sim2');
+  legend('Location','best')

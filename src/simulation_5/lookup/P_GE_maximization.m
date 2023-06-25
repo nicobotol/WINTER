@@ -227,11 +227,13 @@ end
 %% Save the data in a lookup table
 rated_values_P_GE(1) = lambda_GE_mean;
 rated_values_P_GE(2) = cp_GE_mean;
+rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
 save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
 
 % pitch to feather
-lookup_pitch_P_GE(1, :) = V0_a;
-lookup_pitch_P_GE(2, :) = feather_a;
+lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
+lookup_pitch_P_GE(1, :) = [0 V0_a];
+lookup_pitch_P_GE(2, :) = [0 feather_a];
 save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
 
 % generator electrical power

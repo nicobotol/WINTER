@@ -68,6 +68,7 @@ if exist('lookup_pitch_P_GE.mat', 'file')
   load('lookup_P_GE.mat');
   lambda_GE = rated_values_P_GE(1); % TSR for the maximization of P_GE
   cp_GE = rated_values_P_GE(2);     % max power coefficients
+  omega_rated_GE = rated_values_P_GE(3);     % rotor rotatioanal speed
 else
    disp(['Attention: pitch angle values may not have been computed. ' ...
     'Run P_GE_maximization.m first']);
@@ -123,7 +124,7 @@ simulation.type = 10;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = [80 80];  % time from the end of the simulation to 
+simulation.plot_time = [100 100];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 1;% enables or disable plot's autosaving 
@@ -232,7 +233,7 @@ wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = [4];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [V0_rated];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_stop = [7];         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = [20 20]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
@@ -256,9 +257,6 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
 B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
-
-% Rated rotational speed with generator control
-omega_rated_GE = lambda_GE*V0_rated/rotor.R; % [rad/s] rotational speed
 
 % Transform the struct of parameters into buses for simulink
 % rotor_bus_info = Simulink.Bus.createObject(rotor); 
