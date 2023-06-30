@@ -29,3 +29,4 @@ src/simulation_5/result.mat
 *.log
 src/simulation_5/slprj
 *.slxc
+*.bak
