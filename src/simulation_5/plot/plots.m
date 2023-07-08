@@ -19,6 +19,8 @@ switch simulation.type
     % plot the time dependent graphs
     plot_all_dynamic
 
+    plot_all_parametrizations_wind
+
   case 2 % ramp
     plot_all_dynamic
 
@@ -44,7 +46,7 @@ switch simulation.type
     plot_all_dynamic
 
   case 10 % control based on K_opt and K_opt_GE
-    plot_all_parametrizations_wind
+    plot_all_parametrizations_wind_P_GE
     [E_R, E_G, E_GE] = power_check(out_store, I_eq, B_eq, wind.WS_len,...
       line_width, date_fig, "power_check", simulation, font_size, path_images);
 end

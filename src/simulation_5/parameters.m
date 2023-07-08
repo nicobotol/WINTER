@@ -111,7 +111,7 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = [100 100]; % max time to investigaste [s]
+simulation.stop_time = [80 80]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 10;        % 1 -> constant wind speed
@@ -124,10 +124,10 @@ simulation.type = 10;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = [100 100];  % time from the end of the simulation to 
+simulation.plot_time = [5 5  ];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
@@ -172,7 +172,7 @@ generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
 
 generator.tau_c = 500e-6;   % q-axis control time constant [s]
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
+generator.iq_omegaBP = 8e2;%1.5e3; % Iq controller crossover freq. [rad/s]
 generator.TG_pm = 70;  % phase margin for the speed controller [°]
 generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
@@ -227,14 +227,14 @@ blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*...
   blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [15];           % 10 minutes mean wind speed [m/s]]
+wind.mean = [8 8];           % 10 minutes mean wind speed [m/s]]
 wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = [4];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [7];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = [20 20]; % time speed at the start of the ramp [s]
+wind.ramp_WS_start = [10];        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = [10.5];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [0 0 ]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -255,7 +255,7 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
-B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
+B_eq = 0*(rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
 
 % Transform the struct of parameters into buses for simulink

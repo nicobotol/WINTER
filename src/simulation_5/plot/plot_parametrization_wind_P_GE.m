@@ -1,5 +1,4 @@
-function plot_parametrization_wind(plot_name,out_cell,series,x_my_ref, ...
-  y_my_ref,x_label,y_label,plot_title,scaling,simulation,date_fig)
+function plot_parametrization_wind_P_GE(plot_name,out_cell,series,x_my_ref,y_my_ref,x_label,y_label,plot_title,scaling,simulation,date_fig)
 
 parameters
 
@@ -19,13 +18,15 @@ for i=1:wind.WS_len
   wind_resampled = zeros(series_length, 1);
   wind_resampled = interp1(out_cell{i}.wind.Time,out_cell{i}.wind.Data, ...
     out_cell{i}.(series).Time);
-if i==1
+if rem(i, 2)==1
   sign = 'o';
+  col = colors_vect(1,:);
 else
   sign = 'x'; 
+  col = colors_vect(2,:);
 end
   plot(wind_resampled(s_start:end), out_cell{i}.(series).Data(s_start:end)/scaling, sign,...
-    'LineWidth', line_width, 'Color', colors_vect(i,:));
+    'LineWidth', line_width, 'Color', col);
   leg{i + 1} = ['Sim. ', num2str(i)];
 end
 legend(leg, 'Location', 'best', 'FontSize', font_size,...

@@ -1,4 +1,4 @@
-function [Yiq, Gc, Riq, GR, G_cl, kp, ki, kd, tau_d1] = ...
+function [Yiq, Gc, Riq, GR, G_cl, generator] = ...
   PMSM_TF_pid(design_method, enable_plot)
 %% Tune a PID controller for the generator
 parameters
@@ -31,6 +31,11 @@ G = Yiq*Gc;
 Riq = -(kp + ki/s + kd*s)/(1 + s*tau_d1);                   % regulator
 GR = G*Riq;
 
+generator.kp = kp;
+generator.ki = ki;
+generator.kd = kd;
+generator.tau_d1 = tau_d1;
+
 % Save the gains as latex macro
 names = ["GenkpMacroMan", "GenkiMacroMan", "GenkdMacroMan", "GentaudOneMacroMan", "GenMarginMan"];
 
@@ -50,13 +55,19 @@ elseif design_method == 1
   Riq = (kp + ki/s + kd*s)/(1 + s*tau_d1);  
   GR = G*Riq; % regulator
   
+  kp = -kp;
+  ki = -ki;
+  kd = -kd;
+
   fprintf('ki = %f\n', Riq_pid.ki);
   fprintf('kp = %f\n', Riq_pid.kp);
   fprintf('kd = %f\n', Riq_pid.kd);
   
-  kp = -kp;
-  ki = -ki;
-  kd = -kd;
+  generator.kp = Riq_pid.kp;
+  generator.ki = Riq_pid.ki;
+  generator.kd = Riq_pid.kd;
+  generator.tau_d1 = tau_d1;
+
   names = ["GenkpMacroAuto", "GenkiMacroAuto", "GenkdMacroAuto", "GentaudOneMacroAuto", "GenMarginAuto"];
 end
 
@@ -78,6 +89,13 @@ G_cl = GR/(1 + GR);
 % pole(G_cl_simply)
 % zero(G_cl)
 % zero(G_cl_simply)
+
+if B_eq == 0
+  generator.ki = 79.883578;
+  generator.kp = 1.484989;
+  generator.kd = 0.000723;
+  generator.tau_d1 = 1/(1e1*generator.iq_omegaBP);
+end
 
 %% Plot
 if enable_plot == 1

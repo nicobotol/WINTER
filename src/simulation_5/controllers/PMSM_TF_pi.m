@@ -1,4 +1,4 @@
-function [Yiq, Gc, Riq, GR] = PMSM_TF_pi(design_method, enable_plot)
+function [Yiq, Gc, Riq, GR,G_cl,generator] = PMSM_TF_pi(design_method, enable_plot)
 %% Tune a PI controller for the generator
 parameters
 
@@ -17,18 +17,23 @@ iq_omegaBP = generator.iq_omegaBP;
 if design_method == 0
 % Define the transfer function as symbol
 syms s ki
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
+Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generataor TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
 [ki, kp] = pi_tune(G, iq_omegaBP);                        % tune the gains
 
 % Redefine the transfer function as 'transfer function' type 
 s = tf('s');
-Yiq = (B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
+Yiq = -(B+s*I)/(L*I*s^2+(R*I+L*B)*s+R*B+1.5*(p*Lambda)^2); % generator TF
 Gc = 1/(1 + s*tau_c);                                  % power converter TF
 G = Yiq*Gc;  
-Riq = (kp + ki/s);                                        % regulator
+Riq = -(kp + ki/s);                                        % regulator
 GR = G*Riq;
+
+generator.kp = kp;
+generator.ki = ki;
+generator.kd = 0;
+generator.tau_d1 = 0;
 
 %% Automatic design of the controller
 elseif design_method == 1
@@ -46,37 +51,28 @@ Riq = (Riq_pid.kp + Riq_pid.ki/s);                     % regulator
 fprintf('ki = %f\n', Riq_pid.ki);
 fprintf('kp = %f\n', Riq_pid.kp);
 
+generator.kp = Riq_pid.kp;
+generator.ki = Riq_pid.ki;
+generator.kd = 0;
+generator.tau_d1 = 0;
+
 end
 
 % Plot the phase margin
 [~, PM] = margin(GR)
+% Close loop transfer function
+G_cl = GR/(1 + GR);
 
 %% Plot
 if enable_plot == 1
-[magG, phaseG, woutG] = bode(G);
-[magGR, phaseGR, woutGR] = bode(GR);
-[magRiq, phaseRiq, woutRiq] = bode(Riq);
-fig_bode_generator = figure('Position', get(0, 'Screensize'));
-subplot(2,1,1)
-xlabel('\omega [rad/s]', 'FontSize', font_size, 'interpreter','tex')
-ylabel('Mag. [dB]', 'FontSize', font_size, 'interpreter','latex')
-semilogx(woutG, 20*log10(squeeze(magG)), 'LineWidth', line_width)
-hold on
-semilogx(woutGR, 20*log10(squeeze(magGR)), 'LineWidth', line_width)
-semilogx(woutRiq, 20*log10(squeeze(magRiq)), 'LineWidth', line_width)
-hold off
-grid on
-subplot(2,1,2)
-semilogx(woutG, squeeze(phaseG), 'LineWidth', line_width)
-hold on
-semilogx(woutGR, squeeze(phaseGR), 'LineWidth', line_width)
-semilogx(woutRiq, squeeze(phaseRiq), 'LineWidth', line_width)
-hold off
-grid
-xlabel('\omega [rad/s]', 'FontSize', font_size, 'interpreter','tex')
-ylabel('Phase [°]', 'FontSize', font_size, 'interpreter','latex')
-sgtitle('PSMS Bode plot');
-legend('Open loop', 'With regulator', 'Regulator','interpreter','latex')
+  % Open loop, with regulator, regulator
+  TF = [G, GR, Riq];                                      % TF to plot
+  legends = {'Not regulated', 'Regulated', 'Regulator'};  % legends names
+  bode_plot(TF, legends, 'Open loop Bode plot', 'fig_bode_generator')
+  
+  % Close loop
+  %   bode_plot([G_cl, G_cl_simply], {'Close loop', 'Simplified'}, 'Close loop Bode plot', 'fig_bode_cl')
+  bode_plot(G_cl, {'Close loop'}, 'Close loop Bode plot', 'fig_bode_cl')
 end
 
 end

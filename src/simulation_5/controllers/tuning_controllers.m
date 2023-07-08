@@ -1,8 +1,7 @@
 %% Load PMSM transfer functions and design the controller
 
 % Controller for the PMSM generator - q-axis
-[Yiq, Gc, Riq, GR, G_cl, generator.kp, generator.ki, generator.kd, ... 
-  generator.tau_d1] = PMSM_TF_pid(generator.design, generator.bode_plot);
+[Yiq, Gc, Riq, GR, G_cl, generator] = PMSM_TF_pid(generator.design, generator.bode_plot);
 
 % Controller for the PMSM generator - d-axis
 % [~, ~, ~, ~, ~, generator.kp_daxis, generator.ki_daxis, ...

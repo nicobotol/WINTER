@@ -1,6 +1,6 @@
-% clear 
-% close all
-% clc
+clear 
+close all
+clc
 
 parameters;
 Rs = generator.Rs; % [Ohm] stator resistance
@@ -12,32 +12,37 @@ eta = generator.eta; % [-] generator efficiency
 R = rotor.R; % [m]
 
 %% Below rated wind speed
-omega_b = 0.3:0.001:1.2; % [rad/s] rotational speeds to test
-pitch = [0:0.001:1]*pi/180; % [rad] pitch angle to be tested
-V0_b = 4:0.01:V0_rated+0.001; % [m/s] velocity vector below rated
-cP_max = zeros(length(V0_b), 1);
-theta_opt = zeros(length(V0_b), 1);
-omega_GE = zeros(length(V0_b), 1);
-P_GE =  zeros(length(pitch), length(omega_b)); % [W] matrix of powers
-P_GE_b = zeros(length(V0_b), 1);  % [W] power map below rated
-for i = 1:length(V0_b)
-    V0 = V0_b(i);
-    lambda_b = omega_b'*R/V0;
-    cp = interp2(lambda_vector, pitch_vector, lookup_cP, lambda_b, pitch);
-    P_GE = -Rs*(A*V0^3.*cp*rho + 2*B*omega_b.^2).^2./(9*omega_b.^2*p^2*Lambda^2) + A.*cp*rho*V0^3*eta/2; % [W] generator power output
+physical(1) = generator.Rs; % [Ohm] stator resistance
+physical(2) = rotor.A; % [m^2] rotor swept area
+physical(3) = B_eq; % [kgm^2] transmission equiuvalent damping
+physical(4) = generator.p; % [-] number of pole pairs
+physical(5) = generator.Lambda; % [Wb] generator flux linkage
+physical(6) = generator.eta; % [-] generator efficiency
+physical(7) = rotor.R; % [m]
+physical(8) = rho; % [kg/m^3]
 
-    max_tmp = max(P_GE, [], 2);       
-    [~, theta_pos] = max(max_tmp);              % omega corresponding to the maximum                  
-    [P_GE_b(i), omega_pos] = max(P_GE(theta_pos, :)); % max cP
-    omega_GE(i) = omega_b(omega_pos);            % TSR for cP_max
-    theta_opt(i) = pitch(theta_pos);            % pitch for cP_max
+V0_b = 4:0.1:V0_rated+0.001; % [m/s] wind speed 
+
+% Maximize the power output by selecting the proper combination of TSR and pitch angle
+% The variable x containts x = (TSR, pitch angle)
+lb = [5, -10*pi/180]; % variable lower bound
+ub = [10, 40*pi/180]; % variable upper bound
+P = zeros(length(V0_b),1);
+min_v = zeros(length(V0_b),2); % minimization values (lambda, theta)
+x0 = [5, 0]; % initial guess value
+for i=1:length(V0_b)
+  V0 = V0_b(i);    
+  [min_v(i, :), P(i, :)] = fmincon(@(x)compute_P_GE(x, physical, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub);
 end
 
 % Recompute some values
-omega_rotor =  lambda_opt.*V0_b/R; % [rad/s] omega based on the maximization of the rotor power
-lambda_GE =  omega_GE'*R./V0_b;  % optimal TSR based on generator maximization 
+theta_opt = min_v(:, 2); % pitch coming from minimization
+P_GE_b = -P; % power coming from minimization (change sign because negative)
+omega_rotor = lambda_opt.*V0_b/R; % [rad/s] omega based on the maximization of the rotor power
+omega_GE = min_v(:,1)'.*V0_b/R;
+lambda_GE =  min_v(:, 1);  % optimal TSR based on generator maximization 
 lambda_GE_mean = mean(lambda_GE);  % mean TSR based on the generator
-cp_GE = interp2(lambda_vector, pitch_vector, lookup_cP, lambda_GE, theta_opt'); % cp for the maximization of the generator
+cp_GE = interp2(lambda_vector, pitch_vector, lookup_cP, min_v(:, 1), min_v(:, 2)); % cp for the maximization of the generator
 cp_GE_mean = mean(cp_GE);          % mean cp for the generator maximization
 
 %% Static generator power curve
@@ -225,6 +230,10 @@ if simulation.print_figure == 1
   export_figure(fig_new_pitch_map, '\fig_new_pitch_map.eps', path_images);
 end
 %% Save the data in a lookup table
+clear("lookup_P_GE")
+clear("rated_values_P_GE")
+clear("lookup_pitch_P_GE")
+
 rated_values_P_GE(1) = lambda_GE_mean;
 rated_values_P_GE(2) = cp_GE_mean;
 rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
