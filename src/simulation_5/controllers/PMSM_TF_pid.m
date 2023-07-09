@@ -63,9 +63,9 @@ elseif design_method == 1
   fprintf('kp = %f\n', Riq_pid.kp);
   fprintf('kd = %f\n', Riq_pid.kd);
   
-  generator.kp = Riq_pid.kp;
-  generator.ki = Riq_pid.ki;
-  generator.kd = Riq_pid.kd;
+  generator.kp = kp;
+  generator.ki = ki;
+  generator.kd = kd;
   generator.tau_d1 = tau_d1;
 
   names = ["GenkpMacroAuto", "GenkiMacroAuto", "GenkdMacroAuto", "GentaudOneMacroAuto", "GenMarginAuto"];
@@ -91,9 +91,9 @@ G_cl = GR/(1 + GR);
 % zero(G_cl_simply)
 
 if B_eq == 0
-  generator.ki = 79.883578;
-  generator.kp = 1.484989;
-  generator.kd = 0.000723;
+  generator.ki = 103.84;
+  generator.kp = 0.9652;
+  generator.kd = 0.000470;
   generator.tau_d1 = 1/(1e1*generator.iq_omegaBP);
 end
 

@@ -16,7 +16,7 @@ tuning_controllers
 open_system(simulation.mdl);                    % open the model
 in = Simulink.SimulationInput(simulation.mdl);  % set simulation parameters
 
-set_simulink_parameters(simulation.mdl, simulation.type);
+% set_simulink_parameters(simulation.mdl, simulation.type);
 
 tic
 for i = 1:wind.WS_len
@@ -52,18 +52,18 @@ for i = 1:wind.WS_len
       % wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, stop_time);
       [rotor, generator, blade, T_R0] = run_Kopt_KoptGE(rho, ...
       lambda_vector, pitch_vector, lookup_cP, rotor, blade, ...
-      generator, gearbox, wind_speed(i), rated_values, rated_values_P_GE, lookup_Pitch, lookup_pitch_P_GE, simulation, i);
+      generator, gearbox, wind_speed(i, 2), rated_values, rated_values_P_GE, lookup_Pitch, lookup_pitch_P_GE, simulation, i);
 
   end
 
   % Set the initial conditions
-  if simulation.type ~= 3 
-    [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
-      generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
-  elseif simulation.mdl == 3
-    [rotor, generator, blade, T_R0] = initial_conditions_GE(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
-      generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
-  end
+%   if simulation.type ~= 3 
+%     [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
+%       generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
+%   elseif simulation.mdl == 3
+%     [rotor, generator, blade, T_R0] = initial_conditions_GE(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
+%       generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
+%   end
 %mean(wind_speed(1:100, 2))
   % Run the simulation
   out = sim(in, 'ShowProgress','on'); 

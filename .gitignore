@@ -30,3 +30,4 @@ src/simulation_5/result.mat
 src/simulation_5/slprj
 *.slxc
 *.bak
+src/simulation_5/out_store.mat

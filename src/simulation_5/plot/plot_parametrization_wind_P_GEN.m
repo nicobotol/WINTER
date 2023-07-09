@@ -8,7 +8,7 @@ N = size(x_my_ref, 1); % data to be plotted
 hold on
 for j = 1:N
   plot(x_my_ref{j}(:), y_my_ref{j}(:), '--', 'LineWidth', line_width, ...
-    'Color', colors_vect(wind.WS_len+j,:))
+    'Color', color(wind.WS_len+j))
 end
 for i=1:wind.WS_len
   % Time from where start to print
@@ -23,10 +23,10 @@ for i=1:wind.WS_len
 
     if rem(i, 2)==1
       sign = 'o';
-      col = colors_vect(1,:);
+      col = color(i);
     else
       sign = 'x'; 
-      col = colors_vect(2,:);
+      col = color(i);
     end
       plot(wind_resampled(s_start:end), out_cell{i}.(series).Data(s_start:end)/scaling, sign,...
         'LineWidth', line_width, 'Color', col);

@@ -6,7 +6,7 @@ leg = cell(1, wind.WS_len + 1);
 fig = figure('Color','w');
 hold on
 plot(x_my_ref, y_my_ref, '--', 'LineWidth', line_width, ...
-  'Color', colors_vect(wind.WS_len+1,:))
+  'Color', color(wind.WS_len+1))
 leg{1} =  ['Computed ref.'];
 for i=1:wind.WS_len
   % Time from where start to print
@@ -20,13 +20,12 @@ for i=1:wind.WS_len
     out_cell{i}.(series).Time);
 if rem(i, 2)==1
   sign = 'o';
-  col = colors_vect(1,:);
+  col = color(i);
 else
   sign = 'x'; 
-  col = colors_vect(2,:);
+  col = color(i);
 end
-  plot(wind_resampled(s_start:end), out_cell{i}.(series).Data(s_start:end)/scaling, sign,...
-    'LineWidth', line_width, 'Color', col);
+  plot(wind_resampled(s_start:end), out_cell{i}.(series).Data(s_start:end)/scaling, sign,'LineWidth', line_width, 'Color', col);
   leg{i + 1} = ['Sim. ', num2str(i)];
 end
 legend(leg, 'Location', 'best', 'FontSize', font_size,...
