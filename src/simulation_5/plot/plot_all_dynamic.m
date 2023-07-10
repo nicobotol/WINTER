@@ -25,28 +25,30 @@ plot_time_series2('fig_generator_power_dynamic',out_store,'P_GE','P_G', ...
   rotor.P_rated,'Time [s]','P [MW]','Generator input and output power', ...
   1e6,'Electro','Mech.',date_fig,'southeast');
 
-for i=1:wind.WS_len % sum the electrical and joule losses
-  out_store{i}.P_check = [];
-  out_store{i}.P_check.Data = out_store{i}.P_GE.Data + ...
-    out_store{i}.P_GJoule.Data + out_store{i}.P_GInductance.Data;
-  out_store{i}.P_check.Time = out_store{i}.P_GE.Time;
-end
-
-% check on the generator powers
-data = string(4);
-data = ["P_GE","P_GJoule", "P_G"];
-leg = string(4);
-leg = ["Electro","Joule loss", "Input"];
-plot_time_seriesN('fig_generator_power_check',out_store, data, ...
-  rotor.P_rated,'Time [s]','P [MW]','Generator powers', ...
-  1e6,leg,date_fig, 'east')
-
-% generator efficiency
-for i=1:wind.WS_len % sum the electrical and joule losses
-  out_store{i}.generator_eta = [];
-  out_store{i}.generator_eta.Data = out_store{i}.P_GE.Data ./...
-  out_store{i}.P_G.Data;
-  out_store{i}.generator_eta.Time = out_store{i}.P_GE.Time;
+if simulation.type ~= 10
+  for i=1:wind.WS_len % sum the electrical and joule losses
+    out_store{i}.P_check = [];
+    out_store{i}.P_check.Data = out_store{i}.P_GE.Data + ...
+      out_store{i}.P_GJoule.Data + out_store{i}.P_GInductance.Data;
+    out_store{i}.P_check.Time = out_store{i}.P_GE.Time;
+  end
+  
+  % check on the generator powers
+  data = string(4);
+  data = ["P_GE","P_GJoule", "P_G"];
+  leg = string(4);
+  leg = ["Electro","Joule loss", "Input"];
+  plot_time_seriesN('fig_generator_power_check',out_store, data, ...
+    rotor.P_rated,'Time [s]','P [MW]','Generator powers', ...
+    1e6,leg,date_fig, 'east')
+  
+  % generator efficiency
+  for i=1:wind.WS_len % sum the electrical and joule losses
+    out_store{i}.generator_eta = [];
+    out_store{i}.generator_eta.Data = out_store{i}.P_GE.Data ./...
+    out_store{i}.P_G.Data;
+    out_store{i}.generator_eta.Time = out_store{i}.P_GE.Time;
+  end
 end
 % plot_time_series("fig_generator_eta",out_store, 'generator_eta', 'Time [s]', ...
 %   'Generator efficiency [-]', 'Generator efficiency', 1, date_fig, 'southeast');

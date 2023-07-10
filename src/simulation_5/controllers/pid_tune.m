@@ -15,12 +15,23 @@ R = ki/s*(1 + s*tau_p)*(1 + s*tau_d)/(1 + s*tau_d1); % regulator
 GH = G*R;                                  % series of regulator and system
 GH_mag = abs(subs(GH, s, 1j*omega));      % mag at the crossover frequency
 ki = solve(GH_mag == 1, ki);              % integral gain
-ki = 1.3*eval(ki);
-kp = 0.5*ki*(tau_d + tau_p); % 0.5*ki*(tau_d + tau_p);
-kd = 0.5*ki*tau_d*tau_p;     % 0.5*ki*tau_d*tau_p;
+ki = 1.5*eval(ki);
+kp = 0.45*ki*(tau_d + tau_p); % 0.5*ki*(tau_d + tau_p);
+kd = 0.45*ki*tau_d*tau_p;     % 0.5*ki*tau_d*tau_p;
 
 fprintf('ki = %f\n', ki);
 fprintf('kp = %f\n', kp);
 fprintf('kd = %f\n', kd);
+
+
+% ku = 22.06;
+% % kp=ku;
+% Tu=2*(0.508535-509213);
+% kp=0.5*ku;
+% Ti = 0.83*Tu;
+% Td = 0.125*Tu;
+% ki = 0.54*ku/Tu;
+% kd =0.075*ku*Tu;
+% kd=0;ki=0;
 
 end

@@ -21,29 +21,44 @@ physical(6) = generator.eta; % [-] generator efficiency
 physical(7) = rotor.R; % [m]
 physical(8) = rho; % [kg/m^3]
 
-V0_b = 4:0.1:V0_rated+0.001; % [m/s] wind speed 
+% parameters without the damping
+physical_no_B = physical;
+physical_no_B(3) = 0;
+
+% V0_b = 4:0.01:6-0.01;
+V0_b = [4:0.01:V0_rated+0.001]; % [m/s] wind speed 
 
 % Maximize the power output by selecting the proper combination of TSR and pitch angle
 % The variable x containts x = (TSR, pitch angle)
-lb = [5, -10*pi/180]; % variable lower bound
-ub = [10, 40*pi/180]; % variable upper bound
+lb = [5, -5*pi/180]; % variable lower bound
+ub = [10, 5*pi/180]; % variable upper bound
 P = zeros(length(V0_b),1);
 min_v = zeros(length(V0_b),2); % minimization values (lambda, theta)
+min_v_no_B = zeros(length(V0_b),2); % minimization values (lambda, theta)
 x0 = [5, 0]; % initial guess value
+options = optimoptions(@fmincon,'Display', 'off');
 for i=1:length(V0_b)
   V0 = V0_b(i);    
-  [min_v(i, :), P(i, :)] = fmincon(@(x)compute_P_GE(x, physical, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub);
+  [min_v(i, :), P(i, :)] = fmincon(@(x)compute_P_GE(x, physical, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub, [], options);
+  [min_v_no_B(i, :), P_no_B(i, :)] = fmincon(@(x)compute_P_GE(x, physical_no_B, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub, [],options);
 end
 
 % Recompute some values
 theta_opt = min_v(:, 2); % pitch coming from minimization
+theta_opt_no_B = min_v_no_B(:, 2); % pitch coming from minimization
 P_GE_b = -P; % power coming from minimization (change sign because negative)
+P_GE_b_no_B = -P_no_B; % power coming from minimization (change sign because negative)
 omega_rotor = lambda_opt.*V0_b/R; % [rad/s] omega based on the maximization of the rotor power
 omega_GE = min_v(:,1)'.*V0_b/R;
+omega_GE_no_B = min_v_no_B(:,1)'.*V0_b/R;
 lambda_GE =  min_v(:, 1);  % optimal TSR based on generator maximization 
+lambda_GE_no_B =  min_v_no_B(:, 1);  % optimal TSR based on generator maximization 
 lambda_GE_mean = mean(lambda_GE);  % mean TSR based on the generator
+lambda_GE_mean_no_B = mean(lambda_GE_no_B);  % mean TSR based on the generator
 cp_GE = interp2(lambda_vector, pitch_vector, lookup_cP, min_v(:, 1), min_v(:, 2)); % cp for the maximization of the generator
+cp_GE_no_B = interp2(lambda_vector, pitch_vector, lookup_cP, min_v_no_B(:, 1), min_v_no_B(:, 2)); % cp for the maximization of the generator
 cp_GE_mean = mean(cp_GE);          % mean cp for the generator maximization
+cp_GE_mean_no_B = mean(cp_GE_no_B);          % mean cp for the generator maximization
 
 %% Static generator power curve
 V0_v = 4:1:25;                    % windspeed [m/s]
@@ -93,21 +108,27 @@ feather_a = theta_p(max_p_a); % [rad] angle for feather pitching
 
 %% Plots
 % Below rated
-figure('Color', 'w')
+fig = figure('Color', 'w');
 hold on; box on; grid on;
 plot(V0_b, omega_GE, 'LineWidth',line_width, 'DisplayName','Generator ')
+plot(V0_b, omega_GE_no_B, 'LineWidth',line_width, 'DisplayName','Generator B = 0 $[\frac{kgm^2}{s}]$')
 plot(V0_b, omega_rotor, 'LineWidth',line_width, 'DisplayName','Rotor')
 title('Rotor rotational speed')
 xlabel('$V_0$ [m/s]')
 ylabel('$\omega$ [rad/s]')
 legend('location', 'northwest')
+if simulation.print_figure == 1
+  export_figure(fig, strcat(date_fig, 'fig_omega_GE', '.eps'), path_images); 
+end
 
 fig = figure('Color', 'w');
 hold on; box on; grid on;
-plot(V0_b, theta_opt*180/pi, 'LineWidth',line_width)
+plot(V0_b, theta_opt*180/pi, 'LineWidth',line_width, 'DisplayName','Generator')
+plot(V0_b, theta_opt_no_B*180/pi, 'LineWidth',line_width, 'DisplayName','Generator B=0$[\frac{kgm^2}{s}]$')
 title('Pitch angle')
 xlabel('$V_0$ [m/s]')
 ylabel('$\theta$ [deg]')
+legend('location','southeast')
 if simulation.print_figure == 1
   export_figure(fig, strcat(date_fig, 'fig_pitch_GE', '.eps'), path_images); 
 end
@@ -115,12 +136,14 @@ end
 fig = figure('Color', 'w');
 hold on; box on; grid on;
 plot(V0_b, lambda_GE, 'LineWidth',line_width, 'DisplayName','Generator','Color',colors_vect(1,:))
-yline(lambda_GE_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(2,:))
-yline(lambda_opt, '--','LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(3,:))
+plot(V0_b, lambda_GE_no_B, 'LineWidth',line_width, 'DisplayName','Generator B=0$[\frac{kgm^2}{s}]$','Color',colors_vect(2,:))
+yline(lambda_GE_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(3,:))
+yline(lambda_GE_mean_no_B, '--', 'LineWidth',line_width, 'DisplayName','Mean B=0$[\frac{kgm^2}{s}]$','Color',colors_vect(4,:))
+yline(lambda_opt, '--','LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(5,:))
 title('Tip speed ratio')
 xlabel('$V_0$ [m/s]')
 ylabel('$\lambda$ [-]')
-legend('location', 'east')
+legend('location', 'southeast')
 if simulation.print_figure == 1
   export_figure(fig, strcat(date_fig, 'fig_lambda_GE', '.eps'), path_images); 
 end
@@ -128,12 +151,14 @@ end
 fig = figure('Color', 'w');
 hold on; box on; grid on;
 plot(V0_b, cp_GE, 'LineWidth',line_width, 'DisplayName','Generator')
-yline(cp_GE_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(2,:))
-yline(cp_max, '--', 'LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(3,:))
+plot(V0_b, cp_GE_no_B, 'LineWidth',line_width, 'DisplayName','Generator B=0$[\frac{kgm^2}{s}]$')
+yline(cp_GE_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(3,:))
+yline(cp_GE_mean_no_B, '--', 'LineWidth',line_width, 'DisplayName','Mean B=0$[\frac{kgm^2}{s}]$','Color',colors_vect(4,:))
+yline(cp_max, '--', 'LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(5,:))
 title('Power coefficient')
 xlabel('$V_0$ [m/s]')
 ylabel('$c_P$ [-]')
-legend('location', 'northeast')
+legend('location', 'southeast')
 if simulation.print_figure == 1
   export_figure(fig, strcat(date_fig, 'fig_cP_GE', '.eps'), path_images); 
 end
@@ -230,22 +255,22 @@ if simulation.print_figure == 1
   export_figure(fig_new_pitch_map, '\fig_new_pitch_map.eps', path_images);
 end
 %% Save the data in a lookup table
-clear("lookup_P_GE")
-clear("rated_values_P_GE")
-clear("lookup_pitch_P_GE")
-
-rated_values_P_GE(1) = lambda_GE_mean;
-rated_values_P_GE(2) = cp_GE_mean;
-rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
-save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
-
-% pitch to feather
-lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
-lookup_pitch_P_GE(1, :) = [0 V0_a];
-lookup_pitch_P_GE(2, :) = [0 feather_a];
-save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
-
-% generator electrical power
-lookup_P_GE(1, :) = [V0_b, V0_a];
-lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
-save('lookup\lookup_P_GE.mat', "lookup_P_GE");
+% clear("lookup_P_GE")
+% clear("rated_values_P_GE")
+% clear("lookup_pitch_P_GE")
+% 
+% rated_values_P_GE(1) = lambda_GE_mean;
+% rated_values_P_GE(2) = cp_GE_mean;
+% rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
+% save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
+% 
+% % pitch to feather
+% lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
+% lookup_pitch_P_GE(1, :) = [0 V0_a];
+% lookup_pitch_P_GE(2, :) = [0 feather_a];
+% save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
+% 
+% % generator electrical power
+% lookup_P_GE(1, :) = [V0_b, V0_a];
+% lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
+% save('lookup\lookup_P_GE.mat', "lookup_P_GE");

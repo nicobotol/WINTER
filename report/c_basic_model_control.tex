@@ -196,49 +196,58 @@ The saturation block constraints the reference power in between $P_g^* \in \left
 The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
 
 \subsection{Active power controller based on the generator output}\label{subsec:method_control_P_GE}
-In this section another approach to the pitch control is proposed. 
-Below rated windspeed nothing can be done further than what was already presented, since the limitation to the output power is the maximum amount that the blade can extract. Since this limit is given by the $c_P$, once it is maximized the most favorable condition is achieved. \\
-On the other hand, above rated the driveline and generator can be taken into account for the definition of the new set of pitch angle at which the turbine has to work in order to maximize the energy extraction. The methodology to find it is similar to the one presented in \autoref{sec:c_basic_model_control}.  \\
+In this section another approach to the turbine control is proposed, and it is based on the maximization of the power at the generator side of the driveline rather than the rotor one. In fact in general it is not true that the maximization of the power sent to the grid happens when the maximum power is extracted by the wind. \textcolor{red}{Add some references to this type of study}. Also this type of control is studied separating the operational conditions below and above wind speed.\\
+
 First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient has been found in \autoref{eq:P_G_out}.  Unfortunately, the wind and rotor speed contribution cannot be expressed with only one adimensional parameter, such as the tip speed ratio, but they have to be left separately. However the use of $\lambda$ may be useful for the imposing constrains for example on the sound noise of the turbine.
 \begin{gather} 
-  T_G = T_W + B_{eq}\omega = \frac{P_W}{\omega} + B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} + B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \\ \notag
-  \Rightarrow iq = \frac{2}{3p\Lambda_{mg}}\left(\frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} + B_{eq}\omega\right) \\ 
-  P_{G, out} = P_{G, in} - R_s i_q^2 = \eta P_R - R_s i_q^2 = \\ \notag
-   = \eta \frac{A \, \rho V_0^3 c_P(\theta, V_0, \omega)}{2} - \frac{R_s \left(A c_P \rho V_0^3 + 2 B_{eq}\omega^2 \right)^2}{9p^2\Lambda_{mg}^2\omega^2} \label{eq:P_G_out} \\
-   P_{G, out} = \frac{-Rs(\frac{A\,c_P\,\rho\,\omega^3\,R^3}{\lambda^3} + 2\,B_{eq}\,\omega^2)^2}{9\,\omega^2\,p^2\,\Lambda^2} + \frac{A\,c_P\,\rho\,\omega^3\,R^3\,\eta}{2\,\lambda^3}\label{eq:P_G_out_lambda}
+  T_G = T_R - B_{eq}\omega = \frac{P_W}{\omega} - B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} - B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \\ \notag
+  \Rightarrow iq = \frac{A \, c_P \, \rho \, V_0^3 \,-\,2B\omega^2}{3\omega\,p\,\Lambda} \\ 
+  P_{G, out} = P_{G, in} - R_s i_q^2 = T_G \omega - R_s i_q^2 = \\ \notag
+   = \left(-B\,\omega + \frac{A\,c_P\,\rho\,V_0^3}{2\omega}\right)\omega - \frac{R_s\left(A\,V_0^3\,c_P\,\rho - 2B\omega^2\right)^2}{9\,\omega^2\,p^2\,\Lambda^2} \label{eq:P_G_out} \\
+   P_{G, out} = \left(-B\frac{\lambda V_0}{R} + \frac{A\,c_P\,\rho\,V_0^2\,R}{2\lambda}\right)\frac{\lambda \, V_0}{R} - \frac{R_s\,R\left(A\,V_0^3\,c_P\,\rho - 2B\left(\frac{\lambda V_0}{R}\right)^2\right)^2}{9\,\lambda^2V_0^2\,p^2\,\Lambda^2}\label{eq:P_G_out_lambda}\\
+   P_{G, out} = \frac{A\,c_P\,\rho\,V_0^3}{2} - \frac{R_s\,A^2\,c_P^2\,\rho^2\,V_0^4\,R^2}{9\,\lambda^2\,p^2\,\Lambda^2} + B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} = \notag
+   = \frac{A\,c_P\,\rho\,V_0^3}{2} - R_s \left(\frac{T_R}{3/2p\Lambda}\right)^2 + B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} \label{eq:P_G_out_damping}
 \end{gather}
 
 \subsubsection{Below rated wind speed}
 In this operating region we are interested in identify a \acrlong{TSR} and a pitch that maximize the power extraction from the resource. As said before, since in the expression of the power $\omega$ and $V_0$ are decouple, in general it is not guarantee to find an univocal $\lambda$ for all the \acrshort{WS}, and so the control strategy used so far and based only on the $K_{opt}$.\\
-To study the problem, a numerical approach is followed. First of all, a vector of windspeed, pitch angle, and rotational speed are defied. Then, for each wind speed, the power produced for each combinations of rotational speed and pitch is computed and the maximum among then is extracted. At this point the corresponding $\lambda$ and $\theta$ are extracted and can be analysed, as done in \autoref{fig:parameters_for_below_rated}.
+As could be seen in \autoref{eq:P_G_out_damping}, when the damping is not included in the picture, the output power is the incoming in the rotor minus the joule loss (since in that case $T_R =T_G$).\\
+To study the problem, a numerical approach is followed. 
+For a reasonably fine sampling if velocity in the considered range, the inverse of the power function has been minimized wrt the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}. The minimization has been repeated twice, considering or not the transmission damping.
 \begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_pitch_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_07_10_14_18_25fig_omega_GE.eps}
+    \caption{Rotational speed}
+    \label{fig:2023_07_10_14_18_25fig_omega_GE}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_07_10_14_18_25fig_pitch_GE.eps}
     \caption{Optimal pitch angle}
     \label{fig:2023_06_24_15_57_04fig_pitch_GE}
   \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_lambda_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_07_10_14_18_25fig_lambda_GE.eps}
     \caption{Tip speed ratio}
     \label{fig:2023_06_24_15_57_04fig_lambda_GE}
   \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_15_57_04fig_cP_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_07_10_14_18_25fig_cP_GE.eps}
     \caption{Power coefficient}
     \label{fig:2023_06_24_15_57_04fig_cP_GE}
   \end{subfigure}
-  \caption{Comparison of the most important parameters for the operation below rated wind speed, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power.}
+  \caption{Comparison of the most important parameters for the operation below rated wind speed, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power. This latter case is investigated with and without taking the damping into account.}
   \label{fig:parameters_for_below_rated}
 \end{figure}
 
-In particular, the pitch angle is constant and could be considered as 0 $\mesunt{\degree}$. The tip speed ratio and the $c_P$ show some variability due to the discretization done in the choice of the vectors, but in general they can be assumed as constant and equal to they means. \\
-This result is quite interesting because it allow us to use the same approach used in \ref{eq:T_G2} to control the turbine even in this case. 
+In the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$ the considered parameters have some variability below the velocity around $6 \mesunt{\meter\per\second}$, while they are constant above this threshold. This type of map require an estimation of the wind speed in order to set the desired TSR according to the required velocity.  \\ 
+When B=0 $\mesunt{\kilo\gram\square\meter\per\second}$, both the pitch angle and the tip speed ratio are almost constant and so they could be considered as $\theta_{GE}= 0 \, \mesunt{\degree}$ and $\lambda=8.106$. This result is quite interesting because it allow us to use the same approach used in \autoref{eq:T_G2} to control the turbine even in this case. 
 
 \subsubsection{Above rated wind speed}
-Then a parametric study in the pitch angle has been done, meaning that for each wind speed, \autoref{eq:P_G_out} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (since the closer we are the to null pitch, then the higher the power extracted).
+Above rated wind speed, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study in the pitch angle has been done, meaning that for each wind speed, \autoref{eq:P_G_out} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (since the closer we are the to null pitch, then the higher the power extracted).
 \begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
     \centering

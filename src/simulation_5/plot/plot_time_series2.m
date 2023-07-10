@@ -12,15 +12,15 @@ for i = 1:wind.WS_len
     [~, s_start] = min(abs(out_cell{i}.(series1).Time - t_start)); % sample from where to start
 
   plot(out_cell{i}.(series1).Time(s_start:end), out_cell{i}.(series1).Data(s_start:end)/scaling, ...
-    'LineWidth',line_width*0.6,'Color',colors_vect(i, :),'LineStyle','--');
+    'LineWidth',line_width*0.6,'Color',color(i),'LineStyle','--');
   plot(out_cell{i}.(series2).Time(s_start:end), out_cell{i}.(series2).Data(s_start:end)/scaling, ...
-    'LineWidth', line_width*1.2, 'Color', colors_vect(i, :));
+    'LineWidth', line_width*1.2, 'Color', color(i));
   leg{2*i - 1} = [leg1,' sim. ', num2str(i)];
   leg{2*i} = [leg2,' sim. ', num2str(i)];
 end
 if strcmp(y_line, 'none') == 0
   yline(y_line/scaling, 'LineStyle', '-.', 'LineWidth', line_width,...
-    'Color', colors_vect(i + 1, :));
+    'Color', color(i+1));
   leg{2*wind.WS_len + 1} = ['Rated'];
 end
 legend(leg, 'Location', leg_loc, 'FontSize', font_size,...

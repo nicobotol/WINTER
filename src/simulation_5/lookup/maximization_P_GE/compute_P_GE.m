@@ -12,7 +12,7 @@ rho = physical(8); % [kg/m^3] air density
 lambda = x(1);
 theta = x(2);
 
-cp = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, theta);
+cp = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, theta,'cubic',0);
 P_GE = -Rs*(A*cp*rho*V0^3 - 2*B*lambda^2*V0^2/R^2)^2*R^2/(9*lambda^2*V0^2*p^2*Lambda^2) + (-B*lambda*V0/R + A*cp*rho*V0^2*R/(2*lambda))*lambda*V0/R; % [W] generator power
 P_GE = -P_GE; % in order to maximize the function minimize the inverse
 

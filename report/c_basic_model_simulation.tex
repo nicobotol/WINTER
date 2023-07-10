@@ -414,58 +414,59 @@ The employed transfer functions are:
   \begin{tabular}{cc}
   \toprule
     Simulation & G=$\frac{\theta}{\hat{\theta} }$\\\midrule
-    1 & $\frac{(2\pi)^2}{s^2+2\cdot0.7\cdot2\pi+(2\pi)^2}$\\
-    2 & $\frac{1}{s+0.1}$\\
-    3 & $\frac{(20\pi)^2}{s^2+2\cdot0.7\cdot20\pi+(20\pi)^2}$\\
+    1 & $\frac{(2\pi)^2}{s^2+2 \, 0.7 \, 2\pi+(2\pi)^2}$\\
+    2 & $\frac{1}{1}$\\
+    3 & $\frac{(\frac{2\pi}{5})^2}{s^2+2\, 0.7 \,\frac{2\pi}{5}+(\frac{2\pi}{5})^2}$\\
     \bottomrule
   \end{tabular}
   \label{tab:tf_blade_mechanism}
 \end{table}
-It must be noted that Simulation 1 is what suggested in \cite{Olimpo_Anaya‐Lara}.
+It must be noted that Simulation 1 is what suggested in \cite{Olimpo_Anaya‐Lara}, while 2 corresponds to no no delay.
 
 The results of the simulations are reported in \autoref{fig:simulation_with_different_pitch_dynamic}
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_28_00_37_59pitching_dynamic_TF.eps}
-    \caption{Transfer functions modelling the blade actuator}
-    \label{}
-  \end{subfigure}
-  \begin{subfigure}{0.5\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_28_00_25_08fig_wind_TS.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_07_10_17_17_35fig_wind_TS.eps}
     \caption{Wind speed time series}
     \label{}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_28_00_25_29fig_pitch_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_07_10_17_17_56fig_pitch_dynamic.eps}
     \caption{Dynamic of the pitch angle}
     \label{}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_28_00_25_40fig_omega_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_07_10_17_18_12fig_omega_dynamic.eps}
     \caption{Rotational speed}
     \label{}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_28_00_25_51fig_power_dynamic.eps}
-    \caption{Power extracted from the wind and mechanical power at the generator}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_07_10_17_18_22fig_power_dynamic.eps}
+    \caption{Power extracted from wind and mech. power at the generator}
     \label{}
   \end{subfigure}
   \caption{Results of simulation with a generated wind series, different blade actuation mechanisms}
   \label{fig:simulation_with_different_pitch_dynamic}
 \end{figure}
-The results shows how the second mechanism enters faster in the dynamic but also produces an higher oscillation of the pitch angle itself. Furthermore the power and rotational speed have higher fluctuations from the rated value.
+The results shows how the first two mechanism are pretty similar, meaning that the suggested transfer function does not introduce a grate delay in the response of the blade actuation. On the other hand, the third transfer function it is slower, meaning that the blades follow the wind change with some delay and for this reason they are rotate of larger amount.\\
 
 \subsection{Simulation with the controller based on generator output power}\label{subsec:validation_control_P_GE}
 \subsubsection{Below rated wind speed}
-The two control law has been compared below for all the WS between the cut in and the rated one. Their difference is very slight, even though the controller based on the generator output power performs better.
-\textcolor{red}{Add figure here}
-The evaluation of the performance has been also done by computing the energy harvested in the two cases, by performing the integral of the power curve. Agin, the difference is not so big, but it is higher for the new controller: 
+The two control law has been compared for WS between the cut in and the rated one, assuming that the damping $B=0 \mesunt{\kilo\gram\square\meter\per\second}$. Their difference is very slight, even though the controller based on the generator output power performs better.\\
+A critical condition for this comparison is that the rotor rotational speed has to be exactly the one ensuring the desired tip speed ratio. In order to avoid possible influences of a poor tuned generator controller the generator has been excluded from the simulation, and so the torque reference has been directly used in the dynamic equation. Furthermore, the neglecting of the damping removes the corresponding loss power in the balance. \\
+In the simulation, 5 constant input wind speeds has been tested and the corresponding steady state values of mechanical input and electrical output powers evaluated. The results are reported in \autoref{fig:comparison_control_laws}.
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width = \columnwidth]{images/vectorial/2023_07_10_10_21_02comparison_control_laws.eps}
+  \caption{Comparison of input and output power to the generator for the control laws based on the maximization of the power extracted from the resource (called \textit{rotor} in the legend) and the maximization of the power generated electrical power (called \textit{generator} in the legend).}
+  \label{fig:comparison_control_laws}
+\end{figure}
 
+Even tough the differences are small, it could be seen that the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to provide more electrical power.
 \subsubsection{Transition below-above rated WS}
 The test has been done in steady state conditions, with a velocity ramp between 8 and 15 $\mesunt{\meter\per\second}$ lasting 150 seconds.\\
 The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}. \autoref{fig:2023_06_22_21_03_26fig_pitch_param} shows how the actual pitch angle follows what is predicted from the static map of \autoref{fig:fig_new_pitch_map}. As expected, since the blade are rotated less then what was required before the mechanical power extracted from the resource is slightly higher. This is also visible in \autoref{fig:2023_06_22_21_02_45fig_generator_power_check}, where it is also highlighted that the generator produced electrical power is kept constant at the rated value above the rated WS. Finally, \autoref{fig:2023_06_22_20_58_01power_check} shows how does the presence of the inertia made the power available at the input of the generator lower than the rotor one, and so in principle the controller could be less responsive due to a small lag in reaching the rated value. 
