@@ -18,14 +18,14 @@ A wind series that fulfils the prescribed \acrshort{PSD} is:
 with $t = i\Delta_t$ for $i=1,\dots,N$ and $\varphi$ randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
 An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \mesunt{\meter\per\second}$, height above ground of $h=150 
  \ \mesunt{\meter}$, and for a time horizon of $T = 300 \ \mesunt{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which is the interval where the 99\% of the generated data are expected to be. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
-\begin{figure}
+\begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation.eps}
     \caption{Example of generated wind series with $V_{10}=10\mesunt{\meter\per\second}$ and $\sigma_{V_{10}}=1\mesunt{\meter\per\second}$ }
     \label{fig:wind_generation}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation_PSD.eps}
     \caption{Comparison between the PSD used during the generation phase and the one computed on the series itself}
@@ -191,14 +191,14 @@ It could be seen that the aerodynamical torque enters as a disturb in the block 
  
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_06_7_22_23_27fig_bode_generator.eps}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_07_10_23_37_27fig_bode_generator.eps}
     \caption{Bode plots of the open loop system, the controller and the controlled open loop system}
     \label{fig:fig_bode_generator}
  \end{figure}
 
  \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_06_7_22_24_12fig_bode_cl.eps}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_07_10_23_37_40fig_bode_cl.eps}
     \caption{Bode plot of the generator close loop transfer function}
     \label{fig:fig_bode_cl}
  \end{figure}
@@ -209,7 +209,7 @@ It is possible to derive the steady state power curve for the chosen generator s
   \begin{figure}[htb]
     \begin{subfigure}{0.5\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{images/vectorial/2023_06_7_22_26_18generator_step_input.eps}
+      \includegraphics[width=\textwidth]{images/vectorial/2023_07_10_23_35_30generator_step_input.eps}
       \caption{Time response of the controlled generator at the input step torque}
       \label{fig:step_response}
     \end{subfigure}
@@ -219,7 +219,7 @@ It is possible to derive the steady state power curve for the chosen generator s
       \caption{Incoming mechanical, outgoing electrical, and lost power as function of the WS}
       \label{fig:fig_static_electro_power}
     \end{subfigure}
-    \caption{\textcolor{red}{Add caption}
+    \caption{\textcolor{red}{Add caption}}
 \end{figure}
 
  \subsection{Pitch actuation}

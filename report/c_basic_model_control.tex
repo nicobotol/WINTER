@@ -113,7 +113,7 @@ Since these aerodynamic considerations are out of the scope of this thesis, a si
     \label{eq:k_i_poly}
 \end{gather}
 with $\theta$ in $\left[\si{\radian}\right]$. For a more practical visualization these polynomials have been plotted in \autoref{fig:fig_gain_schduling}, where it can be seen that a great variation of the coefficients happens in between the minimum and maximum angles. \textcolor{red}{Write how does they have compute these polynomials}\\
-\begin{figure}
+\begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/fig_gain_scheduling.png}
     \caption{Proportional and integral gains for blade's controller as function of pitch angle, simplified approach from \cite{Olimpo_Anaya‐Lara}}
@@ -198,14 +198,25 @@ The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is prop
 \subsection{Active power controller based on the generator output}\label{subsec:method_control_P_GE}
 In this section another approach to the turbine control is proposed, and it is based on the maximization of the power at the generator side of the driveline rather than the rotor one. In fact in general it is not true that the maximization of the power sent to the grid happens when the maximum power is extracted by the wind. \textcolor{red}{Add some references to this type of study}. Also this type of control is studied separating the operational conditions below and above wind speed.\\
 
-First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient has been found in \autoref{eq:P_G_out}.  Unfortunately, the wind and rotor speed contribution cannot be expressed with only one adimensional parameter, such as the tip speed ratio, but they have to be left separately. However the use of $\lambda$ may be useful for the imposing constrains for example on the sound noise of the turbine.
-\begin{gather} 
-  T_G = T_R - B_{eq}\omega = \frac{P_W}{\omega} - B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} - B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \\ \notag
-  \Rightarrow iq = \frac{A \, c_P \, \rho \, V_0^3 \,-\,2B\omega^2}{3\omega\,p\,\Lambda} \\ 
+First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
+Starting from a torque balance, the \textit{q-axis} current can be expressed as:
+\begin{gather}
+  T_G = T_R - B_{eq}\omega = \frac{P_W}{\omega} - B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} - B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \notag \\ 
+  \Rightarrow iq = \frac{A \, c_P \, \rho \, V_0^3 \,-\,2B\omega^2}{3\omega\,p\,\Lambda} 
+\end{gather}
+then it can be substituted in the expression of the power at the generator:
+\begin{gather}
   P_{G, out} = P_{G, in} - R_s i_q^2 = T_G \omega - R_s i_q^2 = \\ \notag
-   = \left(-B\,\omega + \frac{A\,c_P\,\rho\,V_0^3}{2\omega}\right)\omega - \frac{R_s\left(A\,V_0^3\,c_P\,\rho - 2B\omega^2\right)^2}{9\,\omega^2\,p^2\,\Lambda^2} \label{eq:P_G_out} \\
-   P_{G, out} = \left(-B\frac{\lambda V_0}{R} + \frac{A\,c_P\,\rho\,V_0^2\,R}{2\lambda}\right)\frac{\lambda \, V_0}{R} - \frac{R_s\,R\left(A\,V_0^3\,c_P\,\rho - 2B\left(\frac{\lambda V_0}{R}\right)^2\right)^2}{9\,\lambda^2V_0^2\,p^2\,\Lambda^2}\label{eq:P_G_out_lambda}\\
-   P_{G, out} = \frac{A\,c_P\,\rho\,V_0^3}{2} - \frac{R_s\,A^2\,c_P^2\,\rho^2\,V_0^4\,R^2}{9\,\lambda^2\,p^2\,\Lambda^2} + B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} = \notag
+  = \left(-B\,\omega + \frac{A\,c_P\,\rho\,V_0^3}{2\omega}\right)\omega - \frac{R_s\left(A\,V_0^3\,c_P\,\rho - 2B\omega^2\right)^2}{9\,\omega^2\,p^2\,\Lambda^2} \label{eq:P_G_out_eq}
+\end{gather}
+The tip speed ratio can be introduced:
+\begin{gather}
+  P_{G, out} = \left(-B\frac{\lambda V_0}{R} + \frac{A\,c_P\,\rho\,V_0^2\,R}{2\lambda}\right)\frac{\lambda \, V_0}{R} - \frac{R_s\,R\left(A\,V_0^3\,c_P\,\rho - 2B\left(\frac{\lambda V_0}{R}\right)^2\right)^2}{9\,\lambda^2V_0^2\,p^2\,\Lambda^2}\label{eq:P_G_out_lambda}
+\end{gather} 
+and to highlight the terms composing this power expression, the equation can be rewritten as:
+\begin{gather} 
+   P_{G, out} = \frac{A\,c_P\,\rho\,V_0^3}{2} - \frac{R_s\,A^2\,c_P^2\,\rho^2\,V_0^4\,R^2}{9\,\lambda^2\,p^2\,\Lambda^2} + \notag \\
+   +B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} =  \notag \\
    = \frac{A\,c_P\,\rho\,V_0^3}{2} - R_s \left(\frac{T_R}{3/2p\Lambda}\right)^2 + B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} \label{eq:P_G_out_damping}
 \end{gather}
 
@@ -267,6 +278,7 @@ Above rated wind speed, the definition of the new pitch angle map followed the s
 \subsubsection{Implementation details}
 In order to validate these strategy, the two controller has been modified as follows:
 \begin{itemize}
-  \item PMSM control: in the schema \autoref{fig:d_torque_control_3}, the newly computed  $K_opt$ has been used, and the mechanical input power to the generator $P_G$ has been replaced by the electrical power $P_{G, out}$ in the feedback line
+  \item The generator model has been removed to avoid the interference of the generator controller, and the torque reference value has been directly used into the dynamic equation of the rotor
+  \item PMSM control: in the schema \autoref{fig:d_torque_control_3}, the newly computed  $K_{opt}$ has been used, and the mechanical input power to the generator $P_G$ has been replaced by the electrical power $P_{G, out}$ in the feedback line
   \item Blade pitch control: the new value of rated rotational speed has been replaced to the old one in \autoref{fig:pitch_control}
 \end{itemize}
