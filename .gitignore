@@ -32,3 +32,6 @@ src/simulation_5/slprj
 *.bak
 src/simulation_5/out_store.mat
 src/simulation_5/untitled.slx.autosave
+report/a_main.bbl
+report/a_main.out
+src/simulation_5/PMSM_generator.slxc

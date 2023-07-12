@@ -7,7 +7,7 @@ A general schema of a WT energy conversion chain is reported in \autoref{fig:fig
   \label{fig:fig_drivetrain}
 \end{figure}
 The incoming wind flow makes the blades rotate at a reasonably low rotational speed (let's say around 10 $\left[rpm\right]$ to give an order of magnitude). This rotation is then transmitted to the generator with or without the use of a step up gearbox, according to the requirement of the electrical machine. Finally, a power electronic converter conditions the power before the injection to the grid. Agin, the function and structure of this component depends on the employed generator type.\\
-Conceptually on top of the physical components there are the controllers. The two most important for the seek of this thesis are the one regulating the inclination of the blades (called pitch) and the electrical machine.
+Conceptually on top of the physical components there are different hierarchical levels of controllers, that may have different objectives according to \cite{Olimpo_Anaya‐Lara}. The highest level supervise operator commands, faults, extreme events, startup and shutdown, possibly also coordinating with other turbines in the farm. The primary objective of the lower level is keeping the rotational speed within limits. Secondary objectives may also be reducing the aerodynamic loads, structural vibrations, and provide ancillary services to the grid.  The two most important for the seek of this thesis are the one regulating the inclination of the blades (called pitch) and the electrical machine.
 
 \subsection{Basic aerodynamic model for the blade}
 \subsubsection{Mechanical power and power coefficient}\label{subsec:mech_pow_and_pow_coeff}
@@ -32,14 +32,14 @@ with $\omega$ the rotor rotational speed in $\left[\si{\radian \per \second}\rig
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\textwidth]{images/velocity_triangle.png}
-    \caption{Airfoil cross-section of chord length $c$. The Angle of attack $\alpha$ is the one between the incoming \acrshort{WS} $V_0$ and the chordline. $D$ and $L$ are the produced drag and lift forces. F and M are the total force and torque on the cross section. Source \cite{Aerodynamics_of_wind_turbines}}
+    \caption{Airfoil cross-section of chord length $c$. The Angle of attack $\alpha$ is the one between the incoming \acrshort{WS} $V_0$ and the chordline. $D$ and $L$ are the produced drag and lift forces. F and M are the total force and torque on the cross section. Source of the figure: \cite{Aerodynamics_of_wind_turbines}}
     \label{fig:velocity_triangle}
 \end{figure}
 
 Usually the power is reduced by decreasing the \acrshort{AOA} by pitching the leading edge of the blades up against the wind, but also the opposite is possible \cite{Aerodynamics_of_wind_turbines}. The first strategy is called feathering while the second stalling.
 
 \subsubsection{Thrust force and thrust coefficient}
-The thrust force, usually denoted as T, is the force produced by the rotor in the streamwise direction. It produces the wind speed reduction from the incoming one to the one in the wake:
+The thrust force, usually denoted as T, is the force produced by the rotor in the streamwise direction. It produces the wind speed reduction from the incoming one to the one in the wake, and it is compute as:
 \begin{equation}
     T = \frac{1}{2} \, A \, \rho \, c_T \, V_0^2 \ \ \left[\si{\newton}\right]
     \label{eq:thrust_coeff}
@@ -47,11 +47,9 @@ The thrust force, usually denoted as T, is the force produced by the rotor in th
 The thrust coefficient $c_T$ is obtained similarly to the power one, as it will be shown later in \autoref{subsec:BEM_algorithm}.
 
 \subsubsection{BEM algorithm}\label{subsec:BEM_algorithm}
-The relationship between the \acrshort{cp}, the \acrshort{TSR} and the pitch angle is not linear, and involves the aerodynamic interaction between the incoming wind and the airfoil characteristics. Different tools are available for computing this interactions, with different levels of complexity and fidelity. A common analytical method is the so called \acrfull{BEM}, solving the problem by providing the tangential and normal forces to the blade. The assumptions on which it is based are the absence of radial dependency of the blade-wind interaction and a constant force from the blades on the flow. The last assumption corresponds to having a rotor with an infinite number of blades, and so it is later corrected with a coefficient taking into account their finite number \cite{Aerodynamics_of_wind_turbines}.\\
-At the basis of the computations done in this work there is a \acrshort{BEM} algorithm implemented in Matlab.\\
+The relationship between the \acrshort{cp}, the \acrshort{TSR} and the pitch angle is not linear, and involves the aerodynamic interaction between the incoming wind and the airfoil characteristics. Different methods are available for computing this interactions, with different levels of complexity and fidelity. A common analytical mathematical tool is the so called \acrfull{BEM}, solving the problem by providing the tangential and normal forces to the blade. The assumptions on which it is based are the absence of radial dependency of the blade-wind interaction and a constant force from the blades on the flow. The last assumption corresponds to having a rotor with an infinite number of blades, and so it is later corrected with a coefficient taking into account their finite number \cite{Aerodynamics_of_wind_turbines}.\\
+At the basis of the computations done in this work there is a \acrshort{BEM} algorithm implemented in Matlab which pseudo-code is reported in \autoref{app:BEM_code}. In particular, \autoref{alg:main_BEM} reports the main functions that loops between the different TSR, pitch, and cross sections, while \autoref{alg:detailed_BEM} reports the implementation details leading to the computation of the local (i.e. for a cross section) thrust and power coefficients. A list of the main terms used in the code is reported in \autoref{tab:BEM_code_notation}. \\
 Other methods that may be cited but not further discussed because not used here are the vortex theory, 2D/3D actuator line theory, 2D/3D full CFD models.
-
-A pseudo-code describing the BEM code implementation in details is reported in \autoref{app:BEM_code}. In particular, \autoref{alg:main_BEM} reports the main functions that loops between the different TSR, pitch, and cross sections, while \autoref{alg:detailed_BEM} reports the implementation details leading to the computation of the local (i.e. for a cross section) thrust and power coefficients. A list of the main terms used in the code is reported in \autoref{tab:BEM_code_notation}. 
 
 \subsection{Drivetrain}
 The term \textit{drivetrain} identifies all the components of the mechanical system used to transfer the power from the rotor to the generator.
@@ -61,7 +59,7 @@ The geared concept is the older one since it has been available since 1970s, and
 In the market it is not clear which of the two solutions will be the dominant, since both are available. \autoref{tab:transmission_review} summarises some interesting features of multi mega-watt \acrshort{WT} produced by some of the most important manufacturer currently in the market. 
 
 \begin{table}[htp]\centering
-    \caption{Review of some machine available on the market} \label{tab:transmission_review}
+    \caption{Review of the drivetrain characteristic of some WTs available on the market} \label{tab:transmission_review}
     \input{d_table_review_transmission}
 \end{table}
 
@@ -71,13 +69,5 @@ It is possible to notice that Siemens-Gamesa and General Electric use direct dri
 Two kinds of electrical machine may be used: the permanent magnet or the electrically excited. The popularity of one or the other depends also on the cost of the magnets \cite{1-s2.0-S0040162519313691-main}. \\
 \textcolor{red}{Write something about the used generator in the different types}
 
-\subsection{Operational regions of a WT}
-Even thought the scope of a \acrlong{WT} is usually to harvest as much mechanical energy as possible by reducing the wind's kinetic one, different working regions and corresponding wind speeds levels may be identified depending on the followed literature. For example \cite{Olimpo_Anaya‐Lara} uses two regions (called I and II), \cite{5874598} uses three (called 1, 2, 3), while \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} uses five (called I, II, III, IV, and V). A common denominator is that in all of them the \textit{partial load} and the \textit{full load} regions are identified. The \textit{partial load} is bounded between the \textit{cut-in wind speed} (i.e. the minimum wind speed required to enabling the blade rotation) and the \textit{rated wind speed} (i.e. the lowest velocity at which the rated mechanical power is produced), and the mechanical power is below the rated one. Complementary, in the \textit{full load} the mechanical power would exceed the rated one, but it is limited by the controller. The boundaries of this regime are the rated wind speed and the \textit{cut-out} one (i.e. the maximum one taken into account during the design phase). \\
-The further identified region in \cite{5874598} and region I in \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} is the one below cut-in, when the rotor is kept still by the brakes. Region III in \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} is the switching between the partial and full load, while IV is the region above cut-out when the rotor is kept locked by the brakes. Even though the division in 5 zones is more complete, the one with 2 is sufficient for identifying the conceptual differences. 
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/operating_reagions.png}
-    \caption{Wind speed division in 5 different operating regions according to \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}}
-    \label{fig:operating_reagions}
-\end{figure}
+
 
