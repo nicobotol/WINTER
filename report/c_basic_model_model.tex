@@ -1,5 +1,6 @@
 \newpage
 \section{Implemented model}\label{sec:c_basic_model_model}
+In this section of the work, the models adopted in the different sub-components are described, in terms of motivation and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, then the aerodynamic, the transmission, the rotor mechanical balance, and finally the generator. 
 
 \subsection{Wind speed generation}
 In this section, the generation of a realistic \acrshort{WS} time series is addressed. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
@@ -33,20 +34,28 @@ An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$
 \end{figure}
 
 \subsection{Aerodynamic}
-The inputs of this block are the wind speed, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor. \\
-In the block the actual \acrshort{TSR} is firstly computed, then the power coefficient is extracted from the lookup table obtained from the \autoref{subsec:lookup_cp} and finally the rotor torque is obtained by dividing the rotor power (\autoref{eq:power}) by the rotor speed:
+The inputs of this logical block are the wind speed, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor. \\
+In the block the actual \acrshort{TSR} is firstly computed, then the power coefficient is extracted from the lookup table obtained from the \autoref{subsec:lookup_cp} and finally the rotor torque is obtained by dividing the rotor power (expressed as in \autoref{eq:power}) by the rotor speed:
 \begin{equation}
     T_R = \frac{P_R}{\omega_R} \ \ \left[\si{\newton\per\meter}\right]
 \end{equation}
+\subsection{Pitch actuation}
+In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. \\
+The simplest mechanical model have a second order dynamic, as suggested by \cite{Olimpo_Anaya‐Lara}:
+\begin{equation}
+    \frac{\beta}{\hat{\beta}}=\frac{\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
+    \label{eq:beta_TF}
+\end{equation}
+with $\zeta_p=0.7$ and $\omega_p=2\pi \left[\si{\radian}\right]$ provided by the same source.\\
+The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}\right]$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \left[\si{\degree\per\second}\right]$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \left[\si{\degree\per\second}\right]$ is placed after the actuation block.
 
 \subsection{Mechanical transmission}
-In this simple simulation a mechanical transmission is not taken into account for what concerns the losses and the stiffness but a transmission ratio 
+In this simple simulation, the transmission ratio of the simulation is unitary, and so the relationship between the the rotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
 \begin{equation}
     n = \frac{\omega_{R}}{\omega_{G}} = \frac{1}{1}
     \label{eq:transmission_ratio}
 \end{equation}
-is considered in order to make the system more general introducing a transmission ratio, where $\omega_{R} \ \left[\si{\radian\per\second}\right]$ is the rotational speed on the rotor side while $\omega_{G} \ \left[\si{\radian\per\second}\right]$is the one on the generator side.\\
-In this simulation the machine works as a direct drive.
+In this configuration the turbine is assumed to be direct drive, but a general n is considered in the derivations for making it more general.
 
 \subsection{Dynamical equation}
 The dynamical equation block solves the Newton's law written on the rotor side of the transmission:
@@ -66,7 +75,7 @@ This system of equation may be solved and finally the mechanical dynamic equatio
 Where the subscription indicates if the quantity is referred to the rotor or to the generator, while the apex indicates the side of the transmission in which it is expressed.
 
 \subsection{Transmission damping}
-Finding information on the damping to be used in the \autoref{eq:mech_eq} is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be necessary. Since a damping value is necessary to make the simulation more realistic (at least conceptually) then the system of equation in \autoref{eq:damping_sys} may be setted up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, while the latter is the torque balance.
+Finding information on the mechanical damping is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equation in \autoref{eq:damping_sys} may be setted up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, while the latter is the torque balance:
 \begin{gather}
 \left\{
 \begin{aligned}
@@ -96,9 +105,8 @@ It could be noticed that, for a chosen value of efficiency $\eta$, then the damp
   B_{eq}^R = K_{opt}\omega^R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
 \end{equation}
 
-
 \subsection{Electrical generator}
-As said before, nowadays the \acrfull{PMSM} are the most commonly employed machines, because they can operate in a range of speed, and so this kind of machine will be studied here.\\
+As said before, nowadays the \acrfull{PMSM} are the most commonly employed machines, and so they are going to be studied in this work.\\
 According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
 In this frame the equations of the machine are:
 \begin{gather}
@@ -107,13 +115,13 @@ In this frame the equations of the machine are:
   \omega_{me}\Lambda_{mg}=u_q+Li_d\omega_{me}+L\frac{di_q}{dt}+Ri_q
   \label{eq:q_axis_eq}
 \end{gather}
-where $u_d$ and $u_q$ are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), $i_d$ and $i_q$ are the current in the dq frame (transformed in the same way as the the voltage), $\omega_{me}$ is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega$), L is the inductance and R the resistance of the stator, $\Lambda_{mg}$ is the flux linkage of the permanent magnets, and p the number of pole pairs.\\
-By multiplying both sides of \autoref{eq:q_axis_eq} by $i_q$, \autoref{eq:d_axis_eq} by $i_d$ and then summing them together is it possible to obtain the following power balance:
+where $u_d$ and $u_q$ are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), $i_d$ and $i_q$ are the current in the dq frame (transformed in the same way as the the voltage), $\omega_{me}$ is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega$, with $p$ the number of pole pairs and $\omega$ the mechanical rotational speed $\mesunt{\radian \per \second}$), L is the inductance and R the resistance of the stator, $\Lambda_{mg}$ is the flux linkage of the permanent magnets.\\
+By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
   p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R(i_d^2 + i_q^2)
   \label{eq:gen_power_balance}
 \end{equation}
-then knowing that $i_d=0$ one can rewrite:
+then knowing that the d-axis controller ensures $i_d=0 \, \mesunt{\ampere}$ one can rewrite:
 \begin{equation}
   \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{Ri_q^2}_{Joule}
   \label{eq:gen_power_balance2}
@@ -123,7 +131,7 @@ Since the power is not invariant in the transformation from the abc frame to the
   P_G = T_G\omega = \frac{3}{2}p\omega\Lambda_{mg}i_q = \frac{3}{2}u_qi_q + \frac{3}{2}L i_q\frac{di_q}{dt} + \frac{3}{2}R i_q^2
   \label{eq:gen_power_balance3}
 \end{equation}
-The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0$.
+The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0 \, \mesunt{\ampere}$.
 \begin{figure}[htb]
 \input{d_pmsm.tex}
 \caption{Block diagram of the q-axis of a PMSM}
@@ -131,9 +139,9 @@ The choice of this frame makes the system of equations describing the generator 
 \end{figure}
 
 \autoref{fig:PMSM} represents the block diagram of the q-axis of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the electrical converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the rotor imposed by the wind on the rotor.\\
-It could be seen that the aerodynamical torque enters as a disturb in the block diagram. This model is not a description of the real behaviour of the \acrshort{WT}, because the $T_R$ is affected by the $\Omega_G$, and so in principle some sort of interaction between these quantities should have been introduced. Unfortunately, this dependency is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved observing that this mechanical dynamic evolves slowly compared to the electrical one, and so the electrical part sees the slowly varying dynamic as an almost-constant disturb. Finally for the sake of completeness, it must be remembered that the interactions between rotational speed and aero torque is taken into account into the aerodynamical block of the simulation. \\
+It could be seen that the aerodynamical torque enters as a disturb in the block diagram. This model is not a description of the real behavior of the \acrshort{WT}, because the $T_R$ is affected by the $\Omega_G$, and so in principle some sort of interaction between these quantities should have been introduced. Unfortunately, this dependency is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved observing that this mechanical dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. Finally for the sake of completeness, it must be remembered that the interactions between rotational speed and aero torque is taken into account into the aerodynamical block of the simulation. \\
 
- Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are used in this simulation.
+ Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation.
 \begin{table}[htb]
     \caption{Parameters for the \acrlong{PMSM} generator}
     \centering
@@ -146,7 +154,7 @@ It could be seen that the aerodynamical torque enters as a disturb in the block 
     \textit{d-axis} inductance & 1.8 & $\left[\si{\milli\henry}\right]$ &\\
     Stator resistance & 64 & $\left[\si{\milli\ohm}\right]$ &\\
     Magnets flux & 19.49 & $\left[\si{\weber}\right]$ &\\ \midrule
-    Friction & \textcolor{red}{0} & $\left[\si{\kilo\gram\square\meter\per\second}\right]$ & \\
+    Friction & 0 & $\left[\si{\kilo\gram\square\meter\per\second}\right]$ & \\
     Time delay introduced by the convert & 500 & $\left[\si{\micro\second}\right]$ & \\
     Inverter switching frequency & 1 & $\mesunt{\kilo\hertz}$ & \\
     \bottomrule
@@ -161,84 +169,19 @@ It could be seen that the aerodynamical torque enters as a disturb in the block 
 %    \caption{Feedback scheme of the \textit{q-axis} control loop}
 %    \label{fig:iq_control}
 % \end{figure}
-
- Once the inverter switching frequency is defined \textcolor{red}{add some reference justifying the choice}, then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
+The friction has been considered $ 0 \, \mesunt{\kilo\gram\square\meter\per\second}$ because it has been already considered in the equivalent one of the transmission. \\
+ Once the inverter switching frequency is defined \textcolor{blue}{where can I find some references justifying this choice}, then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
  \begin{gather}
  \uptau_{c}=\frac{\frac{1}{f_{inverter}}}{2}=\frac{\frac{1}{1000}}{2}=500 \ \ \mesunt{\micro \second}
  \end{gather}
-
- For its simplicity the chosen controller is a \acrshort{PID} one, and the design method exposed in \autoref{sec:e_pid_tuning} is used on the open loop function $G(s) = G_c(s)Y_{iq}(s)$, after having specified the crossover frequency of $\omega_{cp}=$1500 $\mesunt{\radian\per\second}$, which is less than $\frac{1}{4}$ the switching one. This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
- The tuning of the PID controller has been done following the procedures described in the \autoref{sec:e_pid_tuning}, but the proportional gain has been halved to have a better transient response. The resulting gains ($k_p$, $k_i$, $k_d$), the frequency of the added pole and the phase margin $\varphi$ are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \textit{pidtune}, that may be used to have at least the order of magnitude of the expected values.
-\begin{table}[htb]
-    \caption{Gains for the PMSM machine controller}
-     \centering
-     \begin{tabular}{cccccc}
-     \toprule
-          & $k_p$ & $k_i$ $\mesunt{\per\second}$ & $k_d$ $\mesunt{\second}$ & $\uptau_{d1} \ \mesunt{\second}$ & $\varphi \mesunt{\degree}$\\ \midrule
-         manual & \GenkpMacroMan & \GenkiMacroMan & \GenkdMacroMan & \GentaudOneMacroMan & \GenMarginMan\\
-         pidtune & \GenkpMacroAuto & \GenkiMacroAuto & \GenkdMacroAuto & \GentaudOneMacroAuto & \GenMarginAuto\\ \bottomrule
-     \end{tabular}
- 
-     \label{tab:tab_pid_tuning}
- \end{table}
- 
- The Bode diagram of the open loop system without any controller (i.e. taking into account the shaft mechanical dynamic, the generator's electrical dynamic, and the inverter time delay), the open loop system with the controller and the controller itself are reported in \autoref{fig:fig_bode_generator}. The bode plot of the close loop is shown in \autoref{fig:fig_bode_cl}. Given G(s) the direct transfer function (i.e. from input to output) and H(s) the feedback one, then the close loop transfer function is given by:
- \begin{gather}
-     G_{CL}=\frac{G(s)H(s)}{1+G(s)H(s)}=\frac{R_{iq}(s)G_c(s)Y_{iq}(s)}{1+R_{iq}(s)G_c(s)Y_{iq}(s)}
-     \label{eq:close_loop_TF}
- \end{gather}
- where $R_{iq}(s)$, $G_c(s)$, $Y_{iq}(s)$, have the meaning of \autoref{subsec:PMSM_control}, and $H(s)=1$ since there is no transfer function on the feedback line.
- 
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_07_10_23_37_27fig_bode_generator.eps}
-    \caption{Bode plots of the open loop system, the controller and the controlled open loop system}
-    \label{fig:fig_bode_generator}
- \end{figure}
-
- \begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_07_10_23_37_40fig_bode_cl.eps}
-    \caption{Bode plot of the generator close loop transfer function}
-    \label{fig:fig_bode_cl}
- \end{figure}
-
-Furthermore, the response of the close loop system to a torque step input is reported in \autoref{fig:step_response}. It could be seen that the integral actions drives the steady state error to 0, while the produced overshoot is quite limited (around 4\%).
+ In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches in a synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually at three half of the switching delay.\\
 
 It is possible to derive the steady state power curve for the chosen generator starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, considering both a unit or lower efficiency.
-  \begin{figure}[htb]
-    \begin{subfigure}{0.5\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/vectorial/2023_07_10_23_35_30generator_step_input.eps}
-      \caption{Time response of the controlled generator at the input step torque}
-      \label{fig:step_response}
-    \end{subfigure}
-    \begin{subfigure}{0.5\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{images/vectorial/fig_static_electro_power.eps}
-      \caption{Incoming mechanical, outgoing electrical, and lost power as function of the WS}
-      \label{fig:fig_static_electro_power}
-    \end{subfigure}
-    \caption{\textcolor{red}{Add caption}}
-\end{figure}
-
- \subsection{Pitch actuation}
-In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. \\
-The simplest mechanical model have a first order dynamic, as suggested by \cite{Olimpo_Anaya‐Lara} :
-\begin{equation}
-    \frac{\beta}{\hat{\beta}}=\frac{\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
-    \label{eq:beta_TF}
-\end{equation}
-with $\zeta_p=0.7$ and $\omega_p=2\pi \left[\si{\radian}\right]$.\\
-The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}\right]$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \left[\si{\degree\per\second}\right]$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \left[\si{\degree\per\second}\right]$ is placed after the actuation block. 
-
-This model is based on the one presented in the \autoref{sec:c_basic_model_model} but with a modification on the synthesis of the generator torque reference. In particular, following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power and the actual one to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
 \begin{figure}[htb]
-    \centering
-    \input{d_torque_control_2.tex}
-    \caption{Scheme of the implemented active power torque controller}
-    \label{fig:d_torque_control_2}
+  \centering
+  \includegraphics[width=0.5\textwidth]{images/vectorial/fig_static_electro_power.eps}
+  \caption{Incoming mechanical, outgoing electrical, and lost power as function of the WS}
+  \label{fig:fig_static_electro_power}
 \end{figure}
 
-The saturation block constraints the reference power in between $P_g^* \in \left[0, P_{rated}\right]$.
-The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
+ 

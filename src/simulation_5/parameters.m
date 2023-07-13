@@ -112,7 +112,7 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 1*ones(1, 1); % max time to investigaste [s]
+simulation.stop_time = 2*ones(1, 1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 4;        % 1 -> constant wind speed
@@ -179,7 +179,7 @@ generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
 rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
 generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
-generator.design = 0;       % 0 enables manual design of the controller
+generator.design = 1;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 % generator.design_TG = 0; % 0 enables manual design of speed controller
 %                             % 1 enables pidtune design of the controller                          

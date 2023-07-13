@@ -31,7 +31,7 @@
     \draw [->] (error) |- node {} (int_gain) {};
     \draw [->] (int_gain) -- node {} (integrator);
     \draw [->] (integrator) -|  node [pos=0.9] {$+$} (sum2);
-    \draw [->] (sum2) --node {$T_G$} (PMSM);
+    \draw [->] (sum2) --node {$T_G^*$} (PMSM);
     \draw [->] (PMSM) --node {$\dots$} (output);
 
 \end{tikzpicture}
