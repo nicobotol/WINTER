@@ -53,7 +53,7 @@ Above rated wind speed the objective is to keep the constant rotational speed an
 is given.
 
 \subsubsection{Implementation details}
-In the Simulink model the implementation of the generator's torque reference $T_G^*$ is done employing a proportional and a saturation blocks, limiting the torque when it goes above the rated speed.Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power $P_G^*$ and the actual one $P_G$ to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
+In the Simulink model the implementation of the generator's torque reference $T_G^*$ is done employing a proportional and a saturation blocks, limiting the torque when it goes above the rated speed. Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power $P_G^*$ and the actual one $P_G$ to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
 \begin{figure}[htb]
     \centering
     \input{d_torque_control_2.tex}
@@ -67,7 +67,7 @@ The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is prop
 In this section another approach to the turbine control is proposed, and it is based on the maximization of the power at the generator side of the driveline rather than the rotor one. In fact in general it is not true that the maximization of the power sent to the grid happens when the maximum power is extracted by the wind. \textcolor{red}{Add some references to this type of study}. Also this type of control is studied separating the operational conditions below and above wind speed.\\
 
 First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
-Starting from a torque balance, the \textit{q-axis} current can be expressed as:
+Starting from a torque balance, the \textit{q-axis} current can be expressed as \textcolor{red}{introduce the transmission ratio in these equations}:
 \begin{gather}
   T_G = T_R - B_{eq}\omega = \frac{P_W}{\omega} - B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} - B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \notag \\ 
   \Rightarrow iq = \frac{A \, c_P \, \rho \, V_0^3 \,-\,2B\omega^2}{3\omega\,p\,\Lambda} 
@@ -166,7 +166,7 @@ The transfer functions inside the loop are the regulator, the power electronic n
     \label{eq:Y_iq}
 \end{gather}
 Where $k_P$ and $k_I$ are the proportional and integral gain respectively, $\uptau_c$ is a time delay introduced by the power electronic, and $J_{eq}$ and $B_{eq}$ are the inertia and damping of the drivetrain respectively, for example as expressed in \autoref{eq:mech_eq}.\\
-For its simplicity the chosen controller is a \acrshort{PID} one, and the design method exposed in \autoref{sec:e_pid_tuning} is used on the open loop function $G(s) = G_c(s)Y_{iq}(s)$, after having specified the crossover frequency of $\omega_{cp}=800 \, \mesunt{\radian\per\second}$, which is less than $\frac{1}{4}$ the switching one. \textcolor{blue}{Previously, with the other generator, I sat $\omega_{cp}=1500 \, \mesunt{\radian\per\second}$ and then used the control method exposed in the appendix to tune the controller. With this generator, I had to further reduce the frequency, and then correct the gains in order to remove the steady state error and avoid too much overshooting in the response. Is it ok?} This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
+For its simplicity the chosen controller is a \acrshort{PID} one, and the design method exposed in \autoref{sec:e_pid_tuning} is used on the open loop function $G(s) = G_c(s)Y_{iq}(s)$, after having specified the crossover frequency of $\omega_{cp}=800 \, \mesunt{\radian\per\second}$, which is less than $\frac{1}{4}$ the switching one. \textcolor{blue}{Previously, with the other generator, I sat $\omega_{cp}=1500 \, \mesunt{\radian\per\second}$ and then used the control method exposed in the appendix to tune the controller. With this generator, I had to further reduce the frequency in order to remove the steady state error and avoid too much overshooting in the response. Is it ok?} This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
  The tuning of the PID controller has been done following the procedures described in the \autoref{sec:e_pid_tuning}. The resulting gains ($k_p$, $k_i$, $k_d$), the frequency of the added pole and the phase margin $\varphi$ are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \textit{pidtune}, that may be used to have at least the order of magnitude of the expected values.
 \begin{table}[htb]
     \caption{Gains for the PMSM machine controller}
@@ -222,7 +222,10 @@ As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, 
 
 The core part of the controller is a \acrfull{PI} action driven by the speed error defining the pitch angle. A saturation block on the pitch angle is used to impose the mechanical constraints, so to limit the blade rotation: $\theta \in \left[0, 90\right] \si{\degree}$. This threshold prevents that a negative speed error produces a pitching towards stalling.
 
-The tuning of this PI is not straightforward because the system to be controlled is not linear, and so the standard techniques cannot be implemented. In particular, at high wind speeds the aerodynamic loads are more sensitive to changes in the angles of attack, and so the change in pitch should be limited \cite{Aerodynamics_of_wind_turbines}. A possible solution is to treat the turbine as a linear varying-parameter system  and schedule the gain during the operation of the mechanism, for example basing on one state of the system itself. This is an advantageous choice, because the approach simplifies the description of the system and does not require a lot of measurements. A frequently done choice is to use the pitch angle itself to schedule the gains. In \autoref{subsec:gain_poly} a gain scheduling law proposed in the literature is reported, while \autoref{subsec:gain_schdeuling_aero} briefly describes how to compute the gains starting from the aerodynamic. In this letter case, the procedure is initially validate on the NREL 5 MW in \autoref{subsec:gain_schdeuling_NREL5MW} and then applied to the DTU 10 MW in \autoref{subsec:gain_schdeuling_DTU10MW}.
+The tuning of this PI is not straightforward because the system to be controlled is not linear, and so the standard techniques cannot be implemented. In particular, at high wind speeds the aerodynamic loads are more sensitive to changes in the angles of attack, and so the change in pitch should be limited \cite{Aerodynamics_of_wind_turbines}. A possible solution is to treat the turbine as a linear varying-parameter system  and schedule the gain during the operation of the mechanism, for example basing on one state of the system itself. This is an advantageous choice, because the approach simplifies the description of the system and does not require a lot of measurements. A frequently done choice is to use the pitch angle itself to schedule the gains. In \autoref{subsec:gain_poly} a gain scheduling law proposed in the literature is reported, while \autoref{subsec:gain_schdeuling_aero} briefly describes how to compute the gains starting from the aerodynamic. In this letter case, the procedure is initially validate on the NREL 5 MW in \autoref{subsec:gain_schdeuling_NREL5MW} and then applied to the DTU 10 MW in \autoref{subsec:gain_schdeuling_DTU10MW}.\\
+
+As final remark, it must be noted that using the actual pitch angle as scheduling variable, implies that the controller dynamic are not slower compared to the system itself and so it may not behave exactly as expected in the vicinity of the rated wind speed.
+
 
 \subsubsection{Simplified approach from literature}\label{subsec:gain_poly}       
 Specifically for the DTU 10 MW, \cite{Olimpo_Anaya‐Lara} proposes the schedule based on the polynomials in \autoref{eq:k_p_poly} and \ref{eq:k_i_poly}:
@@ -240,10 +243,7 @@ with $\theta$ in $\left[\si{\radian}\right]$. For a more practical visualization
     \label{fig:fig_gain_schduling}
 \end{figure}
 
-Another option could have been to schedule the pitch based on the \acrshort{WS} itself, but this would have required a direct measurement of the resource. \\
-As final remark, it must be noted that using the actual pitch angle as scheduling variable, implies that 
-the controller dynamic are not slower compared to the system itself and so it may not behave exactly as expected in the vicinity of the rated wind speed.
-
+Another option could have been to schedule the pitch based on the \acrshort{WS} itself, but this would have required a direct measurement of the resource. 
 \subsubsection{Gain scheduling based on the aerodynamics}\label{subsec:gain_schdeuling_aero}
 
 As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference}, and \cite{ris_r_1500} applying a linearization of the \autoref{eq:mech_eq} and further mathematical manipulations that are out of the scope of this thesis,  the gains may be expressed in close form as :
@@ -271,18 +271,18 @@ The interpolations are used to find two important parameters, called $\theta_{K}
 Once all the terms in \autoref{eq:ki}, \ref{eq:kp}, and \ref{eq:GK} are available and the gain scheduling can be determined, and the comparison reported in \autoref{fig:fig_gain_pitch}.
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.6\textwidth]{images/fig_gain_pitch.eps}
+    \includegraphics[width=0.65\textwidth]{images/fig_gain_pitch.eps}
     \caption{Comparison between the computed gain coefficients and the one presented in \cite{NREL_5MW_reference} for the NREL 5 MW}
     \label{fig:fig_gain_pitch}
 \end{figure}
 
 
-\subsubsection{Use of the procedure on the DTU10MW}\label{subsec:gain_schdeuling_DTU10MW}
-The procedure described in the \autoref{subsec:gain_schdeuling_NREL5MW} is applied on the DTU 10MW. For this turbine, there are less intermediate steps that can be used to cross check the procedure itself. \cite{DTU_Wind_Energy_E_0028} reports the second order interpolation of the aerodynamic torque gain, which is linked to the aerodynamic power gain since the velocity is constant above rated wind speed. This is here reported in \autoref{fig:fig_torque_gain_DTU10MW}.
+\subsubsection{Use of the procedure on the DTU 10 MW}\label{subsec:gain_schdeuling_DTU10MW}
+The procedure described in the \autoref{subsec:gain_schdeuling_NREL5MW} is applied on the DTU 10 MW. For this turbine, there are less intermediate steps that can be used to cross check the procedure itself. \cite{DTU_Wind_Energy_E_0028} reports the second order interpolation of the aerodynamic torque gain, which is linked to the aerodynamic power gain since the velocity is constant above rated wind speed. This is here reported in \autoref{fig:fig_torque_gain_DTU10MW}.
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/fig_torque_gain_DTU10MW.eps}
-    \caption{Aerodynamic torque gain for the DTU 10MW}
+    \caption{Aerodynamic torque gain for the DTU 10 MW}
     \label{fig:fig_torque_gain_DTU10MW}
 \end{figure}
 

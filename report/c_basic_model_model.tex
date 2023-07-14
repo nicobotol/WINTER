@@ -1,11 +1,11 @@
 \newpage
 \section{Implemented model}\label{sec:c_basic_model_model}
-In this section of the work, the models adopted in the different sub-components are described, in terms of motivation and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, then the aerodynamic, the transmission, the rotor mechanical balance, and finally the generator. 
+In this section of the work, the models adopted in the different sub-components are described, in terms of motivation and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, the aerodynamic, the transmission, the rotor mechanical balance, and finally the generator. 
 
 \subsection{Wind speed generation}
-In this section, the generation of a realistic \acrshort{WS} time series is addressed. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
+This part deals with the generation of a realistic \acrshort{WS} time series. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
 Calling $\Delta_t$ $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of $f_s$ $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time T $\left[\si{\second}\right]$ is N. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
-Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum:
+Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum \cite{Aerodynamics_of_wind_turbines}:
 \begin{equation}
     PSD(f) = \frac{I^2V_{10}l}{\left(1+1.5\frac{f \ l}{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
     \label{eq:PSD}
@@ -46,11 +46,11 @@ The simplest mechanical model have a second order dynamic, as suggested by \cite
     \frac{\beta}{\hat{\beta}}=\frac{\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
     \label{eq:beta_TF}
 \end{equation}
-with $\zeta_p=0.7$ and $\omega_p=2\pi \left[\si{\radian}\right]$ provided by the same source.\\
+with $\zeta_p=0.7$ and $\omega_p=2\pi \left[\si{\radian}\right]$ provided by the same reference.\\
 The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}\right]$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \left[\si{\degree\per\second}\right]$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \left[\si{\degree\per\second}\right]$ is placed after the actuation block.
 
 \subsection{Mechanical transmission}
-In this simple simulation, the transmission ratio of the simulation is unitary, and so the relationship between the the rotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
+In this simple simulation, the transmission ratio is unitary, and so the relationship between the the rotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
 \begin{equation}
     n = \frac{\omega_{R}}{\omega_{G}} = \frac{1}{1}
     \label{eq:transmission_ratio}
@@ -106,8 +106,8 @@ It could be noticed that, for a chosen value of efficiency $\eta$, then the damp
 \end{equation}
 
 \subsection{Electrical generator}
-As said before, nowadays the \acrfull{PMSM} are the most commonly employed machines, and so they are going to be studied in this work.\\
-According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
+As said before, nowadays the Permanent Magnet Syncronous Machines (PMSM) are the most commonly employed generators, and so they are going to be studied in this work.\\
+According to the position of the magnets in the rotor, two families of \acrshort{PMSM} are defined. In particular, when the magnets are included inside the iron core, the rotor is no more symmetric from the magnetic point of view, and so the machine is called \textit{anisotropic}. On the other hand, when the magnets are mounted on the surface, the machine is called \textit{isotropic}. For studying the latter type, it is convenient to project the fundamental equations from a reference frame fixed in the stator windings (named \textit{abc}) in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
 In this frame the equations of the machine are:
 \begin{gather}
   0=u_d-Li_q\omega_{me}+L\frac{di_d}{dt}+Ri_d 
@@ -138,7 +138,7 @@ The choice of this frame makes the system of equations describing the generator 
 \label{fig:PMSM}
 \end{figure}
 
-\autoref{fig:PMSM} represents the block diagram of the q-axis of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the electrical converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the rotor imposed by the wind on the rotor.\\
+\autoref{fig:PMSM} represents the block diagram of the q-axis of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the electrical converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the torque imposed by the wind on the rotor.\\
 It could be seen that the aerodynamical torque enters as a disturb in the block diagram. This model is not a description of the real behavior of the \acrshort{WT}, because the $T_R$ is affected by the $\Omega_G$, and so in principle some sort of interaction between these quantities should have been introduced. Unfortunately, this dependency is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved observing that this mechanical dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. Finally for the sake of completeness, it must be remembered that the interactions between rotational speed and aero torque is taken into account into the aerodynamical block of the simulation. \\
 
  Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation.
@@ -170,16 +170,17 @@ It could be seen that the aerodynamical torque enters as a disturb in the block 
 %    \label{fig:iq_control}
 % \end{figure}
 The friction has been considered $ 0 \, \mesunt{\kilo\gram\square\meter\per\second}$ because it has been already considered in the equivalent one of the transmission. \\
- Once the inverter switching frequency is defined \textcolor{blue}{where can I find some references justifying this choice}, then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
+ Once the inverter switching frequency is defined \textcolor{blue}{where can I find some references justifying this choice?}, then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
  \begin{gather}
  \uptau_{c}=\frac{\frac{1}{f_{inverter}}}{2}=\frac{\frac{1}{1000}}{2}=500 \ \ \mesunt{\micro \second}
  \end{gather}
- In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches in a synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually at three half of the switching delay.\\
-
-It is possible to derive the steady state power curve for the chosen generator starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, considering both a unit or lower efficiency.
+ In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually at three half of the switching delay.
+ 
+ \subsubsection{Extension of the static power curve}\label{subsec:genertaor_power_curve}
+ Now that the generator's characteristics have been introduced, it is possible to extend the static power curve presented in \autoref{subsec:static_power_curve} taking into account the electrical losses.These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, considering both a unit or lower efficiency.
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.5\textwidth]{images/vectorial/fig_static_electro_power.eps}
+  \includegraphics[width=0.65\textwidth]{images/vectorial/fig_static_electro_power.eps}
   \caption{Incoming mechanical, outgoing electrical, and lost power as function of the WS}
   \label{fig:fig_static_electro_power}
 \end{figure}
