@@ -51,34 +51,49 @@ max_tmp = max(lookup_cP);
 lambda_opt = lambda_vector(lambda_pos);               % TSR for cP_max
 theta_opt = pitch_vector(theta_pos);                  % pitch for cP_max
 
+% Remove the outlyer
+while cP_max > 1
+  cP_tmp = mean([lookup_cP(theta_pos - 1, lambda_pos), lookup_cP(theta_pos + 1, lambda_pos), lookup_cP(theta_pos, lambda_pos - 1), lookup_cP(theta_pos, lambda_pos + 1)]);
+  lookup_cP(theta_pos, lambda_pos) = cP_tmp;
+  max_tmp = max(lookup_cP);       
+  [~, lambda_pos] = max(max_tmp);                     
+  [cP_max, theta_pos] = max(lookup_cP(:, lambda_pos));  % max cP
+  lambda_opt = lambda_vector(lambda_pos);               % TSR for cP_max
+  theta_opt = pitch_vector(theta_pos);                  % pitch for cP_max
+end
+
 %% Plot
 % contour plot for cP
-contour_plot_cP = figure('Position', get(0, 'Screensize'));
-[C, h] = contourf(lambda_vector, rad2deg(pitch_vector), lookup_cP, ...
-  'ShowText', 'on'); % To display value on the plot use ,'ShowText','on'
-clabel(C,h,'FontSize',font_size*0.8)
+contour_plot_cP = figure('Position', get(0, 'Screensize'), 'Color', 'w');
+[~, lambda_pos_5] = min(abs(lambda_vector - 5));
+[~, lambda_pos_10] = min(abs(lambda_vector - 10));
+[~, theta_pos_2] = min(abs(pitch_vector + 2*pi/180));
+[~, theta_pos_5] = min(abs(pitch_vector - 5*pi/180));
+[C, h] = contourf(lambda_vector(lambda_pos_5:lambda_pos_10), rad2deg(pitch_vector(theta_pos_2:theta_pos_5)), lookup_cP(theta_pos_2:theta_pos_5, lambda_pos_5:lambda_pos_10),'ShowText', 'on'); % To display value on the plot use ,'ShowText','on'
+clabel(C,h,'FontSize',font_size*0.8, 'Interpreter', 'latex')
 hold on
 plot(lambda_opt, theta_opt, 'r.', 'MarkerSize',30)
-text(7.9, 0.4, num2str(cP_max, '%.3f'), 'Color','r', 'FontSize', font_size)
+text(7.9, 0.4, num2str(cP_max, '%.3f'), 'Color','r', 'FontSize', font_size, 'Interpreter', 'latex')
 hold off
 colorbar()
-xlabel('\lambda')
-ylabel('\theta_p (°)')
-title('Contour plot of c_P')
+xlabel('$\lambda$', 'Interpreter', 'latex')
+ylabel('$\theta_p [^\circ]$', 'Interpreter', 'latex')
+title('Contour plot of $c_P$', 'Interpreter', 'latex')
 ax = gca;
 ax.FontSize = font_size;
+export_figure(contour_plot_cP, 'contour_plot_cP.eps', path_images);
 
 % contour plot for cT
-contour_plot_cT = figure('Position', get(0, 'Screensize'));
-[C, h] = contourf(lambda_vector, rad2deg(pitch_vector), lookup_cT, ...
-  'ShowText', 'on');
-clabel(C,h,'FontSize',font_size*0.8)
+contour_plot_cT = figure('Position', get(0, 'Screensize'), 'Color', 'w');
+[C, h] = contourf(lambda_vector(lambda_pos_5:lambda_pos_10), rad2deg(pitch_vector(theta_pos_2:theta_pos_5)), lookup_cT(theta_pos_2:theta_pos_5, lambda_pos_5:lambda_pos_10), 'ShowText', 'on');
+clabel(C,h,'FontSize',font_size*0.8, 'Interpreter', 'latex')
 colorbar()
-xlabel('\lambda')
-ylabel('\theta_p (°)')
-title('Contour plot of c_T')
+xlabel('$\lambda$', 'Interpreter', 'latex')
+ylabel('$\theta_p [^\circ]$', 'Interpreter', 'latex')
+title('Contour plot of $c_T$', 'Interpreter', 'latex')
 ax = gca;
 ax.FontSize = font_size;
+export_figure(contour_plot_cT, 'contour_plot_cT.eps', path_images);
 
 %% Rated wind speed and rated velocity
 V0_rated = (rotor.P_rated/(0.5*rho*cP_max*rotor.A))^(1/3);  % [m/s]
