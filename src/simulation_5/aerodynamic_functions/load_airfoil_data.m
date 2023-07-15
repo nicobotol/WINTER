@@ -1,4 +1,4 @@
-function [aoa, cl_mat, cd_mat] = load_airfoil_data_NREL5MW(filenames)
+function [aoa, cl_mat, cd_mat] = load_airfoil_data(filenames)
 % This function loads the data of the different airfoils and put them into
 % matrices. Each column of these matrices corresponds to one specific
 % airfoil t/c

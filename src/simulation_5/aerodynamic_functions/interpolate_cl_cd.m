@@ -10,11 +10,11 @@ function [cl, cd] = interpolate_cl_cd(aoa, cl_mat, cd_mat, thick_prof, alpha, th
 % thick -> t/c ratio
 
 % initialize the vectors
-clthick = zeros(1,6);
-cdthick = zeros(1,6);
+clthick = zeros(1,length(thick_prof));
+cdthick = zeros(1,length(thick_prof));
 
 %interpolate the values to the different thicknesses
-for k=1:6 % k indicate the airfoil
+for k=1:length(thick_prof) % k indicate the airfoil
   clthick(k) = interp1(aoa(:,k),cl_mat(:,k), alpha);
   cdthick(k) = interp1(aoa(:,k),cd_mat(:,k), alpha);
 end

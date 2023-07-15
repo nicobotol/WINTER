@@ -9,7 +9,6 @@ addpath("wind_series")
 addpath("PMSM")
 addpath("simulink\")
 addpath("plot\")
-addpath("lookup\NREL_5MW\airfoil_data_NREL5MW\")
 
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-15 90]);              % range for picth angle [rad]
@@ -232,11 +231,11 @@ pitch_strategy = 0;  % 0     -> feathering
                      % else  -> no pitch control
 
 %% Airfoil parameters 
-filenames = [ "airfoil_data\cyli1", "airfoil_data\cyli1", "airfoil_data\DU40_A17",... 
-  "airfoil_data\DU35_A17", "airfoil_data\DU30_A17", ...
-  "airfoil_data\DU25_A17", "airfoil_data\DU21_A17","airfoil_data\NA64_A17"];
-blade_filename = "airfoil_data\bladedat.txt";
-thick_prof = [100 100 40.5 35.09 30 25 21 18 ]; % t/c ratio
+filenames = [ "cylin1.txt", "cylin1.txt", "DU40_A17.txt",... 
+  "DU35_A17.txt", "DU30_A17.txt", ...
+  "DU25_A17.txt", "DU21_A17.txt","NA64_A17.txt"];
+blade_filename = "aerodynamic_functions\airfoil_data\bladedat.txt";
+thick_prof = [100 99.99 40.5 35.09 30 25 21 18 ]; % t/c ratio
 [aoa_mat, cl_mat, cd_mat] = load_airfoil_data(filenames);
 [r_vector, c_vector, beta_vector, thick_vector] = load_blade_data( ...
   blade_filename);
@@ -249,7 +248,7 @@ r_item_no_tip = r_item - 1; % number of cross section without the tip
 % column 3 -> rotaional speed [rpm]
 % column 4 -> cP [-]
 % column 5 -> cT [-]
-reference = load('airfoil_data\DTU_10MW_reference.txt'); 
+% reference = load('airfoil_data\DTU_10MW_reference.txt'); 
 
 %% Plotting options
 % colors

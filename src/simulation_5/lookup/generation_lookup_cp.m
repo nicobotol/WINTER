@@ -10,11 +10,11 @@ clc
 
 % add path for the functions for the aerodynamic
 addpath("..\")
-addpath("..\aerodynamic_functions")
-addpath("..\aerodynamic_functions\airfoil_data")
+addpath("aerodynamic_functions");
+addpath("aerodynamic_functions\airfoil_data")
 
 % load the parameters
-parameters_NREL5MW
+parameters
 
 lookup_cP = zeros(pitch_item, lambda_item); % matrix to store cP
 lookup_cT = zeros(pitch_item, lambda_item); % matrix to store cT
@@ -106,6 +106,6 @@ rated_values(5) = cP_max;
 rated_values 
 %%
 % Save the results 
-save('lookup_cP_theta_lambda.mat', 'lookup_cP_NREL5MW');
-save('lookup_cT_theta_lambda.mat', 'lookup_cT_NREL5MW');
-save('rated_values.mat', 'rated_values_NREL5MW');
+save('lookup\lookup_cP_theta_lambda.mat', 'lookup_cP');
+save('lookup\lookup_cT_theta_lambda.mat', 'lookup_cT');
+save('rated_values.mat', 'rated_values');
