@@ -1,16 +1,15 @@
-%% PARAMETERS
+%% PARAMETERS for the NREL5MW
 
 % Add some folders to the path
 addpath("aerodynamic_functions")
 addpath("aerodynamic_functions\airfoil_data")
 addpath("lookup\")
-addpath("lookup\maximization_P_GE\")
 addpath("run")
 addpath("wind_series")
-addpath("controllers")
+addpath("PMSM")
 addpath("simulink\")
 addpath("plot\")
-addpath("utilities\")
+addpath("lookup\NREL_5MW\airfoil_data_NREL5MW\")
 
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-15 90]);              % range for picth angle [rad]
@@ -63,31 +62,6 @@ else
     'Run lookup_pitch.m first']);
 end
 
-if exist('lookup_pitch_P_GE.mat', 'file') 
-  load('lookup_pitch_P_GE.mat');
-  load('rated_values_P_GE.mat');
-  load('lookup_P_GE.mat');
-  lambda_GE = rated_values_P_GE(1); % TSR for the maximization of P_GE
-  cp_GE = rated_values_P_GE(2);     % max power coefficients
-  omega_rated_GE = rated_values_P_GE(3);     % rotor rotatioanal speed
-else
-   disp(['Attention: pitch angle values may not have been computed. ' ...
-    'Run P_GE_maximization.m first']);
-end
-
-if exist('blade_schedule_gains.mat', 'file') 
-  load('blade_schedule_gains.mat');
-else
-   disp(['Attention: blade schedule gains values may not have been computed. ']);
-end
-gs.V0_vect = 12:0.5:25;       % WS [m/s]
-gs.theta_offset = 5*pi/180;   % [rad]
-gs.delta_theta = 0.1*pi/180;  % [rad]
-gs.theta_v = [0:1:25]*pi/180; % [rad]
-gs.omega_phin = 0.6;          % res. freq of the PI controller [rad/s]
-gs.zeta_phi = 0.7;            % damping ratio of the PI controller [rad/s]
-
-
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
 font_size = 25;             % fontsize for plots
@@ -103,36 +77,28 @@ V0_cut_out = 25;            % cut out wind speed [m/s]
 simulation.model = 2;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
-                            % 3 -> with controller based on the generator
-                            % power
 if simulation.model == 1    % without power controller
   simulation.mdl = 'winter_simulink_without_PC'; 
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
-elseif simulation.model == 3 % with power controller considering the generator
-    simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 100*ones(1, 1); % max time to investigaste [s]
+simulation.stop_time = [80]; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 4;        % 1 -> constant wind speed
+simulation.type = 6;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
                             % 6 -> ramp and parametrization plot
-                            % 7 -> with/without blade gain scheduling
-                            % 8 -> with gain scheduling or stall regulation
-                            % 9 -> with different pitching dynamics
-                            % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = 70*ones(3, 1);  % time from the end of the simulation to 
+simulation.plot_time = [];  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 0;% enables or disable plot's autosaving 
+simulation.print_figure = 1;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = [130 130]; % time from the end of the simulation in which to perform the post processing 
+
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -142,8 +108,9 @@ rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
 rotor.P_rated = 10.64e6;    % rated power [W]
 rotor.mass = 1.3016e5;      % mass [kg]
 rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
-rotor.B  = 0;               % rot. friction [kgm^2/s] (computed later !!!!)
-rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % [Nms^2]
+rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
+rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placeholder)
+rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
 
 % Gearbox_parameters
 gearbox.ratio = 1;          % gearbox transmission ratio 
@@ -151,52 +118,42 @@ gearbox.ratio = 1;          % gearbox transmission ratio
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
 generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
-generator.I = 0.0;         % generator iniertia [kgm^2]
+generator.I = 4800;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
-% generator.vll = sqrt(3)*3500;        % rated line-to-line voltage [V]
-% generator.is = 1926;      % rated stator current [A]
-% generator.fe = 15.8;       % rated stator frequency [Hz]
-
-% Olimpo
-% generator.p = 198/2;          % number of poles 320
-% generator.Ld = 5.29e-3;      % d-axis stator inductance [H]
-% generator.Lq = 5.29e-3;      % q-axis stator inductance [H]
-% generator.Rs = 36.6e-3;       % stator resistance [ohm]
-% generator.Lambda = 4.47;   % magnet flux-linkage [Wb]
-
-% Marcelo Lobo
-generator.p = 320/2;          % number of poles 320
+generator.vll = 4e3;        % rated line-to-line voltage [V]
+generator.is = 1443.4;      % rated stator current [A]
+generator.fe = 26.66;       % rated stator frequency [Hz]
+generator.p = 320;          % number of poles
 generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
 generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
-
 generator.tau_c = 500e-6;   % q-axis control time constant [s]
+% generator.p_ctrl = 1e3;   % gain for the Ig reference
+% generator.k_ctrl = 0.01;    % paramter for the Iq refernce
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 8e2;%1.5e3; % Iq controller crossover freq. [rad/s]
-generator.TG_pm = 70;  % phase margin for the speed controller [°]
-generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
+generator.iq_omegaBP = 1.5e3; % Iq controller crossover freq. [rad/s]
+generator.omega_pm = 70;  % phase margin for the speed controller [°]
+generator.omega_omegaBP=generator.iq_omegaBP/10;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
-rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
-generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
+rho*pi*rotor.R^5*cp_max*gearbox.ratio^3/(2*lambda_opt^3); % ref. torque
+                                                          % const. [kgm^2]
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
-% generator.design_TG = 0; % 0 enables manual design of speed controller
-%                             % 1 enables pidtune design of the controller                          
+generator.design_omega = 0; % 0 enables manual design of speed controller
+                            % 1 enables pidtune design of the controller                          
 generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
-generator.bode_plot_TG = 1; % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain 0.5
 generator.power_ctrl_ki=5.5;% power controller gain
 % generator.kp = 7.33e7;
 % generator.kd = 0;
 % generator.ki = 1.32e7;
-% generator.omega1_min = 0;
-% generator.omega2_min = 1.05*generator.omega1_min;
-% generator.omega1_max = 0.90*generator.omega_rated;
-% generator.omega2_max = 0.95*generator.omega_rated;
-% generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
-generator.eta = 0.954;      % efficiency at rated power and speed
+generator.omega1_min = 0;
+generator.omega2_min = 1.05*generator.omega1_min;
+generator.omega1_max = 0.90*generator.omega_rated;
+generator.omega2_max = 0.95*generator.omega_rated;
+generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
 
 % Blade parameters
 blade.mass = 4.3388e4;      % mass [kg]
@@ -205,10 +162,10 @@ blade.zetap = 0.7;          % damping ratio of the pitch actuator
 blade.omegap = 2*pi;        % undamped nat. freq. of the actuator [rad/s]
 blade.pitch_rate=10*pi/180; % maximum pitch rate [rad/s]
 blade.alpha_beta = 2*pi*0.4;% constant for the pitch error filter [rad/s]
-blade.kp_schedule_report = [-59.871 46.281 -7.814 -2.541 1]; % from Olimpo's
-blade.ki_schedule_report = [27.689 -31.926 13.128 -2.405 0.351]; % from Olimpo's
-blade.kp_schedule = blade_schedule_gains{1};% 1.0e+04*[4.3543 -8.7196 7.3927 -3.4753 1.0017 -0.1871 0.0240 -0.0023 0.0002]; %
-blade.ki_schedule = blade_schedule_gains{2};%1.0e+04*[1.9792 -3.9634 3.3603 -1.5797 0.4553 -0.0851 0.0109 -0.0011 0.0001];%
+blade.kp_schedule = [-59.871 46.281 -7.814 -2.541 1];
+blade.ki_schedule = [27.689 -31.926 13.128 -2.405 0.351]*3;
+% blade.kp_schedule = 0.4;
+% blade.ki_schedule = 0.2;
 % blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
 %                       25,26,27;
 %                    2.35,2.35,1.5,1.25,1.08,0.98,0.9,0.82,0.78,0.71,0.68,...
@@ -224,24 +181,28 @@ blade.K1 = 164.13; % Linear coeff. in aero gain scheduling [deg]
 blade.K2 = 702.09; % Quadratic coeff. in aero gain scheduling [deg^2]
 blade.omega2omega0ratio = 1.3; % Relative speed for double nonlinear gain
 blade.pitch_min = 0;        % minimum pitch angle [rad]
-blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*...
-  blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
+blade.kp = 0.592;
+blade.kpp = 4e-9;
+blade.ki = 0.133;
+blade.kip = 4e-9;
+blade.kd = 0;
+
 
 % Wind parameters
-wind.mean = [15 15 15];           % 10 minutes mean wind speed [m/s]]
-wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [15 10];                % 10 minutes mean wind speed [m/s]]
+wind.turbulence = 0.1*wind.mean; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = [10];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [10.5];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(3, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 10.5;        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 14;         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = [1]; % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
-  case {1, 3, 5, 7, 8, 9}
+  case {1, 3, 5}
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6, 10}
+  case {2, 6}
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 
@@ -250,24 +211,20 @@ end
 % Struct where to save the simulations results
 out_store = cell(1, wind.WS_len);
 
-% Transmission damping 
-rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
-
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
-B_eq = 1*(rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
-I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
+B_eq = rotor.B + generator.B/gearbox.ratio^2; % equiv. damping [kgm^2/s]
 
 % Transform the struct of parameters into buses for simulink
-% rotor_bus_info = Simulink.Bus.createObject(rotor); 
-% rotor_bus = evalin('base', rotor_bus_info.busName);
-% generator_bus_info = Simulink.Bus.createObject(generator); 
-% generator_bus = evalin('base', generator_bus_info.busName);
-% gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
-% gearbox_bus = evalin('base', gearbox_bus_info.busName);
-% blade_bus_info = Simulink.Bus.createObject(blade); 
-% blade_bus = evalin('base', blade_bus_info.busName);
+rotor_bus_info = Simulink.Bus.createObject(rotor); 
+rotor_bus = evalin('base', rotor_bus_info.busName);
+generator_bus_info = Simulink.Bus.createObject(generator); 
+generator_bus = evalin('base', generator_bus_info.busName);
+gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
+gearbox_bus = evalin('base', gearbox_bus_info.busName);
+blade_bus_info = Simulink.Bus.createObject(blade); 
+blade_bus = evalin('base', blade_bus_info.busName);
 
 % Pitching startegy (feathering or stall)
 pitch_strategy = 0;  % 0     -> feathering
@@ -275,11 +232,11 @@ pitch_strategy = 0;  % 0     -> feathering
                      % else  -> no pitch control
 
 %% Airfoil parameters 
-filenames = [ "airfoil_data\cylinder", "airfoil_data\FFA-W3-600",  ...
-  "airfoil_data\FFA-W3-480", "airfoil_data\FFA-W3-360", ...
-  "airfoil_data\FFA-W3-301", "airfoil_data\FFA-W3-241"];
+filenames = [ "airfoil_data\cyli1", "airfoil_data\cyli1", "airfoil_data\DU40_A17",... 
+  "airfoil_data\DU35_A17", "airfoil_data\DU30_A17", ...
+  "airfoil_data\DU25_A17", "airfoil_data\DU21_A17","airfoil_data\NA64_A17"];
 blade_filename = "airfoil_data\bladedat.txt";
-thick_prof = [100 60 48 36 30.1 24.1]; % t/c ratio
+thick_prof = [100 100 40.5 35.09 30 25 21 18 ]; % t/c ratio
 [aoa_mat, cl_mat, cd_mat] = load_airfoil_data(filenames);
 [r_vector, c_vector, beta_vector, thick_vector] = load_blade_data( ...
   blade_filename);
@@ -301,10 +258,8 @@ colors_vect = [[0 0.4470 0.7410]; [0.8500 0.3250 0.0980]; ...
                [0.4660 0.6740 0.1880]; [0.3010 0.7450 0.9330]; ...
                [0.6350 0.0780 0.1840]];
 % pathe where to save the images
-path_images = ["C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\report\images"];
-% save the date to identify the figures
-date_fig = string(datetime('now','TimeZone','local','Format', ...
-      'y_MM_d_HH_mm_ss'));  
+path_images = ['C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\' ...
+  '\report\images'];
 
 % parameters for the generator step response plot
 step_t_start = 0.4;
