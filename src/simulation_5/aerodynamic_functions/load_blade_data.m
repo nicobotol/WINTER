@@ -1,4 +1,4 @@
-function [r, c, beta, thick] = load_blade_data_NREL5MW(blade_filename)
+function [r, c, beta, thick] = load_blade_data(blade_filename)
 % Function to upload data of the airfoilfrom the .txt file
 % r -> radius of the sections (m)
 % c -> chord of the section (m)

@@ -11,10 +11,11 @@ addpath("simulink\")
 addpath("plot\")
 
 %% Parameters for the lookup tables generation
-pitch_range = deg2rad([-15 90]);              % range for picth angle [rad]
+pitch_range = deg2rad([-5 5]);              % range for picth angle [rad]
 pitch_item = 2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
-lambda_range = [0 18];                        % range for the TSR (original)
-lambda_item = 2*diff(lambda_range)*3;           % # of guess TSR 
+lambda_range = [7 8];                        % range for the TSR (original)
+lambda_item = 1 + 2*diff(lambda_range)*3;           % # of guess TSR 
+lambda_range = [lambda_range, 7.69];
 % distribute lambda and TSR in their ranges
 lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
 pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
@@ -50,6 +51,10 @@ if exist('rated_values.mat', 'file')
   lambda_opt = rated_values(4);             % optimum TSR
   cp_max = rated_values(5);                 % maximum cp
 else
+  lambda_opt = 0;
+  cp_max = 0;
+  omega_rated = 0;
+  V0_rated = 0;
   disp(['Attention: rated values may not have been computed. ' ...
     'Run lookup_cp.m first']);
 end
@@ -99,14 +104,14 @@ simulation.print_figure = 1;% enables or disable plot's autosaving
 simulation.seed = 3;        % seed for the random number generation
 
 % Rotor parameters
-rotor.R = 89.17;            % rotor radius [m]
+rotor.R = 63;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
 rotor.blades = 3;           % number of blades [#]
 rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
 rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
-rotor.P_rated = 10.64e6;    % rated power [W]
-rotor.mass = 1.3016e5;      % mass [kg]
-rotor.I = 1.5617e8;         % inertia wrt rotational axis [kgm^2]
+rotor.P_rated = 5e6;    % rated power [W]
+rotor.mass =0 ;      % mass [kg]
+rotor.I = 0;         % inertia wrt rotational axis [kgm^2]
 rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]
 rotor.B  = 1000;               % rotational friction [kgm^2/s] (random placeholder)
 rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3);
@@ -117,7 +122,7 @@ gearbox.ratio = 1;          % gearbox transmission ratio
 % Generator parameters
 generator.P_rated = rotor.P_rated; % rated power [W]
 generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
-generator.I = 4800;         % generator iniertia [kgm^2]
+generator.I =0;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
 generator.vll = 4e3;        % rated line-to-line voltage [V]
 generator.is = 1443.4;      % rated stator current [A]
@@ -231,9 +236,9 @@ pitch_strategy = 0;  % 0     -> feathering
                      % else  -> no pitch control
 
 %% Airfoil parameters 
-filenames = [ "cylin1.txt", "cylin1.txt", "DU40_A17.txt",... 
-  "DU35_A17.txt", "DU30_A17.txt", ...
-  "DU25_A17.txt", "DU21_A17.txt","NA64_A17.txt"];
+filenames = [ "cylin1.txt", "cylin2.txt", "DU40_A17.txt",... 
+  "DU35_A17.txt", "DU30_A17.txt",...
+  "DU25_A17.txt", "DU21_A17.txt","DU21_A17.txt"];
 blade_filename = "aerodynamic_functions\airfoil_data\bladedat.txt";
 thick_prof = [100 99.99 40.5 35.09 30 25 21 18 ]; % t/c ratio
 [aoa_mat, cl_mat, cd_mat] = load_airfoil_data(filenames);
