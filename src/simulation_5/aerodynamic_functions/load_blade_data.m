@@ -5,8 +5,8 @@ function [r, c, beta, thick] = load_blade_data(blade_filename)
 % beta -> twist angle of the section (deg)
 % thick -> t/c ratio
 % blade_filaname -> string of the file with the blade data
-
-mat = readmatrix(blade_filename);
+% opts.CommentStyle = '%';
+mat = readmatrix(blade_filename, "CommentStyle", "%");
 r(:) = mat(:, 1);
 beta(:) = deg2rad(mat(:, 3));
 c(:) = mat(:, 2);

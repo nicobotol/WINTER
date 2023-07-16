@@ -11,9 +11,9 @@ addpath("simulink\")
 addpath("plot\")
 
 %% Parameters for the lookup tables generation
-pitch_range = deg2rad([-5 5]);              % range for picth angle [rad]
+pitch_range = deg2rad([-5 40]);              % range for picth angle [rad]
 pitch_item = 2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
-lambda_range = [7 8];                        % range for the TSR (original)
+lambda_range = [0 15];                        % range for the TSR (original)
 lambda_item = 1 + 2*diff(lambda_range)*3;           % # of guess TSR 
 lambda_range = [lambda_range, 7.69];
 % distribute lambda and TSR in their ranges
@@ -253,7 +253,7 @@ r_item_no_tip = r_item - 1; % number of cross section without the tip
 % column 3 -> rotaional speed [rpm]
 % column 4 -> cP [-]
 % column 5 -> cT [-]
-% reference = load('airfoil_data\DTU_10MW_reference.txt'); 
+reference = load('airfoil_data\NREL_5MW_reference.txt', "CommentStyle","%"); 
 
 %% Plotting options
 % colors
