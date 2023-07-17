@@ -21,11 +21,25 @@ lambda_item = 2*diff(lambda_range)*3;           % # of guess TSR
 lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
 pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
+pitch_range_3v = deg2rad([0 35]);              % range for picth angle [rad]
+omega_range_3v = 1.01*[0.5 1.5];                      % range for rotational speed
+omega_range_3v = 1.01*[0 1.5];                      % range for rotational speed
+velocity_range_3v = [2, 27];                    % range for wind speed
+velocity_range_3v = [0, 27];                    % range for wind speed
+pitch_item_3v = 45;              % range for picth angle [rad]
+omega_item_3v = 20;                              % # of rotational speed
+velocity_item_3v = 25;
+omega_vector_3v = linspace(omega_range_3v(1), omega_range_3v(2), omega_item_3v); % [rad/s] rotational speeds
+velocity_vector_3v = linspace(velocity_range_3v(1), velocity_range_3v(2), velocity_item_3v);
+pitch_vector_3v = linspace(pitch_range_3v(1), pitch_range_3v(2), pitch_item_3v);
+
 % load mesh for cP, cT, rated values, and pitch angle (computed in 
 % lookup_cp.m and lookup_pitch.m)
 if exist('lookup_cP_theta_lambda.mat', 'file')
   load('lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
   load('lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
+  load('lookup_cP_3v_theta_lambda.mat'); % cP_3v(omega, pitch angle, V0)
+  load('lookup_cT_3v_theta_lambda.mat'); % cT_3v(omega, pitch angle, V0)
   load('lookup_static_values.mat');   % static values for rows:
                                       % 1 -> wind speed [m/s]
                                       % 2 -> rotor rotational speed [rad/s]

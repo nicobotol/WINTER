@@ -17,12 +17,18 @@ function [cp_partial, cT_partial, pt, pn] = cP_cT_partial(r_item_no_tip, r_vecto
       %pn = zeros(1, r_item_no_tip);
 
       % compute the a and a_prime with the iterative method
-      [a, a_prime, ct, cn, ~] = induction_factor_convergence(a_guess, ...
+      [a, a_prime, ct, cn, phi] = induction_factor_convergence(a_guess, ...
         a_prime_guess, R, r, lambda, beta, Theta_p, B, sigma, aoa_mat, ...
         cl_mat, cd_mat, thick_prof, thick, fake_zero, i_max);
       
       cp_partial(i) = r*((1 - a)^2 + (lambda*r/R*(1 + a_prime))^2)*c*ct;
       cT_partial(i) = ((1 - a)^2 + (lambda*r/R*(1 + a_prime))^2)*c*cn;
+      % F = tip_loss(B, R, r, phi); % Prandtl tip loss factor
+      % if a <= 1/3
+      %   cT_partial(i) = 4*a*F*(1 - a);
+      % else
+      %   cT_partial(i) = 4*a*F*(1 - 0.25*(5 -3*a)*a);
+      % end
 
       pt(i) = 0.5 * rho * (V0^2*(1 - a)^2 + (1 + a_prime)^2*omega^2*r^2)*c*ct; % pt coefficient
       pn(i) = 0.5 * rho * (V0^2*(1 - a)^2 + (1 + a_prime)^2*omega^2*r^2)*c*cn; % pn coefficient
