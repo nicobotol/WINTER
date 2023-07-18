@@ -38,8 +38,8 @@ pitch_vector_3v = linspace(pitch_range_3v(1), pitch_range_3v(2), pitch_item_3v);
 if exist('lookup_cP_theta_lambda.mat', 'file')
   load('lookup_cP_theta_lambda.mat'); % cP(TSR, pitch angle)
   load('lookup_cT_theta_lambda.mat'); % cT(TSR, pitch angle)
-  load('lookup_cP_3v_theta_lambda.mat'); % cP_3v(omega, pitch angle, V0)
-  load('lookup_cT_3v_theta_lambda.mat'); % cT_3v(omega, pitch angle, V0)
+  load('lookup_cP_3v_omega_theta_V0.mat'); % cP_3v(omega, pitch angle, V0)
+  load('lookup_cT_3v_omega_theta_V0.mat'); % cT_3v(omega, pitch angle, V0)
   load('lookup_static_values.mat');   % static values for rows:
                                       % 1 -> wind speed [m/s]
                                       % 2 -> rotor rotational speed [rad/s]

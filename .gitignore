@@ -40,3 +40,5 @@ src/simulation_5/lookup_cP_3v_theta_lambda.mat
 src/simulation_5/lookup_cP_theta_lambda.mat
 src/simulation_5/lookup_cT_3v_theta_lambda.mat
 src/simulation_5/lookup_cT_theta_lambda.mat
+src/simulation_5/lookup_cP_3v_omega_theta_V0.mat
+src/simulation_5/lookup_cT_3v_omega_theta_V0.mat

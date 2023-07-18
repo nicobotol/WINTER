@@ -16,16 +16,15 @@ parameters
 
 lookup_cP_3v_u = zeros(omega_item_3v, pitch_item_3v, velocity_item_3v); % matrix to store cP
 lookup_cT_3v_u = zeros(omega_item_3v, pitch_item_3v, velocity_item_3v); % matrix to store cT
-% lookup_cP(theta, lambda)
+lambda_s1 = zeros(omega_item_3v, pitch_item_3v, velocity_item_3v); 
+lambda_s2 = zeros(omega_item_3v, pitch_item_3v, velocity_item_3v); 
+
 
 for i = 1:velocity_item_3v
   V0 = velocity_vector_3v(i);
-  % T = 1/2*rho*rotor.A*lookup_cT_3v(:, :, i).*V0.^2;         % [N] thrust
-  % lambda_s_1 = V0 + sqrt(V0.^2 - 2*T/(rho*pi*rotor.R^2));  % [m/s] speed at the streamtube section
-  % lambda_s_2 = V0 - sqrt(V0.^2 - 2*T/(rho*pi*rotor.R^2)); % [m/s] speed at the streamtube section
-
-  lambda_s1 = V0/2*(1 + sqrt(1 - lookup_cT(:, :, i)));
-  lambda_s1 = V0/2*(1 - sqrt(1 - lookup_cT(:, :, i)));
+  lambda_s1(:, :, i) = V0/2*(1 + sqrt(1 - lookup_cT_3v(:, :, i)));
+  lambda_s2(:, :, i) = V0/2*(1 - sqrt(1 - lookup_cT_3v(:, :, i)));
+  pause
 end
 
 %%
