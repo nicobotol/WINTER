@@ -1,4 +1,4 @@
-%% cP as function of pitch angle, V0 and omega
+%% unstedy cP as function of pitch angle, V0 and omega
 % This file is aimed to create a mesh of cP and cT as function of the pitch
 % angle, the wind velocity and the rotational speed
 
@@ -26,15 +26,12 @@ theta_max = max(pitch_vector_3v)*1;
 omega_max = max(omega_vector_3v);
 contour_plot_A = figure('Position', get(0, 'Screensize'), 'Color', 'w');
 hold on
+a = [0 0 0];
+b = [omega_max, theta_max/2, 0];
+c = [omega_max/2, theta_max/3, V0_max];
 for i = 1:omega_item_3v
   lhs = [];
   omega = omega_vector_3v(i);
-  % rhs = V0_max*(omega*theta_max - omega_max*pitch_vector_3v)/(omega_max*theta_max);
-  % rhs = pitch_vector_3v*V0_max/theta_max;
-  % rhs = - V0_max*((omega - omega_max)*theta_max + omega_max*pitch_vector_3v)/(omega_max*theta_max);
-  a = [0 0 0];
-  b = [omega_max, theta_max/2, 0];
-  c = [omega_max/2, theta_max/3, V0_max];
   rhs = plane(a, b, c, omega, pitch_vector_3v);
   lhs = velocity_vector_3v;
   A(i, :, :) = lhs.' - rhs < 0.1;
@@ -123,9 +120,17 @@ for i = 1:omega_item_3v
   u_store = [u_store, [omega_tmp; theta_tmp; V0_tmp; cP_1_tmp; cP_2_tmp; cT_1_tmp; cT_2_tmp]];
 end
 
+% Remove from the u_store mat the values corresponding to lmbda_1 because they are not phesible 
+keep = A_store(4, :) > 0;
+lookup_cP_u = zeros(4, sum(keep == 1));
+lookup_cT_u = zeros(4, sum(keep == 1));
+lookup_cP_u(1:3, :) = u_store(1:3, keep);
+lookup_cP_u(4, :)   = u_store(5, keep);
+lookup_cT_u(1:3, :) = u_store(1:3, keep);
+lookup_cT_u(4, :)   = u_store(7, keep);
+
 %% Plot
 % contour plot for cP
-keep = A_store(4, :) > 0;
 contour_plot_cP = figure('Position', get(0, 'Screensize'), 'Color', 'w');
 scatter3(store(1, keep), store(2, keep), store(3, keep), 40, store(4, keep), 'filled')
 hold off
@@ -151,32 +156,34 @@ ax = gca;
 ax.FontSize = font_size;
 % export_figure(contour_plot_cT, 'contour_plot_cT_3v.eps', path_images);
 
-% contour plot for cT_u
-contour_plot_cT_u = figure('Position', get(0, 'Screensize'), 'Color', 'w');
+% contour plot for cP_u
+contour_plot_cP_u = figure('Position', get(0, 'Screensize'), 'Color', 'w');
 scatter3(u_store(1, keep), u_store(2, keep), u_store(3, keep), 40, u_store(5, keep), 'filled')
 hold off
 colorbar()
 xlabel('$\omega$ [rad/s]', 'Interpreter', 'latex')
 ylabel('$\theta_p [^\circ]$', 'Interpreter', 'latex')
 zlabel('$V_0$ [m/s]', 'Interpreter', 'latex')
-title('3 varaibles $c_T$ map', 'Interpreter', 'latex')
+title('3 varaibles $c_P^u$ map', 'Interpreter', 'latex')
 ax = gca;
 ax.FontSize = font_size;
 % export_figure(contour_plot_cT_u, 'contour_plot_cT_3v_u.eps', path_images);
 
-contour_plot_cT_u_2 = figure('Position', get(0, 'Screensize'), 'Color', 'w');
-scatter3(u_store(1, keep), u_store(2, keep), u_store(3, keep), 40, u_store(6, keep), 'filled')
+contour_plot_cT_u = figure('Position', get(0, 'Screensize'), 'Color', 'w');
+scatter3(u_store(1, keep), u_store(2, keep), u_store(3, keep), 40, u_store(7, keep), 'filled')
 hold off
 colorbar()
 xlabel('$\omega$ [rad/s]', 'Interpreter', 'latex')
 ylabel('$\theta_p [^\circ]$', 'Interpreter', 'latex')
 zlabel('$V_0$ [m/s]', 'Interpreter', 'latex')
-title('3 varaibles $c_T$ map', 'Interpreter', 'latex')
+title('3 varaibles $c_T^u$ map', 'Interpreter', 'latex')
 ax = gca;
 ax.FontSize = font_size;
-% export_figure(contour_plot_cT_u_2, 'contour_plot_cT_3v_u.eps', path_images);
+% export_figure(contour_plot_cT_u, 'contour_plot_cT_3v_u.eps', path_images);
 
 %%
 % Save the results
 save('lookup_cP_3v_omega_theta_V0.mat', 'lookup_cP_3v');
 save('lookup_cT_3v_omega_theta_V0.mat', 'lookup_cT_3v');
+save('lookup_cP_3v_omega_theta_V0_u.mat', 'lookup_cP_u');
+save('lookup_cT_3v_omega_theta_V0_u.mat', 'lookup_cT_u');
