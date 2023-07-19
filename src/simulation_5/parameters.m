@@ -12,12 +12,14 @@ addpath("plot\")
 
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-5 40]);              % range for picth angle [rad]
-pitch_item = 2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
-lambda_range = [0 15];                        % range for the TSR (original)
-lambda_item = 1 + 2*diff(lambda_range)*3;           % # of guess TSR 
-lambda_range = [lambda_range, 7.69];
+pitch_item = 50;%2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
+lambda_range = [5 10];%[0 15];                        % range for the TSR (original)
+lambda_item = 20;%1 + 2*diff(lambda_range)*3;           % # of guess TSR 
+lambda_range = [lambda_range];
 % distribute lambda and TSR in their ranges
 lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
+lambda_vector = sort([lambda_vector, 7.55]);
+lambda_item = lambda_item + 1;
 pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
 
 % load mesh for cP, cT, rated values, and pitch angle (computed in 
@@ -109,7 +111,7 @@ rotor.A = rotor.R^2*pi;     % rotor area [m^2]
 rotor.blades = 3;           % number of blades [#]
 rotor.V0_cutin = 4;         % cut in wind velocity [m/s]
 rotor.V0_cutout = 25;       % cut out wind velocity [m/s]
-rotor.P_rated = 5e6;    % rated power [W]
+rotor.P_rated = 5.296610e6;    % rated power [W]
 rotor.mass =0 ;      % mass [kg]
 rotor.I = 0;         % inertia wrt rotational axis [kgm^2]
 rotor.omega_R = lambda_opt*10.5/rotor.R;  % initial rotational speed [rad/s]

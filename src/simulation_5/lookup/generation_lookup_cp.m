@@ -104,8 +104,9 @@ rated_values(3) = omega_rated_rpm;
 rated_values(4) = lambda_opt;
 rated_values(5) = cP_max;
 rated_values 
+
 %%
 % Save the results 
-save('lookup\lookup_cP_theta_lambda.mat', 'lookup_cP');
-save('lookup\lookup_cT_theta_lambda.mat', 'lookup_cT');
-save('rated_values.mat', 'rated_values');
+% save('lookup\lookup_cP_theta_lambda.mat', 'lookup_cP');
+% save('lookup\lookup_cT_theta_lambda.mat', 'lookup_cT');
+% save('rated_values.mat', 'rated_values');
