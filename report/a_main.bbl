@@ -19,6 +19,63 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global}
+    \entry{Burman2011IntegratingRE}{inproceedings}{}
+      \name{author}{7}{}{%
+        {{hash=25a497efd928d57c98421b4cc20e8e35}{%
+           family={Burman},
+           familyi={B\bibinitperiod},
+           given={Kari},
+           giveni={K\bibinitperiod}}}%
+        {{hash=65982711d333274ca04d4f4694ecc541}{%
+           family={Olis},
+           familyi={O\bibinitperiod},
+           given={Daniel\bibnamedelima R.},
+           giveni={D\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=0763f8e44e1d4478a693c085cf5fcc40}{%
+           family={Gevorgian},
+           familyi={G\bibinitperiod},
+           given={Vahan},
+           giveni={V\bibinitperiod}}}%
+        {{hash=e052c6ce1c2e7e7a2d886514ee9a3ac5}{%
+           family={Warren},
+           familyi={W\bibinitperiod},
+           given={Adam},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8475d96893b5deec63ba4c65ce5af8dd}{%
+           family={Butt},
+           familyi={B\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=4b246a3a585c6f386fe4f55539c47baf}{%
+           family={Lilienthal},
+           familyi={L\bibinitperiod},
+           given={Peter\bibnamedelima D.},
+           giveni={P\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=d7746e40d8b438bf24a645af852c9328}{%
+           family={Glassmire},
+           familyi={G\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{6aee8cf99c19f89d2a56c2f75fd836e2}
+      \strng{fullhash}{0f98c745d06f473c1eb2db9210c05535}
+      \strng{bibnamehash}{6aee8cf99c19f89d2a56c2f75fd836e2}
+      \strng{authorbibnamehash}{6aee8cf99c19f89d2a56c2f75fd836e2}
+      \strng{authornamehash}{6aee8cf99c19f89d2a56c2f75fd836e2}
+      \strng{authorfullhash}{0f98c745d06f473c1eb2db9210c05535}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Integrating Renewable Energy into the Transmission and Distribution System of the U. S. Virgin Islands}
+      \field{year}{2011}
+      \verb{urlraw}
+      \verb https://api.semanticscholar.org/CorpusID:109764595
+      \endverb
+      \verb{url}
+      \verb https://api.semanticscholar.org/CorpusID:109764595
+      \endverb
+    \endentry
     \entry{Olimpo_Anaya‐Lara}{book}{}
       \name{author}{4}{}{%
         {{hash=37bc733166f311ce7eac4d82f2f7f21a}{%
@@ -59,8 +116,8 @@
       \strng{editorbibnamehash}{b509b361f8d7741155032e8ddc8e6caf}
       \strng{editornamehash}{b509b361f8d7741155032e8ddc8e6caf}
       \strng{editorfullhash}{b509b361f8d7741155032e8ddc8e6caf}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Offshore Wind Energy Technology}
@@ -83,8 +140,8 @@
       \strng{authorbibnamehash}{29326466f8cb350ea6fb2171dba1703c}
       \strng{authornamehash}{29326466f8cb350ea6fb2171dba1703c}
       \strng{authorfullhash}{29326466f8cb350ea6fb2171dba1703c}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Aerodynamics of Wind Turbines}
@@ -531,8 +588,8 @@
       \strng{authorbibnamehash}{78ea19f4aa01f5f8dc27d5320386b4fc}
       \strng{authornamehash}{78ea19f4aa01f5f8dc27d5320386b4fc}
       \strng{authorfullhash}{58fecfd10a7cae67531f24596a03d5d5}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Renewable and Sustainable Energy Reviews}
@@ -723,8 +780,8 @@
       \strng{authorbibnamehash}{e11f1baf0ac28d4a6731902a60ee6620}
       \strng{authornamehash}{e11f1baf0ac28d4a6731902a60ee6620}
       \strng{authorfullhash}{e11f1baf0ac28d4a6731902a60ee6620}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{note}{Contract Number: EUDP project Light Rotor; Project Number 46-43028-Xwp3 The report number is DTU-Wind-Energy-Report-E-0028 and not DTU-Wind-Energy-Report-E-0018 as stated inside the report}

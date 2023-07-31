@@ -1,3 +1,71 @@
 \newpage
 \section{Introduction to the Wind Turbines}\label{sec:c_WT_characteristics}
-Write something about the historical evolution of the technology, the state of the art, and some prospective of development. 
+Write something about the historical evolution of the technology, the state of the art, and some prospective of development. \\
+There is not a wide agreement about about the reachable size of wind turbines, however the upscaling of some components requires some changes in the fundamental technology. For example, scaling the blades of the same quantity in all the directions does not increase the aerodynamic stress on them since both their load and their resistance scales with the same ratio, but at the same time increases the gravitational load with the cubic of the scaling ratio. \\
+
+\subsection{Wind turbine generator architectures}
+Wind turbines are usually divided into four categories according to the generator architecture. These are divided between \textit{fixed speed} (Type I) and \textit{variable speed} (Type II, III, and IV). 
+\begin{figure}[htb]
+  \centering
+  \begin{subfigure}{0.49\columnwidth}
+    \includegraphics[width=\columnwidth]{images/type1.png}
+    \caption{Type I: fixed rotational speed}
+    \label{fig:type1}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \includegraphics[width=\columnwidth]{images/type2.png}
+    \caption{Type II: wound rotor induction generator and variable resistor}
+    \label{fig:type2}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \includegraphics[width=\columnwidth]{images/type3.png}
+    \caption{Type III: Doubly Fed induction Generator and power interface for part of the generated power}
+    \label{fig:type3}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \includegraphics[width=\columnwidth]{images/type4.png}
+    \caption{Type IV: variable rotational speed with full size power interface}
+    \label{fig:type4}
+  \end{subfigure}
+  \caption{Classical subdivision of the wind turbine architectures, source \cite{Burman2011IntegratingRE}. }
+\end{figure}
+
+\subsubsection{Type I}
+These turbines work at fixed rotational speed. \\
+The generator is a three phase squirrel-cage induction generator, which has to rotate at a rotational speed with a range of 1\% about the synchronous one.\\ 
+Since the frequency of the generated voltage is almost constant, then the connection to the grid can be done with a transformer. \\
+At the startup some power electronics has to be used to limit the current.\\
+The power limitation above the rated one is usually ensured by the aerodynamic stall. \\
+Their simple and robust topology which made them reliable and with low initial costs. On the other hand, they have lower energy conversion capacity because the fixed speed limits a lot the working point. \\
+The configuration can be seen in \autoref{fig:type1}.
+
+\subsubsection{Type II}
+These turbines work at variable rotational speed. \\
+The generator is a wound rotor induction generator. Below rated it works similarly to the fixed speed one. On the other hand, its control above rated is done through a variable resistor in series with the rotor circuit, that allows to change the rotational speed of few percentage points (about 10\%) around the nominal one. The change in speed has the consequence of increasing the energy lost in the resistor.
+The configuration can be seen in \autoref{fig:type2}.
+
+\subsubsection{Type III}
+These turbines work at variable rotational speed. \\
+The generator is a Doubly Fed Induction Generator (DFIG). The rotor is connected to the grid via a power electronic interface allowing a variable frequency voltage to flow in both the directions, enabling the rotor mechanical speed to be decoupled from the synchronous frequency of the electrical network, and so allows the turbine to operate at variable speeds. This interface is usually designed for 30\% of the rated generator power, while the other goes through the stator. The generator can operate both above or below the synchronous velocity. In the first, called \textit{super-synchronous}, power is send from the rotor to the network. On the other hand, in \textit{sub-synchronous} mode the rotor absorbs power from the network.\\
+The configuration can be seen in \autoref{fig:type3}.
+
+\subsubsection{Type IV}
+These turbine work at variable rotational speed. \\
+The generator can be in principle of different type, such as asynchronous, conventional synchronous, ans permanent magnets. The power produced from all of them pass through a power converter that decouple the characteristic of the generator side from the ones of the grid ones. This allows to change the generator frequency independently from the grid one and so the variable speed operation. 
+The configuration can be seen in \autoref{fig:type4}.
+
+
+
+% made a table with three columns and 4 rows
+% \begin{table}[h]
+%   \centering
+%   \begin{tabular}{ccccc}
+%   \toprule
+%   Architecture & Speed & Generator & Control below & Control above & Soft start required\\
+%   \midrule
+%   Type I & Fixed & Squirrel-cage induction & Fixed speed & Aerodynamic stall & Yes \\
+%   Type II & Variable & Wound rotor induction & Stall & Rotor resistance & Yes\\
+%   Type III & Variable & Double Fed Induction Generator & Stall & Pitch & No\\
+%   Type IV & Variable & Synchronous & Stall & Pitch & No\\
+%   \end{tabular}
+% \end{table}
