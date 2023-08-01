@@ -55,6 +55,9 @@
 \usepackage{changepage,threeparttable} % for wide tables
 \usepackage{algorithm} % for the pseudocode
 \usepackage{algpseudocode} % for the pseudocode
+\usepackage{varwidth} %for the varwidth minipage environment
+\newcolumntype{M}{>{\begin{varwidth}{4cm}}c<{\end{varwidth}}} %M is for Maximal column
+
 
 \definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
 \definecolor{mylilas}{RGB}{170,55,241}

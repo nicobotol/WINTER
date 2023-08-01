@@ -44,3 +44,10 @@ src/simulation_5/lookup_cP_3v_omega_theta_V0.mat
 src/simulation_5/lookup_cT_3v_omega_theta_V0.mat
 src/simulation_5/lookup_cP_3v_omega_theta_V0_u.mat
 src/simulation_5/lookup_cT_3v_omega_theta_V0_u.mat
+*.bbl
+*.out
+*.acn
+*.fls
+*.toc
+*.glo
+*.ist

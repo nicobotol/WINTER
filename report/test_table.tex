@@ -1,0 +1,26 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}  
+\usepackage[english]{babel}
+\usepackage{float}   
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{varwidth} %for the varwidth minipage environment
+\newcolumntype{M}{>{\begin{varwidth}{4cm}}c<{\end{varwidth}}} %M is for Maximal column
+
+
+\begin{document}
+
+\section{Ciao}
+\begin{table}[h]
+  \centering
+  \begin{tabular}{ccMMc}
+    \toprule
+  Type & Speed & Generator & Main control feature & Power electronic\\ \midrule
+   I & Fixed & Squirrel-cage induction & Aerodynamic stall & Soft start \\ 
+   II & Variable & Wound rotor induction &  Rotor resistance & Soft start\\
+   III & Variable & Double Fed Induction &  Blade pitch \& power converter & Partial B2B\\
+   IV & Variable & Permanent Magnet Synchronous &  Blade pitch \& power converter & Full scale B2B\\
+   \bottomrule
+  \end{tabular}
+\end{table}
+\end{document}
