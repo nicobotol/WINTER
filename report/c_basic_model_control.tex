@@ -64,28 +64,28 @@ The saturation block constraints the reference power in between $P_G^* \in \left
 The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
 
 \subsection{Generator's torque reference synthesis based on generator}\label{subsec:method_control_P_GE}
-In this section another approach to the turbine control is proposed, and it is based on the maximization of the power at the generator side of the driveline rather than the rotor one. In fact in general it is not true that the maximization of the power sent to the grid happens when the maximum power is extracted by the wind. \textcolor{red}{Add some references to this type of study}. Also this type of control is studied separating the operational conditions below and above wind speed.\\
+In this section another approach to the turbine control is proposed, and it is based on the maximization of the power at the generator side of the driveline rather than the rotor one. In fact in general it is not true that the maximization of the power sent to the grid happens when the maximum power is extracted by the wind. \textcolor{red}{Add some references to this type of study - I have not found them}. Also this type of control is studied separating the operational conditions below and above wind speed.\\
 
 First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
-Starting from a torque balance, the \textit{q-axis} current can be expressed as \textcolor{red}{introduce the transmission ratio in these equations}:
+Starting from a torque balance, the \textit{q-axis} current can be expressed as:
 \begin{gather}
-  T_G = T_R - B_{eq}\omega = \frac{P_W}{\omega} - B_{eq}\omega = \frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} - B_{eq}\omega = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow \notag \\ 
-  \Rightarrow iq = \frac{A \, c_P \, \rho \, V_0^3 \,-\,2B\omega^2}{3\omega\,p\,\Lambda} 
+  T_G^G = n\left(T_R^R - B_{eq}^R\omega^R\right) = n\left(\frac{P_W}{\omega} - B_{eq}\omega\right) = n\left(\frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega)}{2\omega} - B_{eq}\omega\right) = \notag \\
+   = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow iq = \frac{n\left(A \, c_P \, \rho \, V_0^3 \,-\,2B\omega^2\right)}{3\omega\,p\,\Lambda} 
 \end{gather}
 then it can be substituted in the expression of the power at the generator:
 \begin{gather}
-  P_{G, out} = P_{G, in} - R_s i_q^2 = T_G \omega - R_s i_q^2 = \\ \notag
-  = \left(-B\,\omega + \frac{A\,c_P\,\rho\,V_0^3}{2\omega}\right)\omega - \frac{R_s\left(A\,V_0^3\,c_P\,\rho - 2B\omega^2\right)^2}{9\,\omega^2\,p^2\,\Lambda^2} \label{eq:P_G_out_eq}
+  P_{G, out} = P_{G, in} - R_s i_q^2 = T_G^G \frac{\omega}{n} - R_s i_q^2 = \\ \notag
+  = \left(-B\,\omega + \frac{A\,c_P\,\rho\,V_0^3}{2\omega}\right)\omega - \frac{R_s\, n^2\left(A\,V_0^3\,c_P\,\rho - 2B\omega^2\right)^2}{9\,\omega^2\,p^2\,\Lambda^2} \label{eq:P_G_out_eq}
 \end{gather}
 The tip speed ratio can be introduced:
 \begin{gather}
-  P_{G, out} = \left(-B\frac{\lambda V_0}{R} + \frac{A\,c_P\,\rho\,V_0^2\,R}{2\lambda}\right)\frac{\lambda \, V_0}{R} - \frac{R_s\,R\left(A\,V_0^3\,c_P\,\rho - 2B\left(\frac{\lambda V_0}{R}\right)^2\right)^2}{9\,\lambda^2V_0^2\,p^2\,\Lambda^2}\label{eq:P_G_out_lambda}
+  P_{G, out} = \left(-B\frac{\lambda V_0}{R} + \frac{A\,c_P\,\rho\,V_0^2\,R}{2\lambda}\right)\frac{\lambda \, V_0}{R} - \frac{R_s\,R^2\,n\left(A\,V_0^3\,c_P\,\rho - 2B\left(\frac{\lambda V_0}{R}\right)^2\right)^2}{9\,\lambda^2V_0^2\,p^2\,\Lambda^2}\label{eq:P_G_out_lambda}
 \end{gather} 
 and to highlight the terms composing this power expression, the equation can be rewritten as:
 \begin{gather} 
-   P_{G, out} = \frac{A\,c_P\,\rho\,V_0^3}{2} - \frac{R_s\,A^2\,c_P^2\,\rho^2\,V_0^4\,R^2}{9\,\lambda^2\,p^2\,\Lambda^2} + \notag \\
-   +B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} =  \notag \\
-   = \frac{A\,c_P\,\rho\,V_0^3}{2} - R_s \left(\frac{T_R}{3/2p\Lambda}\right)^2 + B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} \label{eq:P_G_out_damping}
+   P_{G, out} = \frac{A\,c_P\,\rho\,V_0^3}{2} - \frac{R_s\,n^2\,A^2\,c_P^2\,\rho^2\,V_0^4\,R^2}{9\,\lambda^2\,p^2\,\Lambda^2} + \notag \\
+   +B\left(\frac{4\,R_s\,n^2\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,n^2\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} =  \notag \\
+   = \frac{A\,c_P\,\rho\,V_0^3}{2} - R_s \left(\frac{n\,T_R^R}{3/2p\Lambda}\right)^2 + B\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B^2}{9\,R^2\,p^2\,\Lambda^2} \label{eq:P_G_out_damping}
 \end{gather}
 
 \subsubsection{Below rated wind speed}
@@ -215,8 +215,8 @@ In this simple model, the \textit{collective} pitching strategy is employed, mea
 As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, the pitch controller has two different behaviors in the operational regions, and so in a wide sense it is a non-linear one: below rated \acrshort{WS}, it has not to be activated at all, while in the full load region it has to pitch the blade in order to drive the rotational speed to rated value. Its simulink implementation has been done as reported in \autoref{fig:pitch_control}.
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=\textwidth]{images/pitch_control_2.png}
-    \caption{Block diagram of the pitch controller\textcolor{red}{Update this picture}}
+    \input{d_blade_control}
+    \caption{Block diagram of the pitch controller\textcolor{red}{Update this picture checking wethre or  not there is the saturation in the middle and if the input/output of the first saturation are correct}}
     \label{fig:pitch_control}
 \end{figure}
 

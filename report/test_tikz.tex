@@ -1,0 +1,127 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}  
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage[dvipsnames, table]{xcolor}
+\usepackage{array}
+\usepackage{color}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\begin{document}
+\centering
+\tikzstyle{block} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{sum} = [draw, fill=white, circle, node distance=2.0cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzset{
+dot/.style = {circle, fill, minimum size=#1,
+              inner sep=0pt, outer sep=0pt},
+dot/.default = 4pt % size of the circle diameter 
+}
+
+\usetikzlibrary{positioning}
+\makeatletter
+\pgfdeclareshape{record}{
+\inheritsavedanchors[from={rectangle}]
+\inheritbackgroundpath[from={rectangle}]
+\inheritanchorborder[from={rectangle}]
+\foreach \x in {center,north east,north west,north,south,south east,south west}{
+\inheritanchor[from={rectangle}]{\x}
+}
+\foregroundpath{
+\pgfpointdiff{\northeast}{\southwest}
+\pgf@xa=\pgf@x \pgf@ya=\pgf@y
+\northeast
+\pgfpathmoveto{\pgfpointadd{\southwest}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+\pgfpathlineto{\pgfpointadd{\southwest}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+\pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+\pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+}
+}
+\makeatother
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+		\node [style=block] (44) at (-12, 6.75) {$k_p\left(\theta\right)$};
+		\node [style=block] (45) at (-12, 5.25) {$k_i\left(\theta\right)$};
+		\node [style=sum] (46) at (-12, 3.25) {+};
+		\node [record,minimum size=1cm,fill=white!30,draw] (47) at (-13.25, 3.25){};
+		\node [style=block] (48) at (-13.25, 1.5) {$\frac{\omega}{n}$};
+		\node [record,minimum size=1cm,fill=white!30,draw] (49) at (-10.75, 3.25) {};
+		\node [style=sum] (50) at (-8.25, 3.25) {$\times$};
+		\node [style=sum, node distance =2cm] (51) at (-9.25, 1.5) {$\times$};
+		\node [style=block] (52) at (-7.0, 1.5) {$\frac{1}{s}$};
+		\node [style=sum] (53) at (-5.75, 3.25) {+};
+		\node [record,minimum size=1cm,fill=white!30,draw] (54) at (-4.5, 3.25) {};
+		\node [style=input] (57) at (-14.75, 3.25) {57};
+		\node [style=input] (62) at (-14.75, 6) {62};
+		\node [style=dot] (63) at (-13.25, 6) {};
+		\node [style=output] (69) at (-3.25, 3.25) {69};
+		\node [style=dot] (70) at (-10, 3.25) {};
+
+		\draw [->] (48) -| (46);
+		\draw [->] (49) -- (50);
+		\draw [->] (47) -- (46);
+		\draw [->] (50) -- (53);
+		\draw [->] (53) -- (54);
+		\draw [->] (54) -- node {$\theta$} (69);
+		\draw [->] (51) -- (52);
+		\draw [->] (52) -| (53);
+		\draw [-] (62) -- node {$\theta$} (63);
+		\draw [->] (63) |- (44);
+		\draw [->] (63) |- (45);
+		\draw [->] (57) -- node {$\omega$} (47);
+		\draw [->] (45) -| (51);
+		\draw [->] (70) |- (51);
+		\draw [->] (44) -| (50);  
+		\draw [->] (46) -- (49);  
+
+\end{tikzpicture}
+
+
+% \centering
+% \tikzstyle{block} = [draw, fill=white, rectangle, 
+%     minimum height=2.5em, minimum width=3em]
+% \tikzstyle{sum} = [draw, fill=white, circle, node distance=1cm]
+% \tikzstyle{input} = [coordinate]
+% \tikzstyle{output} = [coordinate]
+% \tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+% \begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+
+%     \node [input, name=pitch_input] {};
+%     \node [input, name=omega_input] {};
+%     \node [block, right of=pitch_input] (prop_gain) {$k_p$};
+%     \node [block, below of=prop_gain] (pitch_input) {$k_i$};
+%     \node [block, below of=_gain] (pitch_input) {$k_i$};
+%     % \node [sum, right of=inverse_gain, node distance =2cm] (sum) {};
+%     % \node [block, right of=sum] (controller) {$R_{iq}$}; % controller
+%     % \node [block, right of=controller] (G_c) {$G_c$};
+%     % \node [block, right of=G_c] (Yq) {$Y_{iq}$};
+%     % \node [block, right of=Yq] (gain) {$\frac{3}{2}p\Lambda_{mg}$};
+%     % \node [output, right of=gain] (output) {};
+%     % \coordinate [below of=sum, node distance=1cm] (measurements) {};
+
+%     % \draw [draw,->] (input) -- node {$T_G^*$} (inverse_gain);
+%     % \draw [->] (inverse_gain) -- node {$I_q^*$} (sum);
+%     % \draw [->] (sum) -- node {}(controller);
+%     % \draw [->] (controller) -- node [name=controllerG_c] {} (G_c);
+%     % \draw [->] (G_c) -- node [name=G_cYq] {} (Yq);
+%     % \draw [->] (Yq) -- node [name=Yqgain] {$I_q$} (gain);
+%     % \draw [->] (gain) -- node [name=gainout] {$T_G$} (output); 
+%     % \draw [-] (Yqgain) |- (measurements);
+%     % \draw [->] (measurements) -- node[pos=0.8] {$-$} (sum);
+    
+%     %\draw [->] (measurements) -| node [pos=0.99] {$-$} (sum); 
+%     %\draw [->] (sum3) -- node [name=sum3sys4] {} (sys4);
+%     %\draw [->] (sys4) -- node [name=sys4output] {$\Omega_m$} (output);
+%     %\draw [->] (sys5) -| node [name=sys5sum2] [pos=0.99] {$-$} (sum2);
+%     %\draw [->] (sys4output) |- node [near end] [name=outputsys5] {} (sys5);
+%     %\draw [draw, ->] (T_L) -- node[pos=0.99] {$-$} node {$T_{areo}$} (sum3);
+
+% \end{tikzpicture}
+
+
+
+\end{document}

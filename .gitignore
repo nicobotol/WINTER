@@ -51,3 +51,5 @@ src/simulation_5/lookup_cT_3v_omega_theta_V0_u.mat
 *.toc
 *.glo
 *.ist
+*.ilg
+*.gls

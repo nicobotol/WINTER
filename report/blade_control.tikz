@@ -1,0 +1,68 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=block] (33) at (-13.25, 3.25) {};
+		\node [style=sum] (34) at (-12, 3.25) {};
+		\node [style=block] (35) at (-13.25, 2.5) {};
+		\node [style=block] (36) at (-11, 3.25) {};
+		\node [style=block] (37) at (-12, 4.75) {};
+		\node [style=block] (38) at (-12, 4.25) {};
+		\node [style=circle] (39) at (-9.25, 3.25) {};
+		\node [style=circle] (40) at (-9.25, 2.5) {};
+		\node [style=block] (41) at (-8.25, 2.5) {};
+		\node [style=circle] (42) at (-7.75, 3.25) {};
+		\node [style=block] (43) at (-6.5, 3.25) {};
+		\node [style=none] (44) at (-12, 4.75) {$k_p$};
+		\node [style=none] (45) at (-12, 4.25) {$k_i$};
+		\node [style=none] (46) at (-12, 3.25) {+};
+		\node [style=none] (47) at (-13.25, 3.25) {sat};
+		\node [style=none] (48) at (-13.25, 2.5) {$\frac{omega}{n}$};
+		\node [style=none] (49) at (-11, 3.25) {sat};
+		\node [style=none] (50) at (-9.25, 3.25) {x};
+		\node [style=none] (51) at (-9.25, 2.5) {x};
+		\node [style=none] (52) at (-8.25, 2.5) {$\frac{1}{s}$};
+		\node [style=none] (53) at (-7.75, 3.25) {+};
+		\node [style=none] (54) at (-6.5, 3.25) {sat};
+		\node [style=none] (55) at (-12.75, 4.25) {};
+		\node [style=none] (56) at (-12.75, 4.75) {};
+		\node [style=none] (57) at (-14.75, 3.25) {};
+		\node [style=none] (58) at (-12, 2.5) {};
+		\node [style=none] (59) at (-10.25, 2.5) {};
+		\node [style=none] (60) at (-10.25, 3.25) {};
+		\node [style=none] (61) at (-7.75, 2.5) {};
+		\node [style=none] (62) at (-14.75, 4.5) {};
+		\node [style=none] (63) at (-12.75, 4.5) {};
+		\node [style=none] (64) at (-10.25, 4.75) {};
+		\node [style=none] (65) at (-10.5, 4.25) {};
+		\node [style=none] (66) at (-10.5, 2) {};
+		\node [style=none] (67) at (-9.25, 2) {};
+		\node [style=none] (68) at (-9.25, 4.75) {};
+		\node [style=none] (69) at (-5.25, 3.25) {};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw (56.center) to (44.center);
+		\draw (55.center) to (45.center);
+		\draw (56.center) to (55.center);
+		\draw (63.center) to (62.center);
+		\draw (57.center) to (47.center);
+		\draw (48.center) to (58.center);
+		\draw (58.center) to (46.center);
+		\draw (47.center) to (46.center);
+		\draw (46.center) to (49.center);
+		\draw (45.center) to (65.center);
+		\draw (44.center) to (64.center);
+		\draw (49.center) to (50.center);
+		\draw (51.center) to (59.center);
+		\draw (59.center) to (60.center);
+		\draw (65.center) to (66.center);
+		\draw (66.center) to (67.center);
+		\draw (67.center) to (51.center);
+		\draw (51.center) to (52.center);
+		\draw (52.center) to (61.center);
+		\draw (61.center) to (53.center);
+		\draw (53.center) to (54.center);
+		\draw (64.center) to (68.center);
+		\draw (68.center) to (50.center);
+		\draw (50.center) to (53.center);
+		\draw (54.center) to (69.center);
+	\end{pgfonlayer}
+\end{tikzpicture}

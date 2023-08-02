@@ -1,6 +1,6 @@
 \newpage
 \section{Introduction to the Wind Turbines}\label{sec:c_WT_characteristics}
-In this section the historical evolution of the wind energy converters will be briefly summarized, then some data on the actual penetration of the resource in the european market will be presented as long as some points for the future development. Later on the most common architectures will be listed and described in the main functional aspects in order to have an overview of the common terminology.\\
+In this section the historical evolution of the wind energy converters will be briefly summarized, then some data on the actual penetration of the resource in the european market will be presented as long as some points for the future development. \\
 The analysis of the data will be focused on the european area, mainly because this where the writer lives, but also because in the continent there is a growing interest in the renewable in order to fulfill the target of reducing the greenhouse emission of 55\% by 2030 wrt the 1990 level. 
 
 \subsection{Historical evolution}
@@ -24,71 +24,3 @@ There is not a wide agreement about the reachable size of wind turbines, however
 In the period 2023-2027, Europe expect to install 129 GW of new wind power capacity, with 74\% of these sited onshore. These installation schedule is lower than the EU needs in order to meet the REPowerEU goals by 2030 (31 GW/year) according to \cite{wind_europe_data_2022}. \\
 In the period 2023-2027 it will be also expected to start decommissioning old plants. Some of them will be definitely removed from the system, while others will be repowered. This operation will on average trebles the output while reduces the number of turbine by 25\%. \\
 An important aspect to be taken into account for the development are also regulations and permitting. For example the first italian offshore plant was proposed back in 2008, but was commissioned only in the 2022 due to delays in the authorization process \cite{il_post} (in italian). In such a large amount of time the technology increases the size of the generators and there may be the risk that what was initially designed becomes outdate even before being deployed. To overcome similar problems, the EU member states agreed in speed up the the permitting procedures and the european commission has also suggested new laws and guidance to simplify the permitting of wind energy projects. It is expected that these action will release the 47 GW onshore wind capacity that was stuck in administrative procedure during 2022 (source \cite{wind_europe_data_2022}).  
-
-\subsection{Wind turbine generator architectures}
-Wind turbines are usually divided into four categories according to the generator architecture. These are divided between \textit{fixed speed} (Type I) and \textit{variable speed} (Type II, III, and IV). 
-\begin{figure}[htb]
-  \centering
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type1.png}
-    \caption{Type I: squirrel cage induction generator working at fixed rotational speed}
-    \label{fig:type1}
-  \end{subfigure}
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type2.png}
-    \caption{Type II: wound rotor induction generator and variable resistor}
-    \label{fig:type2}
-  \end{subfigure}
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type3.png}
-    \caption{Type III: Doubly Fed Induction Generator and power interface for part of the generated power}
-    \label{fig:type3}
-  \end{subfigure}
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type4.png}
-    \caption{Type IV: variable rotational speed with full size power interface}
-    \label{fig:type4}
-  \end{subfigure}
-  \caption{Classical subdivision of the wind turbine architectures, source \cite{Burman2011IntegratingRE}. }
-\end{figure}
-
-\subsubsection{Type I}
-These turbines work at fixed rotational speed. \\
-The generator is a three phase squirrel-cage induction generator, which has to rotate at a rotational speed with a range of 1\% about the synchronous one.\\ 
-Since the frequency of the generated voltage is almost constant, then the connection to the grid can be done with a simple transformer. \\
-At the startup there are the common problems of the asynchronous machines, meaning that the current on the windings can be much higher than the nominal one producing overheating of the machine. In order to reduce this effect  some specific circuits has to be used to limit the current (i.e. soft starters).\\
-The power limitation above the rated one is usually ensured by the aerodynamic stall. \\
-Their simple and robust topology made them reliable and with low initial costs but on the other hand limits their energy conversion capacity because the fixed speed limits a lot the working point. \\
-The configuration can be seen in \autoref{fig:type1}.
-
-\subsubsection{Type II}
-These turbines work at variable rotational speed. \\
-The generator is a wound rotor induction generator. Below rated power it works similarly to the fixed speed one while above rated the control is done through a variable resistor in series with the rotor circuit. This circuit allows to change the rotational speed of few percentage points (about 10\%) around the nominal one at the price of increasing the energy lost in the resistor.\\ 
-Even in this case, some actions for soft starting the machine are necessary and the connection with grid is done thanks to a simple transformer.\\
-The configuration can be seen in \autoref{fig:type2}.
-
-\subsubsection{Type III}
-These turbines work at variable rotational speed. \\
-The generator is a Doubly Fed Induction Generator (DFIG). This machine as the same stator as the classic induction machine but the wound rotor is not short-circuited but it is connected to the grid via a power electronic interface allowing a variable frequency-variable voltage to flow in both the directions. This enables the rotor mechanical speed to be decoupled from the synchronous frequency of the electrical network, and so allows the turbine to operate at variable speeds ($\pm$ 30\% the synchronous one). The generator can operate both above or below the synchronous velocity. In the first case, called \textit{super-synchronous}, power is send from the rotor to the network from both the rotor and stator circuits. On the other hand, in \textit{sub-synchronous} mode the rotor absorbs power from the network while the stator fed into the grid more power than the one taken. The electronic interface allowing this power flow is functionally composed by a rectifier and an inverter sharing the same DC link, in what is called \textit{back-to-back} configuration. This interface is usually designed for 30\% of the rated generator power.\\
-The advantage of this architecture are a considerable variable speed coming at at the reasonably low price of a power electronic designed to a fraction of the full turbine power.\\  
-The functional schema of the plant can be seen in \autoref{fig:type3}.
-
-\subsubsection{Type IV}
-These turbine work at variable rotational speed. \\
-The generator can be in principle of different type, such as asynchronous, conventional synchronous, and permanent magnets. The difference from type III is that all the produced power pass through a back-to-back power converter that decouple the characteristic of the generator side from the ones of the grid ones. This allows to change the generator frequency independently from the grid one and so working in a wide set of speeds. The price to this flexibility is a power electronic designed for the full capacity of the turbine. Recently a suggested configuration is to arrange more generators in parallel, each of them processing a fraction of the total power which is splitted by the gearbox. \\
-The basic configuration can be seen in \autoref{fig:type4}.
-
-
-\begin{table}[htb]
-  \centering
-  \begin{tabular}{ccMMc}
-    \toprule
-  Type & Speed & Generator & Main control feature & Power electronic\\ \midrule
-   I & Fixed & Squirrel-cage induction & Aerodynamic stall & Soft start \\ 
-   II & Variable & Wound rotor induction &  Rotor resistance & Soft start\\
-   III & Variable & Double Fed Induction &  Blade pitch \& power converter & Partial B2B\\
-   IV & Variable & Permanent Magnet Synchronous &  Blade pitch \& power converter & Full scale B2B\\
-   \bottomrule
-  \end{tabular}
-\end{table}
-\end{document}
