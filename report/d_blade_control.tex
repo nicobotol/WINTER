@@ -33,36 +33,46 @@ dot/.default = 4pt % size of the circle diameter
 \begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
 		\node [style=block] (44) at (-12, 6.75) {$k_p\left(\theta\right)$};
 		\node [style=block] (45) at (-12, 5.25) {$k_i\left(\theta\right)$};
-		\node [style=sum] (46) at (-12, 3.25) {+};
-		\node [record,minimum size=1cm,fill=white!30,draw] (47) at (-13.25, 3.25){};
-		\node [style=block] (48) at (-13.25, 1.5) {$\frac{\omega}{n}$};
-		\node [record,minimum size=1cm,fill=white!30,draw] (49) at (-10.75, 3.25) {};
-		\node [style=sum] (50) at (-8.25, 3.25) {$\times$};
+		\node [style=sum] (46) at (-12, 3.25) {};
+		\node [style=block] (48) at (-13.25, 1.5) {$\frac{\omega_{rated}^R}{n}$};
+		\node [style=sum] (50) at (-8, 3.25) {$\times$};
 		\node [style=sum, node distance =2cm] (51) at (-9.25, 1.5) {$\times$};
-		\node [style=block] (52) at (-7.0, 1.5) {$\frac{1}{s}$};
-		\node [style=sum] (53) at (-5.75, 3.25) {+};
-		\node [record,minimum size=1cm,fill=white!30,draw] (54) at (-4.5, 3.25) {};
+		\node [style=block] (52) at (-6.5, 1.5) {$\frac{1}{s}$};
+		\node [style=sum] (53) at (-5, 3.25) {};
+		\node [record,minimum size=1cm,fill=white!30,draw] (54) at (-3, 3.25) {};
 		\node [style=input] (57) at (-14.75, 3.25) {57};
 		\node [style=input] (62) at (-14.75, 6) {62};
 		\node [style=dot] (63) at (-13.25, 6) {};
-		\node [style=output] (69) at (-3.25, 3.25) {69};
+		\node [style=output] (69) at (-1.25, 3.25) {69};
 		\node [style=dot] (70) at (-10, 3.25) {};
+		\node [style=sum] (71) at (-8, 1.5) {};
+		\node [style=dot] (72) at (-4.25, 3.25) {};
+		\node [style=dot] (73) at (-1.75, 3.25) {};
+		\node [style=sum] (74) at (-3, 1.5) {};
+		\node [dot=1 pt] (75) at (-3, 0.5) {};
+    
 
-		\draw [->] (48) -| (46);
-		\draw [->] (49) -- (50);
-		\draw [->] (47) -- (46);
+		\draw [->] (48) -| node[pos=0.95] {$-$} (46);
+		\draw [->] (46) -- (50);
 		\draw [->] (50) -- (53);
 		\draw [->] (53) -- (54);
-		\draw [->] (54) -- node {$\theta$} (69);
-		\draw [->] (51) -- (52);
-		\draw [->] (52) -| (53);
+		\draw [-]  (53) -- (72);
+		\draw [-]  (54) -- (73);
+		\draw [->] (73) -- node {$\theta$} (69);
+		\draw [->] (51) -- (71);
+		\draw [->] (71) -- (52);
+		\draw [->] (52) -| node[pos=0.95] {$+$} (53);
 		\draw [-] (62) -- node {$\theta$} (63);
 		\draw [->] (63) |- (44);
 		\draw [->] (63) |- (45);
-		\draw [->] (57) -- node {$\omega$} (47);
+		\draw [->] (57) -- node {$\omega^G$} (46);
 		\draw [->] (45) -| (51);
 		\draw [->] (70) |- (51);
-		\draw [->] (44) -| (50);  
-		\draw [->] (46) -- (49);  
+		\draw [->] (44) -| (50); 
+		\draw [->] (72) |- node[pos=0.95] {$-$} (74); 
+		\draw [->] (73) |- (74); 
+		\draw [- ] (74) -- (75); 
+		\draw [->] (75) -| node[pos=0.95] {$+$} (71); 
+
 
 \end{tikzpicture}
