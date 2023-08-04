@@ -11,8 +11,8 @@ addpath("simulink\")
 addpath("plot\")
 
 %% Parameters for the lookup tables generation
-pitch_range = deg2rad([-5 40]);              % range for picth angle [rad]
-pitch_item = 50;%2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
+pitch_range = deg2rad([-5 22]);              % range for picth angle [rad]
+pitch_item = 27;%2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
 lambda_range = [5 10];%[0 15];                        % range for the TSR (original)
 lambda_item = 20;%1 + 2*diff(lambda_range)*3;           % # of guess TSR 
 lambda_range = [lambda_range];

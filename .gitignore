@@ -36,3 +36,7 @@ report/a_main.bbl
 report/a_main.out
 src/simulation_5/PMSM_generator.slxc
 *.mat
+*.bbl
+*.gls
+*.ilg
+*.out
