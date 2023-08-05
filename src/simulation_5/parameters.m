@@ -11,16 +11,27 @@ addpath("simulink\")
 addpath("plot\")
 
 %% Parameters for the lookup tables generation
-pitch_range = deg2rad([-5 22]);              % range for picth angle [rad]
-pitch_item = 27;%2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
-lambda_range = [5 10];%[0 15];                        % range for the TSR (original)
-lambda_item = 20;%1 + 2*diff(lambda_range)*3;           % # of guess TSR 
+pitch_range = deg2rad([-10 30]);              % range for picth angle [rad]
+pitch_item = 40;%2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
+lambda_range = [2 10];                        % range for the TSR (original)
+lambda_item = 2*diff(lambda_range);           % # of guess TSR 
 lambda_range = [lambda_range];
 % distribute lambda and TSR in their ranges
 lambda_vector = linspace(lambda_range(1), lambda_range(2), lambda_item); 
 lambda_vector = sort([lambda_vector, 7.55]);
 lambda_item = lambda_item + 1;
 pitch_vector = linspace(pitch_range(1), pitch_range(2), pitch_item);
+
+pitch_range_3v = deg2rad([-10 30]);              % range for picth angle [rad]
+% pitch_range_3v = deg2rad([0 5]);              % range for picth angle [rad]
+omega_range_3v = 1.01*[0 1.5];                      % range for rotational speed
+velocity_range_3v = [2, 27];                    % range for wind speed
+pitch_item_3v = 40;              % range for picth angle [rad]
+omega_item_3v = 100;                              % # of rotational speed
+velocity_item_3v = 50;
+omega_vector_3v = linspace(omega_range_3v(1), omega_range_3v(2), omega_item_3v); % [rad/s] rotational speeds
+velocity_vector_3v = linspace(velocity_range_3v(1), velocity_range_3v(2), velocity_item_3v);
+pitch_vector_3v = linspace(pitch_range_3v(1), pitch_range_3v(2), pitch_item_3v);
 
 % load mesh for cP, cT, rated values, and pitch angle (computed in 
 % lookup_cp.m and lookup_pitch.m)
