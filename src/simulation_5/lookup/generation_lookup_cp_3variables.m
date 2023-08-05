@@ -107,7 +107,6 @@ for i = 1:omega_item_3v
   l_cP_rs_2 = reshape(lookup_cP_3v_u_2(i,:,:), pitch_item_3v, velocity_item_3v);
   l_cT_rs_1 = reshape(lookup_cT_3v_u_1(i,:,:), pitch_item_3v, velocity_item_3v);
   l_cT_rs_2 = reshape(lookup_cT_3v_u_2(i,:,:), pitch_item_3v, velocity_item_3v);
-  
 
   cP_1_tmp = reshape(l_cP_rs_1', 1, velocity_item_3v*pitch_item_3v);
   cP_2_tmp = reshape(l_cP_rs_2', 1, velocity_item_3v*pitch_item_3v);
@@ -116,8 +115,9 @@ for i = 1:omega_item_3v
   omega_tmp = omega_vector_3v(i)*ones(1, velocity_item_3v*pitch_item_3v);
   V0_tmp = kron(ones(1, pitch_item_3v), velocity_vector_3v);
   theta_tmp = kron(pitch_vector_3v, ones(1, velocity_item_3v));
+  lambda_s2_tmp = reshape(lambda_s2_reshape', 1, velocity_item_3v*pitch_item_3v);
   
-  u_store = [u_store, [omega_tmp; theta_tmp; V0_tmp; cP_1_tmp; cP_2_tmp; cT_1_tmp; cT_2_tmp]];
+  u_store = [u_store, [omega_tmp; theta_tmp; V0_tmp - lambda_s2_tmp; cP_1_tmp; cP_2_tmp; cT_1_tmp; cT_2_tmp]];
 end
 
 % Remove from the u_store mat the values corresponding to lmbda_1 because they are not phesible 
@@ -163,7 +163,7 @@ hold off
 colorbar()
 xlabel('$\omega$ [rad/s]', 'Interpreter', 'latex')
 ylabel('$\theta_p [^\circ]$', 'Interpreter', 'latex')
-zlabel('$V_0$ [m/s]', 'Interpreter', 'latex')
+zlabel('$V_0 - \lambda$ [m/s]', 'Interpreter', 'latex')
 title('3 varaibles $c_P^u$ map', 'Interpreter', 'latex')
 ax = gca;
 ax.FontSize = font_size;
@@ -175,7 +175,7 @@ hold off
 colorbar()
 xlabel('$\omega$ [rad/s]', 'Interpreter', 'latex')
 ylabel('$\theta_p [^\circ]$', 'Interpreter', 'latex')
-zlabel('$V_0$ [m/s]', 'Interpreter', 'latex')
+zlabel('$V_0 - \lambda$ [m/s]', 'Interpreter', 'latex')
 title('3 varaibles $c_T^u$ map', 'Interpreter', 'latex')
 ax = gca;
 ax.FontSize = font_size;
@@ -183,7 +183,7 @@ ax.FontSize = font_size;
 
 %%
 % Save the results
-save('lookup_cP_3v_omega_theta_V0.mat', 'lookup_cP_3v');
-save('lookup_cT_3v_omega_theta_V0.mat', 'lookup_cT_3v');
-save('lookup_cP_3v_omega_theta_V0_u.mat', 'lookup_cP_u');
-save('lookup_cT_3v_omega_theta_V0_u.mat', 'lookup_cT_u');
+% save('lookup_cP_3v_omega_theta_V0.mat', 'lookup_cP_3v');
+% save('lookup_cT_3v_omega_theta_V0.mat', 'lookup_cT_3v');
+% save('lookup_cP_3v_omega_theta_V0_u.mat', 'lookup_cP_u');
+% save('lookup_cT_3v_omega_theta_V0_u.mat', 'lookup_cT_u');
