@@ -138,11 +138,13 @@ NREL_data_theta = NREL_data(1,2:end);
 NREL_data_lambda = NREL_data(2:end,1);
 figure();
 hold on;
+plot([NaN, NaN], 'o', 'Color', 'k', 'DisplayName', 'Ref.')
+plot([NaN, NaN], '-', 'Color', 'k', 'DisplayName', 'Comp.')
 for i = 1:length(pitch)
   cp_comp =  interp2(lambda_vector, pitch_vector, lookup_cP, lambda_vec, pitch(i)*3.14/180);
   cp_NREL = interp2(NREL_data_lambda, NREL_data_theta, NREL_data(2:end, 2:end)', lambda_vec, pitch(i));
-  plot(lambda_vec, cp_comp, 'Color', color(i), 'HandleVisibility', 'off');
-  plot(lambda_vec, cp_NREL, 'o', 'Color', color(i), 'DisplayName', num2str(pitch(i)));
+  plot(lambda_vec, cp_comp, 'Color', color(i), 'HandleVisibility', 'off', 'LineWidth', line_width);
+  plot(lambda_vec, cp_NREL, 'o', 'Color', color(i), 'DisplayName', [num2str(pitch(i)), '$^\circ$' ], 'LineWidth', line_width);
 end
 legend('Location', 'EastOutside')
 title('Comparison between reference and computed $c_P$ for NREL 5 MW')
