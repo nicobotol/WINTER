@@ -153,6 +153,16 @@ ylabel('$c_P [-]$')
 grid on
 box on
 
+tmp(1, :) = kron(lambda_vector, ones(1, pitch_item));
+tmp(2, :) = kron(ones(1, lambda_item), pitch_vector);
+tmp(3, :) = reshape(lookup_cP, 1, lambda_item*pitch_item);
+idx = tmp(3, :) > 0;
+figure()
+plot3(tmp(1, idx), tmp(2, idx)*180/3.14, tmp(3, idx), 'o')
+xlabel('$\lambda$')
+ylabel('$\theta [^\circ]$')
+zlabel('$c_P$')
+
 %%
 % Save the results 
 save('lookup\lookup_cP_theta_lambda.mat', 'lookup_cP');

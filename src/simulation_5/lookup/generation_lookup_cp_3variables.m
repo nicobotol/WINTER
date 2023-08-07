@@ -44,7 +44,6 @@ for i = 1:omega_item_3v
 end
 
 keep = A_store(4, :) == 1;
-% scatter3(A_store(1, keep), A_store(2, keep), A_store(3, keep), 40, A_store(4, keep), 'filled')
 scatter3(A_store(1, :), A_store(2, :), A_store(3, :), 40, A_store(4, :), 'filled')
 hold off
 colorbar()
@@ -98,6 +97,21 @@ for i = 1:omega_item_3v
   lambda_s1_reshape = reshape(lambda_s1(i,:,:), pitch_item_3v, velocity_item_3v);
   lambda_s2_reshape = reshape(lambda_s2(i,:,:), pitch_item_3v, velocity_item_3v);
 
+  figure()
+  hold on
+  plot(V0, 'DisplayName', '$V_0$')
+  plot(lambda_s1_reshape, 'DisplayName', '$\lambda_1$')
+  legend()
+  hold off
+  
+  figure()
+  hold on
+  plot(V0, 'DisplayName', '$V_0$')
+  plot(lambda_s2_reshape, 'DisplayName', '$\lambda_2$')
+  legend()
+  hold off
+  
+
   lookup_cP_3v_u_1(i,:,:) = cP_reshape./(1-lambda_s1_reshape./V0).^3;
   lookup_cP_3v_u_2(i,:,:) = cP_reshape./(1-lambda_s2_reshape./V0).^3;
   lookup_cT_3v_u_1(i,:,:) = cT_reshape./(1-lambda_s1_reshape./V0).^2;
@@ -117,17 +131,18 @@ for i = 1:omega_item_3v
   theta_tmp = kron(pitch_vector_3v, ones(1, velocity_item_3v));
   lambda_s2_tmp = reshape(lambda_s2_reshape', 1, velocity_item_3v*pitch_item_3v);
   
-  u_store = [u_store, [omega_tmp; theta_tmp; V0_tmp - lambda_s2_tmp; cP_1_tmp; cP_2_tmp; cT_1_tmp; cT_2_tmp]];
+  u_store = [u_store, [omega_tmp; theta_tmp; V0_tmp - lambda_s2_tmp; cP_1_tmp; cP_2_tmp; cT_1_tmp; cT_2_tmp; V0_tmp]];
 end
 
 % Remove from the u_store mat the values corresponding to lmbda_1 because they are not phesible 
 keep = A_store(4, :) > 0;
 lookup_cP_u = zeros(4, sum(keep == 1));
 lookup_cT_u = zeros(4, sum(keep == 1));
-lookup_cP_u(1:3, :) = u_store(1:3, keep);
-lookup_cP_u(4, :)   = u_store(5, keep);
-lookup_cT_u(1:3, :) = u_store(1:3, keep);
-lookup_cT_u(4, :)   = u_store(7, keep);
+lookup_cP_u(1:3, :) = u_store(1:3, keep); % omega, theta, V0-lambda_2
+lookup_cP_u(4, :)   = u_store(5, keep);   % cP
+lookup_cT_u(1:3, :) = u_store(1:3, keep); % omega, theta, V0-lambda_2 
+lookup_cT_u(4, :)   = u_store(7, keep);   % V0 
+lookup_cP_u(5, :)   = lookup_cP_u(1, :)*rotor.R ./ u_store(8, keep); % TSR
 
 %% Plot
 % contour plot for cP
@@ -142,6 +157,14 @@ title('3 varaibles $c_P$ map', 'Interpreter', 'latex')
 ax = gca;
 ax.FontSize = font_size;
 % export_figure(contour_plot_cP, 'contour_plot_cP_3v.eps', path_images);
+
+idx = lookup_cP_u(4, :) > 0;
+figure()
+plot3( lookup_cP_u(5, idx), lookup_cP_u(2, idx)*180/3.14, lookup_cP_u(4, idx), 'o')
+xlabel('$\lambda$')
+ylabel('$\theta$')
+zlabel('$c_P$')
+axis([0 20 0 30 0 3])
 
 % contour plot for cT
 contour_plot_cT = figure('Position', get(0, 'Screensize'), 'Color', 'w');

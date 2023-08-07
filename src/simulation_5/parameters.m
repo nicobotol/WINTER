@@ -9,11 +9,12 @@ addpath("wind_series")
 addpath("PMSM")
 addpath("simulink\")
 addpath("plot\")
+addpath("utilities\")
 
 %% Parameters for the lookup tables generation
 pitch_range = deg2rad([-10 30]);              % range for picth angle [rad]
 pitch_item = 40;%2*ceil(rad2deg(diff(pitch_range)));% # of guess pitch 
-lambda_range = [2 10];                        % range for the TSR (original)
+lambda_range = [2 20];                        % range for the TSR (original)
 lambda_item = 2*diff(lambda_range);           % # of guess TSR 
 lambda_range = [lambda_range];
 % distribute lambda and TSR in their ranges
