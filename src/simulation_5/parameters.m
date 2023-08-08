@@ -127,10 +127,10 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 100*ones(1, 1); % max time to investigaste [s]
+simulation.stop_time = 50*ones(3, 1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 4;        % 1 -> constant wind speed
+simulation.type = 6;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -248,9 +248,9 @@ wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = [10];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [10.5];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(3, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = [4];        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = [10];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(2, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -271,7 +271,7 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
-B_eq = 1*(rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
+B_eq = (rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
 
 % Transform the struct of parameters into buses for simulink

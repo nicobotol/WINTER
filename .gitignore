@@ -53,3 +53,16 @@ src/simulation_5/lookup_cT_3v_omega_theta_V0_u.mat
 *.ist
 *.ilg
 *.gls
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/sim/varcache/winter_simulink_with_PC_generator_control/checksumOfCache.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/sim/varcache/winter_simulink_with_PC_generator_control/varInfo.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/sim/varcache/winter_simulink_with_PC/checksumOfCache.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/sim/varcache/winter_simulink_with_PC/varInfo.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_sfprj/winter_simulink_with_PC/_self/sfun/info/binfo.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_sfprj/winter_simulink_with_PC/amsi_serial.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_sfprj/EMLReport/emlReportAccessInfo.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_sfprj/EMLReport/sTkFozk2LAtxsJaXCtCiqQB.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_sfprj/precompile/9SgInC3ObuKUIgscBekIaH.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_sfprj/precompile/autoInferAccessInfo.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_sfprj/precompile/lgjlVjx7hK3mHkyo5EnDm.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_jitprj/jitEngineAccessInfo.mat
+src/simulation_5/aerodynamic_functions_frozen_wake/DTU10MW/slprj/_jitprj/sTkFozk2LAtxsJaXCtCiqQB.mat

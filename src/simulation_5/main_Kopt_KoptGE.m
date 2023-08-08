@@ -21,21 +21,17 @@ for i=1:wind.WS_len
     simulation.mdl = 'winter_simulink_with_PC_generator_control';
   end
 
-  open_system(simulation.mdl);                    % open the model
+  % open_system(simulation.mdl);                    % open the model
   in = Simulink.SimulationInput(simulation.mdl);  % set simulation parameters
-  set_simulink_parameters(simulation.mdl, simulation.type);
+  % set_simulink_parameters(simulation.mdl, simulation.type);
   stop_time = simulation.stop_time(i); % set the stop time 
   wind_speed = zeros(stop_time/wind.sample_t, 2);
-  wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, ...
-    wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, ...
-    stop_time);
+  wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, stop_time);
   if i==1
     [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
       generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
   else
-    [rotor, generator, blade, T_R0] = initial_conditions_GE(rho, ...
-      lambda_vector, pitch_vector, lookup_cP, rotor, blade, ...
-      generator, gearbox,wind_speed(1, 2), V0_rated, rated_values_P_GE, lookup_pitch_P_GE);
+    [rotor, generator, blade, T_R0] = initial_conditions_GE(rho, lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox,wind_speed(1, 2), V0_rated, rated_values_P_GE, lookup_pitch_P_GE);
   end
   out = sim(in, 'ShowProgress','on'); 
   out_store{i} = out;
