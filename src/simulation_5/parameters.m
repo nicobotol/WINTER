@@ -33,6 +33,10 @@ velocity_item_3v = 50;
 omega_vector_3v = linspace(omega_range_3v(1), omega_range_3v(2), omega_item_3v); % [rad/s] rotational speeds
 velocity_vector_3v = linspace(velocity_range_3v(1), velocity_range_3v(2), velocity_item_3v);
 pitch_vector_3v = linspace(pitch_range_3v(1), pitch_range_3v(2), pitch_item_3v);
+pitch_item_3v = 40 + 1;              % range for picth angle [rad]
+velocity_item_3v = 50 + 1;
+velocity_vector_3v = sort([velocity_vector_3v 25]);
+pitch_vector_3v = sort([pitch_vector_3v 29*pi/180]);
 
 % load mesh for cP, cT, rated values, and pitch angle (computed in 
 % lookup_cp.m and lookup_pitch.m)

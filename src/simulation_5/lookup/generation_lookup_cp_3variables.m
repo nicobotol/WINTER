@@ -65,6 +65,8 @@ for i = 1:omega_item_3v
   cT(isnan(cT)) = 0; % set to zero the NaN values
   cP(cP < 0) = 0; % set to zero the negative values
   cT(cT < 0) = 0; % set to zero the negative values
+  cP(cP > 1) = 1; % set to one the values grather than 1
+  cT(cT > 1) = 1; % set to one the values grather than 1
   
   % store the results
   % lookup_cP_3v(i, A_cell{i} > 0) = cP(A_cell{i} > 0);
@@ -97,19 +99,13 @@ for i = 1:omega_item_3v
   lambda_s1_reshape = reshape(lambda_s1(i,:,:), pitch_item_3v, velocity_item_3v);
   lambda_s2_reshape = reshape(lambda_s2(i,:,:), pitch_item_3v, velocity_item_3v);
 
-  figure()
-  hold on
-  plot(V0, 'DisplayName', '$V_0$')
-  plot(lambda_s1_reshape, 'DisplayName', '$\lambda_1$')
-  legend()
-  hold off
-  
-  figure()
-  hold on
-  plot(V0, 'DisplayName', '$V_0$')
-  plot(lambda_s2_reshape, 'DisplayName', '$\lambda_2$')
-  legend()
-  hold off
+  tmp = reshape_matrix(lambda_s1_reshape, pitch_vector_3v, velocity_vector_3v);
+%   figure()
+%   hold on
+%   plot3(tmp(1, :), tmp(2, :), tmp(3, :), 'o');
+%   xlabel('$\theta$')
+%   ylabel('$V_0$')
+%   zlabel('$\lambda_1$')
   
 
   lookup_cP_3v_u_1(i,:,:) = cP_reshape./(1-lambda_s1_reshape./V0).^3;
