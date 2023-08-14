@@ -7,76 +7,8 @@ A general schema of a WT energy conversion chain is reported in \autoref{fig:fig
   \label{fig:fig_drivetrain}
 \end{figure}
 The incoming wind flow makes the blades rotate at a reasonably low rotational speed (let's say around 10 $\left[rpm\right]$ to give an order of magnitude). This rotation is then transmitted to the generator with or without the use of a step up gearbox, according to the requirement of the electrical machine. Finally, a power electronic converter conditions the power before the injection to the grid. Agin, the function and structure of this component depends on the employed generator type.\\
-Conceptually on top of the physical components there are different hierarchical levels of controllers, that may have different objectives according to \cite{Olimpo_Anaya‐Lara}. The highest level supervise operator commands, faults, extreme events, startup and shutdown, possibly also coordinating with other turbines in the farm. Then a lower level is primary responsible of keeping the rotational speed within limits, and secondly reducing the aerodynamic loads, structural vibrations, and provide ancillary services to the grid.  The two most important controllers for the seek of this thesis are the one regulating the inclination of the blades (called pitch) and the electrical machine.\\
-In the following subsections first of all the most common architectures will be listed and described in the main functional aspects in order to have an overview of the common terminology. Later on the most important subsystem will be described in order to provide some information about their structures and functionalities. These \textit{subsystems} are not only seen from a physical point of view but also as functional blocks interconnected to provide to the turbine its full capabilities. This description will be on purpose general, since the low level practical implementation greatly depends not only from the single subsystem but also from their interconnections.
-
-\subsection{Wind turbine generator architectures}\label{subsec:WT_generator_arch}
-Wind turbines are usually divided into four categories according to the generator architecture. These are divided between \textit{fixed speed} (Type I) and \textit{variable speed} (Type II, III, and IV). In this subsection the main features of each of them will be discussed. These are also summarized in \autoref{tab:main_arch_comp}.
-\begin{figure}[htb]
-  \centering
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type1.png}
-    \caption{Type I: squirrel cage induction generator working at fixed rotational speed}
-    \label{fig:type1}
-  \end{subfigure}
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type2.png}
-    \caption{Type II: wound rotor induction generator and variable resistor}
-    \label{fig:type2}
-  \end{subfigure}
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type3.png}
-    \caption{Type III: Doubly Fed Induction Generator and power interface for part of the generated power}
-    \label{fig:type3}
-  \end{subfigure}
-  \begin{subfigure}{0.49\columnwidth}
-    \includegraphics[width=\columnwidth]{images/type4.png}
-    \caption{Type IV: variable rotational speed with full size power interface}
-    \label{fig:type4}
-  \end{subfigure}
-  \caption{Classical subdivision of the wind turbine architectures, source \cite{Burman2011IntegratingRE}. }
-\end{figure}
-
-\begin{table}[htb]
-  \centering
-  \begin{tabular}{ccMMc}
-    \toprule
-  Type & Speed & Generator & Main control feature & Power electronic\\ \midrule
-   I & Fixed & Squirrel-cage induction & Aerodynamic stall & Soft start \\ 
-   II & Variable & Wound rotor induction &  Rotor resistance & Soft start\\
-   III & Variable & Double Fed Induction &  Blade pitch \& power converter & Partial B2B\\
-   IV & Variable & Permanent Magnet Synchronous &  Blade pitch \& power converter & Full scale B2B\\
-   \bottomrule
-  \end{tabular}
-  \caption{Comparison of the main functional features of the four types of WT architectures}
-  \label{tab:main_arch_comp}
-\end{table}
-
-\subsubsection{Type I}
-These turbines work at fixed rotational speed. \\
-The generator is a three phase \acrfull{SCIG}, which has to rotate at a rotational speed with a range of 1\% about the synchronous one.\\ 
-Since the frequency of the generated voltage is almost constant, then the connection to the grid can be done with a simple transformer. \\
-At the startup there are the common problems of the asynchronous machines, meaning that the current on the windings can be much higher than the nominal one producing overheating of the machine. In order to reduce this effect  some specific circuits has to be used to limit the current (i.e. soft starters).\\
-The power limitation above the rated one is usually ensured by the aerodynamic stall. \\
-Their simple and robust topology made them reliable and with low initial costs but on the other hand limits their energy conversion capacity because the fixed speed limits a lot the working point. \\
-The configuration can be seen in \autoref{fig:type1}.
-
-\subsubsection{Type II}
-These turbines work at variable rotational speed. \\
-The generator is a wound rotor induction generator. Below rated power it works similarly to the fixed speed one while above rated the control is done through a variable resistor in series with the rotor circuit. This circuit allows to change the rotational speed of few percentage points (about 10\%) around the nominal one at the price of increasing the energy lost in the resistor.\\ 
-Even in this case, some actions for soft starting the machine are necessary and the connection with grid is done thanks to a simple transformer.\\
-The configuration can be seen in \autoref{fig:type2}.
-
-\subsubsection{Type III}
-These turbines work at variable rotational speed. \\
-The generator is a \acrfull{DFIG}. This machine as the same stator as the classic induction machine but the wound rotor is not short-circuited but it is connected to the grid via a power electronic interface allowing a variable frequency-variable voltage to flow in both the directions. This enables the rotor mechanical speed to be decoupled from the synchronous frequency of the electrical network, and so allows the turbine to operate at variable speeds ($\pm$ 30\% the synchronous one). The generator can operate both above or below the synchronous velocity. In the first case, called \textit{super-synchronous}, power is send from the rotor to the network from both the rotor and stator circuits. On the other hand, in \textit{sub-synchronous} mode the rotor absorbs power from the network while the stator fed into the grid more power than the one taken. The electronic interface allowing this power flow is functionally composed by a rectifier and an inverter sharing the same DC link, in what is called \textit{back-to-back} configuration. This interface is usually designed for 30\% of the rated generator power.\\
-The advantage of this architecture are a considerable variable speed coming at at the reasonably low price of a power electronic designed to a fraction of the full turbine power.\\  
-The functional schema of the plant can be seen in \autoref{fig:type3}.
-
-\subsubsection{Type IV}
-These turbine work at variable rotational speed. \\
-The generator can be in principle of different type, such as asynchronous, conventional synchronous, and permanent magnets. The difference from type III is that all the produced power pass through a back-to-back power converter that decouple the characteristic of the generator side from the ones of the grid ones. This allows to change the generator frequency independently from the grid one and so working in a wide set of speeds. The price to this flexibility is a power electronic designed for the full capacity of the turbine. Recently a suggested configuration is to arrange more generators in parallel, each of them processing a fraction of the total power which is splitted by the gearbox. \\
-The basic configuration can be seen in \autoref{fig:type4}.
+Conceptually on top of the physical components there are different hierarchical levels of control, that may have different objectives according to \cite{Olimpo_Anaya‐Lara}. The highest level supervise operator commands, faults, extreme events, startup and shutdown, possibly also coordinating with other turbines in the farm. Then a lower level is primary responsible of keeping the rotational speed within limits, and secondly reducing the aerodynamic loads, structural vibrations, and provide ancillary services to the grid.  The two most important controllers for the seak of this thesis are the one regulating the inclination of the blades (called pitch) and the electrical machine.\\
+In the following subsections the most important subsystems will be described in order to provide some information about their structures and functionalities. These \textit{subsystems} are not only seen from a physical point of view but also as functional blocks interconnected to provide to the turbine its full capabilities.
 
 \subsection{Basic aerodynamic model for the blade}
 \subsubsection{Mechanical power and power coefficient}\label{subsec:mech_pow_and_pow_coeff}
@@ -97,7 +29,7 @@ and it is computed from the analysis of the elementary blade cross section. More
     \lambda = \frac{\omega R}{V_0} \ \ \left[-\right]
     \label{eq:TSR}
 \end{equation}
-with $\omega$ the rotor rotational speed in $\left[\si{\radian \per \second}\right]$, R is the rotor radius in $\left[\si{\meter}\right]$, and $V_0$ is the incoming wind speed in  $\left[\si{\meter \per \second}\right]$. The pitch angle is the rotation angle of the blade around its main axes, and by adjusting it the \acrfull{AOA} of the entire blade changes, producing a modification of the harvested power. The \acrshort{AOA} is the one between the incoming wind flow and blade's chordline, denoted as $\alpha$ in \autoref{fig:velocity_triangle}. 
+with $\omega$ being the rotor rotational speed in $\left[\si{\radian \per \second}\right]$, R is the rotor radius in $\left[\si{\meter}\right]$, and $V_0$ is the incoming wind speed in  $\left[\si{\meter \per \second}\right]$. The pitch angle is the rotation angle of the blade around its main axis, and by adjusting it the \acrfull{AOA} of the entire blade changes, producing a modification of the harvested power. The \acrshort{AOA} is the one between the incoming wind flow and blade's chordline, denoted as $\alpha$ in \autoref{fig:velocity_triangle}. 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\textwidth]{images/velocity_triangle.png}
@@ -117,39 +49,26 @@ The thrust coefficient $c_T$ is obtained similarly to the power one, as it will 
 
 \subsubsection{BEM algorithm}\label{subsec:BEM_algorithm}
 The relationship between the \acrshort{cp}, the \acrshort{TSR} and the pitch angle is not linear, and involves the aerodynamic interaction between the incoming wind and the airfoil characteristics. Different methods are available for computing this interactions, with different levels of complexity and fidelity. A common analytical mathematical tool is the so called \acrfull{BEM}, solving the problem by providing the tangential and normal forces to the blade. The assumptions on which it is based are the absence of radial dependency of the blade-wind interaction and a constant force from the blades on the flow. The last assumption corresponds to having a rotor with an infinite number of blades, and so it is later corrected with a coefficient taking into account their finite number \cite{Aerodynamics_of_wind_turbines}.\\
-At the basis of the computations done in this work there is a \acrshort{BEM} algorithm implemented in Matlab which pseudo-code is reported in \autoref{app:BEM_code}. In particular, \autoref{alg:main_BEM} reports the main functions that loops between the different TSR, pitch, and cross sections, while \autoref{alg:detailed_BEM} reports the implementation details leading to the computation of the local (i.e. for a cross section) thrust and power coefficients. A list of the main terms used in the code is reported in \autoref{tab:BEM_code_notation}. \\
+At the basis of the computations done in this work there is a \acrshort{BEM} algorithm implemented in Matlab whose pseudo-code is reported in \autoref{app:BEM_code}. In particular, \autoref{alg:main_BEM} reports the main functions that loops between the different TSR, pitch, and cross sections, while \autoref{alg:detailed_BEM} reports the implementation details leading to the computation of the local (i.e. for a cross section) thrust and power coefficients. A list of the main terms used in the code is reported in \autoref{tab:BEM_code_notation}. \\
 Other methods that may be cited but not further discussed because not used here are the vortex theory, 2D/3D actuator line theory, 2D/3D full CFD models.
 
 \subsection{Drivetrain}
 The term \textit{drivetrain} identifies all the components of the mechanical system used to transfer the power from the rotor to the generator.
 The classical components of a drivetrain are the \textit{main shaft} (i.e. the shaft connected to the rotor) which usually rotates at low speed, the \textit{gearbox} (which is not always present), and the generator. According to \cite{Olimpo_Anaya‐Lara}, in 85\% of the drivetrains a gearbox is present but this value may be biased by the older installed machines. Its primary use is to step up the rotational speed, and so to use high speed machines. According to the gearbox ratio, they may be divided between \textit{medium speed} (around 1/10) and \textit{high speed} (which can reach the range 1/90-1/120).\\
 The other possibility is to have a \textit{gearless} configuration, and the direct drive is the most common, while hydraulic transmission are under development, \cite{Olimpo_Anaya‐Lara}.\\
-The geared concept is the older one since it has been available since 1970s, and it amplifies the inertia of the generator by the square of the inverse of the gear ratio, reducing the torque variations sensitivity. The gear-less concept was introduced in 1991, requires a lower number of components, eliminates transmission losses and gearbox failure. On the other hand the electrical machine has higher dimensions and weights because more space for the poles is necessary.\\
+The geared concept is the older one since it has been available since 1970s, and it amplifies the inertia of the generator by the square of the inverse of the gear ratio, reducing the torque variations sensitivity. The gear-less concept was introduced in 1991, it requires a lower number of components, eliminates transmission losses and gearbox failure. On the other hand the electrical machine has higher dimensions and weights because more space for the poles is necessary.\\
 In the market it is not clear which of the two solutions will be the dominant, since both are available. \autoref{tab:transmission_review} summarises some interesting features of multi mega-watt \acrshort{WT} produced by some of the most important manufacturer currently in the market. 
 
 \begin{table}[htp]\centering
-    \caption{Review of the drivetrain characteristic of some WTs available on the market} \label{tab:transmission_review}
+    \caption{Review of the drivetrain characteristic of some WTs available on the market. The most used electrical machines are the \acrfull{PMSM} and the \acrfull{DFAG}.} \label{tab:transmission_review}
     \input{d_table_review_transmission}
 \end{table}
 
 It is possible to notice that Siemens-Gamesa and General Electric use direct drive concepts, while Vestas still prefers a geared solution even tough with the same kind of electrical machine.
 
 \subsection{Electrical generator}
-The different types of generators have been already described in \autoref{subsec:WT_generator_arch}. On top of the purely technological motivation, the choice of one kind of machine depends also on others such as reliability and costs (especially the ones of the magnets \cite{1-s2.0-S0040162519313691-main}). \\
-\cite{current_staus_and_future_trends_of_offshore_wind_power_in_europe} reports that up to 2019 induction machines shared the greatest part of the market in OWT with 13\% the DFIG and 50.7\% the SCIG (with fully converter), while the PMSG covered the remaining 36.3\%. However it is also highlighted that these percentages suffer from old plants, since between 2016 and 2019 1265 PMSM were installed against only 388 SCIG and 54 DFIG (none of them installed in 2018 and 2019).  \\
-Another emerging trend is the decomposition of the generator into a number of  independent modules (i.e. the so called \textit{modularity}) in order to increase the reliability improving the fault tolerance and reducing the downtime. In particular from the functional point of view the design aims to arrange some modules operating independently from one another even if some of them fail. Two main topologies are presented in \cite{7695592} and they are schematized in \autoref{fig:7695592-fig-1-source-large}. The first one splits the power produced by the generator in multiple converters arranged in series, parallel or a combination of them, while the second uses multiple converter units each driven by an independent phase of the machine. The first solution has the advantages of letting each generator to be switched off in case of fault or when turbine works below rated power (while still allow each of the smaller generator to work near its rated power) and allows a reduction of the grid harmonics by shifting the PWM pulses of the modules. On the other hand the second topology allows for operation under failures in the machine phase as well. \\
-In general, the converters arranged in parallel can better handle the increasing in current due to the increase of the turbine power with fixed voltage while the series configuration allows less transformer-grid connections.\\
-Off course the modularity has also to be take into account during the delivering of the control signals and while designing the physical design of the subsystems. These aspects will not be taken into account in this thesis because not of interest.  
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=0.7\columnwidth]{images/7695592-fig-1-source-large.png}
-  \caption{Different functional modularity topologies for the electrical generator, source \cite{7695592} }
-  \label{fig:7695592-fig-1-source-large}
-\end{figure}
+Two kinds of electrical machine may be used: the permanent magnet or the electrically excited. The popularity of one or the other depends also on the cost of the magnets \cite{1-s2.0-S0040162519313691-main}. \\
+\textcolor{red}{Write something about the used generator in the different types}
 
 \subsection{Other subsystems}
 \textcolor{blue}{Could it be a good idea to add something about the pitching mechanism, the mechanical brake, and the power electronic processing the output of the generator even though they are not implemented in the simulator?}
-
-
-
-
