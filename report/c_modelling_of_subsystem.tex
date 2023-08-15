@@ -37,7 +37,7 @@ with $\omega$ being the rotor rotational speed in $\left[\si{\radian \per \secon
     \label{fig:velocity_triangle}
 \end{figure}
 
-Usually the power is reduced by decreasing the \acrshort{AOA} by pitching the leading edge of the blades up against the wind, but also the opposite is possible \cite{Aerodynamics_of_wind_turbines}. The first strategy is called feathering while the second stalling.
+Usually the power is reduced by decreasing the \acrshort{AOA} by pitching the leading edge of the blades up against the wind, but also the opposite is possible \cite{Aerodynamics_of_wind_turbines}. The first strategy is called \textit{feathering} while the second \textit{stalling}.
 
 \subsubsection{Thrust force and thrust coefficient}
 The thrust force, usually denoted as T, is the force produced by the rotor in the streamwise direction. It produces the wind speed reduction from the incoming one to the one in the wake, and it is compute as:
@@ -57,17 +57,17 @@ The term \textit{drivetrain} identifies all the components of the mechanical sys
 The classical components of a drivetrain are the \textit{main shaft} (i.e. the shaft connected to the rotor) which usually rotates at low speed, the \textit{gearbox} (which is not always present), and the generator. According to \cite{Olimpo_Anaya‐Lara}, in 85\% of the drivetrains a gearbox is present but this value may be biased by the older installed machines. Its primary use is to step up the rotational speed, and so to use high speed machines. According to the gearbox ratio, they may be divided between \textit{medium speed} (around 1/10) and \textit{high speed} (which can reach the range 1/90-1/120).\\
 The other possibility is to have a \textit{gearless} configuration, and the direct drive is the most common, while hydraulic transmission are under development, \cite{Olimpo_Anaya‐Lara}.\\
 The geared concept is the older one since it has been available since 1970s, and it amplifies the inertia of the generator by the square of the inverse of the gear ratio, reducing the torque variations sensitivity. The gear-less concept was introduced in 1991, it requires a lower number of components, eliminates transmission losses and gearbox failure. On the other hand the electrical machine has higher dimensions and weights because more space for the poles is necessary.\\
-In the market it is not clear which of the two solutions will be the dominant, since both are available. \autoref{tab:transmission_review} summarises some interesting features of multi mega-watt \acrshort{WT} produced by some of the most important manufacturer currently in the market. 
+In the market it is not clear which of the two solutions will be the dominant, since both are available. \autoref{tab:transmission_review} summarises some interesting features of multi mega-watt \acrshort{WT} produced by some of the most important manufacturers currently in the market. 
 
 \begin{table}[htp]\centering
-    \caption{Review of the drivetrain characteristic of some WTs available on the market. The most used electrical machines are the \acrfull{PMSM} and the \acrfull{DFAG}.} \label{tab:transmission_review}
+    \caption{Review of the drivetrain characteristic of some WTs available on the market. The most used electrical machines are the \acrfull{PMSM} and the \acrfull{DFIG}.} \label{tab:transmission_review}
     \input{d_table_review_transmission}
 \end{table}
 
 It is possible to notice that Siemens-Gamesa and General Electric use direct drive concepts, while Vestas still prefers a geared solution even tough with the same kind of electrical machine.
 
 \subsection{Electrical generator}
-Two kinds of electrical machine may be used: the permanent magnet or the electrically excited. The popularity of one or the other depends also on the cost of the magnets \cite{1-s2.0-S0040162519313691-main}. \\
+Two kinds of electrical machines may be used: the permanent magnet or the electrically excited. The popularity of one or the other depends also on the cost of the magnets \cite{1-s2.0-S0040162519313691-main}. \\
 \textcolor{red}{Write something about the used generator in the different types}
 
 \subsection{Other subsystems}
