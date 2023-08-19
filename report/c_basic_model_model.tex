@@ -4,21 +4,21 @@ In this section of the work, the models adopted in the different sub-components 
 
 \subsection{Wind speed generation}
 This part deals with the generation of a realistic \acrshort{WS} time series. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
-Calling $\Delta_t$ $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of $f_s$ $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time T $\left[\si{\second}\right]$ is N. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
+Calling $\Delta_t$ $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of $f_s$ $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time T $\left[\si{\second}\right]$ is $N_s$. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
 Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum \cite{Aerodynamics_of_wind_turbines}:
 \begin{equation}
-    PSD(f) = \frac{I^2V_{10}l}{\left(1+1.5\frac{f \ l}{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
+    PSD(f) = \frac{\mathcal{I} ^2V_{10}l}{\left(1+1.5\frac{f \ l}{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
     \label{eq:PSD}
 \end{equation}
-where $I=\sigma/V_{10}$ is the turbulence intensity, $\sigma$ is the wind standard deviation $\left[\si{\meter\per\second}\right]$, $f$ is the frequency $\left[\si{\hertz}\right]$, $V_{10}$ is the 10 minutes average wind speed, $l$ is the length scale (said $h \ \left[\si{\meter}\right]$ the height above ground, $l=20h$ for $h<30 \ \left[\si{\meter}\right]$, and  $l=600 \ \left[\si{\meter}\right]$ otherwise).\\
+where $\mathcal{I} =\sigma/V_{10}$ is the turbulence intensity, $\sigma$ is the wind standard deviation $\left[\si{\meter\per\second}\right]$, $f$ is the frequency $\left[\si{\hertz}\right]$, $V_{10}$ is the 10 minutes average wind speed, $l$ is the length scale (said $h \ \left[\si{\meter}\right]$ the height above ground, $l=20h$ for $h<30 \ \left[\si{\meter}\right]$, and  $l=600 \ \left[\si{\meter}\right]$ otherwise).\\
 A wind series that fulfils the prescribed \acrshort{PSD} is:
 \begin{gather}
-    u(t) = \bar{u}+\sum_{n=1}^{N}\sqrt{\frac{2PSD(f_n)}{T}}\cos{(\omega_nt-\varphi_n)} \ \ \left[\si{\meter \per \second}\right]
+    u(t) = V_{10}+\sum_{n=1}^{N_s}\sqrt{\frac{2PSD(f_n)}{T}}\cos{(\omega_nt-\varphi_n)} \ \ \left[\si{\meter \per \second}\right]
     \label{eq:wind_series}
 \end{gather}
-with $t = i\Delta_t$ for $i=1,\dots,N$ and $\varphi$ randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
+with $t = i\Delta_t$ for $i=1,\dots,N_s$ and $\varphi$ randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
 An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \mesunt{\meter\per\second}$, height above ground of $h=150 
- \ \mesunt{\meter}$, and for a time horizon of $T = 300 \ \mesunt{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which is the interval where the 99\% of the generated data are expected to be. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
+ \ \mesunt{\meter}$, and for a time horizon of $T = 300 \ \mesunt{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which define the interval where the 99\% of the generated data are expected to be. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation.eps}
@@ -41,7 +41,7 @@ In the block the actual \acrshort{TSR} is firstly computed, then the power coeff
 \end{equation}
 \subsection{Pitch actuation}
 In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. \\
-The simplest mechanical model have a second order dynamic, as suggested by \cite{Olimpo_Anaya‐Lara}:
+The simplest mechanical model has a second order dynamic, as suggested by \cite{Olimpo_Anaya‐Lara}:
 \begin{equation}
     \frac{\beta}{\hat{\beta}}=\frac{\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
     \label{eq:beta_TF}
@@ -66,16 +66,16 @@ The dynamical equation block solves the Newton's law written on the rotor side o
       T_T^R\omega^R = T_T^G\omega^G\\
     \end{cases}
 \end{equation}
-This system of equation may be solved and finally the mechanical dynamic equation can be written on the rotor side:
+This system of equations may be solved and finally the mechanical dynamic equation can be written on the rotor side:
 \begin{gather}
     \left(J_R + \frac{J_G}{n^2}\right) \dot{\omega^R} = T_R^R - \frac{T_G^G}{n} - \left(B_R + \frac{B_G}{n^2}\right)\omega^R \\
     J_{eq} \dot{\omega^R} = T_R^R - T_G^R - B_{eq}\omega^R
     \label{eq:mech_eq}
 \end{gather}
-Where the subscription indicates if the quantity is referred to the rotor or to the generator, while the apex indicates the side of the transmission in which it is expressed.
+Where the subscript indicates if the quantity is referred to the rotor or to the generator, while the apex indicates the side of the transmission in which it is expressed.
 
 \subsection{Transmission damping}
-Finding information on the mechanical damping is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equation in \autoref{eq:damping_sys} may be setted up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, while the latter is the torque balance:
+Finding information on the mechanical damping is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equations in \autoref{eq:damping_sys} may be set up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, while the latter is the torque balance:
 \begin{gather}
 \left\{
 \begin{aligned}
@@ -100,7 +100,7 @@ B_{eq}^R= \frac{T_R^R}{\omega^R}(1 - \eta)= \frac{K_{opt}(\omega^R)^R}{\omega^R}
 \label{eq:damping}
 \end{gather} 
 where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the units of $\mesunt{\newton \meter \square\second }$.\\
-It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature information at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these conditions in mind, the damping becomes:
+It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature information at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these assumptions in mind, the damping becomes:
 \begin{equation}
   B_{eq}^R = K_{opt}\omega^R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
 \end{equation}
@@ -134,16 +134,16 @@ Since the power is not invariant in the transformation from the abc frame to the
 The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0 \, \mesunt{\ampere}$.
 \begin{figure}[htb]
 \input{d_pmsm.tex}
-\caption{Block diagram of the q-axis of a PMSM}
+\caption{Block diagram of the q-axis current control of a PMSM}
 \label{fig:PMSM}
 \end{figure}
 
-\autoref{fig:PMSM} represents the block diagram of the q-axis of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the electrical converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the torque imposed by the wind on the rotor.\\
+\autoref{fig:PMSM} represents the block diagram of q-axis current control of a \acrshort{PMSM}. $R_{iq}$ is the controller, $\uptau_{c}$ $\left[\si{\second}\right]$ is the time delay of the power electronic converter, $T_R \ \left[\si{\newton \per \meter}\right]$ is the torque imposed by the wind on the rotor.\\
 It could be seen that the aerodynamical torque enters as a disturb in the block diagram. This model is not a description of the real behavior of the \acrshort{WT}, because the $T_R$ is affected by the $\Omega_G$, and so in principle some sort of interaction between these quantities should have been introduced. Unfortunately, this dependency is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved observing that this mechanical dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. Finally for the sake of completeness, it must be remembered that the interactions between rotational speed and aero torque is taken into account into the aerodynamical block of the simulation. \\
 
  Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation.
 \begin{table}[htb]
-    \caption{Parameters for the \acrlong{PMSM} generator}
+    \caption{Parameters for the \acrlong{PMSM} generator presented by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}}
     \centering
     \begin{tabular}{lccc}
     \toprule
@@ -174,10 +174,10 @@ The friction has been considered $ 0 \, \mesunt{\kilo\gram\square\meter\per\seco
  \begin{gather}
  \uptau_{c}=\frac{\frac{1}{f_{inverter}}}{2}=\frac{\frac{1}{1000}}{2}=500 \ \ \mesunt{\micro \second}
  \end{gather}
- In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually at three half of the switching delay.
+ In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually of 1.5 the switching delay.
  
  \subsubsection{Extension of the static power curve}\label{subsec:genertaor_power_curve}
- Now that the generator's characteristics have been introduced, it is possible to extend the static power curve presented in \autoref{subsec:static_power_curve} taking into account the electrical losses.These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, considering both a unit or lower efficiency.
+ Now that the generator's characteristics have been introduced, it is possible to extend the static power curve presented in \autoref{subsec:static_power_curve} taking into account the electrical losses.These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, considering both unity and lower efficiency.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.65\textwidth]{images/vectorial/fig_static_electro_power.eps}

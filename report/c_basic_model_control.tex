@@ -1,14 +1,14 @@
 \newpage
 \section{Control of the implemented model}\label{sec:c_basic_model_control}
-In this section, the different control part is described, focusing in particular on the generator and the blade pitching. \\
+In this section, the different control parts are described, focusing in particular on the generator and the blade pitching. \\
 For what concerns the generator, first of all the basic idea behind the control is presented and then implemented according two different approaches. Secondly the low level control of the electrical machine is described.\\
 For what concerns the blade pitch control, the method implemented is firstly exposed in its theoretical concepts, then is validated on the NREL 5 MW wind turbine (since more data for benchmarking the process are available) and finally implemented for the DTU 10 MW.   
 
 \subsection{Generator's torque reference synthesis based on rotor}\label{subsec:torque_reference}
-In this section it is described the main idea used for controlling the generated power. This approach is in some sense general, and in fact it will be firstly applied here and then also on \autoref{subsec:method_control_P_GE}. The difference between the two is that now (as presented in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}) the focus is on the power extracted from the resource while latter it will be the power produced by the generator.
+In this section it is described the main idea used for controlling the generated power. This approach is in some sense general, and in fact it will be firstly applied here and then also on \autoref{subsec:method_control_P_GE}. The difference between the two is that now (as presented in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}) the focus is on the power extracted from the resource while later it will be the power produced by the generator.
 
 \subsubsection{Below rated wind speed}
-As said before, below rated wind speed the objective is to ensuring the maximum power extraction from the resource, and so working at the maximum power coefficient:
+As said before, below the rated wind speed the objective is to ensure the maximum power extraction from the resource, and so working at the maximum power coefficient:
 \begin{gather}
     T_G=\frac{P_G}{\omega_G}=\frac{\frac{1}{2}\rho c_{P,MAX} \pi R^2 V_0^3}{\omega_G} \ \ \left[\si{\newton\per\meter}\right]
     \label{eq:T_G1}
@@ -24,7 +24,7 @@ By replacing \autoref{eq:lambda_opt} into \autoref{eq:T_G1} then the drivetrain 
     \label{eq:T_G2}
 \end{equation}
 
-Since the $K_{opt}$ coefficient may be used either for computing the power and the torque, both on the generator an rotor side, having a table collecting the different usage cases may be usefull, and for this purpose \autoref{tab:gain_map} has been produced.
+Since the $K_{opt}$ coefficient may be used either for computing the power and the torque, both on the generator an rotor side, having a table collecting the different use cases may be usefull, and for this purpose \autoref{tab:gain_map} has been produced.
 \begin{table}[htb]
     \centering
     \caption{Map for the use of torque constant}
@@ -38,13 +38,13 @@ Since the $K_{opt}$ coefficient may be used either for computing the power and t
     \label{tab:gain_map}
 \end{table}
 
- For the differences discussed above in the identification of the power coefficient and tip speed ratio, there is a small difference between the $K_{opt}$ proposed from \cite{DTU_Wind_Energy_Report-I-0092} and the one computed by me, and again the one compute will be used in the simulation:
+ For the differences discussed above in the identification of the power coefficient and tip speed ratio, there is a small difference between the $K_{opt}$ proposed from \cite{DTU_Wind_Energy_Report-I-0092} and the one computed by me, and again the one computed will be used in the simulation:
  \begin{gather*}
      K_{opt, report} = 1.001 \cdot 10^7 \ \ \ \left[\si{\newton\meter\square\second}\right] \\
      K_{opt, computed} = 1.020 \cdot 10^7 \ \ \ \left[\si{\newton\meter\square\second}\right] 
  \end{gather*}
 
-\subsubsection{Above rated winspeed}
+\subsubsection{Above rated \acrshort{WS}}
 Above rated wind speed the objective is to keep the constant rotational speed and so the command:
 \begin{equation}
     T_G = \frac{P_{rated}}{\omega_{rated}^G} = \frac{nP_{rated}}{\omega_{rated}^R}\ \ \left[\si{\newton\per\meter}\right]
@@ -64,7 +64,7 @@ The saturation block constraints the reference power in between $P_G^* \in \left
 The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
 
 \subsection{Generator's torque reference synthesis based on generator}\label{subsec:method_control_P_GE}
-In this section another approach to the turbine control is proposed, and it is based on the maximization of the power at the generator side of the driveline rather than the rotor one. In fact in general it is not true that the maximization of the power sent to the grid happens when the maximum power is extracted by the wind. \textcolor{red}{Add some references to this type of study - I have not found them}. Also this type of control is studied separating the operational conditions below and above wind speed.\\
+In this section another approach to the turbine control is proposed, and it is based on the maximization of the power at the generator side of the driveline rather than the rotor one. In fact in general it is not true that the maximization of the power sent to the grid happens when the maximum power is extracted by the wind. \textcolor{red}{Add some references to this type of study - I have not found them}. Also this type of control is studied separating the operational conditions below and above the rated \acrshort{WS}.\\
 
 First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
 Starting from a torque balance, the \textit{q-axis} current can be expressed as:
@@ -89,9 +89,9 @@ and to highlight the terms composing this power expression, the equation can be 
 \end{gather}
 
 \subsubsection{Below rated wind speed}
-In this operating region we are interested in identify a \acrlong{TSR} and a pitch that maximize the power extraction from the resource. In this case the $\lambda$ and $\theta$ are not univocally identified as done in \autoref{subsec:lookup_cp}, and so it is not guarantee to find an univocal $K_{opt}$ to be used in the control at all wind speeds.\\
+In this operating region we are interested in identifying a \acrlong{TSR} and a pitch that maximize the power extraction from the resource. In this case the $\lambda$ and $\theta$ are not univocally identified as done in \autoref{subsec:lookup_cp}, and so it is not guaranteed to find an univocal $K_{opt}$ to be used in the control at all \acrshort{WS}.\\
 
-To study the problem, a numerical approach is followed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximize the power itself) wrt the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}. The minimization has been repeated twice, considering or not the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_damping}, when the damping is not included in the picture, the output power is the incoming in the rotor minus the joule loss (since in that case $T_R=T_G$).
+To study the problem, a numerical approach is followed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximizing the power itself) with respect to the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}. The minimization has been repeated twice, considering or excluding the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_damping}, when the damping is not included in the picture, the output power is the incoming over in the rotor minus the joule loss (since in that case $T_R=T_G$).
 \begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
     \centering
@@ -121,11 +121,11 @@ To study the problem, a numerical approach is followed. For a reasonably fine sa
   \label{fig:parameters_for_below_rated}
 \end{figure}
 
-From the results it could be seen that in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$ the considered parameters have some variability below the velocity around $6 \mesunt{\meter\per\second}$, while they are constant above this threshold. This type of map require an estimation of the wind speed in order to set the desired TSR according to the required velocity.  \\ 
-When B=0 $\mesunt{\kilo\gram\square\meter\per\second}$, both the pitch angle and the tip speed ratio are almost constant and so they could be considered as $\theta_{GE}= 0 \, \mesunt{\degree}$ and $\lambda=8.106$. This result is quite interesting because it allow us to use the same approach used in \autoref{eq:T_G2} to control the turbine even in this case. 
+From the results it could be seen that in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$ the considered parameters have some variability below the velocity around $6 \mesunt{\meter\per\second}$, while they are constant above this threshold. This type of map requires an estimation of the wind speed in order to set the desired TSR according to the required velocity.  \\ 
+When B=0 $\mesunt{\kilo\gram\square\meter\per\second}$, both the pitch angle and the tip speed ratio are almost constant and so they could be set to $\theta_{GE}= 0 \, \mesunt{\degree}$ and $\lambda=8.106$. This result is quite interesting because it allow us to use the same approach used in \autoref{eq:T_G2} to control the turbine even in this case. 
 
 \subsubsection{Above rated wind speed}
-Above rated wind speed, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study in the pitch angle has been done, meaning that for each wind speed, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, then the higher the power extracted).
+Above rated wind speed, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study in the pitch angle has been done, meaning that for each wind speed, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, the higher the power extracted is).
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.5\textwidth]{images/vectorial/fig_new_pitch_map.eps}
@@ -134,10 +134,10 @@ Above rated wind speed, the definition of the new pitch angle map followed the s
 \end{figure}
 
 \subsubsection{Implementation details}
-In order to validate these strategy, the two controller has been modified as follows:
+In order to validate these strategies, the two controllers have been modified as follows:
 \begin{itemize}
-  \item PMSM control: in the schema \autoref{fig:d_torque_control_2}, the newly computed  $K_{opt}$ has been used, and the mechanical input power to the generator $P_G$ has been replaced by the electrical power $P_{G, out}$ in the feedback line
-  \item Blade pitch control: the new value of rated rotational speed has been replaced to the old one in \autoref{fig:pitch_control}
+  \item PMSM control: in the schema in \autoref{fig:d_torque_control_2}, the newly computed  $K_{opt}$ has been used, and the mechanical input power to the generator $P_G$ has been replaced by the electrical power $P_{G, out}$ in the feedback line
+  \item Blade pitch control: the new value of rated rotational speed has been used instead of the old one in \autoref{fig:pitch_control}
 \end{itemize}
 
 \subsection{Generator's low level control}
@@ -222,7 +222,7 @@ As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, 
 
 The core part of the controller is a \acrfull{PI} action driven by the speed error defining the pitch angle. A saturation block on the pitch angle is used to impose the mechanical constraints, so to limit the blade rotation: $\theta \in \left[0, 90\right] \si{\degree}$. This threshold prevents that a negative speed error produces a pitching towards stalling.
 
-The tuning of this PI is not straightforward because the system to be controlled is not linear, and so the standard techniques cannot be implemented. In particular, at high wind speeds the aerodynamic loads are more sensitive to changes in the angles of attack, and so the change in pitch should be limited \cite{Aerodynamics_of_wind_turbines}. A possible solution is to treat the turbine as a linear varying-parameter system  and schedule the gain during the operation of the mechanism, for example basing on one state of the system itself. This is an advantageous choice, because the approach simplifies the description of the system and does not require a lot of measurements. A frequently done choice is to use the pitch angle itself to schedule the gains. In \autoref{subsec:gain_poly} a gain scheduling law proposed in the literature is reported, while \autoref{subsec:gain_schdeuling_aero} briefly describes how to compute the gains starting from the aerodynamic. In this letter case, the procedure is initially validate on the NREL 5 MW in \autoref{subsec:gain_schdeuling_NREL5MW} and then applied to the DTU 10 MW in \autoref{subsec:gain_schdeuling_DTU10MW}.\\
+The tuning of this PI is not straightforward because the system to be controlled is not linear, and so the standard techniques cannot be implemented. In particular, at high wind speeds the aerodynamic loads are more sensitive to changes in the angles of attack, and so the change in pitch should be limited \cite{Aerodynamics_of_wind_turbines}. A possible solution is to treat the turbine as a linear varying-parameter system  and schedule the gain during the operation of the mechanism, for example based on one state of the system itself. This is an advantageous choice, because the approach simplifies the description of the system and does not require a lot of measurements. A frequently made choice is to use the pitch angle itself to schedule the gains. In \autoref{subsec:gain_poly} a gain scheduling law proposed in the literature is reported, while \autoref{subsec:gain_schdeuling_aero} briefly describes how to compute the gains starting from the aerodynamic. In this letter case, the procedure is initially validate on the NREL 5 MW in \autoref{subsec:gain_schdeuling_NREL5MW} and then applied to the DTU 10 MW in \autoref{subsec:gain_schdeuling_DTU10MW}.\\
 
 As final remark, it must be noted that using the actual pitch angle as scheduling variable, implies that the controller dynamic are not slower compared to the system itself and so it may not behave exactly as expected in the vicinity of the rated wind speed.
 
@@ -255,11 +255,11 @@ As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference},
     GK(\theta) = \frac{1}{1+\frac{\theta}{\theta_K}} \label{eq:GK}
 \end{gather}
 where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, n is the gear ratio, $\zeta_{\Phi}$ and $\omega_{\Phi\eta}$ are the damping ratio and the resonant frequency of the dynamic response of the PI-regulator. \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6\mesunt{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power w.r.t. the pitch angle $-\frac{dP}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
-The frozen wake BEM is implemented in two steps, then repeated for all the windspeeds between the rated and the cut out one. In the first one, the standard BEM presented in \autoref{subsec:BEM_algorithm} is applied on the blade, considering that it is pitched as to produce the rated power (i.e. the pitch angle is the one scheduled in \autoref{subsec:pitch_map}). In this step the induction coefficients \textit{a} and \textit{$a_{prime}$} found are stored. In the second step, the previously described BEM is applied but the pitch angle is changed on a set around the optimal one, while the induction coefficients are kept constant (i.e. they are not computed with the iterative procedure). The power is then computed for each pitch angle and finally the power derivative wrt the pitch angle is obtained applying the finite difference method.
+The frozen wake BEM is implemented in two steps, then repeated for all the \acrshort{WS} between the rated and the cut out one. In the first one, the standard BEM presented in \autoref{subsec:BEM_algorithm} is applied on the blade, considering that it is pitched as to produce the rated power (i.e. the pitch angle is the one scheduled in \autoref{subsec:pitch_map}). In this step the induction coefficients \textit{a} and \textit{$a_{prime}$} found are stored. In the second step, the previously described BEM is applied but the pitch angle is changed on a set around the optimal one, while the induction coefficients are kept constant (i.e. they are not computed with the iterative procedure). The power is then computed for each pitch angle and finally the power derivative with respect to the pitch angle is obtained applying the finite difference method.
 
 \subsubsection{Validation of the procedure on the NREL 5MW}\label{subsec:gain_schdeuling_NREL5MW}
 In order to validate the procedure, the gains are initially computed for the NREL 5MW turbine because more intermediate steps are available in literature \cite{NREL_5MW_reference}.\\
-The derivative of the power computed at the expected pitch angle is  reported in \autoref{fig:fig_dPdtheta}, alongside its interpolation done by a first and second order polynomials. It could be seen that the second order approximation seems to better follow the tendency of the computed points with respect to the first order one. 
+The derivative of the power computed at the expected pitch angle is  reported in \autoref{fig:fig_dPdtheta}, alongside its interpolation done by a first and second order polynomials. It could be seen that the second order approximation seems to better follow the trend of the computed points with respect to the first order one. 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/fig_dPdtheta.eps}
@@ -267,7 +267,7 @@ The derivative of the power computed at the expected pitch angle is  reported in
     \label{fig:fig_dPdtheta}
 \end{figure}
 
-The interpolations are used to find two important parameters, called $\theta_{K}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0}$. The first is the blade-pitch angle at which the pitch sensitivity has doubled from its value at the rated operating point, while the second is the pitch sensitivity at 0 pitch (i.e. the intercept of the interpolation). For the turbine under investigations, these two parameters are $\theta_K=10.25 \mesunt{\degree}$ and  $\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -29.15 \mesunt{\mega\watt\per\radian}$, while the ones reported in the report are $\theta_K=6.3 \mesunt{\degree}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -25.52\mesunt{\mega\watt\per\radian}$ (for the linear case). These values seems to be reasonably close each other.\\ 
+The interpolations are used to find two important parameters, called $\theta_{K}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0}$. The first is the blade-pitch angle at which the pitch sensitivity is twice the value at the rated operating point, while the second is the pitch sensitivity at 0 pitch (i.e. the intercept of the interpolation). For the turbine under investigations, these two parameters are $\theta_K=10.25 \mesunt{\degree}$ and  $\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -29.15 \mesunt{\mega\watt\per\radian}$, while the ones reported in the report are $\theta_K=6.3 \mesunt{\degree}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -25.52\mesunt{\mega\watt\per\radian}$ (for the linear case). These values seem to be reasonably close each other.\\ 
 Once all the terms in \autoref{eq:ki}, \ref{eq:kp}, and \ref{eq:GK} are available and the gain scheduling can be determined, and the comparison reported in \autoref{fig:fig_gain_pitch}.
 \begin{figure}[htb]
     \centering
