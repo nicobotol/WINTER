@@ -83,9 +83,9 @@ In the case of large offshore WTs the drawbacks of the described technologies ar
 \subsection{Power electronic converters}
 As will be better seen in \autoref{sec:control_objective}, the power electronic converters are the components that allow the turbine to work in a wider regions of speeds, so in maximizing the energy harvested from the wind. \cite{Olimpo_Anaya‐Lara} reports the most important requirements of those components, among whom there are the reliability (since they are reported to be at the top of the list of the most common failures). \\
 The functional principle of these converter is to transform the variable voltage/frequency output of the turbine to DC and back to AC with fixed frequency/voltage suitable for connection to the grid.\\
-According to the type of electrical generator and the power rating, different constructions are possible for those generators. The wider classification can be done between low voltage ($<1 \mesunt{\kilo \volt}$) and medium voltage (1-35 $\mesunt{\kilo \volt}$). The \acrfull{VSR} controls the generator torque and speed, while the \acrfull{VSI} controls the DC bus and the grid reactive power. Typical switching frequencies for these electric components are in the range 1-3 $\mesunt{\kilo \hertz}$. \\
+According to the type of electrical generator and the power rating, different constructions are possible for those generators. The wider classification can be done between low voltage ($<1 \mesunt{\kilo \volt}$) and medium voltage (1-35 $\mesunt{\kilo \volt}$). The \acrfull{VSR} controls the generator torque and speed, while the \acrfull{VSI} controls the DC bus and the grid reactive power. Typical switching frequencies for these electric components are in the range 1-3 $\mesunt{\kilo \hertz}$ \cite{Olimpo_Anaya‐Lara}. \\
 Two possible arrangements of power electronic devices used for achieving the power conversion at low voltage are visible in \autoref{fig:B2B_converters}.
-In particular \autoref{fig:B2B_converter} process all the output power of the generator and so it is employed with \acrshort{SCIG}, \acrshort{PMSM}, or \acrshort{WRSM}. \autoref{fig:B2B_converter_2} shows that it is also possible to reduce the amount of power that the power electronic has to be designed for, as done for example in the case of \acrshort{DFIG}, where only around 30\% of the rated power goes through the power electronic. 
+In particular \autoref{fig:B2B_converter} process all the output power of the generator and so it is employed with \acrshort{SCIG}, \acrshort{PMSM}, or \acrshort{WRSM}. \autoref{fig:B2B_converter_2} shows that it is also possible to reduce the amount of power that the power electronic has to be designed for, as done for example in the case of \acrshort{DFIG}, where only around 30\% of the rated power goes through the power electronic. Both these arrangements use IGBTs as switching devices.
 \begin{figure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
@@ -112,5 +112,18 @@ Alongside with the previously discussed configurations, \cite{Olimpo_Anaya‐Lar
   \label{fig:boost_converter}
 \end{figure}
 
-\subsection{Other subsystems}
-\textcolor{blue}{Could it be a good idea to add something about the pitching mechanism, the mechanical brake, and the power electronic processing the output of the generator even though they are not implemented in the simulator?}
+\subsection{Rotor braking system}
+It is generally known that the lifespan of a wind turbine is in the order of 20 years, reaching even 30-35 with proper maintenance and repairing, as stated for example by the WT manufacturer Gamesa \cite{gamesa_life_turbine}. In all this long period of time the turbine has to be stopped in case of extreme events or maintenance, and so a rotor braking system is necessary.\\
+An aerodynamics based and a mechanical emergency brake are usually employed. The first one acts by pitching the entire blades of 90 $\si{\degree}$ upwind (if the blade can be pitched from the root) or turning only the tip (whenever the pitching mechanism is not present, such as the old stall-regulated turbines). The generated aero torque slows down the rotor in few rotations at the most \cite{brake_dromstorre}. Usually these mechanism are spring operated in order to work also under electrical or hydraulic power failures.\\
+The mechanical brake is mainly used as parking system and emergency brake \cite{brake_dromstorre}. This brake is usually placed on the high speed shaft (in the geared turbines) and activated by an hydraulic circuit \cite{brake_wiley}. 
+
+\subsection{Yaw mechanism and yaw braking}
+The yaw mechanism is the mechanical part allowing the nacelle and the rotor to be rotated around the tower axis. This feature is necessary for controlling the swept area of the turbine, which can be used either for maximizing the power production and also for reducing the power and loads when necessary. Since the moment of inertia of the nacelle-rotor assemble with respect yaw is high, then this approach is not used as primary power control method, even though some attempts are cited in \cite{Kim_2014}. On the other hand, yaw control can be exploited in wind parks in order to deflect the wake flow of one turbine providing to the downstream one an higher incoming wind speed, and thus an higher energy production \cite{Kim_2014}.\\
+An example of yawing/brake mechanism assemble can be seen in \autoref{fig:fig_brake}. Other different arrangements are also possible, depending also on other factors such as the accessibility for installation and maintenance, the weight reduction, and the stress distribution. Furthermore the visible electric motors can be replaced by hydraulic ones \cite{Kim_2014}.\\
+For what concerns yaw brake, it is often hydraulic regulated even tough again some electric configurations are available \cite{Kim_2014}. 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{images/fig_brake.jpg}
+  \caption{Example of yawing mechanism, source \cite{Kim_2014}}
+  \label{fig:fig_brake}
+\end{figure}

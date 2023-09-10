@@ -1,5 +1,12 @@
 \section{WT controllers and their objectives} \label{sec:control_objective}
+\textcolor{red}{Riscrivere introduzione}
 In this section of the work first of all the operating regions of a WT are presented and then the two main controllers are discussed. The first one is in charge of limiting the power extracted from the resource, when needed, by acting on the pitch angle, while the second ensures the correct rotational speed of the rotor in order to fullfil the requirements of the specific operational region.
+
+\subsection{Control objectives}
+There are different conceptual levels of control for the wind turbines, each of them with a specific target.\\  
+The primary objective of the controller is to keep the rotor speed and generated power within limits. Secondary objectives include the reduction of the load on the mechanical components (both as peak values and also the fatigue ones) and the reduction of the vibrations. In modern offshore turbines this has also to take into account the external load applied by the waves. \\
+On an higher hierarchical level there are the handling of start up and shut down operations, alongside the extreme events.
+
 
 \subsection{Operational regions of a WT}
 Even thought the scope of a \acrlong{WT} is usually to harvest as much mechanical energy as possible by reducing the wind's kinetic one, different working regions and corresponding wind speeds levels may be identified depending on the followed literature. For example \cite{Olimpo_Anaya‐Lara} uses two regions (called I and II), \cite{5874598} uses three (called 1, 2, 3), while \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} uses five (called I, II, III, IV, and V). A common denominator is that in all of the sources the \textit{partial load} and the \textit{full load} regions are identified. The \textit{partial load} is bounded between the \textit{cut-in wind speed} (i.e. the minimum wind speed required to enable the blade rotation) and the \textit{rated wind speed} (i.e. the lowest velocity at which the rated mechanical power is produced), and the mechanical power is below the rated one. Complementary, in the \textit{full load} the mechanical power would exceed the rated one, but it is limited by the controller. The boundaries of this regime are the rated wind speed and the \textit{cut-out} one (i.e. the maximum one taken into account during the design phase). \\
@@ -13,15 +20,23 @@ The further identified region in \cite{5874598} and region I in \cite{10-MW_Dire
 
 \subsection{Power control}
 As could be seen in \autoref{eq:power}, the mechanical power scales with the cubic of the wind speed, meaning that operating at the maximum power coefficient ($c_{P, max}$) may quickly lead to exceeding the maximum load for which the blades are designed and the power manageable by the different subsystems. In order to limit these loads, control actions have to be taken. The most common ones are the stall regulation and the variable-speed pitch regulation, as reported in \cite{Aerodynamics_of_wind_turbines}.
+
 \subsubsection{Stall regulation}\label{subsec:stall_regulation_theory}
-The \acrshort{WTs} employing this method are the simplest ones from the mechanical point of view because blades are bolted to the hub and cannot be pitched once they are setted. The electrical generator often employed is the robust asynchronous machine, requiring an almost constant rotational speed.\\
-When the incoming wind increases its speed, then the \acrshort{AOA} decreases reducing the lift and increasing the drag. \textcolor{red}{Since then in the report this control method is employed, maybe is better to go a little bit further in this explanation}\\
+The \acrshort{WTs} employing this method are the simplest ones from the mechanical point of view and in fact it was used in the first WTs, and so it is here reported to give some explanations also on the historical development. Nowadays it is no more chosen in the MW-size turbines, even though \cite{Grasso_2016} reports that it may be still used in some small and medium kW turbines. The main reasons are the reduced number of components and sensors which lead to a reduced design complexity and finally to minor costs and higher reliability. \\
+The simplicity comes from the fact that the blades are bolted to the hub and cannot be pitched once they are setted. The electrical generator often employed is the robust asynchronous machine, requiring an almost constant rotational speed.\\
+When the incoming wind increases its speed, then the \acrshort{AOA} decreases reducing the lift \texit{l} and increasing the drag \textit{d}, leading to a lower tangential load, which is given by:
+\begin{equation}
+  p_T = l \sin(\theta) - d \cos(\theta) \mesunt{\newton} \text{ with } \alpha = \phi - \theta
+\end{equation}
+$p_T$ is the force tangential to the rotorplane, $\alpha$ is the \acrshort{AOA}, $\phi$ is the angle between the plane of rotation and the relative velocity, and $\theta$ is the pitch angle (that in this type of turbine is fixed).\\ 
 The construction has two main drawbacks: the rigidity of the operations and the extreme load rejection. Even though the mechanical construction is reliable, it is not very flexible since the maximum power reduction is limited by the initial positioning of the blades, and their setting is possible only by unbolting and repositioning them.\\
 Furthermore, whenever the generator stops to produce a resisting torque, it is possible that the stalling would not be effective enough to avoid the acceleration of the drivetrain, increasing the risks of breakage for the components. In that case aerodynamic safety systems are activated, for example by turning the outer part of the blades of 90$\si{\degree}$ w.r.t. the rotor plane. 
 
 \subsubsection{Pitch regulation with constant rotor rotational speed}
-In this type of \acrshort{WT} the pitch angle can be actively controlled along the blade. The pitching mechanism may be implemented with different kinds of mechanical systems, such as hydraulic pistons, hydraulic motors, or electrical motors. \\
-Since the dynamic of the wind fluctuations are faster than the ones of the blade pitching system, then it is possible that the pitch regulated WT behaves like a stall regulated \acrshort{WT} for some time and so the output power locally exceeds the rated one.
+This control mechanism is in some way an extension of the previous one, since the pitch angle can be actively controlled along the blade while the rotor rotation speed is kept constant. This method allows the use of an asynchronous machine while limits the power when the incoming tends to grow too much. \\
+ The pitching mechanism may be implemented with different kinds of mechanical systems, such as hydraulic pistons, hydraulic motors, or electrical motors. \\
+Since the dynamic of the wind fluctuations are faster than the ones of the blade pitching system, then it is possible that the pitch regulated WT behaves like a stall regulated \acrshort{WT} for some time and so the output power locally exceeds the rated one.\\
+Neither this kind of machines are nowadays employed.
 
 \subsubsection{Variable-speed pitch regulation}
 This is the most common type nowadays, and the \acrshort{WTs} investigated in this work belongs to this kind. Their working philosophy in partial load regime is to vary the rotor speed in order to keep $\lambda = \lambda_{MAX}$ in \autoref{eq:TSR}, and consequently $c_p=c_{p,max}$. On the other hand, in the full load region the rotational speed is kept constant at $\omega = \omega_{rated}$ while the power is limited by acting on the pitch angle, and so on the $c_P$ in the relation $c_P(\lambda, \theta)$. The switching between the regions may be done using some smoothing functions. \\
@@ -30,7 +45,8 @@ In addition to the classification done in \ref{subsec:mech_pow_and_pow_coeff} (i
 
 \subsection{Yaw control}
 The yaw controller rotates the nacelle in order to set the orientation of the rotor-plane w.r.t. the incoming wind speed. In stall and pitch controlled \acrshort{WTs} this is done in order to align the rotational axis with the incoming stream and so maximizing the air passing through the rotor. \\
-According to \cite{Aerodynamics_of_wind_turbines}, some attempts to develop a power controller based only on the yaw have been done in the past, but with low implications nowadays. 
+According to \cite{Aerodynamics_of_wind_turbines}, some attempts to develop a power controller based only on the yaw have been done in the past, but with low implications nowadays at turbine level. 
 
 \subsection{Electrical generator control}\label{subsec:PMSM_control}
+\textcolor{red}{Rivedere questo capitolo, anche in considerazione quanto suggerito durante la revisione}
 In general, control of these machines may be focused on two objectives: the speed or the torque, and the first includes the second as a nested loop. For the sake of the thesis, a torque control has to be implemented because it is easy to synthesize this signal in the two control regions. It's worth nothing that the control depends on the architecture type of the turbine. 
