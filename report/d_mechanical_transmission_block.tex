@@ -1,0 +1,15 @@
+\tikzstyle{block} = [draw, fill=white, rectangle, 
+    minimum height=2.5em, minimum width=3em]
+\tikzstyle{sum} = [draw, fill=white, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+  \node [input, name=input] {};
+  \node [block, right of=input, minimum size=24mm, align=center] (main) {Mechanical \\ transmission};
+  \node [output, right of=main] (output) {};
+
+  \draw [->] (input) -- node {$\omega_R$} (main);
+  \draw [->] (main) -- node {$\omega_G$} (output);
+\end{tikzpicture}

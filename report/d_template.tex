@@ -1,0 +1,16 @@
+\tikzmath{\ninput = 2; \noutput = 1;
+\ninputp1 = \ninput + 1; \noutputp1 = \noutput + 1;}
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+  
+  \node (controller) [draw,minimum size=24mm] {Controller};
+  \path (controller.north west)--(controller.south west) foreach \j in {1,...,\ninput} {  coordinate [pos=1/\ninputp1*\j] (y\j)};
+  
+   \foreach \i/\name  in {1/$P_G$,2/$\omega_G$}  
+   \draw[<-] (y\i) -- ++(-2,0) node[left] (x\i){\name};
+
+  \path (controller.north east)--(controller.south east) foreach \j in {1,...,\noutput} {coordinate [pos=1/\noutputp1*\j] (z\j)};
+\foreach \i/\name  in {1/$T_G$} 
+    \draw[->] (z\i) -- ++(2,0) node[right] (t\i){\name};
+
+\end{tikzpicture}
