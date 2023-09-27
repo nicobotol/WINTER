@@ -36,7 +36,8 @@ dot/.default = 4pt % size of the circle diameter
   \node [style=block, align=center] (3) at (3, -2.5) {Mechanical \\ transmission};
   \node [style=block, align=center] (4) at (6, -2.5) {Pitch \\ controller};
   \node [style=block, align=center] (5) at (9, -2.5) {Pitch \\ actuator};
-  \node [style=block, align=center] (6) at (6, -4.25) {Torque \\ controller};
+  \node [style=block, align=center] (6) at (3, -4.25) {Torque \\ controller};
+  \node [style=block, align=center] (24) at (6, -4.25) {$\frac{2T_G^*}{3p\Lambda_{mg}}$};
   \node [style=block] (7) at (9, -4.25) {Generator};
   \node [style=block, align=center] (8) at (12.5, -4.25) {Power \\electronics};
   \node [style=block] (9) at (15, -4.25) {Grid};
@@ -50,9 +51,10 @@ dot/.default = 4pt % size of the circle diameter
   \node [dot=1pt] (18) at (10.5, -4.25) {};
   \node [dot=1pt] (19) at (4.5, -0.75) {};
   \node [dot=1pt] (20) at (10.5, -5.25) {};
-  \node [dot=1pt] (21) at (4.75, -5.25) {};
+  \node [dot=1pt] (21) at (1.25, -5.25) {};
   \node [dot=1pt] (22) at (10, -4) {};
   \node [dot=1pt] (23) at (10.5, -4) {};
+  \node [dot=1pt] (25) at (1.25, -3.5) {};
 
   \draw [->] (10) -- node {$V_0$} (1.150);
   \draw [->] (11) -- node {$\omega_R$} (3);
@@ -62,13 +64,15 @@ dot/.default = 4pt % size of the circle diameter
   \draw [-] (12) -- node {} (13);
   \draw [->] (13) |- node {} (1.175);
   \draw [->] (3) -> node {$\omega_G$} (4);
-  \draw [->] (4) -> node {$\hat{\theta}$} (5);
+  \draw [->] (4) -> node {$\theta^*$} (5);
   \draw [-] (5) -| node {} (14);
   \draw [-] (15) -- node {$\theta$} (14);
   \draw [->] (15) |- node {} (1.200);
-  \draw [->] (17) |- node {} (6.160);
+  \draw [-] (17) |- node {} (25);
+  \draw [->] (25) |- node {} (6.160);
   \draw [->] (21) |- node {} (6.180);
-  \draw [->] (6) -- node {$\hat{T_G}$} (7);
+  \draw [->] (6) -- node {$T_G^*$} (24);
+  \draw [->] (24) -- node {$I_q^*$} (7);
   \draw [->] (7) -> node[pos=0.65] {$P_G$} (8);
   % \draw [-] (18) |- node {} (19);
   \draw [-] (18) -- node {} (20);

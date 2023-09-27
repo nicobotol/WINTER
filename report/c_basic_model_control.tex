@@ -2,7 +2,7 @@
 \section{Control of the implemented model}\label{sec:c_basic_model_control}
 In this section, the different control parts are described, focusing in particular on the generator and the blade pitching. \\
 For what concerns the generator, first of all the basic idea behind the control is presented and then implemented according two different approaches. Secondly the low level control of the electrical machine is described.\\
-For what concerns the blade pitch control, the method implemented is firstly exposed in its theoretical concepts, then is validated on the NREL 5 MW wind turbine (since more data for benchmarking the process are available) and finally implemented for the DTU 10 MW.   
+For what concerns the blade pitch control, the method implemented is firstly exposed in its theoretical concepts, then it is validated on the NREL 5 MW wind turbine (since more data for benchmarking the process are available) and finally implemented for the DTU 10 MW.   
 
 \subsection{Generator's torque reference synthesis based on rotor}\label{subsec:torque_reference}
 In this section it is described the main idea used for controlling the generated power. This approach is in some sense general, and in fact it will be firstly applied here and then also on \autoref{subsec:method_control_P_GE}. The difference between the two is that now (as presented in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}) the focus is on the power extracted from the resource while later it will be the power produced by the generator.
@@ -38,7 +38,7 @@ Since the $K_{opt}$ coefficient may be used either for computing the power and t
     \label{tab:gain_map}
 \end{table}
 
- For the differences discussed above in the identification of the power coefficient and tip speed ratio, there is a small difference between the $K_{opt}$ proposed from \cite{DTU_Wind_Energy_Report-I-0092} and the one computed by me, and again the one computed will be used in the simulation:
+ For the differences discussed above in the identification of the power coefficient and tip speed ratio, there is a small difference (1.9$\%$) between the $K_{opt}$ proposed from \cite{DTU_Wind_Energy_Report-I-0092} and the one computed by me, and again the one computed will be used in the simulation:
  \begin{gather*}
      K_{opt, report} = 1.001 \cdot 10^7 \ \ \ \left[\si{\newton\meter\square\second}\right] \\
      K_{opt, computed} = 1.020 \cdot 10^7 \ \ \ \left[\si{\newton\meter\square\second}\right] 
@@ -182,7 +182,7 @@ For its simplicity the chosen controller is a \acrshort{PID} one, and the design
  
  The Bode diagram of the open loop system without any controller (i.e. taking into account the shaft mechanical dynamic, the generator's electrical dynamic, and the inverter time delay), the open loop system with the controller and the controller itself are reported in \autoref{fig:fig_bode_generator}. The bode plot of the close loop is shown in \autoref{fig:fig_bode_cl}. Given G(s) the direct transfer function (i.e. from input to output) and H(s) the feedback one, then the close loop transfer function is given by:
  \begin{gather}
-     G_{CL}=\frac{G(s)H(s)}{1+G(s)H(s)}=\frac{R_{iq}(s)G_c(s)Y_{iq}(s)}{1+R_{iq}(s)G_c(s)Y_{iq}(s)}
+     G_{CL}=\frac{G(s)}{1+G(s)H(s)}=\frac{R_{iq}(s)G_c(s)Y_{iq}(s)}{1+R_{iq}(s)G_c(s)Y_{iq}(s)}
      \label{eq:close_loop_TF}
  \end{gather}
  where $R_{iq}(s)$, $G_c(s)$, $Y_{iq}(s)$, have the meaning of \autoref{subsec:PMSM_control}, and $H(s)=1$ since there is no transfer function on the feedback line.
