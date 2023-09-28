@@ -64,10 +64,9 @@ for i = 1:wind.WS_len
     [rotor, generator, blade, T_R0] = initial_conditions_GE(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
       generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
   end
-%mean(wind_speed(1:100, 2))
+
   % Run the simulation
-  out = sim(in, 'ShowProgress','on'); 
-  out_store{i} = out; % store the results of the simulation
+  out_store{i} = sim(in, 'ShowProgress','on'); % store the results of the simulation
 
 %   % Uncomment all the blocks
 %   uncomment_all(simulation.mdl)

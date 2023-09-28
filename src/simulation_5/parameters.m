@@ -127,10 +127,10 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 50*ones(3, 1); % max time to investigaste [s]
+simulation.stop_time = 20*ones(1, 1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 6;        % 1 -> constant wind speed
+simulation.type = 1;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -243,8 +243,8 @@ blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*...
   blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [15 15 15];           % 10 minutes mean wind speed [m/s]]
-wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [15];           % 10 minutes mean wind speed [m/s]]
+wind.turbulence = [1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]

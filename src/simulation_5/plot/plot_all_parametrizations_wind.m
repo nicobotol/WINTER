@@ -60,10 +60,12 @@ plot_parametrization_wind('fig_omega_param',out_store,'omega_R', ...
   end
 
   cP1 = out_store{1}.cP.Data;
-  cP2=out_store{2}.cP.Data;
   t1 =  out_store{1}.cP.Time;
-  t2 = out_store{2}.cP.Time;
   figure();hold on;
   plot(t1, cP1,'DisplayName','Sim1');
-  plot(t2, cP2,'DisplayName','Sim2');
+  if length(out_store) > 1
+    t2 = out_store{2}.cP.Time;
+    cP2=out_store{2}.cP.Data;
+    plot(t2, cP2,'DisplayName','Sim2');
+  end
   legend('Location','best')
