@@ -151,25 +151,25 @@ As said before, nowadays the Permanent Magnet Syncronous Machines (PMSM) are the
 In this work the isotropic \acrshort{PMSM} are taken into account. For studying them it is convenient to project the fundamental equations from a reference frame fixed in the stator windings (named \textit{abc}) in a reference frame synchronous with the rotor, named \textit{dq frame}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
 In this frame the equations of the machine are:
 \begin{gather}
-  0=u_d-Li_q\omega_{me}+L\frac{di_d}{dt}+Ri_d 
+  0=u_d-L_{s}i_q\omega_{me}+L_{s}\frac{di_d}{dt}+R_{s}i_d 
   \label{eq:d_axis_eq}\\
-  \omega_{me}\Lambda_{mg}=u_q+Li_d\omega_{me}+L\frac{di_q}{dt}+Ri_q
+  \omega_{me}\Lambda_{mg}=u_q+L_{s}i_d\omega_{me}+L_{s}\frac{di_q}{dt}+R_{s}i_q
   \label{eq:q_axis_eq}
 \end{gather}
-where $u_d$ and $u_q$ are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), $i_d$ and $i_q$ are the current in the dq frame (transformed in the same way as the the voltage), $\omega_{me}$ is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega$, with $p$ the number of pole pairs and $\omega$ the mechanical rotational speed $\mesunt{\radian \per \second}$), L is the inductance and R the resistance of the stator, $\Lambda_{mg}$ is the flux linkage of the permanent magnets.\\
+where $u_d$ and $u_q$ are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), $i_d$ and $i_q$ are the current in the dq frame (transformed in the same way as the the voltage), $\omega_{me}$ is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega$, with $p$ the number of pole pairs and $\omega$ the mechanical rotational speed $\mesunt{\radian \per \second}$), $L_{s}$ is the inductance and $R_{s}$ the resistance of the stator, $\Lambda_{mg}$ is the flux linkage of the permanent magnets.\\
 By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
-  p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R(i_d^2 + i_q^2)
+  p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L_{s}\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R_{s}(i_d^2 + i_q^2)
   \label{eq:gen_power_balance}
 \end{equation}
 Since in isotropic machines the relationship between a given input torque and the corresponding \textit{q-axis} current is univocal (i.e. the $\textit{q-axis}$ does not play any role in the conversion of the torque) it is convenient to keep the total current as low as possible in order to minimize the joule losses. This is achieved by working in the so called \acrfull{MTPA} regime, in which the current on the \textit{d-axis} is null. For this reason, knowing that the quadrature axis controller ensures $i_d=0 \, \mesunt{\ampere}$ one can rewrite:
 \begin{equation}
-  \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{Ri_q^2}_{Joule}
+  \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L_{s} i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{R_{s}i_q^2}_{Joule}
   \label{eq:gen_power_balance2}
 \end{equation}
 Since the power is not invariant in the transformation from the abc frame to the dq but $P_{dq} = \frac{3}{2}P_{abc}$, \autoref{eq:gen_power_balance2} has to be rewritten as:
 \begin{equation}
-  P_G = T_G\omega = \frac{3}{2}p\omega\Lambda_{mg}i_q = \frac{3}{2}u_qi_q + \frac{3}{2}L i_q\frac{di_q}{dt} + \frac{3}{2}R i_q^2
+  P_G = T_G\omega = \frac{3}{2}p\omega\Lambda_{mg}i_q = \frac{3}{2}u_qi_q + \frac{3}{2}L_{s} i_q\frac{di_q}{dt} + \frac{3}{2}R_{s} i_q^2
   \label{eq:gen_power_balance3}
 \end{equation}
 The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0 \, \mesunt{\ampere}$.

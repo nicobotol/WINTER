@@ -8,7 +8,7 @@ This model is based on the one presented in the \autoref{sec:c_basic_model_model
     \label{fig:d_torque_control_3}
 \end{figure}
 
-The saturation block constraints the reference power in between $P_G^* \in \left[0, P_{rated}\right]$.
+The saturation block constraints the reference power in between $P_G^* \in \left[0, P_{R,rated}\right]$.
 The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
 
 The response at the 4 simulations configurations presented in \autoref{tab:simulation_config} are reported in \autoref{fig:simulation_1_act_power}, \ref{fig:simulation_2_act_power},  \ref{fig:simulation_3_act_power}, \ref{fig:simulation_4_act_power}.

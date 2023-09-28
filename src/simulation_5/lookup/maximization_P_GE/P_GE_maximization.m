@@ -30,15 +30,18 @@ V0_b = [4:0.01:V0_rated+0.001]; % [m/s] wind speed
 
 % Maximize the power output by selecting the proper combination of TSR and pitch angle
 % The variable x containts x = (TSR, pitch angle)
-lb = [5, -5*pi/180]; % variable lower bound
+lb = [7.5, -5*pi/180]; % variable lower bound
 ub = [10, 5*pi/180]; % variable upper bound
 P = zeros(length(V0_b),1);
 min_v = zeros(length(V0_b),2); % minimization values (lambda, theta)
-min_v_no_B = zeros(length(V0_b),2); % minimization values (lambda, theta)
 x0 = [5, 0]; % initial guess value
+min_v_no_B = zeros(length(V0_b),2); % minimization values (lambda, theta)
 options = optimoptions(@fmincon,'Display', 'off');
 for i=1:length(V0_b)
   V0 = V0_b(i);    
+  if i>1
+    x0 = [min_v(i-1, 1), min_v(i-1, 2)]; % update the initial guess with the results of the previous iteration
+  end
   [min_v(i, :), P(i, :)] = fmincon(@(x)compute_P_GE(x, physical, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub, [], options);
   [min_v_no_B(i, :), P_no_B(i, :)] = fmincon(@(x)compute_P_GE(x, physical_no_B, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub, [],options);
 end
@@ -110,9 +113,9 @@ feather_a = theta_p(max_p_a); % [rad] angle for feather pitching
 % Below rated
 fig = figure('Color', 'w');
 hold on; box on; grid on;
-plot(V0_b, omega_GE, 'LineWidth',line_width, 'DisplayName','Generator ')
-plot(V0_b, omega_GE_no_B, 'LineWidth',line_width, 'DisplayName','Generator B = 0 $[\frac{kgm^2}{s}]$')
-plot(V0_b, omega_rotor, 'LineWidth',line_width, 'DisplayName','Rotor')
+plot(V0_b, omega_GE, 'LineWidth',line_width, 'DisplayName','Gen.')
+plot(V0_b, omega_GE_no_B, 'LineWidth',line_width, 'DisplayName','Gen. B=0 $[\frac{kgm^2}{s}]$')
+plot(V0_b, omega_rotor,'--', 'LineWidth',line_width, 'DisplayName','Rotor', 'Color', colors_vect(5,:))
 title('Rotor rotational speed')
 xlabel('$V_0$ [m/s]')
 ylabel('$\omega$ [rad/s]')
@@ -123,37 +126,45 @@ end
 
 fig = figure('Color', 'w');
 hold on; box on; grid on;
-plot(V0_b, theta_opt*180/pi, 'LineWidth',line_width, 'DisplayName','Generator')
-plot(V0_b, theta_opt_no_B*180/pi, 'LineWidth',line_width, 'DisplayName','Generator B=0$[\frac{kgm^2}{s}]$')
+plot(V0_b, theta_opt*180/pi, 'LineWidth',line_width, 'DisplayName','Gen.')
+plot(V0_b, theta_opt_no_B*180/pi, 'LineWidth',line_width, 'DisplayName','Gen. B=0$[\frac{kgm^2}{s}]$')
+yline(0, '--', 'Color', colors_vect(5,:),'LineWidth',line_width, 'FontSize', font_size, 'DisplayName','Rotor')
 title('Pitch angle')
 xlabel('$V_0$ [m/s]')
 ylabel('$\theta$ [deg]')
-legend('location','southeast')
+legend('location','east')
 if simulation.print_figure == 1
   export_figure(fig, strcat(date_fig, 'fig_pitch_GE', '.eps'), path_images); 
 end
 
 fig = figure('Color', 'w');
 hold on; box on; grid on;
-plot(V0_b, lambda_GE, 'LineWidth',line_width, 'DisplayName','Generator','Color',colors_vect(1,:))
-plot(V0_b, lambda_GE_no_B, 'LineWidth',line_width, 'DisplayName','Generator B=0$[\frac{kgm^2}{s}]$','Color',colors_vect(2,:))
-yline(lambda_GE_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(3,:))
-yline(lambda_GE_mean_no_B, '--', 'LineWidth',line_width, 'DisplayName','Mean B=0$[\frac{kgm^2}{s}]$','Color',colors_vect(4,:))
-yline(lambda_opt, '--','LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(5,:))
+plot(V0_b, lambda_GE, 'LineWidth',line_width, 'DisplayName','Gen.','Color',colors_vect(1,:))
+plot(V0_b, lambda_GE_no_B, 'LineWidth',line_width, 'DisplayName','Gen. B=0$[\frac{kgm^2}{s}]$','Color',colors_vect(2,:))
+yl_1 = yline(lambda_GE_mean, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibility', 'off', 'Color',colors_vect(1,:), 'FontSize', font_size);
+yl_1.LabelHorizontalAlignment = 'left';
+yl_2 = yline(lambda_GE_mean_no_B, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibility', 'off', 'Color',colors_vect(2,:), 'FontSize', font_size);
+yl_2.LabelHorizontalAlignment = 'left';
+yl_3 = yline(lambda_opt, '--', 'Rotor','LineWidth',line_width, 'HandleVisibility', 'off','Color',colors_vect(5,:), 'FontSize', font_size);
+yl_3.LabelHorizontalAlignment = 'left';
 title('Tip speed ratio')
 xlabel('$V_0$ [m/s]')
 ylabel('$\lambda$ [-]')
-legend('location', 'southeast')
+legend('location', 'east')
 if simulation.print_figure == 1
   export_figure(fig, strcat(date_fig, 'fig_lambda_GE', '.eps'), path_images); 
 end
 
 fig = figure('Color', 'w');
 hold on; box on; grid on;
-plot(V0_b, cp_GE, 'LineWidth',line_width, 'DisplayName','Generator')
-plot(V0_b, cp_GE_no_B, 'LineWidth',line_width, 'DisplayName','Generator B=0$[\frac{kgm^2}{s}]$')
-yline(cp_GE_mean, '--', 'LineWidth',line_width, 'DisplayName','Mean','Color',colors_vect(3,:))
-yline(cp_GE_mean_no_B, '--', 'LineWidth',line_width, 'DisplayName','Mean B=0$[\frac{kgm^2}{s}]$','Color',colors_vect(4,:))
+plot(V0_b, cp_GE, 'LineWidth',line_width, 'DisplayName','Gen.')
+plot(V0_b, cp_GE_no_B, 'LineWidth',line_width, 'DisplayName','Gen. B=0$[\frac{kgm^2}{s}]$')
+y1 = yline(cp_GE_mean, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibility','off','Color',colors_vect(1,:), 'FontSize', font_size);
+y2 = yline(cp_GE_mean_no_B, '--', 'Mean', 'LineWidth',line_width,'HandleVisibility','off','Color',colors_vect(2,:), 'FontSize', font_size);
+y1.LabelHorizontalAlignment = 'left';
+y1.LabelVerticalAlignment = 'bottom';
+y2.LabelHorizontalAlignment = 'left';
+y2.LabelVerticalAlignment = 'bottom';
 yline(cp_max, '--', 'LineWidth',line_width, 'DisplayName','Rotor','Color',colors_vect(5,:))
 title('Power coefficient')
 xlabel('$V_0$ [m/s]')
@@ -199,7 +210,7 @@ box on
 % plot(omega(max_p), max_v/1e6, '--', 'DisplayName','Static')
 % grid on
 % box on
-% ylabel('$P_{G, out}$ [MW]')
+% ylabel('$P_{GE}$ [MW]')
 % xlabel('$\omega$ [rad/s]')
 % legend('location', 'eastoutside')
 

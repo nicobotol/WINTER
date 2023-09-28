@@ -105,7 +105,7 @@ gs.zeta_phi = 0.7;            % damping ratio of the PI controller [rad/s]
 
 %% Physical parameters
 rho = 1.225;                % air density [kg/m^3]
-font_size = 25;             % fontsize for plots
+font_size = 30;             % fontsize for plots
 line_width = 2;             % line width for plots
 marker_size = 12;           % marker size for plots
 i_max = 300;                % max number of accepted iterations
@@ -130,7 +130,7 @@ end
 simulation.stop_time = 20*ones(1, 1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 1;        % 1 -> constant wind speed
+simulation.type = 3;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response

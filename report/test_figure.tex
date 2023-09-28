@@ -2,31 +2,31 @@
 \include{a_packages}
 \begin{document}
 \begin{figure}[htb]
-  \begin{subfigure}{0.5\columnwidth}
+  \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/2023_05_3_17_52_01fig_wind_TS.eps}
-    \caption{Wind time series}
-    \label{fig:2023_05_1_00_55_48fig_wind_TS.eps}
-  \end{subfigure}
-  \begin{subfigure}{0.5\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/2023_05_3_17_39_46fig_pitch_param.eps}
-    \caption{Pitch angle time series}
-    \label{fig:2023_05_1_00_50_19fig_power_param}
-  \end{subfigure}
-  \begin{subfigure}{0.5\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/2023_05_3_17_40_32fig_omega_param.eps}
-    \caption{Power}
-    \label{fig:2023_05_1_00_51_17fig_omega_param}
-  \end{subfigure}
-  \begin{subfigure}{0.5\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/2023_05_3_17_40_32fig_omega_param.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_omega_GE.eps}
     \caption{Rotational speed}
-    \label{fig:2023_05_1_00_50_58fig_pitch_param}
+    \label{fig:2023_07_10_14_18_25fig_omega_GE}
   \end{subfigure}
-  \caption{Results of simulation with a generated wind series}
-  \label{fig:simulation_rand_wind_NPC}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_pitch_GE.eps}
+    \caption{Optimal pitch angle}
+    \label{fig:2023_06_24_15_57_04fig_pitch_GE}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_lambda_GE.eps}
+    \caption{Tip speed ratio}
+    \label{fig:2023_06_24_15_57_04fig_lambda_GE}
+  \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_cP_GE.eps}
+    \caption{Power coefficient}
+    \label{fig:2023_06_24_15_57_04fig_cP_GE}
+  \end{subfigure}
+  \caption{Comparison of the most important parameters for the operation below rated WS, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power. This latter case is investigated with and without taking the damping into account.}
+  \label{fig:parameters_for_below_rated}
 \end{figure}
 \end{document}

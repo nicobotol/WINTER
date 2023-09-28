@@ -14,10 +14,10 @@ In the following subsections the most important subsystems will be described in 
 \subsubsection{Mechanical power and power coefficient}\label{subsec:mech_pow_and_pow_coeff}
 The mechanical power that a \acrshort{WT} can extract from the wind is expressed by the well known equation:
 \begin{gather}
-    P = \frac{1}{2}\ A \, \rho \, c_P \, V_0^3 \ \ \left[\si{\watt}\right] \label{eq:power} \\
-    V_0 = \sqrt[3]{\frac{2 \ P}{A \, \rho \, c_P}} \ \ \left[\si{\meter \per \second}\right] 
+    P_R = \frac{1}{2}\ A \, \rho \, c_P \, V_0^3 \ \ \left[\si{\watt}\right] \label{eq:power} \\
+    V_0 = \sqrt[3]{\frac{2 \ P_R}{A \, \rho \, c_P}} \ \ \left[\si{\meter \per \second}\right] 
 \end{gather}
-where A is the rotor swept area $\left[\si{\square \meter}\right]$, $\rho$ is the air density in $\left[\si{\kilo\gram\per\cubic\meter}\right]$, and $c_P$ is the power coefficient. 
+where A is the rotor swept area $\left[\si{\square \meter}\right]$, $\rho$ is the air density in $\left[\si{\kilo\gram\per\cubic\meter}\right]$, and $c_P$ is the power coefficient. The subscript $R$ stands for \textit{Rotor}, and it is intended to highlight that this power is extracted by the rotor itself from the resource.  
 
 The \acrfull{cp} is defined as the ratio between the power extracted by the \acrshort{WT} divided by the available power from the source:
 \begin{equation}
@@ -42,7 +42,7 @@ Usually the power is reduced by decreasing the \acrshort{AOA} by pitching the le
 \subsubsection{Thrust force and thrust coefficient}
 The thrust force, usually denoted as T, is the force produced by the rotor in the streamwise direction. It produces the wind speed reduction from the incoming one to the one in the wake, and it is compute as:
 \begin{equation}
-    T = \frac{1}{2} \, A \, \rho \, c_T \, V_0^2 \ \ \left[\si{\newton}\right]
+    T_R = \frac{1}{2} \, A \, \rho \, c_T \, V_0^2 \ \ \left[\si{\newton}\right]
     \label{eq:thrust_coeff}
 \end{equation}
 The thrust coefficient $c_T$ is obtained similarly to the power one, as it will be shown later in \autoref{subsec:BEM_algorithm}.

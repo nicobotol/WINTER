@@ -13,7 +13,7 @@
     \node [block, right of=sum] (controller) {$R_{iq}$}; % controller
     \node [block, right of=controller, node distance=2cm] (G_c) {$\frac{1}{1+\uptau_{c}s}$}; % elecrical delay
     \node [sum, right of=G_c, node distance=2cm] (sum2) {};
-    \node [block, right of=sum2] (sys2) {$\frac{-1}{sL+R}$};
+    \node [block, right of=sum2] (sys2) {$\frac{-1}{sL_{s}+R_{s}}$};
     \node [block, right of=sys2, node distance=2.3cm] (sys3) {$\frac{3}{2}p\Lambda_{mg}$};
     \node [sum, right of=sys3, node distance=2cm] (sum3) {};
     \node [block, right of=sum3, node distance=2cm] (sys4) {$\frac{-1}{B_{eq}+sJ_{eq}}$};
