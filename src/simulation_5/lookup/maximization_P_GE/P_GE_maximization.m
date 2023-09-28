@@ -266,22 +266,22 @@ if simulation.print_figure == 1
   export_figure(fig_new_pitch_map, '\fig_new_pitch_map.eps', path_images);
 end
 %% Save the data in a lookup table
-% clear("lookup_P_GE")
-% clear("rated_values_P_GE")
-% clear("lookup_pitch_P_GE")
-% 
-% rated_values_P_GE(1) = lambda_GE_mean;
-% rated_values_P_GE(2) = cp_GE_mean;
-% rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
-% save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
-% 
-% % pitch to feather
-% lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
-% lookup_pitch_P_GE(1, :) = [0 V0_a];
-% lookup_pitch_P_GE(2, :) = [0 feather_a];
-% save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
-% 
-% % generator electrical power
-% lookup_P_GE(1, :) = [V0_b, V0_a];
-% lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
-% save('lookup\lookup_P_GE.mat', "lookup_P_GE");
+clear("lookup_P_GE")
+clear("rated_values_P_GE")
+clear("lookup_pitch_P_GE")
+
+rated_values_P_GE(1) = lambda_GE_mean;
+rated_values_P_GE(2) = cp_GE_mean;
+rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
+save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
+
+% pitch to feather
+lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
+lookup_pitch_P_GE(1, :) = [0 V0_a];
+lookup_pitch_P_GE(2, :) = [0 feather_a];
+save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
+
+% generator electrical power
+lookup_P_GE(1, :) = [V0_b, V0_a];
+lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
+save('lookup\lookup_P_GE.mat', "lookup_P_GE");
