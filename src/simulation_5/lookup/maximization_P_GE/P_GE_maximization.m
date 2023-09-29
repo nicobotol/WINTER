@@ -26,7 +26,7 @@ physical_no_B = physical;
 physical_no_B(3) = 0;
 
 % V0_b = 4:0.01:6-0.01;
-V0_b = [4:0.01:V0_rated+0.001]; % [m/s] wind speed 
+V0_b = [4:0.05:V0_rated+0.001]; % [m/s] wind speed 
 
 % Maximize the power output by selecting the proper combination of TSR and pitch angle
 % The variable x containts x = (TSR, pitch angle)
@@ -34,14 +34,11 @@ lb = [7.5, -5*pi/180]; % variable lower bound
 ub = [10, 5*pi/180]; % variable upper bound
 P = zeros(length(V0_b),1);
 min_v = zeros(length(V0_b),2); % minimization values (lambda, theta)
-x0 = [5, 0]; % initial guess value
+x0 = [7.5, 0]; % initial guess value
 min_v_no_B = zeros(length(V0_b),2); % minimization values (lambda, theta)
 options = optimoptions(@fmincon,'Display', 'off');
 for i=1:length(V0_b)
   V0 = V0_b(i);    
-  if i>1
-    x0 = [min_v(i-1, 1), min_v(i-1, 2)]; % update the initial guess with the results of the previous iteration
-  end
   [min_v(i, :), P(i, :)] = fmincon(@(x)compute_P_GE(x, physical, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub, [], options);
   [min_v_no_B(i, :), P_no_B(i, :)] = fmincon(@(x)compute_P_GE(x, physical_no_B, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub, [],options);
 end
@@ -62,6 +59,7 @@ cp_GE = interp2(lambda_vector, pitch_vector, lookup_cP, min_v(:, 1), min_v(:, 2)
 cp_GE_no_B = interp2(lambda_vector, pitch_vector, lookup_cP, min_v_no_B(:, 1), min_v_no_B(:, 2)); % cp for the maximization of the generator
 cp_GE_mean = mean(cp_GE);          % mean cp for the generator maximization
 cp_GE_mean_no_B = mean(cp_GE_no_B);          % mean cp for the generator maximization
+cp_E = P_GE_b./(0.5*A*rho*V0_b'.^3); % electrical generator power normalized by the wind one
 
 %% Static generator power curve
 V0_v = 4:1:25;                    % windspeed [m/s]
@@ -265,23 +263,38 @@ box on
 if simulation.print_figure == 1
   export_figure(fig_new_pitch_map, '\fig_new_pitch_map.eps', path_images);
 end
+
+% Pitch angle as function of V0
+fig_cpE = figure('Color','w');
+hold on
+plot(V0_b, cp_E, 'LineWidth', line_width, 'DisplayName', '')
+xlabel('$V_{0}$ [m/s]')
+ylabel('$c_{P,E} [-]$')
+title('Electrical power coefficient')
+legend('location', 'northwest')
+grid on
+box on
+if simulation.print_figure == 1
+  export_figure(fig_cpE, '\fig_fig_cpE.eps', path_images);
+end
+
 %% Save the data in a lookup table
-clear("lookup_P_GE")
-clear("rated_values_P_GE")
-clear("lookup_pitch_P_GE")
-
-rated_values_P_GE(1) = lambda_GE_mean;
-rated_values_P_GE(2) = cp_GE_mean;
-rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
-save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
-
-% pitch to feather
-lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
-lookup_pitch_P_GE(1, :) = [0 V0_a];
-lookup_pitch_P_GE(2, :) = [0 feather_a];
-save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
-
-% generator electrical power
-lookup_P_GE(1, :) = [V0_b, V0_a];
-lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
-save('lookup\lookup_P_GE.mat', "lookup_P_GE");
+% clear("lookup_P_GE")
+% clear("rated_values_P_GE")
+% clear("lookup_pitch_P_GE")
+% 
+% rated_values_P_GE(1) = lambda_GE_mean;
+% rated_values_P_GE(2) = cp_GE_mean;
+% rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
+% save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
+% 
+% % pitch to feather
+% lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
+% lookup_pitch_P_GE(1, :) = [0 V0_a];
+% lookup_pitch_P_GE(2, :) = [0 feather_a];
+% save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
+% 
+% % generator electrical power
+% lookup_P_GE(1, :) = [V0_b, V0_a];
+% lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
+% save('lookup\lookup_P_GE.mat', "lookup_P_GE");

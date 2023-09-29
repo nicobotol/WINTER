@@ -127,10 +127,10 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 20*ones(1, 1); % max time to investigaste [s]
+simulation.stop_time = 2; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 3;        % 1 -> constant wind speed
+simulation.type = 4;        % 1 -> constant wind speed
                             % 2 -> ramp
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -143,7 +143,7 @@ simulation.type = 3;        % 1 -> constant wind speed
 simulation.plot_time = 70*ones(3, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 0;% enables or disable plot's autosaving 
+simulation.print_figure = 1;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
@@ -188,7 +188,7 @@ generator.Lambda = 19.49;   % magnet flux-linkage [Wb]
 
 generator.tau_c = 500e-6;   % q-axis control time constant [s]
 generator.iq_pm = 70;       % phase margin for the Iq controller [°]
-generator.iq_omegaBP = 8e2;%1.5e3; % Iq controller crossover freq. [rad/s]
+generator.iq_omegaBP = 7.5e2;%1.5e3; % Iq controller crossover freq. [rad/s]
 generator.TG_pm = 70;  % phase margin for the speed controller [°]
 generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = ...
@@ -198,7 +198,7 @@ generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 % generator.design_TG = 0; % 0 enables manual design of speed controller
 %                             % 1 enables pidtune design of the controller                          
-generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
 generator.bode_plot_TG = 1; % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain 0.5

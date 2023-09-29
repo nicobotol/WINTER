@@ -19,7 +19,7 @@ for i=1:length(G)
     ylabel('Mag. [dB]', 'FontSize', font_size, 'interpreter','latex')
     grid on
     set(gca, 'FontSize', font_size)
-    legend(legends,'interpreter','latex','FontSize', font_size, 'location', 'best')
+    legend(legends,'interpreter','latex','FontSize', font_size, 'location', 'southwest', 'NumColumns',size(legends,2))
   end
   
   % Phase
