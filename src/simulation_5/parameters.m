@@ -127,11 +127,11 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 2; % max time to investigaste [s]
+simulation.stop_time = 50; % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 4;        % 1 -> constant wind speed
-                            % 2 -> ramp
+simulation.type = 1;        % 1 -> constant wind speed
+                            % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
                             % 5 -> generated WS and parametrization plot
@@ -140,10 +140,10 @@ simulation.type = 4;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = 70*ones(3, 1);  % time from the end of the simulation to 
+simulation.plot_time = 19*ones(3, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
@@ -198,7 +198,7 @@ generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 % generator.design_TG = 0; % 0 enables manual design of speed controller
 %                             % 1 enables pidtune design of the controller                          
-generator.bode_plot = 1;    % 1 enables bode plot, 0 disables it
+generator.bode_plot = 0;    % 1 enables bode plot, 0 disables it
 generator.bode_plot_TG = 1; % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain 0.5
@@ -249,8 +249,8 @@ wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = [4];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [10];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(2, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_stop = [5];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -267,11 +267,13 @@ out_store = cell(1, wind.WS_len);
 
 % Transmission damping 
 rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
+% rotor.B = rotor.K_opt*omega_rated*(1/generator.eta-1); % [kgm^2/s]
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
 B_eq = (rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
+% I_eq = 0;
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
 
 % Transform the struct of parameters into buses for simulink

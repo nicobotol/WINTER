@@ -11,8 +11,8 @@ theta = [-5:dtheta:25];
 [~, theta_0_pos] = min(abs(theta - 0));
 theta_rad = theta*pi/180;
 
-kp_gain = polyval(blade.kp_schedule, theta_rad);
-ki_gain = polyval(blade.ki_schedule, theta_rad);
+kp_gain = polyval(blade.kp_schedule_report, theta_rad);
+ki_gain = polyval(blade.ki_schedule_report, theta_rad);
 
 fig = figure('Position', get(0, 'Screensize'), 'Color','w');
 yyaxis left
@@ -25,7 +25,10 @@ xlabel('Pitch angle [deg.]')
 title('Gain scheduling coefficients', 'Interpreter','latex')
 grid on
 set(gca, 'FontSize', font_size)
+box on
 
 
-% fig_name = strcat(path_images,'\fig_gain_scheduling','.png');
-% export_fig('fig', fig_name);
+if simulation.print_figure == 1
+  fig_name = strcat('C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\report\images\vectorial\fig_gain_scheduling','.eps');
+  export_fig(fig, fig_name);
+end

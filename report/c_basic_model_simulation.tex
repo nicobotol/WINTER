@@ -1,6 +1,13 @@
 \newpage
-\section{Simulation for standard control techniques}\label{sec:c_basic_model_simulation}
-In this section the developed model is tested under different conditions as slowly increasing wind ramp, random wind series, random wind series and disabling of the pitch controller, random wind series and different pitching dynamics, comparison between torque gain based on the rotor and generator power for constant wind speed.
+\section{Analysis of the dynamic behaviour of the wind turbine}\label{sec:c_basic_model_simulation}
+In this section the developed model is tested applying different controllers and different wind conditions such as:
+\begin{itemize}
+  \item slowly increasing wind ramp;
+  \item random wind series;
+  \item disabling of the pitch controller;
+  \item random wind series and different pitching dynamics;
+  \item comparison between the control laws based on the rotor power (as described in \autoref{subsec:torque_reference}) or the generator one (\autoref{subsec:method_control_P_GE}), for constant wind speed.
+\end{itemize}
 \subsection{Simulation with velocity ramp}
 \subsubsection{Simulation setting}
 The model is tested providing as wind input a ramp starting at time 0 $\left[\si{\second}\right]$. Other four parameters may be changed in the simulation: starting and finishing wind speeds, time length of the ramp, and the initial rotor velocity.\\
