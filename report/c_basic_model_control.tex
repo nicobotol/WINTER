@@ -53,7 +53,7 @@ Above rated WS the objective is to keep the constant rotational speed and so the
 is given.
 
 \subsubsection{Implementation details of the genereator's controller based on the rotor power}
-In the Simulink model the implementation of the generator's torque reference $T_G^*$ is done employing a proportional and a saturation blocks, limiting the torque when it goes above the rated speed. Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power $P_G^*$ and the actual one $P_G$ to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
+In the Simulink model the implementation of the generator's torque reference $T_G^*$ is done employing a proportional and a saturation blocks, limiting the torque when it goes above the rated speed. Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power $P_G^*$ and the actual one $P_G$ to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2} \textcolor{red}{Sostituire al blocco PMSM la dicitura "Current control loop" per evidenziare il fatto che il riferimento di coppia non stia entrando direttamente nalla macchina ma nel suo anello di controllo di corrente }.
 \begin{figure}[htb]
     \centering
     \input{d_torque_control_2.tex}
@@ -123,13 +123,13 @@ To study the problem, a numerical method is employed. For a reasonably fine samp
   \label{fig:parameters_for_below_rated}
 \end{figure}
 
-\textcolor{red}{Riscrivere questi risultati perchè sono cambiati dopo aver rifatto i grafici}
+\textcolor{red}{Menzionare nel testo la possibilità di incorrere in minimi locali durante la minimizzazione che possono portare a produrre dei risultati sbagliati}
 From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_damping} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provided a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Finally, also the proper choice of the boundaries for the function to be minimized highly affects the quality and smoothness of the results.\\
 Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ may be still valid. The simplest choice for these parameters is their mean, but also another choice may be possible. For example, if one considers the wind speed distribution of the location where the turbine is going to be deployed, then the mean can be weighted by the probability that each WS occurs during the year. \\
 When B=0 $\mesunt{\kilo\gram\square\meter\per\second}$ $\lambda=8.11$ and $\theta=0 \si{\degree}$ has been chosen, while for the case with damping $\lambda=8.11$ and $\theta=0 \si{\degree}$ has been chosen.\\
 
 \subsubsection{Generator's torque reference above WS}
-Above rated WS, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study in the pitch angle has been done, meaning that for each WS, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, the higher the power extracted is).
+Above rated WS, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study on the pitch angle has been done, meaning that for each WS, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, the higher the power extracted is).
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.5\textwidth]{images/vectorial/fig_new_pitch_map.eps}
@@ -147,7 +147,7 @@ In order to validate these strategies, the two controllers have been modified as
 \begin{figure}[htb]
   \centering
   \input{d_torque_control_GE.tex}
-  \caption{Scheme of the implemented active power torque controller considering the generator}
+  \caption{Scheme of the implemented active power torque controller considering the generator \textcolor{red}{Sostituire al blocco PMSM la dicitura "Current control loop" per evidenziare il fatto che il riferimento di coppia non stia entrando direttamente nalla macchina ma nel suo anello di controllo di corrente }.}
   \label{fig:d_torque_control_GE}
 \end{figure}
 
@@ -200,24 +200,24 @@ For its simplicity the chosen controller is a \acrshort{PID} one, and the design
  
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_09_29_18_10_11fig_bode_generator.eps}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_10_2_16_06_13fig_bode_generator.eps}
     \caption{Bode plots of the open loop system, the controller and the controlled open loop system}
     \label{fig:fig_bode_generator}
  \end{figure}
 
  \begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_09_29_18_10_23fig_bode_cl.eps}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_10_2_16_06_31fig_bode_cl.eps}
     \caption{Bode plot of the generator close loop transfer function}
     \label{fig:fig_bode_cl}
  \end{figure}
 
-Furthermore, the response of the close loop system to a torque step input is reported in \autoref{fig:step_response}. It could be seen that the integral actions drives the steady state error to \textcolor{red}{almost} 0, while the produced overshoot is quite limited (around 5\%). \textcolor{blue}{In fact, the steady state value is not exactly 1, but it is around 0.9988. In my opinion, this small error in the steady state produces a small deviation in reaching the exactly desired rotational speed in the simulations, and so in not reaching the optimal tip speed ratio. For this reason, later on in the simulation part, when I compared the control law based on the optimal $\lambda$ based on rotor and generator analysis, I excluded the generator at all, feeding the torque reference in the dynamical equation. Is my supposition reasonable? Is this kind of steady state error acceptable?}
+Furthermore, the response of the close loop system to a q-axis current step input is reported in \autoref{fig:step_response}. It could be seen that the integral actions drives the steady state error to 0, while the produced overshoot is quite limited (less than 1\%). 
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.75\textwidth]{images/vectorial/2023_09_29_18_10_34generator_step_input.eps}
-  \caption{Time response of the controlled generator at the input step torque}
+  \includegraphics[width=0.75\textwidth]{images/vectorial/2023_10_2_15_44_16generator_step_input.eps}
+  \caption{Time response of the controlled generator at the input step of the reference q-axis current}
   \label{fig:step_response}
 \end{figure}
 

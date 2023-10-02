@@ -41,39 +41,23 @@ end
 fig = figure('Color', 'w');
 for i = 1:n_series
   yyaxis left
-  plot(time{i}(s_start:end), P_R{i}(s_start:end)/1e6, 'DisplayName', '$P_{rotor}$', 'LineWidth',line_width);
+  plot(time{i}(s_start:end), P_R{i}(s_start:end)/1e6, 'DisplayName', '$P_{R}$', 'LineWidth',line_width);
   hold on
-  plot(time{i}(s_start:end), P_G{i}(s_start:end)/1e6, '--', 'DisplayName', '$P_{generator}$','LineWidth', line_width);
-  plot(time{i}(s_start:end), P_sum{i}(s_start:end)/1e6, ':', 'DisplayName','$P_{generator} + P_{damping}$', 'LineWidth', line_width);
-  plot(time{i}(s_start:end), (P_G{i}(s_start:end) + P_damping{i}(s_start:end) + P_inertia{i}(s_start:end))/1e6, '--', 'DisplayName', '$P_{generator} + P_{damping} + P_{inertia}$', 'LineWidth', line_width, 'Color', color(3));
+  plot(time{i}(s_start:end), P_G{i}(s_start:end)/1e6, '--', 'DisplayName', '$P_{G}$','LineWidth', line_width);
+  plot(time{i}(s_start:end), P_sum{i}(s_start:end)/1e6, ':', 'DisplayName','$P_{G} + P_{D}$', 'LineWidth', line_width);
+  plot(time{i}(s_start:end), (P_G{i}(s_start:end) + P_damping{i}(s_start:end) + P_inertia{i}(s_start:end))/1e6, '--', 'DisplayName', '$P_{G} + P_{D} + P_{I}$', 'LineWidth', line_width, 'Color', color(3));
   ylabel('Power [MW]');
 
   yyaxis right
-  plot(time{i}(s_start:end), P_inertia{i}(s_start:end)/1e6, '-', 'DisplayName','$P_{inertia}$', 'LineWidth', line_width);
-  plot(time{i}(s_start:end), P_damping{i}(s_start:end)/1e6, '--','DisplayName', '$P_{damping}$', 'LineWidth', line_width);
+  plot(time{i}(s_start:end), P_inertia{i}(s_start:end)/1e6, '-', 'DisplayName','$P_{I}$', 'LineWidth', line_width);
+  plot(time{i}(s_start:end), P_damping{i}(s_start:end)/1e6, '--','DisplayName', '$P_{D}$', 'LineWidth', line_width);
   xlabel('Time [s]');
   ylabel('Power lost and stored [MW]');
-  legend('Location', 'south', 'NumColumns', 3);
+  legend('Location', 'southeast', 'NumColumns', 3);
   title('Comparison of the powers');
   grid on
   set(gca, 'FontSize', font_size)
 end
-
-figure();hold on;
-plot(time{i}(s_start:end), P_R{i}(s_start:end)/1e6, 'DisplayName', '$P_{rotor}$','LineWidth', line_width);
-plot(time{i}(s_start:end), P_G{i}(s_start:end)/1e6, 'DisplayName', '$P_{generator}$','LineWidth', line_width);
-plot(time{i}(s_start:end), P_inertia{i}(s_start:end)/1e6, '-.', 'DisplayName','$P_{inertia}$', 'LineWidth', line_width);
-plot(time{i}(s_start:end), P_damping{i}(s_start:end)/1e6, '--','DisplayName', '$P_{damping}$', 'LineWidth', line_width);
-legend('Location', 'south', 'NumColumns', 3);
-
-figure();hold on;
-plot(time{i}(s_start:end), P_G{i}(s_start:end)/1e6, 'DisplayName', '$P_{G}$','LineWidth', line_width);
-plot(time{i}(s_start:end), P_GE{i}(s_start:end)/1e6, 'DisplayName', '$P_{GE}$','LineWidth', line_width);
-plot(time{i}(s_start:end), P_GInductance{i}(s_start:end)/1e6, 'DisplayName', '$P_{ind}$','LineWidth', line_width);
-plot(time{i}(s_start:end), P_GJoule{i}(s_start:end)/1e6, 'DisplayName', '$P_{joule}$','LineWidth', line_width);
-plot(time{i}(s_start:end), (P_GJoule{i}(s_start:end) + P_GInductance{i}(s_start:end) + P_GE{i}(s_start:end))/1e6, '--', 'DisplayName', '$sum$','LineWidth', line_width);
-legend
-
 
 
 if simulation.print_figure == 1

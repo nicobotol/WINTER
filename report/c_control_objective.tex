@@ -5,7 +5,8 @@ In this section of the work first of all the operating regions of a WT are prese
 \subsection{Control objectives}
 There are different conceptual levels of control for the wind turbines, each of them with a specific target.\\  
 The primary objective of the controller is to keep the rotor speed and generated power within limits. Secondary objectives include the reduction of the load on the mechanical components (both as peak values and also the fatigue ones) and the reduction of the vibrations. In modern offshore turbines this has also to take into account the external load applied by the waves. \\
-On an higher hierarchical level there are the handling of start up and shut down operations, alongside the extreme events.
+On an higher hierarchical level there are the handling of start up and shut down operations, alongside the extreme events.\\
+\textcolor{red}{Valutare la possibilità di mettere una immagine che in qualche modo riassuma i diversi livelli di controllo della macchina, tipo quella preparata da \url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9535421} }
 
 
 \subsection{Operational regions of a WT}
@@ -49,4 +50,5 @@ According to \cite{Aerodynamics_of_wind_turbines}, some attempts to develop a po
 
 \subsection{Electrical generator control}\label{subsec:PMSM_control}
 \textcolor{red}{Rivedere questo capitolo, anche in considerazione quanto suggerito durante la revisione}
+\textcolor{red}{Dire in generale che possono esistere diversi tipi di controlli in base allo specifico tipo di macchina che viene utilizzata. Dire che il controllo del generatore utilizzato in questa applicazione specifica verrà poi presentato in uno specifico capitolo successivo}
 In general, control of these machines may be focused on two objectives: the speed or the torque, and the first includes the second as a nested loop. For the sake of the thesis, a torque control has to be implemented because it is easy to synthesize this signal in the two control regions. It's worth nothing that the control depends on the architecture type of the turbine. 

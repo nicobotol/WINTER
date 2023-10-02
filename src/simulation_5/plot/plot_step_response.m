@@ -13,9 +13,9 @@ function plot_step_response(out_cell, date_fig)
   plot(out_cell{1}.T_G.Time, out_cell{1}.T_G.Data, 'LineWidth', line_width*0.75);
   legend('Reference', 'Response', 'location', 'northwest', 'FontSize', font_size, 'interpreter','latex');
   grid on;
-  title('Generator torque step response')
+  title('Generator q-axis current step response')
   xlabel('Time [s]', 'interpreter','latex')
-  ylabel('T [Nm]', 'interpreter','latex')
+  ylabel('$I_q$ [A]', 'interpreter','latex')
   set(gca, 'FontSize', font_size)
   rectangle('Position', [step_t_start step_y_min step_t_stop-step_t_start  step_y_max-step_y_min])
   ylim([0, 1.2])

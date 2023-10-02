@@ -39,7 +39,7 @@ A post-process check can be done on the powers, in particular that the one provi
 
 \subsubsection{Simulation results}
 The results of the simulations are reported in \autoref{fig:simulation_1}, \ref{fig:simulation_2}, \ref{fig:simulation_3}. \\
-In particular, the figure a) reports the wind velocity as function of the simulation time. b), c), and d) are the parametrizations of the rotor rotational speed, the power, and the pitch angle as function of the wind speed. e) is the power check, as described in \autoref{eq:power_balance}. Finally, f) is the generator torque that the controller imposes at the generator as function of the rotor rotational speed. 
+In particular, the \autoref{fig:wind_sim_I} reports the wind velocity as function of the simulation time. \ref{fig:omega_sim_I}, \ref{fig:power_sim_I}, and \ref{fig:pitch_sim_I} are the parametrizations of the rotor rotational speed, the power, and the pitch angle as function of the wind speed, \ref{fig:power_check_sim_I} is the power check, as described in \ref{eq:power_balance}, and \ref{fig:torque_sim_I} is the generator torque reference as function of the rotor rotational speed. 
 % plots of the results
 \input{c_basic_model_results}
 
@@ -156,20 +156,21 @@ After the simulation and in order to evaluate it quantitatively, the RMS error b
 In this simulation these error metrics are not so representative since the wind is not always above the rated one and therefore the corresponding power, torque and rotational speed are not always expected to be reached. They are reported anyway in order to be then compared with the simulations proposed later on.  
 
 \begin{table}[htb]
-  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
+  \caption{RMS error of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency}}
   \centering
-  \begin{tabular}{ccccc}
-  \toprule
-    Simulation & $\omega_R$  & $P_G$ & $T_G$ \\ 
-     & $\left[\si{\radian\per\second}\right]$ & $\left[\si{\mega\watt}\right]$ &$\left[\si{\mega\newton\meter}\right]$ \\ \midrule       
-     1 & 0.031 & 0.833 & 0.563 \\
-     2 & 0.030 & 0.832 & 0.557 \\
-     3 & 0.047 & 1.128 & 0.802 \\
-     4 & 0.036 & 0.902 & 0.629 \\
+  \begin{tabular}{cccccccc}
+    \toprule
+      Simulation & \multicolumn{2}{c}{$\omega_R$} & \multicolumn{2}{c}{$P_G$} & \multicolumn{2}{c}{$T_G$} \\ 
+       & $\left[\si{\radian\per\second}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\watt}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\newton\meter} \right]$ & $ \% \left[-\right]$ \\ \midrule       
+       1 & 0.031 & 3.06 & 0.833 & 7.83  & 0.563 & 5.37\\
+       2 & 0.030 & 2.95 & 0.832 & 7.82  & 0.557 & 5.31\\
+       3 & 0.047 & 4.63 & 1.128 & 10.60 & 0.802 & 7.64\\
+       4 & 0.036 & 3.55 & 0.902 & 8.48  & 0.629 & 6.00\\
      \bottomrule
   \end{tabular}
   \label{tab:res_variable_gains}
 \end{table}
+
 The first two simulations are very close to each other, since the static gain of \textit{sim. 2} is almost the same of the scheduling at rated speed. Furthermore, the results of the fourth simulation are not too different from the first two. Finally, it could be also noticed that the gain in case \textit{3} is very different from the other one, suggesting that this choice is not suitable for this condition. 
 
 \subsubsection{Wind speed of $V_{10}=15 \ \mesunt{\meter\per\second}$}
@@ -240,16 +241,16 @@ The second simulation is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and 
 
 The \acrshort{RMS} error between the steady state value and the corresponding expected static is evaluated. The results are reported in the \autoref{tab:res_variable_gains2}.
 \begin{table}[htb]
-  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency2}}
+  \caption{RMS error of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency2}}
   \centering
-  \begin{tabular}{ccccc}
-  \toprule
-    Simulation & $\omega_R$  & $P_G$ & $T_G$ \\ 
-     & $\left[\si{\radian\per\second}\right]$ & $\left[\si{\mega\watt}\right]$ &$\left[\si{\mega\newton\meter}\right]$ \\ \midrule       
-     1 & 0.011 & 0.262 & 0.190 \\
-     2 & 0.009 & 0.171 & 0.138 \\
-     3 & 0.020 & 0.486 & 0.349 \\
-     4 & 0.016 & 0.406 & 0.288 \\
+  \begin{tabular}{cccccccc}
+    \toprule
+      Simulation & \multicolumn{2}{c}{$\omega_R$} & \multicolumn{2}{c}{$P_G$} & \multicolumn{2}{c}{$T_G$} \\ 
+       & $\left[\si{\radian\per\second}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\watt}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\newton\meter} \right]$ & $ \% \left[-\right]$ \\ \midrule      
+     1 & 0.011 & 1.08 & 0.262 & 2.46 & 0.190 & 1.81 \\
+     2 & 0.009 & 0.89 & 0.171 & 1.61 & 0.138 & 1.32 \\
+     3 & 0.020 & 1.97 & 0.486 & 4.57 & 0.349 & 3.33 \\
+     4 & 0.016 & 1.58 & 0.406 & 3.82 & 0.288 & 2.75 \\
      \bottomrule
   \end{tabular}
   \label{tab:res_variable_gains2}
@@ -323,16 +324,16 @@ The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation
 \end{figure}
 
 \begin{table}[htb]
-  \caption{Quantitative evaluations of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency3}}
+  \caption{RMS error of the results obtained with setting in \autoref{fig:gain_scheduling_time_dependency3}}
   \centering
-  \begin{tabular}{ccccc}
-  \toprule
-    Simulation & $\omega_R$  & $P_G$ & $T_G$ \\ 
-     & $\left[\si{\radian\per\second}\right]$ & $\left[\si{\mega\watt}\right]$ &$\left[\si{\mega\newton\meter}\right]$ \\ \midrule       
-     1 & 0.023 & 0.483 & 0.359 \\
-     2 & 0.018 & 0.319 & 0.257 \\
-     3 & 0.033 & 0.769 & 0.556 \\
-     4 & 0.031 & 0.742 & 0.533 \\
+  \begin{tabular}{cccccccc}
+    \toprule
+      Simulation & \multicolumn{2}{c}{$\omega_R$} & \multicolumn{2}{c}{$P_G$} & \multicolumn{2}{c}{$T_G$} \\ 
+       & $\left[\si{\radian\per\second}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\watt}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\newton\meter} \right]$ & $ \% \left[-\right]$ \\ \midrule        
+     1 & 0.023 & 2.27 & 0.483 & 4.54 & 0.359 & 3.42 \\
+     2 & 0.018 & 1.77 & 0.319 & 3.00 & 0.257 & 2.45 \\
+     3 & 0.033 & 3.25 & 0.769 & 7.23 & 0.556 & 5.30 \\
+     4 & 0.031 & 3.06 & 0.742 & 6.97 & 0.533 & 5.08 \\
      \bottomrule
   \end{tabular}
   \label{tab:res_variable_gains3}

@@ -140,7 +140,7 @@ simulation.type = 1;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = 19*ones(3, 1);  % time from the end of the simulation to 
+simulation.plot_time = 35*ones(3, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
@@ -164,7 +164,8 @@ rotor.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % [Nms^2]
 gearbox.ratio = 1;          % gearbox transmission ratio 
 
 % Generator parameters
-generator.P_rated = rotor.P_rated; % rated power [W]
+generator.eta = 0.954;      % mechanical efficiency at rated power and speed
+generator.P_rated = generator.eta*rotor.P_rated; % rated power [W]
 generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
 generator.I = 0.0;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
@@ -211,7 +212,7 @@ generator.power_ctrl_ki=5.5;% power controller gain
 % generator.omega1_max = 0.90*generator.omega_rated;
 % generator.omega2_max = 0.95*generator.omega_rated;
 % generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
-generator.eta = 0.954;      % efficiency at rated power and speed
+
 
 % Blade parameters
 blade.mass = 4.3388e4;      % mass [kg]
@@ -248,8 +249,8 @@ wind.turbulence = [1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = [4];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [5];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_WS_start = [14];        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = [20];         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = [simulation.stop_time];  % time speed at the stop of the ramp [s]
 
@@ -275,6 +276,7 @@ I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
 B_eq = (rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 % I_eq = 0;
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
+B_eq = 1*B_eq;
 
 % Transform the struct of parameters into buses for simulink
 % rotor_bus_info = Simulink.Bus.createObject(rotor); 

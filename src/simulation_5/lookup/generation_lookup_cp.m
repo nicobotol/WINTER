@@ -41,12 +41,12 @@ for l = 1:lambda_item % loop over the TSR
     % store the results
     lookup_cP(p, l) = cP;
     lookup_cT(p, l) = cT;
-
-    % Unsteady map
-    lambda_s1(i,:,:) = V0/2*(1 + sqrt(1 - cT));
-    lambda_s2(i,:,:) = V0/2*(1 - sqrt(1 - cT));
-    cP_u = cP/(1 - lambda_s2/V0)^3;  
-    cT_u = cT/(1 - lambda_s2/V0)^3;
+% 
+%     % Unsteady map
+%     lambda_s1(i,:,:) = V0/2*(1 + sqrt(1 - cT));
+%     lambda_s2(i,:,:) = V0/2*(1 - sqrt(1 - cT));
+%     cP_u = cP/(1 - lambda_s2/V0)^3;  
+%     cT_u = cT/(1 - lambda_s2/V0)^3;
   end
 end
 

@@ -1,32 +1,5 @@
 \documentclass[11pt, a4paper]{article}
 \include{a_packages}
 \begin{document}
-\begin{figure}[htb]
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_omega_GE.eps}
-    \caption{Rotational speed}
-    \label{fig:2023_07_10_14_18_25fig_omega_GE}
-  \end{subfigure}
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_pitch_GE.eps}
-    \caption{Optimal pitch angle}
-    \label{fig:2023_06_24_15_57_04fig_pitch_GE}
-  \end{subfigure}
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_lambda_GE.eps}
-    \caption{Tip speed ratio}
-    \label{fig:2023_06_24_15_57_04fig_lambda_GE}
-  \end{subfigure}
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_cP_GE.eps}
-    \caption{Power coefficient}
-    \label{fig:2023_06_24_15_57_04fig_cP_GE}
-  \end{subfigure}
-  \caption{Comparison of the most important parameters for the operation below rated WS, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power. This latter case is investigated with and without taking the damping into account.}
-  \label{fig:parameters_for_below_rated}
-\end{figure}
+\input{c_basic_model_results.tex}
 \end{document}

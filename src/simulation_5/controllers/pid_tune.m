@@ -15,9 +15,9 @@ R = ki/s*(1 + s*tau_p)*(1 + s*tau_d);%/(1 + s*tau_d1); % regulator
 GH = G*R;                                  % series of regulator and system
 GH_mag = abs(subs(GH, s, 1j*omega));      % mag at the crossover frequency
 ki = solve(GH_mag == 1, ki);              % integral gain
-ki = 1.1*eval(ki);
-kp = ki*(tau_d + tau_p); % 0.5*ki*(tau_d + tau_p);
-kd = ki*tau_d*tau_p;     % 0.5*ki*tau_d*tau_p;
+ki = 1*eval(ki);
+kp = ki*(tau_d + tau_p); 
+kd = ki*tau_d*tau_p;    
 
 fprintf('ki = %f\n', ki);
 fprintf('kp = %f\n', kp);
