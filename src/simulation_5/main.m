@@ -36,8 +36,7 @@ for i = 1:wind.WS_len
     case 4 % generator step response
       [in, stop_time, out_store] = run_generator_step();
     case 7 % with or without gain schdeuling
-      wind_speed = run_generated_wind_series(wind.mean(i), ...
-      wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      wind_speed = run_generated_wind_series(wind.mean(i),wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [blade.kp_schedule, blade.ki_schedule] = run_blade_gains(blade, i);
     case 8 % with gain schdeuling or stall regulated
       wind_speed = run_generated_wind_series(wind.mean(i), ...
@@ -90,4 +89,6 @@ end
 %% Post processing
 if simulation.type ~= 4
   RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation);
+
+
 end

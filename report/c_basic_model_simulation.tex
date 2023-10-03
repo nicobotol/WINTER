@@ -19,9 +19,9 @@ It is decided to test 3 wind velocity conditions to investigate the three main o
     \toprule
       Simulation & Regime  & WS & Ramp length \\ 
        & & $\left[\si{\meter\per\second}\right]$ & $\left[\si{\second}\right]$ \\ \midrule       
-       I & Below & 4-10 & 200  \\
-       II & Below $\rightarrow$ above rated & 10-14 & 200 \\
-       III & Above & 14-20 & 200  \\
+       I & Below & 4-10 & 2000  \\
+       II & Below $\rightarrow$ above rated & 10-14 & 2000 \\
+       III & Above & 14-20 & 2000  \\
        \bottomrule
     \end{tabular}
     \label{tab:simulation_config}
@@ -39,11 +39,20 @@ A post-process check can be done on the powers, in particular that the one provi
 
 \subsubsection{Simulation results}
 The results of the simulations are reported in \autoref{fig:simulation_1}, \ref{fig:simulation_2}, \ref{fig:simulation_3}. \\
-In particular, the \autoref{fig:wind_sim_I} reports the wind velocity as function of the simulation time. \ref{fig:omega_sim_I}, \ref{fig:power_sim_I}, and \ref{fig:pitch_sim_I} are the parametrizations of the rotor rotational speed, the power, and the pitch angle as function of the wind speed, \ref{fig:power_check_sim_I} is the power check, as described in \ref{eq:power_balance}, and \ref{fig:torque_sim_I} is the generator torque reference as function of the rotor rotational speed. 
+In particular
+\begin{itemize}
+  \item \autoref{fig:wind_sim_I}, \ref{fig:wind_sim_II}, \ref{fig:wind_sim_III} report the wind velocity as function of the simulation time;
+  \item \autoref{fig:omega_sim_I}, \ref{fig:omega_sim_II}, \ref{fig:omega_sim_III} are the parametrizations of the rotor rotational speed as function of the wind speed;
+  \item \autoref{fig:power_sim_I}, \ref{fig:power_sim_II}, \ref{fig:power_sim_III} are the parametrizations of the power as function of the wind speed;
+  \item \autoref{fig:pitch_sim_I}, \ref{fig:pitch_sim_II}, \ref{fig:pitch_sim_III} are the parametrizations of the pitch angle as function of the wind speed;
+  \item \autoref{fig:power_check_sim_I}, \ref{fig:power_check_sim_II}, \ref{fig:power_check_sim_III} are the power check, as described in \autoref{eq:power_balance};
+  \item \autoref{fig:torque_sim_I} is the generator torque reference as function of the rotor rotational speed.
+\end{itemize}
+
 % plots of the results
 \input{c_basic_model_results}
 
-It could be seen that below rated wind speed there is a deviation between the rotor speed computed with the equations and the one obtained in the simulation. The main two possible sources of this difference are that the rate of change of the wind speed is higher then the time required to the rotor to reach the steady state conditions, \textcolor{blue}{and the possible steady state error in the generator controller as discussed before}. 
+It could be seen that below rated wind speed there is a deviation between the rotor speed computed with the equations and the one obtained in the simulation. The main two possible sources of this difference are that the rate of change of the wind speed is higher then the time required to the rotor to reach the steady state conditions. 
 
 \subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
 \subsubsection{Simulation settings}
@@ -109,42 +118,42 @@ The first of the three simulations is run at $V_{10} = 11.5 \ \mesunt{\meter\per
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_47_54fig_wind_TS.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_18_59_44fig_wind_TS.eps}
     \label{fig:fig_wind_15ms}
     \caption{Wind time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_02fig_pitch_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_18_59_51fig_pitch_dynamic.eps}
     \label{}
     \caption{Pitch angle time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_13fig_omega_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_18_59_58fig_omega_dynamic.eps}
     \label{}
     \caption{Rotor rotational speed time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_43fig_torque_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_19_00_14fig_torque_dynamic.eps}
     \label{}
     \caption{Torque time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_48_24fig_power_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_19_00_04fig_power_dynamic.eps}
     \label{}
     \caption{Power time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_49_17fig_generator_power_check.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_19_00_27fig_generator_power_check.eps}
     \label{}
     \caption{Generator power time series}
   \end{subfigure}
@@ -162,10 +171,10 @@ In this simulation these error metrics are not so representative since the wind 
     \toprule
       Simulation & \multicolumn{2}{c}{$\omega_R$} & \multicolumn{2}{c}{$P_G$} & \multicolumn{2}{c}{$T_G$} \\ 
        & $\left[\si{\radian\per\second}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\watt}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\newton\meter} \right]$ & $ \% \left[-\right]$ \\ \midrule       
-       1 & 0.031 & 3.06 & 0.833 & 7.83  & 0.563 & 5.37\\
-       2 & 0.030 & 2.95 & 0.832 & 7.82  & 0.557 & 5.31\\
-       3 & 0.047 & 4.63 & 1.128 & 10.60 & 0.802 & 7.64\\
-       4 & 0.036 & 3.55 & 0.902 & 8.48  & 0.629 & 6.00\\
+       1 &  0.03 &  3.07 &  0.53  &  5.25  &  0.31  &  3.12 \\
+       2 &  0.03 &  2.93 &  0.54  &  5.30  &  0.30  &  3.01 \\
+       3 &  0.04 &  4.36 &  0.80  &  7.92  &  0.49  &  4.88 \\
+       4 &  0.04 &  3.56 &  0.63  &  6.24  &  0.38  &  3.79 \\
      \bottomrule
   \end{tabular}
   \label{tab:res_variable_gains}
@@ -196,42 +205,42 @@ The second simulation is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and 
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_06fig_wind_TS.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_11_06fig_wind_TS.eps}
     \label{fig:2023_05_9_20_55_30fig_wind_TS}
     \caption{Wind time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_11fig_pitch_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_11_17fig_pitch_dynamic.eps}
     \label{fig:2023_05_9_20_55_30fig_pitch_dynamic}
     \caption{Pitch angle time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_21fig_omega_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_11_26fig_omega_dynamic.eps}
     \label{fig:2023_05_9_20_55_46fig_omega_dynamic}
     \caption{Pitch angle time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_52fig_torque_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_11_43fig_torque_dynamic.eps}
     \label{fig:2023_05_9_20_56_15fig_torque_dynamic}
     \caption{Torque time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_14_10_32fig_power_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_11_34fig_power_dynamic.eps}
     \label{fig:2023_05_9_20_55_59fig_power_dynamic}
     \caption{Power time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_15_07_04fig_generator_power_check.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_12_07fig_generator_power_check.eps}
     \label{fig:2023_05_20_15_07_04fig_generator_power_check}
     \caption{Generator power time series}
   \end{subfigure}
@@ -247,10 +256,11 @@ The \acrshort{RMS} error between the steady state value and the corresponding ex
     \toprule
       Simulation & \multicolumn{2}{c}{$\omega_R$} & \multicolumn{2}{c}{$P_G$} & \multicolumn{2}{c}{$T_G$} \\ 
        & $\left[\si{\radian\per\second}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\watt}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\newton\meter} \right]$ & $ \% \left[-\right]$ \\ \midrule      
-     1 & 0.011 & 1.08 & 0.262 & 2.46 & 0.190 & 1.81 \\
-     2 & 0.009 & 0.89 & 0.171 & 1.61 & 0.138 & 1.32 \\
-     3 & 0.020 & 1.97 & 0.486 & 4.57 & 0.349 & 3.33 \\
-     4 & 0.016 & 1.58 & 0.406 & 3.82 & 0.288 & 2.75 \\
+     1 & 0.01 &  1.23 &  0.08  &  0.75  &  0.10  &  1.00 \\
+     2 & 0.01 &  0.87 &  0.02  &  0.22  &  0.08  &  0.79 \\
+     3 & 0.02 &  2.18 &  0.23  &  2.27  &  0.17  &  1.66 \\
+     4 & 0.02 &  1.78 &  0.16  &  1.56  &  0.13  &  1.29 \\
+    
      \bottomrule
   \end{tabular}
   \label{tab:res_variable_gains2}
@@ -280,42 +290,42 @@ The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_31_57fig_wind_TS.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_20_17fig_wind_TS.eps}
     \label{}
     \caption{Wind time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_05fig_pitch_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_20_27fig_pitch_dynamic.eps}
     \label{}
     \caption{Pitch angle time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_15fig_omega_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_20_38fig_omega_dynamic.eps}
     \label{}
     \caption{Pitch angle time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_45fig_torque_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_20_55fig_torque_dynamic.eps}
     \label{}
     \caption{Torque time series}
   \end{subfigure}
   \vskip\baselineskip
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_32_26fig_power_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_20_46fig_power_dynamic.eps}
     \label{}
     \caption{Power time series}
   \end{subfigure}
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_16_33_21fig_generator_power_check.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_20_21_12fig_generator_power_check.eps}
     \label{}
     \caption{Generator power time series}
   \end{subfigure}
@@ -330,10 +340,11 @@ The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation
     \toprule
       Simulation & \multicolumn{2}{c}{$\omega_R$} & \multicolumn{2}{c}{$P_G$} & \multicolumn{2}{c}{$T_G$} \\ 
        & $\left[\si{\radian\per\second}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\watt}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\newton\meter} \right]$ & $ \% \left[-\right]$ \\ \midrule        
-     1 & 0.023 & 2.27 & 0.483 & 4.54 & 0.359 & 3.42 \\
-     2 & 0.018 & 1.77 & 0.319 & 3.00 & 0.257 & 2.45 \\
-     3 & 0.033 & 3.25 & 0.769 & 7.23 & 0.556 & 5.30 \\
-     4 & 0.031 & 3.06 & 0.742 & 6.97 & 0.533 & 5.08 \\
+     1 & 0.01 &  1.17 &  0.07  &  0.66  &  0.10  &  0.96  \\
+     2 & 0.01 &  0.91 &  0.03  &  0.29  &  0.08  &  0.81  \\
+     3 & 0.02 &  1.80 &  0.19  &  1.84  &  0.14  &  1.42  \\
+     4 & 0.02 &  1.69 &  0.16  &  1.61  &  0.13  &  1.28 \\ 
+    
      \bottomrule
   \end{tabular}
   \label{tab:res_variable_gains3}

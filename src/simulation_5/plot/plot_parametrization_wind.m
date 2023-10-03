@@ -1,5 +1,4 @@
-function plot_parametrization_wind(plot_name,out_cell,series,x_my_ref, ...
-  y_my_ref,x_label,y_label,plot_title,scaling,simulation,date_fig)
+function plot_parametrization_wind(plot_name,out_cell,series,x_my_ref,y_my_ref,x_label,y_label,plot_title,scaling,simulation,date_fig)
 
 parameters
 
@@ -22,7 +21,7 @@ for i=1:wind.WS_len
 % else
 %   sign = 'x'; 
 % end
-sign = 'x';
+sign = '-';
   plot(wind_resampled(s_start:end), out_cell{i}.(series).Data(s_start:end)/scaling, sign,  'LineWidth', line_width, 'Color', colors_vect(i,:));
   leg{i + 1} = ['Sim. ', num2str(i)];
 end

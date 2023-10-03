@@ -53,14 +53,14 @@ Above rated WS the objective is to keep the constant rotational speed and so the
 is given.
 
 \subsubsection{Implementation details of the genereator's controller based on the rotor power}
-In the Simulink model the implementation of the generator's torque reference $T_G^*$ is done employing a proportional and a saturation blocks, limiting the torque when it goes above the rated speed. Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator power $P_G^*$ and the actual one $P_G$ to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2} \textcolor{red}{Sostituire al blocco PMSM la dicitura "Current control loop" per evidenziare il fatto che il riferimento di coppia non stia entrando direttamente nalla macchina ma nel suo anello di controllo di corrente }.
+In the Simulink model the implementation of the generator's torque reference $T_G^*$ is done employing a proportional and a saturation blocks. Following what is presented in \cite{Olimpo_Anaya‐Lara}, an intermediate block with a \acrshort{PI} controller uses the error between the reference generator mechanical input power $P_G^*$ and the actual one $P_G$ to set the generator torque. The control schema is presented in \autoref{fig:d_torque_control_2}.
 \begin{figure}[htb]
     \centering
     \input{d_torque_control_2.tex}
     \caption{Scheme of the implemented active power torque controller}
     \label{fig:d_torque_control_2}
 \end{figure}
-The saturation block constraints the reference power in between $P_G^* \in \left[0, P_{R,rated}\right]$.
+The saturation block constraints the reference power in between $P_G^* \in \left[0, P_{G,rated}\right]$.
 The values of the gains are $k_i = 5.5$ and $k_p=0.5$, according to what is proposed by \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be so high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
 
 \subsection{Generator's torque reference synthesis based on generator}\label{subsec:method_control_P_GE}
@@ -75,7 +75,7 @@ Starting from a torque balance, the \textit{q-axis} current can be expressed as:
 \end{gather}
 then it can be substituted in the expression of the power at the generator:
 \begin{gather}
-  P_{GE} = P_{G, in} - R_s i_q^2 = T_G^G \frac{\omega^R}{n} - R_s i_q^2 = \\ \notag
+  P_{GE} = P_{G} - R_s i_q^2 = T_G^G \frac{\omega^R}{n} - R_s i_q^2 = \\ \notag
   = \left(-B_{eq}\,\omega^R + \frac{A\,c_P\,\rho\,V_0^3}{2\omega^R}\right)\omega^R - \frac{R_s\, n^2\left(A\,V_0^3\,c_P\,\rho - 2B_{eq}{\omega^R}^{2}\right)^2}{9\,{\omega^R}^{2}\,p^2\,\Lambda_{mg}^2} \label{eq:P_G_out_eq}
 \end{gather}
 The tip speed ratio can be introduced:
@@ -123,8 +123,7 @@ To study the problem, a numerical method is employed. For a reasonably fine samp
   \label{fig:parameters_for_below_rated}
 \end{figure}
 
-\textcolor{red}{Menzionare nel testo la possibilità di incorrere in minimi locali durante la minimizzazione che possono portare a produrre dei risultati sbagliati}
-From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_damping} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provided a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Finally, also the proper choice of the boundaries for the function to be minimized highly affects the quality and smoothness of the results.\\
+From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_damping} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provided a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Furthermore, since the minimization is performed with the Matlab's function $\texttt{fmincon}$, then the possible presence of local minima has to be taken into account by properly choosing the boundaries of the variables, that in this specific case have been set to $\lambda \in \left[7.5, 10\right]$ and $\theta\in\left[-5, 5\right] \si{\degree}$.  \\
 Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ may be still valid. The simplest choice for these parameters is their mean, but also another choice may be possible. For example, if one considers the wind speed distribution of the location where the turbine is going to be deployed, then the mean can be weighted by the probability that each WS occurs during the year. \\
 When B=0 $\mesunt{\kilo\gram\square\meter\per\second}$ $\lambda=8.11$ and $\theta=0 \si{\degree}$ has been chosen, while for the case with damping $\lambda=8.11$ and $\theta=0 \si{\degree}$ has been chosen.\\
 
@@ -147,11 +146,11 @@ In order to validate these strategies, the two controllers have been modified as
 \begin{figure}[htb]
   \centering
   \input{d_torque_control_GE.tex}
-  \caption{Scheme of the implemented active power torque controller considering the generator \textcolor{red}{Sostituire al blocco PMSM la dicitura "Current control loop" per evidenziare il fatto che il riferimento di coppia non stia entrando direttamente nalla macchina ma nel suo anello di controllo di corrente }.}
+  \caption{Scheme of the implemented active power torque controller considering the generator.}
   \label{fig:d_torque_control_GE}
 \end{figure}
 
-\subsection{Generator's low level control}
+\subsection{Generator's low level control}\label{subsec:generator_low_level-control}
 Once the desired torque is generated according to the desired control law as described in \autoref{subsec:torque_reference} or \autoref{subsec:method_control_P_GE}, the first operation of the control scheme is to transform it in a $I_q \, \mesunt{\ampere}$ current reference knowing that:
 \begin{equation}
     T_G = \frac{3}{2}\Lambda_{mg} p I_q \ \ \left[\si{\newton\meter}\right]

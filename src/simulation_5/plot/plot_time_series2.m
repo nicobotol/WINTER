@@ -6,6 +6,9 @@ parameters
 leg = cell(2*wind.WS_len, 1);
 fig = figure('Color','w');
 hold on
+y_lim_min = 1e10;
+y_lim_max = -1e10;
+
 for i = 1:wind.WS_len
     % Time from where start to print
     t_start = out_cell{i}.(series1).Time(end) - simulation.plot_time(i); % [s]
@@ -17,6 +20,16 @@ for i = 1:wind.WS_len
     'LineWidth', line_width*1.2, 'Color', color(i));
   leg{2*i - 1} = [leg1,' sim. ', num2str(i)];
   leg{2*i} = [leg2,' sim. ', num2str(i)];
+
+  y_min = min(out_cell{i}.(series1).Data(s_start:end)/scaling);
+  y_max = max(out_cell{i}.(series1).Data(s_start:end)/scaling);
+  if y_min < y_lim_min
+    y_lim_min = y_min;
+  end
+  if y_max > y_lim_max
+    y_lim_max = y_max;
+  end
+
 end
 if strcmp(y_line, 'none') == 0
   yline(y_line/scaling, 'LineStyle', '-.', 'LineWidth', line_width,...
@@ -31,6 +44,9 @@ title(plot_title, 'Interpreter','latex')
 grid on
 box on
 set(gca, 'FontSize', font_size)
+ylim([0.95*y_lim_min 1.05*y_lim_max])
+
+
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
   export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);

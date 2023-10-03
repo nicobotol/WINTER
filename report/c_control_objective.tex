@@ -1,12 +1,17 @@
 \section{WT controllers and their objectives} \label{sec:control_objective}
-\textcolor{red}{Riscrivere introduzione}
+\textcolor{red}{Riscrivere introduzione}\\
 In this section of the work first of all the operating regions of a WT are presented and then the two main controllers are discussed. The first one is in charge of limiting the power extracted from the resource, when needed, by acting on the pitch angle, while the second ensures the correct rotational speed of the rotor in order to fullfil the requirements of the specific operational region.
 
 \subsection{Control objectives}
-There are different conceptual levels of control for the wind turbines, each of them with a specific target.\\  
-The primary objective of the controller is to keep the rotor speed and generated power within limits. Secondary objectives include the reduction of the load on the mechanical components (both as peak values and also the fatigue ones) and the reduction of the vibrations. In modern offshore turbines this has also to take into account the external load applied by the waves. \\
-On an higher hierarchical level there are the handling of start up and shut down operations, alongside the extreme events.\\
-\textcolor{red}{Valutare la possibilità di mettere una immagine che in qualche modo riassuma i diversi livelli di controllo della macchina, tipo quella preparata da \url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9535421} }
+There are different conceptual levels of control for the wind turbines, each of them with a specific target, as could be seen in \autoref{fig:control_levels} (source \cite{9535421}).
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width = 0.7\columnwidth]{images/control_levels.jpg}
+  \caption{General control structure of a wind power systems,  source \cite{9535421}}
+  \label{fig:control_levels}
+\end{figure}
+
+On the higher hierarchical level ($\textit{advanced feature}$ in \autoref{fig:control_levels}) there are the handling of start up and shut down operations, alongside the extreme events, and possibly the integration with others turbines in the neighborhood.The primary objective of the $\textit{wind system specific control}$ is to keep the rotor speed and generated power within limits. Secondary objectives include the reduction of the load on the mechanical components (both as peak values and also the fatigue ones) and the reduction of the vibrations. In modern offshore turbines this has also to take into account the external load applied by the waves. At the $\textit{basic control}$ level there are some functions that are not strictly related to the wind turbine field, but are common to all the electric drives connected to the grid. Finally, at the lower hierarchical level there are the commands for the switching devices at the generator and grid side. 
 
 
 \subsection{Operational regions of a WT}
@@ -49,6 +54,5 @@ The yaw controller rotates the nacelle in order to set the orientation of the ro
 According to \cite{Aerodynamics_of_wind_turbines}, some attempts to develop a power controller based only on the yaw have been done in the past, but with low implications nowadays at turbine level. 
 
 \subsection{Electrical generator control}\label{subsec:PMSM_control}
-\textcolor{red}{Rivedere questo capitolo, anche in considerazione quanto suggerito durante la revisione}
-\textcolor{red}{Dire in generale che possono esistere diversi tipi di controlli in base allo specifico tipo di macchina che viene utilizzata. Dire che il controllo del generatore utilizzato in questa applicazione specifica verrà poi presentato in uno specifico capitolo successivo}
-In general, control of these machines may be focused on two objectives: the speed or the torque, and the first includes the second as a nested loop. For the sake of the thesis, a torque control has to be implemented because it is easy to synthesize this signal in the two control regions. It's worth nothing that the control depends on the architecture type of the turbine. 
+As exposed in \autoref{subsec:electrical_generator_description}, different types of generators may be employed in the WTs, each of them requiring a different control method at the \textit{basic control} level of the \autoref{fig:control_levels}. \\
+For the sake of the thesis, a torque control has to be implemented, meaning that the \textit{Wind System Specific Control} (according to the notation of \autoref{fig:control_levels}) generates a reference torque level that is then converted in a current reference. Alongside this current loop, an inner voltage one regulating the speed is present too. This particular choice is done because the synthesis of the torque reference signal in the two control regions is relatively easy. Further details on the design on the modelling of the chosen PMSM machine and its regulators will be given in \autoref{subsec:electrical_generator_description} and \autoref{subsec:generator_low_level-control}.
