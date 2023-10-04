@@ -8,5 +8,5 @@ function [kp_schedule, ki_schedule] = run_stall_regulation(blade, i)
   elseif i == 2 % without scheduling
     kp_schedule = 0;
     ki_schedule = 0;
-  
   end
+end

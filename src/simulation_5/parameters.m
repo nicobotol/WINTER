@@ -127,10 +127,10 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 120*ones(4,1); % max time to investigaste [s]
+simulation.stop_time = 150*ones(4,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 7;        % 1 -> constant wind speed
+simulation.type = 5;        % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -140,14 +140,14 @@ simulation.type = 7;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = 100*ones(4, 1);  % time from the end of the simulation to 
+simulation.plot_time = 140*ones(4, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = [40 40 40 40]; % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 140*ones(4,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -225,15 +225,6 @@ blade.kp_schedule_report = [-59.871 46.281 -7.814 -2.541 1]; % from Olimpo's
 blade.ki_schedule_report = [27.689 -31.926 13.128 -2.405 0.351]; % from Olimpo's
 blade.kp_schedule = blade_schedule_gains{1};% 1.0e+04*[4.3543 -8.7196 7.3927 -3.4753 1.0017 -0.1871 0.0240 -0.0023 0.0002]; %
 blade.ki_schedule = blade_schedule_gains{2};%1.0e+04*[1.9792 -3.9634 3.3603 -1.5797 0.4553 -0.0851 0.0109 -0.0011 0.0001];%
-% blade.kp_tab = [-2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
-%                       25,26,27;
-%                    2.35,2.35,1.5,1.25,1.08,0.98,0.9,0.82,0.78,0.71,0.68,...
-%                       0.65,0.6,0.57,0.55,0.5,0.49,0.43,0.43,0.42,0.41];
-% blade.ki_tab = [ -2, 0,4,6,8,10.5,12,13,14,16,17,18,19,20,21,22,23,24,...
-%                       25,26,27;
-%                     0.92, 0.92,0.58,0.49,0.42,0.39,0.36,0.32,0.305,0.29,...
-%                       0.28,0.26,0.23,0.22,0.21,0.205,0.195,0.19,0.185,...
-%                       0.18,0.17];
 blade.theta_f = 0.5*pi/180; % added term in the generator control [rad]
 blade.initial_pitch = 0*pi/180;  % initial condition for pitch ctrl 
 blade.K1 = 164.13; % Linear coeff. in aero gain scheduling [deg]
@@ -244,8 +235,8 @@ blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*...
   blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [20]*ones(4,1);           % 10 minutes mean wind speed [m/s]]
-wind.turbulence = [1.0]*ones(4,1); % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [6 11.5 20];           % 10 minutes mean wind speed [m/s]]
+wind.turbulence = [0.6 1 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]

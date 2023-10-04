@@ -56,34 +56,34 @@ It could be seen that below rated wind speed there is a deviation between the ro
 
 \subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
 \subsubsection{Simulation settings}
-The model is tested with an input wind time series three times, the first with mean \acrshort{WS} of 6 $\mesunt{\meter\per\second}$, the second with  11 $\mesunt{\meter\per\second}$, and the third with 20 $\mesunt{\meter\per\second}$. These values are chosen to test the simulator in the three characteristics wind regimes. In the first simulation the turbulence is chosen to be $\sigma=0.6 \mesunt{\meter\per\second}$ while for the other $\sigma=1 \mesunt{\meter\per\second}$. The simulation is run for $t=150\ \mesunt{\second}$ and the results of the last 100 $\mesunt{\second}$ are plotted in order to get rid of the transient behavior. The sampling frequency for the wind series generation is set to be $f_s=50 \left[\si{\hertz}\right]$.
+The model is tested with an input wind time series three times, the first with mean \acrshort{WS} of 6 $\mesunt{\meter\per\second}$, the second with 11.5 $\mesunt{\meter\per\second}$, and the third with 20 $\mesunt{\meter\per\second}$. These values are chosen to test the simulator in the three characteristics wind regimes. In the first simulation the turbulence is chosen to be $\sigma=0.6 \mesunt{\meter\per\second}$ while for the other $\sigma=1 \mesunt{\meter\per\second}$. The simulation is run for $t=150\ \mesunt{\second}$ and the results of the last 100 $\mesunt{\second}$ are plotted in order to get rid of the transient behavior. The sampling frequency for the wind series generation is set to be $f_s=50 \left[\si{\hertz}\right]$.
 
 \subsubsection{Simulation results}
-The results of this simulation are reported in \autoref{fig:simulation_rand_wind_NPC}, where the wind time series and the parametrizations of some quantities as function of the instantaneous wind speed are reported on top of the corresponding reference lines obtained by static analysis. \\
+The results of this simulation are reported in \autoref{fig:simulation_rand_wind_NPC}, where the wind time series and the parametrizations of some quantities as function of the instantaneous wind speed are reported on top of the corresponding reference lines obtained by static analysis. Futhermore, the RMS error between the value of some observed quantities and their static values will be presented in \autoref{tab:RMS_comparison}, where they will be also compared with the results of another similar simulation. \\
 What can be seen from the results is that the observed quantities are clustered around the static curve. This is reasonable since if the turbulence would have been set to 0 then the expected results would have been a point on the static curve corresponding to the investigated WS. It must be highlighted that in these curves the initial transient part has been eliminated in order to have a better visualization. 
 
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_52_01fig_wind_TS.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_14_56_44fig_wind_TS.eps}
     \caption{Wind time series}
     \label{fig:2023_05_1_00_55_48fig_wind_TS.eps}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_39_46fig_pitch_param.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_14_57_26fig_pitch_param.eps}
     \caption{Pitch angle time series}
     \label{fig:2023_05_1_00_50_19fig_power_param}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_37_59fig_power_param.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_14_56_58fig_power_param.eps}
     \caption{Input power to the generator}
     \label{fig:2023_05_1_00_51_17fig_omega_param}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_3_17_40_32fig_omega_param.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_14_57_38fig_omega_param.eps}
     \caption{Rotational speed}
     \label{fig:2023_05_1_00_50_58fig_pitch_param}
   \end{subfigure}
@@ -266,7 +266,7 @@ The \acrshort{RMS} error between the steady state value and the corresponding ex
   \label{tab:res_variable_gains2}
 \end{table}
 
-As could be seen from the root mean square errors, the gain scheduling simulations performs better than the fixed one. In fact, even tough \textit{simulation 2} has lowest error value, the ones of \textit{4} are almost double than the \textit{1}. This means that a fixed gain may perform well in a certain wind region (i.e. the one corresponding at the same gain in the scheduling approach) but probably it will underperform in another different from that one.  
+As could be seen from the root mean square errors, the gain scheduling simulations performs better than the fixed one. In fact, even tough \textit{simulation 2} has lowest error value, the ones of \textit{3} are almost double than the \textit{1}. This means that a fixed gain may perform well in a certain wind region (i.e. the one corresponding at the same gain in the scheduling approach) but probably it will underperform in another different from that one.  
 
 \subsubsection{Wind speed with $V_{10} =  20 \ \mesunt{\meter\per\second}$}
 The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation parameters are reported in \autoref{tab:simulation_config_variable_gains3} while the results in \autoref{fig:gain_scheduling_time_dependency3} and \autoref{tab:res_variable_gains3}.
@@ -352,31 +352,31 @@ The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation
 
 The considerations that can be done on this case are similar to the previous case. 
 
-\subsubsection{Gain disabled and parametrization plot}
+\subsubsection{Gain disabled and parametrization plot}\label{subsec:gain_disabled}
 
 Another comparison between the use or not of the gain scheduling may be done repeating the simulations done in \autoref{sec:wind_series_sim} but disabling the blade gain scheduling, and letting the gains of the previous \textit{simulation 2} (i.e. $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$). The corresponding results are reported in \autoref{fig:simulation_rand_wind_no_gain_scheduling}.
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_19fig_wind_TS.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_15_24_55fig_wind_TS.eps}
     \caption{Wind time series}
     \label{fig:2023_05_8_22_43_35fig_wind_TS.eps}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_46fig_pitch_param.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_15_25_29fig_pitch_param.eps}
     \caption{Pitch angle time series}
     \label{fig:2023_05_8_22_44_05fig_pitch_param}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_24fig_power_param.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_15_25_02fig_power_param.eps}
     \caption{Input power to the generator}
     \label{fig:2023_05_8_22_44_15fig_power_param}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_8_23_17_57fig_omega_param.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_4_15_25_43fig_omega_param.eps}
     \caption{Rotational speed}
     \label{fig:2023_05_8_23_17_57fig_omega_param}
   \end{subfigure}
@@ -384,8 +384,27 @@ Another comparison between the use or not of the gain scheduling may be done rep
   \label{fig:simulation_rand_wind_no_gain_scheduling}
 \end{figure}
 
+\begin{table}[htb]
+  \centering
+  \caption{RMS errors of the simulations done in \autoref{sec:wind_series_sim} and \autoref{subsec:gain_disabled} alongside their normalized values}
+  \label{tab:RMS_comparison}
+  \begin{tabular}{cccccccccc}
+    \toprule
+      $V_0$  & Sim. & $\omega_R$ & $\omega_{R,norm}$ & $P_{G}$ & $P_{G,norm}$ & $T_{G}$ & $T_{G,norm}$ & $\theta$ & $\theta_{norm}$ \\ 
+      $\mesunt{\meter\per\second}$ & & $\mesunt{\radian\per\second}$ & $\left[\%\right]$ & $\mesunt{\mega\watt}$ & $\left[\%\right]$ & $\mesunt{\mega\newton\per\meter}$ & $\left[\%\right]$ & $\mesunt{\radian}$ & $\left[\%\right]$ \\ \hline
+      \multirow{2}{*}{6.0}  & \ref{sec:wind_series_sim} &  0.04 &  7.27 & 0.36 & 23.66 & 0.45 & 15.73 & 0.00 &  0.00 \\
+      & \ref{subsec:gain_disabled} &  0.04 &  7.27 & 0.36 & 23.66 & 0.45 & 15.73 & 0.00 &  0.00 \\   \hline
+      \multirow{2}{*}{11.5} & \ref{sec:wind_series_sim} & 0.04 &  3.83 & 0.93 &  9.19 & 0.67 & 6.66 & 0.05 & 148.81 \\
+      & \ref{subsec:gain_disabled} & 0.04 &  3.68 & 0.93 &  9.16 & 0.66 &  6.62 & 0.04 & 144.00 \\ \hline 
+      \multirow{2}{*}{20.0} & \ref{sec:wind_series_sim} & 0.02 &  1.49 &  0.08 & 0.79 &  0.12 & 1.24 & 0.01 & 4.86 \\
+      & \ref{subsec:gain_disabled} & 0.02 &  1.52 & 0.16 &  1.56 & 0.15 &  1.54 & 0.02 &  7.80 \\ \bottomrule
+  \end{tabular}
+\end{table}
+
+Even though the results of the normalized errors have been reported for completeness in \autoref{tab:RMS_comparison}, their value is not always meaningful, since the normalization has been done for the value of the quantity of interest at the mean wind velocity, while the quantity itself evolves in time during the simulation. This could be well seen in the pitch error, where the high value is due to the fact that the normalization factor is a value close to 0 $\mesunt{\degree}$ while the pitch changes around this value.
+
 \subsubsection{Conclusions}
-The results obtained in \autoref{subsec:gain_scheduling_disabling} show that the choice of the gain highly influences the performance of the system. In particular the gain used in the \text{sim. 3} seems to be always the worst choice in the tested cases. Between the scheduling rule, the one proposed in \autoref{subsec:gain_schdeuling_DTU10MW} seems to perform better than the one of \cite{Olimpo_Anaya‐Lara}. Finally, it seems that the constant gain used in \textit{sim. 2} is always the best choice, probably because it is the highest one and so produces the response with the highest effort. \textcolor{red}{Maybe a better explanation can be found.}
+The results obtained in \autoref{subsec:gain_scheduling_disabling} show that the choice of the gain influences the performance of the system. In particular the gain used in the \text{sim. 3} seems to be always the worst choice in the tested cases. Between the scheduling rule, the one proposed in \autoref{subsec:gain_schdeuling_DTU10MW} seems to perform better than the one of \cite{Olimpo_Anaya‐Lara}. Finally, it seems that the constant gain used in \textit{sim. 2} is always the best choice, probably because it is the highest one and so produces the response with the highest effort. \textcolor{red}{Maybe a better explanation can be found.}
 
 \subsection{Disabling of the pitch angle controller}
 In order to show the effectiveness of the blade pitch controller one can disable it at all and let the turbine work at fixed pitch angle as happened for the purely stall regulated ones (see \autoref{subsec:stall_regulation_theory}). What is different between the concept presented before and this simulation is the control objective of the electrical machine, since in the stall regulated was the rotational speed while now it is the generator incoming power. \\

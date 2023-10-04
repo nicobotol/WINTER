@@ -33,9 +33,10 @@ switch simulation.type
     plot_step_response(out_store, date_fig)
 
   case 5 % generated WS and parametrization plot   
-    plot_all_dynamic
+    plot_time_series("fig_wind_TS",out_store, 'wind', 'Time [s]', 'Wind speed [m/s]', 'Wind speed time serie', 1, date_fig, 'northwest');
+    % plot_all_dynamic
     plot_all_parametrizations_wind
-    plot_all_parametrizations
+    % plot_all_parametrizations
 
   case {6, 7, 8} % ramp and parametrization plot
     plot_all_dynamic

@@ -5,25 +5,29 @@
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{siunitx}
+\usepackage{multirow}
 \usepackage{varwidth} %for the varwidth minipage environment
 \newcolumntype{M}{>{\begin{varwidth}{4cm}}c<{\end{varwidth}}} %M is for Maximal column
 
+\newcommand{\mesunt}[1]{\left[\si{#1}\right]}
 
 \begin{document}
 
 \section{Ciao}
+
 \begin{table}[htb]
   \centering
-  \begin{tabular}{cccccccc}
-  \toprule
-    Simulation & \multicolumn{2}{c}{$\omega_R$} & \multicolumn{2}{c}{$P_G$} & \multicolumn{2}{c}{$T_G$} \\ 
-     & $\left[\si{\radian\per\second}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\watt}\right]$ & $ \% \left[-\right]$ & $\left[\si{\mega\newton\meter} \right]$ & $ \% \left[-\right]$ \\ \midrule       
-     1 & 0.031 & 3.06 & 0.833 & 7.83  & 0.563 & 5.37\\
-     2 & 0.030 & 2.95 & 0.832 & 7.82  & 0.557 & 5.31\\
-     3 & 0.047 & 4.63 & 1.128 & 10.60 & 0.802 & 7.64\\
-     4 & 0.036 & 3.55 & 0.902 & 8.48  & 0.629 & 6.00\\
-     \bottomrule
+  \caption{RMS errors of the simulations done in REF.1 and REF.2 alongside their normalized values}
+  \begin{tabular}{cccccccccc}
+    \toprule
+      $V_0$  & Sim. & $\omega_R$ & $\omega_{R,norm}$ & $P_{G}$ & $P_{G,norm}$ & $T_{G}$ & $T_{G,norm}$ & $\theta$ & $\theta_{norm}$ \\ 
+      $\mesunt{\meter\per\second}$ & & $\mesunt{\radian\per\second}$ & $\left[\%\right]$ & $\mesunt{\mega\watt}$ & $\left[\%\right]$ & $\mesunt{\mega\newton\per\meter}$ & $\left[\%\right]$ & $\mesunt{\radian}$ & $\left[\%\right]$ \\ \hline
+      \multirow{2}{*}{6.0}  & REF.1 &  0.04 &  7.27 & 0.36 & 23.66 & 0.45 & 15.73 & 0.00 &  0.00 \\
+      & REF.2 &  0.04 &  7.27 & 0.36 & 23.66 & 0.45 & 15.73 & 0.00 &  0.00 \\   \hline
+      \multirow{2}{*}{11.5} & REF.1 & 0.04 &  3.83 & 0.93 &  9.19 & 0.67 & 6.66 & 0.05 & 148.81 \\
+      & REF.2 & 0.04 &  3.68 & 0.93 &  9.16 & 0.66 &  6.62 & 0.04 & 144.00 \\ \hline 
+      \multirow{2}{*}{20.0} & REF.1 & 0.02 &  1.49 &  0.08 & 0.79 &  0.12 & 1.24 & 0.01 & 4.86 \\
+      & REF.2 & 0.02 &  1.52 & 0.16 &  1.56 & 0.15 &  1.54 & 0.02 &  7.80 \\ \bottomrule
   \end{tabular}
-  \label{tab:res_variable_gains}
 \end{table}
 \end{document}

@@ -67,8 +67,6 @@ for i = 1:wind.WS_len
   % Run the simulation
   out_store{i} = sim(in, 'ShowProgress','on'); % store the results of the simulation
 
-%   % Uncomment all the blocks
-%   uncomment_all(simulation.mdl)
 end
 toc
 
@@ -86,9 +84,7 @@ else
   fprintf('Simulation ended with error\n');
 end
 
-%% Post processing
-if simulation.type ~= 4
-  RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation);
-
-
-end
+  %% Post processing
+  if simulation.type ~= 4
+    RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch);
+  end
