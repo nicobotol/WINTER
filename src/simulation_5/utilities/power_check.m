@@ -38,8 +38,8 @@ for i = 1:n_series
 
 end
 
-fig = figure('Color', 'w');
 for i = 1:n_series
+  fig = figure('Color', 'w');
   yyaxis left
   plot(time{i}(s_start:end), P_R{i}(s_start:end)/1e6, 'DisplayName', '$P_{R}$', 'LineWidth',line_width);
   hold on
@@ -57,13 +57,13 @@ for i = 1:n_series
   title('Comparison of the powers');
   grid on
   set(gca, 'FontSize', font_size)
-end
-
-
-if simulation.print_figure == 1
-  fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
-  export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
-%   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
+  
+  
+  if simulation.print_figure == 1
+    fig_name = strcat(path_images,'\', date_fig, plot_name, num2str(i),'.eps');
+    export_figure(fig, strcat(date_fig, plot_name, num2str(i), '.eps'), path_images);
+    %   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
+  end
 end
   
 end

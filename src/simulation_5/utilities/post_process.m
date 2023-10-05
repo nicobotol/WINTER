@@ -53,10 +53,11 @@ end
 %% Write the RMS table to a file
 if simulation.type == 5
   mode = 'a';
+  write_RMS_table(RMS_errors,mode);
 else
   mode = 'w';
 end
-write_RMS_table(RMS_errors,mode);
+
 
 end
 

@@ -17,9 +17,7 @@ function [cp_partial, cT_partial, pt, pn] = cP_cT_partial(r_item_no_tip, r_vecto
       %pn = zeros(1, r_item_no_tip);
 
       % compute the a and a_prime with the iterative method
-      [a, a_prime, ct, cn, phi] = induction_factor_convergence(a_guess, ...
-        a_prime_guess, R, r, lambda, beta, Theta_p, B, sigma, aoa_mat, ...
-        cl_mat, cd_mat, thick_prof, thick, fake_zero, i_max);
+      [a, a_prime, ct, cn, phi] = induction_factor_convergence(a_guess, a_prime_guess, R, r, lambda, beta, Theta_p, B, sigma, aoa_mat, cl_mat, cd_mat, thick_prof, thick, fake_zero, i_max);
       
       cp_partial(i) = r*((1 - a)^2 + (lambda*r/R*(1 + a_prime))^2)*c*ct;
       cT_partial(i) = ((1 - a)^2 + (lambda*r/R*(1 + a_prime))^2)*c*cn;

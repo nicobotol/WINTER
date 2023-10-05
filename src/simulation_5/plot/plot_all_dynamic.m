@@ -9,10 +9,10 @@ data = string(1);
 data = ["omega_R"];
 leg = string(4);
 leg = [ "Sim. 1", "Sim. 2", "Sim. 3", "Sim. 4"];
-plot_time_seriesN('fig_omega_dynamic', out_store, data, omega_rated, 'Time [s]','$\omega_R$ [rad/s]', 'Rotor rotational speed', 1, line_width, leg, date_fig, 'northeast')
+plot_time_seriesN('fig_omega_dynamic', out_store, data, omega_rated, 'Time [s]','$\omega_R$ [rad/s]', 'Rotor rotational speed', 1, line_width, leg, date_fig, 'northwest')
 
 % power dynamic
-plot_time_series2('fig_power_dynamic', out_store, 'P_R', 'P_G',  generator.P_rated, 'Time [s]', 'P [MW]', 'Rotor and generator powers', 1e6, 'Aero.', 'Gen.', date_fig, 'northeast')
+plot_time_series2('fig_power_dynamic', out_store, 'P_R', 'P_G',  generator.P_rated, 'Time [s]', 'P [MW]', 'Rotor and generator powers', 1e6, 'Aero.', 'Gen.', date_fig, 'southeast')
 
 % torque dynamic
 plot_time_series2('fig_torque_dynamic', out_store,'T_G_reference', 'T_G', 'none', 'Time [s]', 'T [MNm]', 'Generator torque', 1e6, 'Ref.', '', date_fig, 'southeast')

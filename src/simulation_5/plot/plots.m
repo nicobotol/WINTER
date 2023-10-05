@@ -6,10 +6,8 @@ addpath('\..')
 addpath('lookup\')
 
 
-[~, pos_4] = min(abs(lookup_static_values(1, :) - V0_cut_in)/ ...
-  velocity_spacing); % position of the element coresponding to 4 [m/s]
-[~, pos_25] = min(abs(lookup_static_values(1, :) - V0_cut_out)/ ...
-  velocity_spacing); % position of the element coresponding to 25 [m/s]
+[~, pos_4] = min(abs(lookup_static_values(1, :) - V0_cut_in)/  velocity_spacing); % position of the element coresponding to 4 [m/s]
+[~, pos_25] = min(abs(lookup_static_values(1, :) - V0_cut_out)/  velocity_spacing); % position of the element coresponding to 25 [m/s]
 
 switch simulation.type
   case 1 % constant wind speed
@@ -44,7 +42,7 @@ switch simulation.type
     % plot_time_series("fig_wind_TS",out_store, 'wind', 'Time [s]', 'Wind speed [m/s]', 'Wind speed time serie', 1, date_fig, 'northwest');
     % plot_all_parametrizations_wind
     % plot_all_parametrizations
-    % [~, ~, ~] = power_check(out_store, I_eq, B_eq, wind.WS_len, line_width, date_fig, "power_check", simulation, font_size, path_images);
+    [~, ~, ~] = power_check(out_store, I_eq, B_eq, wind.WS_len, line_width, date_fig, "power_check", simulation, font_size, path_images);
     % rotor power parametrization
 
 

@@ -26,8 +26,7 @@ function [a, a_prime, ct, cn, phi] = induction_factor(a, a_prime, R, r, ...
   alpha = phi - Theta;  % angle of attack
 
   % function to interpolate cl and cd for the given value of alpha and t/c
-  [cl, cd] = interpolate_cl_cd(aoa_mat, cl_mat, cd_mat, thick_vector, ...
-    alpha, thick);
+  [cl, cd] = interpolate_cl_cd(aoa_mat, cl_mat, cd_mat, thick_vector, alpha, thick);
 
   cn = cl*cos(phi) + cd*sin(phi); 
   ct = cl*sin(phi) - cd*cos(phi); 

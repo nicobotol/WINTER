@@ -27,41 +27,33 @@ for i = 1:wind.WS_len
     case 1  % constant wind speed  
       wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, stop_time);
     case {2, 6}  % wind speed ramp
-      wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i), ...
-      wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, ...
-      stop_time);
+      wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i),      wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
     case {3, 5} % generated time series
-      wind_speed = run_generated_wind_series(wind.mean(i), ...
-      wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
     case 4 % generator step response
       [in, stop_time, out_store] = run_generator_step();
     case 7 % with or without gain schdeuling
       wind_speed = run_generated_wind_series(wind.mean(i),wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [blade.kp_schedule, blade.ki_schedule] = run_blade_gains(blade, i);
     case 8 % with gain schdeuling or stall regulated
-      wind_speed = run_generated_wind_series(wind.mean(i), ...
-      wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i),      wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
+      % wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [blade.kp_schedule, blade.ki_schedule] = run_stall_regulation(blade, i);
     case 9 % with or without gain schdeuling
-      wind_speed = run_generated_wind_series(wind.mean(i), ...
-      wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [blade] = run_pitch_dynamics(blade, i);
     case 10 % test with K_opt and K_opt_GE
       wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, stop_time);
       % wind_speed = run_ramp(wind.ramp_WS_start, wind.ramp_WS_stop, wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, stop_time);
-      [rotor, generator, blade, T_R0] = run_Kopt_KoptGE(rho, ...
-      lambda_vector, pitch_vector, lookup_cP, rotor, blade, ...
-      generator, gearbox, wind_speed(i, 2), rated_values, rated_values_P_GE, lookup_Pitch, lookup_pitch_P_GE, simulation, i);
+      [rotor, generator, blade, T_R0] = run_Kopt_KoptGE(rho, lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, wind_speed(i, 2), rated_values, rated_values_P_GE, lookup_Pitch, lookup_pitch_P_GE, simulation, i);
 
   end
 
   % Set the initial conditions
   if simulation.mdl ~= 3 
-    [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
-      generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
+    [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
   elseif simulation.mdl == 3
-    [rotor, generator, blade, T_R0] = initial_conditions_GE(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, ...
-      generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
+    [rotor, generator, blade, T_R0] = initial_conditions_GE(rho,lambda_vector, pitch_vector, lookup_cP,rotor, blade, generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
   end
 
   % Run the simulation

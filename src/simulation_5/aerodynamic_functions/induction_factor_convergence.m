@@ -31,8 +31,7 @@ for i = 1:i_max
   a_prime_old = a_prime;
   
   % update a and a_prime
-  [a, a_prime, ct, cn, phi] = induction_factor(a, a_prime, R, r, lambda, ...
-    beta, Theta_p, sigma, B, aoa_mat, cl_mat, cd_mat, thick_prof, thick);
+  [a, a_prime, ct, cn, phi] = induction_factor(a, a_prime, R, r, lambda, beta, Theta_p, sigma, B, aoa_mat, cl_mat, cd_mat, thick_prof, thick);
   
   % compute the error
   epsilon = abs(a_old - a);

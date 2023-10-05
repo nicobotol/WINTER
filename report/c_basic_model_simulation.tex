@@ -407,38 +407,53 @@ Even though the results of the normalized errors have been reported for complete
 The results obtained in \autoref{subsec:gain_scheduling_disabling} show that the choice of the gain influences the performance of the system. In particular the gain used in the \text{sim. 3} seems to be always the worst choice in the tested cases. Between the scheduling rule, the one proposed in \autoref{subsec:gain_schdeuling_DTU10MW} seems to perform better than the one of \cite{Olimpo_Anaya‐Lara}. Finally, it seems that the constant gain used in \textit{sim. 2} is always the best choice, probably because it is the highest one and so produces the response with the highest effort. \textcolor{red}{Maybe a better explanation can be found.}
 
 \subsection{Disabling of the pitch angle controller}
-In order to show the effectiveness of the blade pitch controller one can disable it at all and let the turbine work at fixed pitch angle as happened for the purely stall regulated ones (see \autoref{subsec:stall_regulation_theory}). What is different between the concept presented before and this simulation is the control objective of the electrical machine, since in the stall regulated was the rotational speed while now it is the generator incoming power. \\
+In order to show the effectiveness of the blade pitch controller one can disable it at all and let the turbine work at fixed pitch angle as happened for the purely stall regulated ones (see \autoref{subsec:stall_regulation_theory}). While in the old-styled stall regulated turbines the controller ensured the fixed rotor speed for letting the asynchronous machine to work at the desired velocity, here the controller's aim is to limit the generator power.\\
 In the simulations, the disabling is performed setting $k_p=0 \ \mesunt{\second}$ and $k_i=0 \ [-]$. \textcolor{red}{WRITE IT BETTER, SUMMARIZING WHAT IT IS WRITTEN IN THE THEORETICAL PART - It is expected that increasing the wind speed above the rated one, the rotor rotational speeds increase (and consequently the extracted power), up to the drag becomes so high to let the rotor speed to decrease on its own. }\\
-This test case is run with the same input velocity used in \autoref{fig:gain_scheduling_time_dependency2}, and some of the results of the simulations are reported in \autoref{fig:simulation_rand_wind_no_pitch_control}, alongside the case of blade pitch scheduling for better understanding the differences. In particular the \textit{sim. 1} uses the scheduling of \autoref{subsec:gain_schdeuling_DTU10MW} while the \textit{sim. 2} is the one with disabled gain.\\
-More in detail, \autoref{fig:pitch_dynamic_no_ctrl} shows that in \textit{sim. 2} the pitch is not changed, while the other does so. \autoref{fig:omega_dynamic_no_ctrl} shows that the rotational speed is limited at the rated value in \textit{sim. 1}, while it is almost doubled in\textit{sim. 2}. It must be noted that in a purely stall regulated machine the rotational speed would have been controlled to a constant value in order to produce the voltage at the desired frequency.\\
-\autoref{fig:power_dynamic_no_ctrl} shows that the power extracted from the wind is much higher in the second simulation than in the first one while the mechanical power at the generator is the same. This is explained by the fact that the controller acts reducing the torque at almost half of the previous one (see \autoref{fig:torque_dynamic_no_ctrl}).
+
+
+This test case is run for a total of 600 $\mesunt{\second}$ with a wind ramp from 6 up to 15 $\mesunt{\meter\per\second}$ in 400 $\mesunt{\second}$, and then the final velocity kept constant. Some of the results are reported in \autoref{fig:simulation_rand_wind_no_pitch_control}, where they are compared with the case of blade pitch scheduling, for better understanding the differences. In particular the \textit{sim. 1} uses the scheduling of \autoref{subsec:gain_schdeuling_DTU10MW} while the \textit{sim. 2} is the one with disabled gain.\\
+More in detail, clearly \autoref{fig:pitch_dynamic_no_ctrl} shows that in \textit{sim. 2} the pitch is not changed, while the other does so after the reaching of the rated wind speed. \autoref{fig:omega_dynamic_no_ctrl} shows that the rotational speed is the same below the rated velocity, because both of the configuration pursue the MPPT, while they are different above, with \textit{sim. 1} limited at the rated value, while still continues to grow \textit{sim. 2} up to the end of the wind ramp. In this letter case the different slope is due to the decreasing of the torque (visible in \autoref{fig:torque_dynamic_no_ctrl}), necessary to keep the required constant power. \\
+\autoref{fig:power_dynamic_no_ctrl} shows that the power extracted from the wind is much higher in the second simulation than in the first one while the mechanical power at the generator is the same. \autoref{fig:power_check_1} and \ref{fig:power_check_2} shows how the incoming rotor power is transformed in the different contributions introduced in \autoref{eq:power_balance}. In particular, in both of the simulations the energy stored in the rotor inertia is null when the regime speed is reached, while the difference between the incoming power and the mechanical provided as input at the generator is equal to the one dissipated by the damping.
 
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_30_17fig_pitch_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_38_45fig_pitch_dynamic.eps}
     \caption{Pitch angle time series}
     \label{fig:pitch_dynamic_no_ctrl}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_30_24fig_omega_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_38_56fig_omega_dynamic.eps}
     \caption{Rotor rotational speed time series}
     \label{fig:omega_dynamic_no_ctrl}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_45_11fig_power_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_39_06fig_power_dynamic.eps}
     \caption{Rotor power and generator input power}
     \label{fig:power_dynamic_no_ctrl}
   \end{subfigure}
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_05_20_22_30_44fig_torque_dynamic.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_39_17fig_torque_dynamic.eps}
     \caption{Rotational speed}
     \label{fig:torque_dynamic_no_ctrl}
   \end{subfigure}
-  \caption{Results of simulation with a generated wind series, no blade control}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_20_02power_check1.eps}
+    \caption{Comparison of the powers of \textit{sim.1}}
+    \label{fig:power_check_1}
+  \end{subfigure}
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_20_02power_check2.eps}
+    \caption{Comparison of the powers of \textit{sim.2}}
+    \label{fig:power_check_2}
+  \end{subfigure}
+
+  \caption{Results of simulation with a ramp wind series, disabling blade pitch control}
   \label{fig:simulation_rand_wind_no_pitch_control}
 \end{figure}
 
