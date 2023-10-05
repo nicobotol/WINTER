@@ -2,14 +2,14 @@
 plot_time_series("fig_wind_TS",out_store, 'wind', 'Time [s]',  'Wind speed [m/s]', 'Wind speed time serie', 1, date_fig, 'northwest');
 
 % pitch dynamic
-plot_time_series('fig_pitch_dynamic', out_store, 'pitch','Time [s]','$\theta \ [deg.]$', 'Pitch angle time serie', pi/180, date_fig, 'northwest'); 
+plot_time_series('fig_pitch_dynamic', out_store, 'pitch','Time [s]','$\theta \ [deg.]$', 'Pitch angle time serie', pi/180, date_fig, 'southeast'); 
 
 % rotor omega dynamic
 data = string(1);
 data = ["omega_R"];
 leg = string(4);
 leg = [ "Sim. 1", "Sim. 2", "Sim. 3", "Sim. 4"];
-plot_time_seriesN('fig_omega_dynamic', out_store, data, omega_rated, 'Time [s]','$\omega_R$ [rad/s]', 'Rotor rotational speed', 1, line_width, leg, date_fig, 'northwest')
+% plot_time_seriesN('fig_omega_dynamic', out_store, data, omega_rated, 'Time [s]','$\omega_R$ [rad/s]', 'Rotor rotational speed', 1, line_width, leg, date_fig, 'southeast')
 
 % power dynamic
 plot_time_series2('fig_power_dynamic', out_store, 'P_R', 'P_G',  generator.P_rated, 'Time [s]', 'P [MW]', 'Rotor and generator powers', 1e6, 'Aero.', 'Gen.', date_fig, 'southeast')

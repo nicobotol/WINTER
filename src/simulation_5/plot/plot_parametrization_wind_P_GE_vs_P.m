@@ -24,13 +24,15 @@ for i=1:2:wind.WS_len
   [~, s_start_ii] = min(abs(out_cell{i+1}.P_GE.Time - t_start)); % sample from where to start
   
   % Resample the wind speed
-  series_length = out_cell{i}.P_GE.TimeInfo.Length;
-  wind_resampled = zeros(series_length, 1);
-  wind_resampled = interp1(out_cell{i}.wind.Time,out_cell{i}.wind.Data, ...
-    out_cell{i}.P_GE.Time);
-  series_length_ii = out_cell{i+1}.P_GE.TimeInfo.Length;
-  wind_resampled_ii = zeros(series_length_ii, 1);
-  wind_resampled_ii = interp1(out_cell{i+1}.wind.Time,out_cell{i+1}.wind.Data, out_cell{i+1}.P_GE.Time);
+  % series_length = out_cell{i}.P_GE.TimeInfo.Length;
+  % wind_resampled = zeros(series_length, 1);
+  % wind_resampled = interp1(out_cell{i}.wind.Time,out_cell{i}.wind.Data, ...
+  %   out_cell{i}.P_GE.Time);
+  wind_resampled = out_cell{i}.wind.Data;
+  % series_length_ii = out_cell{i+1}.P_GE.TimeInfo.Length;
+  % wind_resampled_ii = zeros(series_length_ii, 1);
+  % wind_resampled_ii = interp1(out_cell{i+1}.wind.Time,out_cell{i+1}.wind.Data, out_cell{i+1}.P_GE.Time);
+  wind_resampled_ii = out_cell{i+1}.wind.Data;
   
   plot(wind_resampled_ii(s_start_ii:end), out_cell{i+1}.P_G.Data(s_start_ii:end)/scaling,'s', 'LineWidth', line_width, 'Color', color(4)); % rotor mechanical power
   plot(wind_resampled(s_start:end), out_cell{i}.P_G.Data(s_start:end)/scaling, 'diamond','LineWidth',  line_width, 'Color', color(3)); % generator mechanical power

@@ -1,4 +1,4 @@
-function plot_time_dataN(plot_name, out_cell, data, y_line,  x_label, y_label, plot_title, scaling, font_scale, leg, date_fig, leg_loc)
+function plot_time_seriesN(plot_name, out_cell, data, y_line,  x_label, y_label, plot_title, scaling, font_scale, leg, date_fig, leg_loc)
 
 line_style = ["-", "--", ":", "-."];
 

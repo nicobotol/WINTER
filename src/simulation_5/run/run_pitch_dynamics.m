@@ -9,18 +9,18 @@ actuator_nominal = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap
     
 
   elseif i == 2 % with faster blade pitch dynamic
-    omega = blade.omegap*10;
+    omega = blade.omegap*5;
     actuator_fast = tf(omega^2, [1 2*blade.zetap*omega omega^2]);
     % blade.actuator_dynamic = tf(1, [1 1e-1]);
     blade.actuator_dynamic = actuator_fast;
-    blade.actuator_dynamic = tf(1, 1);
+    % blade.actuator_dynamic = tf(1, 1);
     
   elseif i ==3  % with slower blade pitch dynamic
     % zeta = blade.zetap;
     
-    % omega = blade.omegap*10;
-    % actuator_fast = tf(omega^2, [1 2*blade.zetap*omega omega^2]);
-    actuator_fast = tf(1, 1);
+    omega = blade.omegap*5;
+    actuator_fast = tf(omega^2, [1 2*blade.zetap*omega omega^2]);
+    % actuator_fast = tf(1, 1);
     
     omega = blade.omegap/5;
     actuator_slow =  tf(omega^2, [1 2*blade.zetap*omega omega^2]);

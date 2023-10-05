@@ -14,10 +14,10 @@ for i=1:wind.WS_len
   [~, s_start] = min(abs(out_cell{i}.(series).Time - t_start)); % sample from where to start
   
   % Resample the wind speed
-  series_length = out_cell{i}.(series).TimeInfo.Length;
-  wind_resampled = zeros(series_length, 1);
-  wind_resampled = interp1(out_cell{i}.wind.Time,out_cell{i}.wind.Data, ...
-    out_cell{i}.(series).Time);
+  % series_length = out_cell{i}.(series).TimeInfo.Length;
+  % wind_resampled = zeros(series_length, 1);
+  % wind_resampled = interp1(out_cell{i}.wind.Time,out_cell{i}.wind.Data,   out_cell{i}.(series).Time);
+  wind_resampled = out_cell{i}.wind.Data;
 if rem(i, 2)==1
   sign = 'o';
   col = color(i);
