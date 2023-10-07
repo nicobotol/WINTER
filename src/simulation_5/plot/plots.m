@@ -8,6 +8,8 @@ addpath('lookup\')
 
 [~, pos_4] = min(abs(lookup_static_values(1, :) - V0_cut_in)/  velocity_spacing); % position of the element coresponding to 4 [m/s]
 [~, pos_25] = min(abs(lookup_static_values(1, :) - V0_cut_out)/  velocity_spacing); % position of the element coresponding to 25 [m/s]
+[~, pos_ramp_start] = min(abs(lookup_static_values(1, :) - wind.ramp_WS_start(1))/  velocity_spacing); % position of the element coresponding to 25 [m/s]
+[~, pos_ramp_stop] = min(abs(lookup_static_values(1, :) - wind.ramp_WS_stop(1))/  velocity_spacing); % position of the element coresponding to 25 [m/s]
 
 switch simulation.type
   case 1 % constant wind speed
@@ -51,8 +53,7 @@ switch simulation.type
 
   case 10 % control based on K_opt and K_opt_GE
     plot_all_parametrizations_wind_P_GE
-    plot_all_dynamic;
+    % plot_all_dynamic;
     plot_parametrization_wind_P_GE_vs_P('comparison_control_laws',out_store,'P_GE', lookup_P_GE(1,:), lookup_P_GE(2,:)/1e6,'Wind speed [m/s]','P [MW]','Comparison of the control laws',1e6,simulation,date_fig)
-    [E_R, E_G, E_GE] = power_check(out_store, I_eq, B_eq, wind.WS_len,...
-      line_width, date_fig, "power_check", simulation, font_size, path_images);
+    % [E_R, E_G, E_GE] = power_check(out_store, I_eq, B_eq, wind.WS_len,line_width, date_fig, "power_check", simulation, font_size, path_images);
 end

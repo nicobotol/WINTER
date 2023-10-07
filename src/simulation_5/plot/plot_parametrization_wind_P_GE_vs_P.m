@@ -12,10 +12,14 @@ hold on
 % plot([NaN, NaN], [NaN, NaN], 'ks')
 % plot(x_my_ref, y_my_ref, '--', 'LineWidth', line_width, 'Color', color(wind.WS_len+1))
 % leg{1} =  ['Computed ref.'];
+line_type = {':', '-', '--', '-.'};
 k=0;
 for i=1:2:wind.WS_len
-  k=k+1;
-  subplot(2,3,k)
+  if wind.WS_len ~= 2
+    k=k+1;
+    subplot(2,3,k)
+    line_type = {'x', 'o', 'x', 'o'};
+  end
   hold on
   % Time from where start to print
   t_start = out_cell{i}.P_GE.Time(end) - simulation.plot_time(i); % [s]
@@ -23,32 +27,33 @@ for i=1:2:wind.WS_len
   t_start_ii = out_cell{i+1}.P_GE.Time(end) - simulation.plot_time(i+1); % [s]
   [~, s_start_ii] = min(abs(out_cell{i+1}.P_GE.Time - t_start)); % sample from where to start
   
-  % Resample the wind speed
-  % series_length = out_cell{i}.P_GE.TimeInfo.Length;
-  % wind_resampled = zeros(series_length, 1);
-  % wind_resampled = interp1(out_cell{i}.wind.Time,out_cell{i}.wind.Data, ...
-  %   out_cell{i}.P_GE.Time);
   wind_resampled = out_cell{i}.wind.Data;
-  % series_length_ii = out_cell{i+1}.P_GE.TimeInfo.Length;
-  % wind_resampled_ii = zeros(series_length_ii, 1);
-  % wind_resampled_ii = interp1(out_cell{i+1}.wind.Time,out_cell{i+1}.wind.Data, out_cell{i+1}.P_GE.Time);
   wind_resampled_ii = out_cell{i+1}.wind.Data;
   
-  plot(wind_resampled_ii(s_start_ii:end), out_cell{i+1}.P_G.Data(s_start_ii:end)/scaling,'s', 'LineWidth', line_width, 'Color', color(4)); % rotor mechanical power
-  plot(wind_resampled(s_start:end), out_cell{i}.P_G.Data(s_start:end)/scaling, 'diamond','LineWidth',  line_width, 'Color', color(3)); % generator mechanical power
-  plot(wind_resampled(s_start:end), out_cell{i}.P_GE.Data(s_start:end)/scaling, 'o','LineWidth', line_width, 'Color', color(1)); % generator electrical power
-  plot(wind_resampled_ii(s_start_ii:end), out_cell{i+1}.P_GE.Data(s_start_ii:end)/scaling,'x', 'LineWidth',  line_width, 'Color', color(2)); % rotor electrical power
+  plot(wind_resampled_ii(s_start_ii:end), out_cell{i+1}.P_R.Data(s_start_ii:end)/scaling, line_type{1}, 'LineWidth', line_width, 'Color', color(1), 'MarkerSize', marker_size); % rotor mechanical power
+  plot(wind_resampled_ii(s_start_ii:end), out_cell{i+1}.P_GE.Data(s_start_ii:end)/scaling, line_type{2}, 'LineWidth',  line_width, 'Color', color(1), 'MarkerSize', marker_size); % rotor electrical power
+  plot(wind_resampled(s_start:end), out_cell{i}.P_R.Data(s_start:end)/scaling, line_type{3},'LineWidth',  line_width, 'Color', color(2), 'MarkerSize', marker_size); % generator mechanical power
+  plot(wind_resampled(s_start:end), out_cell{i}.P_GE.Data(s_start:end)/scaling, line_type{4},'LineWidth', line_width, 'Color', color(2), 'MarkerSize', marker_size); % generator electrical power
   grid on
   set(gca, 'FontSize', font_size)
   box on
-  if k == 1 || k == 4
+  if wind.WS_len ~= 2
+    if (k == 1 || k == 4) 
+      ylabel(y_label,'interpreter','latex')
+    end
+  else
     ylabel(y_label,'interpreter','latex')
   end
-  ylim([0.995*min(out_cell{i}.P_GE.Data(s_start:end)/scaling), 1.005*max(out_cell{i}.P_G.Data(s_start:end)/scaling)])
+    ylim([0.99*min(out_cell{i}.P_GE.Data(s_start:end)/scaling), 1.005*max(out_cell{i}.P_R.Data(s_start:end)/scaling)])
+
 end
 xlabel(x_label,'interpreter','latex')
-legends_name = {'Rotor $P_{in}$','Gen. $P_{in}$','Gen. $P_{out}$','Rotor $P_{out}$'};
-legend(legends_name, 'position', [0.75,0.238193265647898,0.127430735291504,0.058136925199618]);
+legends_name = {'Rotor $P_{in}$','Rotor $P_{out}$','Gen. $P_{in}$','Gen. $P_{out}$'};
+if wind.WS_len ~= 2
+  legend(legends_name, 'position', [0.75,0.238193265647898,0.127430735291504,0.058136925199618]);
+else
+  legend(legends_name, 'location', 'southeast');
+end
 % legend('Rotor $P_{in}$','Gen. $P_{in}$','Gen. $P_{out}$','Rotor $P_{out}$', 'Location', 'best', 'FontSize', font_size,'interpreter','latex');
 sgtitle(plot_title, 'Interpreter','latex', 'FontSize', font_size);
 if simulation.print_figure == 1

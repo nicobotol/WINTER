@@ -510,41 +510,50 @@ The results of the simulations are reported in \autoref{fig:simulation_with_diff
 \subsection{Simulation with the generator's torque reference based on the generator output} \label{subsec:validation_control_P_GE}
 In this section the control law for the generators's torque based on the generator output power developed in \autoref{subsec:method_control_P_GE} is tested and compared with the one based on the rotor power and developed in \autoref{subsec:torque_reference}.
 % For this simulation, in order to avoid the interference of the controller not allowing the generator to reach the steady state, this component has been removed and the torque reference value has been directly used into the dynamic equation of the rotor power.
-\subsubsection{Below rated wind speed}
-The two control laws have been compared for WS between the cut in and the rated one, assuming no damping (i.e. $B=0 \mesunt{\kilo\gram\square\meter\per\second}$).\\
-A critical condition for this test is that the rotor rotational speeds is exactly the one prescribed by the desired tip speed ratio. In order to avoid possible influences of a poorly tuned generator controller, the generator has been excluded from the simulation and the torque reference has been directly used in the dynamic equation. Furthermore, the neglecting of the damping removes the corresponding loss power in the balance. \\
-In the simulation, 5 constant wind speeds has been provided and the corresponding steady state values of mechanical input and electrical output powers to the generator have been evaluated. The results are reported in \autoref{fig:comparison_control_laws}.
+\subsubsection{Simulation with the generator's torque reference based on the generator output for WS below rated wind speed}
+The generator torque's control law based on the generator has been compared with the one of the rotor, for WS between the cut in and the rated one.assuming no damping. \\
+A critical condition for this tests is that the rotor rotational speeds reach exactly the ones producing the desired tip speed ratio. For this reason, initially the damping reducing the power sent by the rotor to the input of the generator is removed (i.e. $B_{eq}=0 \mesunt{\kilo\gram\square\meter\per\second}$). \\
+In the simulation, 5 constant wind speeds has been provided and the corresponding steady state values of mechanical input and electrical output powers to the generator have been evaluated. The results are reported in \autoref{fig:comparison_control_laws_no_B}.
 \begin{figure}[htb]
   \centering
-  \includegraphics[width = \columnwidth]{images/vectorial/2023_07_10_10_21_02comparison_control_laws.eps}
-  \caption{Comparison of input and output power to the generator for the control laws based on the maximization of the power extracted from the resource (called \textit{rotor} in the legend) and the maximization of the power generated electrical power (called \textit{generator} in the legend).}
+  \begin{subfigure}{\columnwidth}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_7_17_20_00comparison_control_laws.eps}
+    \caption{Simulation without damping}
+    \label{fig:comparison_control_laws_no_B}
+  \end{subfigure}
+  \begin{subfigure}{\columnwidth}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_7_15_40_22comparison_control_laws.eps}
+    \caption{Simulation with damping}
+    \label{fig:comparison_control_laws_B}
+  \end{subfigure}
+  \caption{Comparison of input power at the rotor and output power of the generator for the control laws based on the maximization of the power extracted from the resource (called \textit{Rotor} in the legend) and the maximization of the power generated electrical power (called \textit{Generator} in the legend).}
   \label{fig:comparison_control_laws}
 \end{figure}
 
-Even tough the differences are small, it could be seen that the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to provide more electrical power.
+Even tough the differences are small, it could be seen that the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to deliver more electrical power. \\
+When the damping is included in the picture, the results (\autoref{fig:comparison_control_laws_B}) are similar to the already described ones for the lower velocities, while they become different approaching the rated wind speed, when the law base on the rotor is able to produce a grater electrical output rather than the one based on the generator. A possible explanation is that the inclusion of the damping makes the assumption of considering $\lambda$ and $\theta$ constant no more valid, and so the designed control not effective as expected. 
+
 \subsubsection{Transition below-above rated WS}
-The test has been done in steady state conditions, with a velocity ramp between 8 and 15 $\mesunt{\meter\per\second}$ lasting 150 seconds. In that case the damping and the generator are both taken into account.\\
-The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}. \autoref{fig:2023_06_22_21_03_26fig_pitch_param} shows how the actual pitch angle follows what is predicted from the static map of \autoref{fig:fig_new_pitch_map}. As expected, since the blade are rotated less then what was required in the generator case, the mechanical power extracted from the resource is slightly higher. This is also visible in \autoref{fig:2023_06_22_21_02_45fig_generator_power_check}, where it is also highlighted that the generator's produced electrical power is kept constant at the rated value above the rated WS. Finally, \autoref{fig:2023_06_22_21_02_45fig_generator_power_check} shows how does the presence of the inertia made the power available at the input of the generator lower than the rotor one, and so in principle the controller could be less responsive due to a small lag in reaching the rated value. 
+The test has been done in \textit{quasi-steady state} conditions, with a velocity ramp between 10 and 12 $\mesunt{\meter\per\second}$ in 500 seconds.\\
+The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}. \autoref{fig:2023_10_6_20_44_00fig_omega_param} reports the parametrization of the rotor rotational speed as function of the WS. It could be seen that both the control laws are able to follow the expected static curve, while the small perturbations around the rated wind speed are due to the action of the pitch mechanism.\\
+In \autoref{fig:2023_10_6_20_40_58comparison_control_laws} shows how also in this simulation the control law based on the maximization of the rotor extracts more power from the resource, while the other one delivers more electrical power.
+\begin{center}
 \begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_21_42_22fig_pitch_param.eps}
-    \caption{Pitch angle}
-    \label{fig:2023_06_22_21_03_26fig_pitch_param}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_10_7_17_14_08fig_omega_param.eps}
+    \caption{Rotational speed parametrized with the WS}
+    \label{fig:2023_10_6_20_44_00fig_omega_param}
   \end{subfigure}
-  \begin{subfigure}{0.5\textwidth}
+  \\
+  \begin{subfigure}{0.75\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_21_41_37fig_power_param.eps}
-    \caption{Mechanical power at the rotor side}
-    \label{fig:2023_06_22_21_03_05fig_power_param}
-  \end{subfigure}
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_06_24_21_41_05fig_generator_power_check.eps}
-    \caption{Incoming and outgoing power at the generator side}
-    \label{fig:2023_06_22_21_02_45fig_generator_power_check}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_10_7_17_12_00comparison_control_laws.eps}
+    \caption{Comparison of the mechanical incoming and the electrical outgoing power at the generator side}
+    \label{fig:2023_10_6_20_40_58comparison_control_laws}
   \end{subfigure}
   \caption{Results of the validation of the control based on the power output at the generator side}
   \label{fig:fig_blade_control_gen_side_validation}
 \end{figure}
+\end{center}
 \newpage

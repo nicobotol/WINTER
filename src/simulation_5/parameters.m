@@ -67,33 +67,34 @@ if exist('rated_values.mat', 'file')
   lambda_opt = rated_values(4);             % optimum TSR
   cp_max = rated_values(5);                 % maximum cp
 else
-  disp(['Attention: rated values may not have been computed. ' ...
-    'Run lookup_cp.m first']);
+  disp(['Attention: rated values may not have been computed. Run lookup_cp.m first']);
 end
 
 if exist('lookup_pitch.mat', 'file') 
   load('lookup_pitch.mat');
 else
-   disp(['Attention: pitch angle values may not have been computed. ' ...
-    'Run lookup_pitch.m first']);
+   disp(['Attention: pitch angle values may not have been computed. Run lookup_pitch.m first']);
 end
 
 if exist('lookup_pitch_P_GE.mat', 'file') 
   load('lookup_pitch_P_GE.mat');
   load('rated_values_P_GE.mat');
+  load('rated_values_P_GE_no_B.mat');
   load('lookup_P_GE.mat');
   lambda_GE = rated_values_P_GE(1); % TSR for the maximization of P_GE
   cp_GE = rated_values_P_GE(2);     % max power coefficients
   omega_rated_GE = rated_values_P_GE(3);     % rotor rotatioanal speed
+  lambda_GE_no_B = rated_values_P_GE_no_B(1); % TSR for the maximization of P_GE
+  cp_GE_no_B = rated_values_P_GE(2);     % max power coefficients
+  omega_rated_GE_no_B = rated_values_P_GE_no_B(3);     % rotor rotatioanal speed
 else
-   disp(['Attention: pitch angle values may not have been computed. ' ...
-    'Run P_GE_maximization.m first']);
+   disp(['Attention: pitch angle values may not have been computed. Run P_GE_maximization.m first']);
 end
 
 if exist('blade_schedule_gains.mat', 'file') 
   load('blade_schedule_gains.mat');
 else
-   disp(['Attention: blade schedule gains values may not have been computed. ']);
+   disp(['Attention: blade schedule gains values may not have been computed']);
 end
 gs.V0_vect = 12:0.5:25;       % WS [m/s]
 gs.theta_offset = 5*pi/180;   % [rad]
@@ -115,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 2;       % choice of the model
+simulation.model = 3;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator
@@ -127,10 +128,10 @@ elseif simulation.model == 2 % with power controller
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 end
-simulation.stop_time = 2*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 1;        % 1 -> constant wind speed
+simulation.type = 10;        % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -140,14 +141,14 @@ simulation.type = 1;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = 70*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 10*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 140*ones(4,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 140*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -193,7 +194,8 @@ generator.iq_omegaBP = 7.5e2;%1.5e3; % Iq controller crossover freq. [rad/s]
 generator.TG_pm = 70;  % phase margin for the speed controller [°]
 generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
-generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
+% generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
+generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 % generator.design_TG = 0; % 0 enables manual design of speed controller
@@ -233,20 +235,20 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = V0_rated;%[4 4 6 6 8 8 10 10 V0_rated V0_rated];           % 10 minutes mean wind speed [m/s]
+wind.mean = [4 4 6 6 8 8 10 10 V0_rated V0_rated];           % 10 minutes mean wind speed [m/s]
 wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = [10 10];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [25 25];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(10, 1); % time speed at the start of the ramp [s]
-wind.ramp_time_stop = simulation.stop_time*2/3;  % time speed at the stop of the ramp [s]
+wind.ramp_WS_stop = [12 12];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(2, 1); % time speed at the start of the ramp [s]
+wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
-  case {1, 3, 5, 7, 8, 9}
+  case {1, 3, 5, 7, 8, 9, 10 }
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6, 10}
+  case {2, 6  }
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 
@@ -262,8 +264,7 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
-B_eq = (rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
-% I_eq = 0;
+B_eq = 0*(rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
 
 % Transform the struct of parameters into buses for simulink
@@ -282,14 +283,11 @@ pitch_strategy = 0;  % 0     -> feathering
                      % else  -> no pitch control
 
 %% Airfoil parameters 
-filenames = [ "airfoil_data\cylinder", "airfoil_data\FFA-W3-600",  ...
-  "airfoil_data\FFA-W3-480", "airfoil_data\FFA-W3-360", ...
-  "airfoil_data\FFA-W3-301", "airfoil_data\FFA-W3-241"];
+filenames = [ "airfoil_data\cylinder", "airfoil_data\FFA-W3-600",  "airfoil_data\FFA-W3-480", "airfoil_data\FFA-W3-360", "airfoil_data\FFA-W3-301", "airfoil_data\FFA-W3-241"];
 blade_filename = "airfoil_data\bladedat.txt";
 thick_prof = [100 60 48 36 30.1 24.1]; % t/c ratio
 [aoa_mat, cl_mat, cd_mat] = load_airfoil_data(filenames);
-[r_vector, c_vector, beta_vector, thick_vector] = load_blade_data( ...
-  blade_filename);
+[r_vector, c_vector, beta_vector, thick_vector] = load_blade_data(blade_filename);
 r_item = size(r_vector, 2); % number of cross sections along the blade
 r_item_no_tip = r_item - 1; % number of cross section without the tip
 
@@ -303,15 +301,11 @@ reference = load('airfoil_data\DTU_10MW_reference.txt');
 
 %% Plotting options
 % colors
-colors_vect = [[0 0.4470 0.7410]; [0.8500 0.3250 0.0980]; ...
-               [0.9290 0.6940 0.1250]; [0.4940 0.1840 0.5560]; ...
-               [0.4660 0.6740 0.1880]; [0.3010 0.7450 0.9330]; ...
-               [0.6350 0.0780 0.1840]];
+colors_vect = [[0 0.4470 0.7410]; [0.8500 0.3250 0.0980]; [0.9290 0.6940 0.1250]; [0.4940 0.1840 0.5560]; [0.4660 0.6740 0.1880]; [0.3010 0.7450 0.9330]; [0.6350 0.0780 0.1840]];
 % pathe where to save the images
 path_images = ["C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\report\images"];
 % save the date to identify the figures
-date_fig = string(datetime('now','TimeZone','local','Format', ...
-      'y_MM_d_HH_mm_ss'));  
+date_fig = string(datetime('now','TimeZone','local','Format', 'y_MM_d_HH_mm_ss'));  
 
 % parameters for the generator step response plot
 step_t_start = 0.4;
@@ -327,3 +321,5 @@ set(groot, 'defaultLegendInterpreter','latex');
 set(0,'DefaultFigureWindowStyle','docked');
 set(0,'defaultAxesFontSize',  font_size)
 set(0,'DefaultLegendFontSize', font_size)
+
+beep off

@@ -283,10 +283,15 @@ end
 % clear("rated_values_P_GE")
 % clear("lookup_pitch_P_GE")
 % 
-% rated_values_P_GE(1) = lambda_GE_mean;
-% rated_values_P_GE(2) = cp_GE_mean;
-% rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
-% save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
+rated_values_P_GE(1) = lambda_GE_mean;
+rated_values_P_GE(2) = cp_GE_mean;
+rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
+save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
+%
+rated_values_P_GE_no_B(1) = lambda_GE_mean_no_B;
+rated_values_P_GE_no_B(2) = cp_GE_mean_no_B;
+rated_values_P_GE_no_B(3) = lambda_GE_mean_no_B*V0_rated/rotor.R;
+save('lookup\rated_values_P_GE_no_B.mat', "rated_values_P_GE_no_B");
 % 
 % % pitch to feather
 % lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);

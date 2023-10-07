@@ -1,12 +1,12 @@
 \newpage
-\section{PID tuning}\label{sec:e_pid_tuning}
- Given G(s), the transfer function of the generic system to be controlled, the tuning is done following this reported procedure:
+\section{Tuning of a PID controller}\label{sec:e_pid_tuning}
+ Given G(s), the transfer function of the generic system to be controlled, the tuning is done following the reported procedure:
  \begin{enumerate}
     \item The transfer function of the plant to be controlled is rewritten as:
     \begin{equation}
         G(s) = \frac{\prod zeros(G(s))}{\prod poles(G(s))}
     \end{equation}
-    \item Poles are sorted according to their magnitude, to take into account the possible presence of complex conjugate ones. 
+    % \item Poles are sorted according to their magnitude, to take into account the possible presence of complex conjugate ones. 
     \item The general PID regulator transfer function is written as:
     \begin{gather}
          R(s) = k_p+\frac{k_i}{s}+k_ds=k_i\frac{(1+s\uptau_p)(1+s\uptau_d)}{s}
@@ -17,17 +17,14 @@
          R(s) = \left(k_p+\frac{k_i}{s}+k_ds\right)\cdot \frac{1}{(1+s\uptau_{d1})} = ki\frac{(1+s\uptau_p)(1+s\uptau_d)}{s(1+s\uptau_{d1})}
          \label{eq:regulator4}
     \end{gather}
-    \item The zeros of the regulator are used to cancel out the poles of the plant. In particular one of them is usually placed at the maximum pole (i.e. the one at the highest frequency) 
-    \begin{gather}
-        \uptau_p =\frac{1}{max\left\{pole\left(G\right)\right\}}
-    \end{gather}
-    while the position of the other may be chosen according to different objectives. If it is placed on the smallest pole (e.g. \autoref{eq:pole_case1}), then the magnitude of the transfer function decreases and the phase margin increases while if it ``shifted'' on the right, the opposite happens. In this system, the latter approach is chosen and the frequency of the second zero is placed at the logarithmic mean between the highest and the lowest ones (e.g. \autoref{eq:pole_case2} and \ref{eq:pole_case3}), while sometimes it is placed at the log mean of the two highest poles: \textcolor{red}{Secondo zero cancella il secondo polo più lento e non la media integrale}
-    \begin{gather}
-        \uptau_d =\frac{1}{min\left\{pole\left(G\right)\right\}} \label{eq:pole_case1}\\
-        \omega_0 = \frac{\log_{10}\left(max\left\{pole(G)\right\}\right)+\log_{10}\left(min\left\{pole(G)\right\}\right)}{2} \label{eq:pole_case2}\\
-        \uptau_d = \frac{1}{10^{\omega_0 }} \label{eq:pole_case3}
-    \end{gather} 
-    It is worth to remember that a high phase margin produces more stability of the plant, while an increase magnitude speeds the system response but may lead to an overshoot of the response.\\
+    \item The zeros of the regulator are used to cancel out the two poles of the plant. In particular, the first zero is usually set at the slowest pole, while the second zero can cancel the second slowest pole or can be used to achieve a desired trade off between stability and transient response. In fact, the more the second pole is slower the more the magnitude of the transfer function decreases and the phase margin increases, while if it faster the opposite happens.
+    %  In this system, the latter approach is chosen and the frequency of the second zero is placed at the logarithmic mean between the highest and the lowest ones (e.g. \autoref{eq:pole_case2} and \ref{eq:pole_case3}), while sometimes it is placed at the log mean of the two highest poles: \textcolor{red}{Secondo zero cancella il secondo polo più lento e non la media integrale}
+    % \begin{gather}
+    %     \uptau_d =\frac{1}{min\left\{pole\left(G\right)\right\}} \label{eq:pole_case1}\\
+    %     \omega_0 = \frac{\log_{10}\left(max\left\{pole(G)\right\}\right)+\log_{10}\left(min\left\{pole(G)\right\}\right)}{2} \label{eq:pole_case2}\\
+    %     \uptau_d = \frac{1}{10^{\omega_0 }} \label{eq:pole_case3}
+    % \end{gather} 
+    It is worth to remember that a high phase margin produces more stability of the plant, while an increase magnitude speeds the system response but may lead to an overshoot during transient.\\
     The regulator pole is assigned at a reasonably high frequency, for example one decade above the crossover one, in particular:
     \begin{gather}        
         \uptau_{d1} =\frac{1}{10\omega_{cp}}

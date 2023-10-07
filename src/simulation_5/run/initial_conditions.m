@@ -1,6 +1,4 @@
-function [rotor, generator, blade, T_R0] = initial_conditions(rho, ...
-  lambda_vector, pitch_vector, lookup_cP, rotor, blade, ...
-  generator, gearbox, V0_0, rated_values, lookup_Pitch)
+function [rotor, generator, blade, T_R0] = initial_conditions(rho, lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, V0_0, rated_values, lookup_Pitch)
 % This functions sets the initial conditions fo the simulation
 % V0_0 -> initial windspeed [m/s]
 
