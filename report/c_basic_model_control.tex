@@ -47,7 +47,7 @@ Since the $K_{opt}$ coefficient may be used either for computing the power and t
  A deeper derivation may observe that the damping can be included in \autoref{eq:T_G1}:
  \begin{equation}
   T_G = \frac{P_G}{\omega_G} = \frac{P_R-B_{eq}(\omega_R)^2}{\omega_G} = K_{opt} - B_{eq}n^2\omega_G  
-  \label{eq:T_G3}
+  \label{eq:T_G5}
  \end{equation}
  With this expression a more fine tracking of the power is possible, and it is particularly suitable to strictly enforce a desired velocity to the machine. The drawback of the approach is the necessity to know the value of the damping coefficient, which in principle is something that may be not available. For this reason, in the tested cases that will be proposed later, \autoref{eq:T_G1} will be used, unless where explicitly specified.
 
@@ -99,7 +99,7 @@ and to highlight the terms composing this power expression, the equation can be 
 
 \subsubsection{Generator's torque reference below rated WS}
 
-In the case describe in \autoref{subsec:below_rotor} the choice of the reference values of TSR and pitch angle to be used below rated WS were based on only aerodynamical considerations, with the aim of maximizing the power extracted from the resource. In this case the same could not be done, and in principle it is not ensured that the TSR and the pitch are univocally identified. This has also the implication that the $K_{opt}$ used in the synthesis of the generator reference torque may be not univocally identified, and so the approach followed in \autoref{eq:T_G2} may be no more valid. \\
+In the case describe in \autoref{subsec:below_rotor} the choice of the reference values of TSR and pitch angle to be used below rated WS were based on only aerodynamical considerations, with the aim of maximizing the power extracted from the resource. In this case the same could not be done, and in principle it is not ensured that the TSR and the pitch are univocal identified. This has also the implication that the $K_{opt}$ used in the synthesis of the generator reference torque may be not univocal identified, and so the approach followed in \autoref{eq:T_G2} may be no more valid. \\
 To study the problem, a numerical method is employed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximizing the power itself) with respect to the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}, alongside the corresponding counterpart found with the policy based on the rotor power maximization. The study has been repeated twice, considering or excluding the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_damping}, when the damping is not included in the picture, the output power is the incoming over in the rotor minus the joule loss (since in that case $T_R=T_G$).
 \begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
@@ -233,7 +233,7 @@ As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, 
 \begin{figure}[htb]
     \centering
     \input{d_blade_control}
-    \caption{Block diagram of the pitch controller\textcolor{red}{Update this picture checking wethre or  not there is the saturation in the middle and if the input/output of the first saturation are correct}}
+    \caption{Block diagram of the pitch controller\textcolor{red}{Update this picture checking whether or  not there is the saturation in the middle and if the input/output of the first saturation are correct}}
     \label{fig:pitch_control}
 \end{figure}
 

@@ -4,7 +4,12 @@
 \tikzstyle{sum} = [draw, fill=white, circle, node distance=1cm]
 \tikzstyle{input} = [coordinate]
 \tikzstyle{output} = [coordinate]
-\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzstyle{pinstyle} = [pin edge={0.001,thin,black}]
+\tikzset{
+dot/.style = {circle, fill, minimum size=#1,
+              inner sep=0pt, outer sep=0pt},
+dot/.default = 1pt % size of the circle diameter 
+}
 
 \usetikzlibrary{positioning}
 \makeatletter
@@ -29,9 +34,11 @@
 \begin{tikzpicture}[auto, node distance=1.7cm,>=latex']
 
     \node [input, name=input] {};
+    \node [dot, right of=input, node distance=0.5cm] (fake_input) {};
     \node [block, right of=input, node distance=1.3cm] (power) {$u^3$};
     \node [block, right of=power, node distance=1.3cm] (k_opt) {$K_{opt}$};
-    \node [record,minimum size=1cm,fill=white!30,draw,right of=k_opt] (saturation) {};
+    \node [sum, right of=k_opt, node distance=1.1cm] (sum3) {};
+    \node [record,minimum size=1cm,fill=white!30,draw,right of=sum3, node distance=1.3cm] (saturation) {};
     \node [sum, right of=saturation, node distance=1.5cm] (sum) {};
     \node [block, right of=sum, node distance=1.3cm] (prop_gain) {$k_p$};
     \node [block, below of=prop_gain, node distance=1.5cm] (int_gain) {$k_i$};
@@ -42,10 +49,15 @@
     \node [block, right of=current_controller, node distance=2.2cm] (PMSM) {$PMSM$};
     \node [output, right of=PMSM] (output) {};
     \node [input, below of=sum, name=P_g] {};
+    \node [block, below of=power, node distance=1.5cm, densely dashed] (power2) {$u^2$};
+    \node [block, right of=power2, node distance=1.3cm, densely dashed] (B_eq) {$B_{eq}$};
+
 
     \draw [draw,->] (input) -- node {$\omega_G$} (power);
     \draw [->] (power) -- node {} (k_opt);
-    \draw [->] (k_opt) -- node {$P_{G}^*$} (saturation);
+    \draw [->] (k_opt) -- node {} (sum3);
+    \draw [->] (sum3) -- node {$P_{G}^*$} (saturation);
+    \draw [->] (sum3) -- node {} (saturation);
     \draw [->] (saturation) -- node {$P_{G}^*$} (sum);
     \draw [->] (sum) -- node [name=error] {} (prop_gain);
     \draw [->] (prop_gain) -- node [pos=0.9] {$+$} (sum2);
@@ -56,6 +68,8 @@
     \draw [->] (sum2) --node {$T_G^*$} (iq_gain);
     \draw [->] (iq_gain) -- node {$I_q^*$} (current_controller);
     \draw [->] (current_controller) --node {} (PMSM);
-    
+    \draw [->, densely dashed] (fake_input) |- node {} (power2);
+    \draw [->, densely dashed] (power2) -- node {} (B_eq);
+    \draw [->, densely dashed] (B_eq) -| node [pos=0.9] {$+$} (sum3);
 
 \end{tikzpicture}
