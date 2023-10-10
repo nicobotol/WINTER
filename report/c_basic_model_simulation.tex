@@ -59,7 +59,7 @@ It could be seen that below rated wind speed there is a deviation between the ro
 The model is tested with an input wind time series three times, the first with mean \acrshort{WS} of 6 $\mesunt{\meter\per\second}$, the second with 11.5 $\mesunt{\meter\per\second}$, and the third with 20 $\mesunt{\meter\per\second}$. These values are chosen to test the simulator in the three characteristics wind regimes. In the first simulation the turbulence is chosen to be $\sigma=0.6 \mesunt{\meter\per\second}$ while for the other $\sigma=1 \mesunt{\meter\per\second}$. The simulation is run for $t=150\ \mesunt{\second}$ and the results of the last 100 $\mesunt{\second}$ are plotted in order to get rid of the transient behavior. The sampling frequency for the wind series generation is set to be $f_s=50 \left[\si{\hertz}\right]$.
 
 \subsubsection{Simulation results}
-The results of this simulation are reported in \autoref{fig:simulation_rand_wind_NPC}, where the wind time series and the parametrizations of some quantities as function of the instantaneous wind speed are reported on top of the corresponding reference lines obtained by static analysis. Futhermore, the RMS error between the value of some observed quantities and their static values will be presented in \autoref{tab:RMS_comparison}, where they will be also compared with the results of another similar simulation. \\
+The results of this simulation are reported in \autoref{fig:simulation_rand_wind_NPC}, where the wind time series and the parametrizations of some quantities as function of the instantaneous wind speed are reported on top of the corresponding reference lines obtained by static analysis. Futhermore, the \acrfull{RMS} error between the value of some observed quantities and their static values will be presented in \autoref{tab:RMS_comparison}, where they will be also compared with the results of another similar simulation. \\
 What can be seen from the results is that the observed quantities are clustered around the static curve. This is reasonable since if the turbulence would have been set to 0 then the expected results would have been a point on the static curve corresponding to the investigated WS. It must be highlighted that in these curves the initial transient part has been eliminated in order to have a better visualization. 
 
 \begin{figure}[htb]
@@ -539,16 +539,16 @@ The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}.
 In \autoref{fig:2023_10_6_20_40_58comparison_control_laws} shows how also in this simulation the control law based on the maximization of the rotor extracts more power from the resource, while the other one delivers more electrical power.
 \begin{center}
 \begin{figure}[htb]
-  \begin{subfigure}{0.5\textwidth}
+  \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_10_7_17_14_08fig_omega_param.eps}
+    \includegraphics[width=0.5\textwidth]{images/vectorial/2023_10_7_17_14_08fig_omega_param.eps}
     \caption{Rotational speed parametrized with the WS}
     \label{fig:2023_10_6_20_44_00fig_omega_param}
   \end{subfigure}
   \\
-  \begin{subfigure}{0.75\textwidth}
+  \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_10_7_17_12_00comparison_control_laws.eps}
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_10_7_17_12_00comparison_control_laws.eps}
     \caption{Comparison of the mechanical incoming and the electrical outgoing power at the generator side}
     \label{fig:2023_10_6_20_40_58comparison_control_laws}
   \end{subfigure}
