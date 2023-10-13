@@ -1,4 +1,4 @@
-function [rotor, generator, blade, T_R0] = initial_conditions(rho, lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, V0_0, rated_values, lookup_Pitch)
+function [rotor, generator, blade, T_R0, x_est_initial, P_est_initial] = initial_conditions(rho, lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, V0_0, rated_values, lookup_Pitch, IMM)
 % This functions sets the initial conditions fo the simulation
 % V0_0 -> initial windspeed [m/s]
 
@@ -26,5 +26,12 @@ cP0 = interp2(lambda_vector, pitch_vector, lookup_cP, lambda0, blade.pitch0);
 
 P_R0 = 0.5*rho*V0_0^3*pi*rotor.R^2*cP0; % rotor power [W]
 T_R0 = P_R0/rotor.omega_R0;            % rotor torque [Nm]
+
+IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
+IMM.x_est = [rotor.omega_R0; V0_0];       % initial state estimate
+for j = 1:IMM.n_models
+  x_est_initial(1:IMM.states_len, j) = IMM.x_est; 
+  P_est_initial(1:IMM.states_len, 1:IMM.states_len, j) = IMM.P_est; 
+end
 
 end

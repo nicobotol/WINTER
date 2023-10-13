@@ -14,14 +14,14 @@ addpath('lookup\')
 switch simulation.type
   case 1 % constant wind speed
     % plot all the static results
-    plot_all_static
+    % plot_all_static
     
     % plot the time dependent graphs
     plot_all_dynamic
-    
-    plot_all_parametrizations_wind
+    plot_IMM
+    % plot_all_parametrizations_wind
 
-    [~, ~, ~] = power_check(out_store, I_eq, B_eq, wind.WS_len, line_width, date_fig, "power_check", simulation, font_size, path_images);
+    % [~, ~, ~] = power_check(out_store, I_eq, B_eq, wind.WS_len, line_width, date_fig, "power_check", simulation, font_size, path_images);
 
   case 2 % ramp
     plot_all_dynamic

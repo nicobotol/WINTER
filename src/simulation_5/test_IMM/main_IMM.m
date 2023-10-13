@@ -38,6 +38,8 @@ P_est = P_real;
 x_real_store = [];
 x_est_store = [];
 cp_real_store = [];
+model_prob = [];
+K_store = [];
 
 % Initialize the models
 for j = 1:n_models
@@ -46,6 +48,7 @@ for j = 1:n_models
   model{j}.mu = 1/n_models; % mode probability
   model{j}.x_est_store = [];
   model{j}.cp_est_store = [];
+  model{j}.mu_store = [];
 end
 
 for t=1:t_tot
@@ -60,7 +63,8 @@ for t=1:t_tot
   if t < t_tot/2
     x_real(2) = V0; % wind speed (ADD NOISE HERE)
   else
-    x_real(2) = 3*V0;
+    x_real(1) = 1.01;
+    x_real(2) = 4*V0;
   end
   x_real_store = [x_real_store x_real];
   z = measurement(x_real, param{5}) + mvnrnd([0], R)'; % rotational speed measurement [rad/s]
@@ -79,11 +83,17 @@ for t=1:t_tot
   [x_est, P_est] = state_combination(model);
 
   % Filter interaction
-  model = filter_interaction(model, Pi);
+  [model, model_prob] = filter_interaction(model, Pi, model_prob);
+  [~, idx] = max(model_prob(:, end)); % model with the highest probability
+
+  % Compute the gain
+  K = 0.5*model{idx}.cp*pi*param{2}*param{3}^2*x_est(2)^3/x_est(1)^3;
+  K_store = [K_store K];
 
   % Save the hystory of the estimation
   x_est_store = [x_est_store x_est];
   cp_real_store = [cp_real_store cp_real];
+
 end
 
 figure();hold on;grid on;
@@ -108,16 +118,32 @@ ylabel('$\omega$')
 legend()
 % ylim([0 1])
 
-% figure();hold on;grid on;
-% for i=1:n_models
-%   plot(model{i}.x_est_store(2, :), 'DisplayName', ['Model ', num2str(i)], 'LineWidth', line_width)
-% end
-% plot(x_real_store(2, :), '-.', 'DisplayName', 'Real', 'LineWidth', line_width)
-% plot(x_est_store(2, :), '--', 'DisplayName', 'Est.', 'LineWidth', line_width)
-% title('$V_0$')
-% xlabel('Time')
-% ylabel('$V_0$')
-% legend()
+figure(); hold on; grid on;
+for i=1:n_models
+  plot(model{i}.mu_store, 'DisplayName', ['Model ', num2str(i)], 'LineWidth', line_width, 'Color', color(i))
+end
+title('Model probability')
+xlabel('Time')
+ylabel('$\mu$')
+legend()
+
+figure(); hold on; grid on;
+plot(K_store, 'LineWidth', line_width)
+title('Gain')
+xlabel('Time')
+ylabel('$K$')
+
+
+figure();hold on;grid on;
+for i=1:n_models
+  plot(model{i}.x_est_store(2, :), 'DisplayName', ['Model ', num2str(i)], 'LineWidth', line_width)
+end
+plot(x_real_store(2, :), '-.', 'DisplayName', 'Real', 'LineWidth', line_width)
+plot(x_est_store(2, :), '--', 'DisplayName', 'Est.', 'LineWidth', line_width)
+title('$V_0$')
+xlabel('Time')
+ylabel('$V_0$')
+legend()
 
 rms([x_est_store-x_real_store]')
 
@@ -297,7 +323,7 @@ end
 %  |  _| | | | ||  __/ |    | | | | | ||  __/ | | (_| | (__| |_| | (_) | | | |
 %  |_|   |_|_|\__\___|_|    |_|_| |_|\__\___|_|  \__,_|\___|\__|_|\___/|_| |_|
                                                                             
-function model = filter_interaction(model, Pi)
+function [model, model_prob] = filter_interaction(model, Pi, model_prob)
   n_models = size(model, 1);
   states_len = size(model{1}.x_est, 1);
   mu = zeros(n_models, n_models);
@@ -327,6 +353,14 @@ function model = filter_interaction(model, Pi)
     model{j}.x_est = model{j}.x_tilde;
     model{j}.P_est = model{j}.P_tilde;
   end
+
+  % Store the value of the probability
+  tmp = zeros(n_models, 1);
+  for j=1:n_models
+    model{j}.mu_store = [model{j}.mu_store model{j}.mu_new];
+    tmp(j) = model{j}.mu_new;
+  end
+  model_prob(:,end+1) = tmp;
 end
 
 %    ___        _               _               _     
@@ -359,3 +393,4 @@ function model = hystory(model)
     model{j}.cp_est_store = [model{j}.cp_est_store model{j}.cp_est];
   end
 end
+

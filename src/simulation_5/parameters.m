@@ -116,12 +116,13 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 4;       % choice of the model
+simulation.model = 5;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator
                             % power
                             % 4 -> extremum seeking controller
+                            % 5 -> IMM controller
 if simulation.model == 1    % without power controller
   simulation.mdl = 'winter_simulink_without_PC'; 
 elseif simulation.model == 2 % with power controller
@@ -130,6 +131,8 @@ elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
 elseif simulation.model == 4 % extremum seeking controller
     simulation.mdl = 'winter_simulink_extremum_seeking_control'; 
+elseif simulation.model == 5 % extremum seeking controller
+    simulation.mdl = 'winter_simulink_IMM_control'; 
 end
 simulation.stop_time = 50*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
@@ -269,6 +272,28 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
 B_eq = 0*(rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
+
+% parameters for the IMM control
+IMM.n_models = 3;           % number of models
+IMM.states_len = 2;           % number of states
+IMM.prob_transition = 0.99; % probability of transition
+IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
+IMM.R = (0.05/3)^2; % measurement noise
+IMM.Q = [(1e-7/3)^2 0; 0 (wind.turbulence(1)/100/3)^2]; % process noise
+IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
+IMM.x_est = [0; 0];       % initial state estimate
+IMM.cp_vector = [0.1, 0.2, 0.46];
+% Initialize the models
+P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
+x_est_initial = zeros(IMM.states_len, IMM.n_models);  
+for j = 1:IMM.n_models
+  model{j}.x_est = IMM.x_est; % state
+  model{j}.P_est = IMM.P_est; % covariance
+  model{j}.mu = 1/IMM.n_models; % mode probability
+  x_est_initial(1:IMM.states_len, j) = model{j}.x_est; 
+  P_est_initial(1:IMM.states_len, 1:IMM.states_len, j) = model{j}.P_est; 
+end
+
 
 % Transform the struct of parameters into buses for simulink
 % rotor_bus_info = Simulink.Bus.createObject(rotor); 
