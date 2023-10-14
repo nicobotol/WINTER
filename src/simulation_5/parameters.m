@@ -275,14 +275,16 @@ I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side
 
 % parameters for the IMM control
 IMM.n_models = 3;           % number of models
-IMM.states_len = 2;           % number of states
+IMM.states_len = 1;           % number of states
 IMM.prob_transition = 0.99; % probability of transition
 IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
-IMM.R = (0.05/3)^2; % measurement noise
-IMM.Q = [(1e-7/3)^2 0; 0 (wind.turbulence(1)/100/3)^2]; % process noise
+IMM.R = 1e-6*(0.05/3)^2; % measurement noise
+% IMM.Q = [(1e-7/3)^2 0; 0 (wind.turbulence(1)/100/3)^2]; % process noise
+IMM.Q = [1e-3]; % process noise
 IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
-IMM.x_est = [0; 0];       % initial state estimate
-IMM.cp_vector = [0.1, 0.2, 0.46];
+IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
+IMM.cp_vector = [0.44, 0.45, 0.46];
+IMM.K_vector = [0.8 1 1.2]*1e7;
 % Initialize the models
 P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
 x_est_initial = zeros(IMM.states_len, IMM.n_models);  
