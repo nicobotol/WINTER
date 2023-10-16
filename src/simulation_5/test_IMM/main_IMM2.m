@@ -3,7 +3,8 @@
 close all; clear; clc;
 parameters
 
-omega = 0.6;
+V0 = 8;
+omega = lambda_opt*V0/rotor.R;
 x_est = omega*ones(IMM.states_len, IMM.n_models);
 P_est = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
 for i=1:IMM.n_models
@@ -16,12 +17,15 @@ omega_tilde_store = [];
 omega_store = [];
 K_store = [];
 mu_store =[];
-K_opt = IMM.K_vector(2); % initial K_opt
+T_R_store = [];
+T_G_store = [];
+x_est_store = zeros(IMM.n_models, t_tot);
+K_opt = output
 omega_tilde = omega; % initial speed estimation
 
 for t=1:t_tot
-  T_G = K_opt*omega_tilde^2; % feedback torque
-  T_R = T_G + 1e6*rand(1); % aero torque
+  T_R = 0.5*V0^3*rho*cp_max*rotor.A; %+ 5e4*(rand(1) - 0.5)*2; % aero torque
+  T_G = K_opt*omega^2; % feedback torque
   param{1} = I_eq;
   param{2} = B_eq;
   param{3} = K_real;
@@ -33,13 +37,11 @@ for t=1:t_tot
   omega_tilde_store = [omega_tilde_store omega_tilde];
   mu_store = [mu_store mu_vector];
   K_store = [K_store K_opt];
-end
+  x_est_store(:, t) = [x_est'];
+  T_R_store = [T_R_store, T_R];
+  T_G_store = [T_G_store, T_G];
 
-figure(); hold on; grid on;
-plot(omega_store, 'LineWidth', 2)
-plot(omega_tilde_store, '--', 'LineWidth', 2)
-title('omega')
-legend('Real', 'Est.')
+end
 
 figure(); hold on; grid on;
 plot(K_store, 'LineWidth', 2)
@@ -49,6 +51,19 @@ figure(); hold on; grid on;
 for i=1:IMM.n_models
   plot(mu_store(i, :), 'DisplayName', ['Model ', num2str(i)]);
 end
+legend()
+
+figure(); hold on; grid on;
+for i=1:IMM.n_models
+  plot(x_est_store(i, :), 'DisplayName', ['Model ', num2str(i)]);
+end
+plot(omega_store, 'LineWidth', 2, 'DisplayName', 'Real')
+plot(omega_tilde_store, '--', 'LineWidth', 2, 'DisplayName', 'Mean')
+legend()
+
+figure(); hold on; grid on;
+plot(T_R_store, 'LineWidth', 2, 'DisplayName', 'Aero torque')
+plot(T_G_store, 'LineWidth', 2, 'DisplayName', 'Feedback torque')
 legend()
 
 function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, P_est, mu_vector, T_R, IMM, I_eq, B_eq)
@@ -63,7 +78,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   K_vector = IMM.K_vector;
   mu = zeros(n_models);
   % Vector of parameters
-  param = cell(6,1);
+  param = cell(5,1);
   param{1} = I_eq; % inertia
   param{2} = B_eq; % damping
   param{3} = 0; % K_opt
@@ -94,8 +109,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   omega_tilde = x_est_g(1); % estimation of the rotational speed
 
   [model, model_prob] = filter_interaction(model, Pi);
-  [~, idx] = max(model_prob); % model with the highest probability
-  K_opt = IMM.K_vector(idx);
+  K_opt = wls_K_opt(model)
   
   % Assemble the model cell
   for j=1:n_models
@@ -112,7 +126,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   %  | |___| . \|  _|  
   %  |_____|_|\_\_|    
                      
-  function [model] = EKF(model, z, T_G, param, matrices)
+  function [model] = EKF(model, z, T_R, param, matrices)
     % y -> measurement of the rotational speed [rad/s]
     
     x_est = model.x_est;
@@ -126,7 +140,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
     G = matrices.G;
   
     % Prediction
-    x_est = dynamic(x_est(1:states_len), T_G, param);
+    x_est = dynamic(x_est(1:states_len), T_R, param);
     P_est = F*P_est*F' + G*Q*G';
     P_prior = P_est;
     states_len = size(x_est, 1); % number of states
@@ -155,7 +169,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   
   function x_new = dynamic(x_est, T_R, param)
   
-  states_len = size(x_est, 1);
+    states_len = size(x_est, 1);
     I_eq = param{1}; % Inertia
     B_eq = param{2}; % Damping
     K_opt = param{3}; % Power coefficient
@@ -190,7 +204,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
     B_eq = param{2}; % Density
     K_opt = param{3}; % Power coefficient
   
-    F = [-K_opt/I_eq*x_est(1)-B_eq/I_eq];
+    F = [-2*K_opt/I_eq*x_est(1)-B_eq/I_eq];
     H = [1];
     G = [1];
   %   matrices = cell(4, 1);
@@ -208,7 +222,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
     n_models = size(model, 1);
     states_len = size(model{1}.x_est, 2);
     for j=1:n_models
-      param{4} = model{j}.K_opt;
+      param{3} = model{j}.K_opt;
       % compute the linearized matrices
       matrices = compute_matrices(model{j}.x_est(1:states_len), param);
       matrices.R = param{4};
@@ -227,20 +241,32 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   
   function model = probability_updating(model, z, param)
     n_models = size(model, 1);
+    states_len = size(model{1}.x_est, 1);
+    
     for j=1:n_models
       % compute the linearized matrices
       matrices = compute_matrices(model{j}.x_est, param);
       matrices.R = param{4};
       matrices.Q = param{5}; 
+
+      H = zeros(states_len);
+      R = zeros(states_len);
+      G = zeros(states_len);
+      P_prior = zeros(states_len);
+      model{j}.Lambda = zeros(1);
+      zeta = zeros(states_len);
+
       H = matrices.H;
       R = matrices.R;
       G = matrices.G;
       z_hat = model{j}.z_hat;
       P_prior = model{j}.P_prior;
-  
+      
+      S = zeros(states_len, states_len);
       S = H*P_prior*H' + G*R*G';
       zeta = z - z_hat;
-      model{j}.Lambda = 1/sqrt(2*pi*det(S))*exp(-1/2*zeta'*inv(S)*zeta);
+      tmp = 1/sqrt(2*pi*det(S))*exp(-1/2*zeta'*inv(S)*zeta);
+      model{j}.Lambda = tmp(1);
     end
     % Compute the denominator
     den = 0;
@@ -318,24 +344,6 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
     end
   end
   
-  %    ___        _               _               _     
-  %   / _ \ _   _| |_ _ __  _   _| |_    ___  ___| |_   
-  %  | | | | | | | __| '_ \| | | | __|  / _ \/ __| __|  
-  %  | |_| | |_| | |_| |_) | |_| | |_  |  __/\__ \ |_ _ 
-  %   \___/ \__,_|\__| .__/ \__,_|\__|  \___||___/\__(_)
-  %                  |_|                                
-  
-  function model = output_estimation(model, param)
-    n_models = size(model, 1);
-    R = param{3}; % Radius
-    lambda = 0;
-    for j=1:n_models
-      x_est_1 = model{j}.x_est(1);
-      x_est_2 = model{j}.x_est(2);
-      lambda = R*x_est_1/x_est_2; 
-    end
-  end
-  
   %                                       _ 
   %   _ __ _____   ___ __  _ __ _ __   __| |
   %  | '_ ` _ \ \ / / '_ \| '__| '_ \ / _` |
@@ -354,4 +362,33 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   
       y = y';
   end
-  
+
+  %    ___        _               _   
+  %   / _ \ _   _| |_ _ __  _   _| |_ 
+  %  | | | | | | | __| '_ \| | | | __|
+  %  | |_| | |_| | |_| |_) | |_| | |_ 
+  %   \___/ \__,_|\__| .__/ \__,_|\__|
+  %                  |_|              
+  function K_opt = wls_K_opt(model)
+    % This function computes the local estimation of the global centroid, so where each agent thinks the network centroid is
+    
+      n_models = size(model, 1);
+    
+      % build the measurement matrix
+      H = kron(ones(n_models,1), 1);
+    
+      for i=1:n_models
+        Z = []; % measurements
+        C = []; % covariance matrix
+        for j=1:n_models
+          % rearrange the measurements in a vector
+          Z = [Z; models{i}.K_opt];
+          
+          % build the covariance matrix
+          C = blkdiag(C, models{i}.P_est);
+        end
+        % compute the WLS
+        K_opt = inv(H'*inv(C)*H)*H'*inv(C)*Z;
+      end
+     
+    end

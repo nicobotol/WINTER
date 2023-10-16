@@ -134,7 +134,7 @@ elseif simulation.model == 4 % extremum seeking controller
 elseif simulation.model == 5 % extremum seeking controller
     simulation.mdl = 'winter_simulink_IMM_control'; 
 end
-simulation.stop_time = 50*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 1;        % 1 -> constant wind speed
@@ -241,14 +241,14 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [8];           % 10 minutes mean wind speed [m/s]
+wind.mean = [11];           % 10 minutes mean wind speed [m/s]
 wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = [10 10];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [12 12];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(2, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = [4];        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = [13];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -269,22 +269,22 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
-I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
-B_eq = 0*(rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
+I_eq = (rotor.I + generator.I/gearbox.ratio^2); % equiv. inertia [kgm^2]
+B_eq = (rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
 
 % parameters for the IMM control
-IMM.n_models = 3;           % number of models
+IMM.K_vector = [0.6 0.8 1.0 1.02 1.04]*1e7;
+IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 1;           % number of states
 IMM.prob_transition = 0.99; % probability of transition
 IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
-IMM.R = 1e-6*(0.05/3)^2; % measurement noise
+IMM.R = (0.05/3)^2; % measurement noise
 % IMM.Q = [(1e-7/3)^2 0; 0 (wind.turbulence(1)/100/3)^2]; % process noise
 IMM.Q = [1e-3]; % process noise
 IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
 IMM.cp_vector = [0.44, 0.45, 0.46];
-IMM.K_vector = [0.8 1 1.2]*1e7;
 % Initialize the models
 P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
 x_est_initial = zeros(IMM.states_len, IMM.n_models);  

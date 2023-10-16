@@ -28,7 +28,7 @@ P_R0 = 0.5*rho*V0_0^3*pi*rotor.R^2*cP0; % rotor power [W]
 T_R0 = P_R0/rotor.omega_R0;            % rotor torque [Nm]
 
 IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
-IMM.x_est = [rotor.omega_R0; V0_0];       % initial state estimate
+IMM.x_est = [rotor.omega_R0];       % initial state estimate
 for j = 1:IMM.n_models
   x_est_initial(1:IMM.states_len, j) = IMM.x_est; 
   P_est_initial(1:IMM.states_len, 1:IMM.states_len, j) = IMM.P_est; 
