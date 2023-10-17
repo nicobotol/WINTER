@@ -1,26 +1,21 @@
 \newpage
-\section{Structure of the work and limitation of the scope}
+\section{Structure of the work and limitation of the scope}\label{sec:b_introduction}
+With the provisional agreement between member states reached on March 2023 and approved in September 2023, EU set at 42.5\% the target share of energy coming from renewable sources by 2030 \cite{rauters}, \cite{EU_targets}, which means almost doubling the existing share of renewable energy in the EU (\cite{EU_targets}). These targets clearly show that a lot of work must be done in order to improve our ability in converting the available resources into more usable ones. Among them, the wind energy nowadays represents the second largest source with a share of 13\%, while the first and third are are solid biomass and hydropower, with a share of 41\% and 12\% respectively \cite{ren_share}. 
 
-\textcolor{red}{REWRITE EVERYTHING}
+The scope of this thesis is to study the effect of different control laws on the performance of a wind turbine. In particular, these are necessary to maximize the converted power while ensuring safety operation and structural integrity. The target of the controllers are the pitch angle (i.e. the angle between the blade and the wind flow) and the generator torque. These control laws has been tested in a emulator developed in the Matlab/Simulink environment, taking as study case the DTU 10 MW reference wind turbine \cite{DTU_Wind_Energy_Report-I-0092}. This choice is due to the necessity of cross-validate the obtained intermediate results with public available data from a multi MW device, before using the proposed emulator for deeper investigations. 
+
+For what concerns the specific target of the study, first of all the maximization of the power extracted from the wind resource is taken as objective. Then it is observed that this condition not always implies the highest electrical one sent to the grid. To optimize it, the electrical characteristics of the generator have been considered, and a new control law identified. Both these solutions relays on the assumption of perfect knowledge of the physical parameters describing the system, which is something hard to be realized in practice, at least for the ageing of the different components. For this reason, the last \textcolor{red}{at least for the moment} controller takes into account this kind variability during the definition of the reference signals. \\
+The work is organized as follows in \autoref{sec:c_WT_characteristics} an overview on the historical evolutions and prospective of the resource is summarized, \autoref{sec:c_modelling_of_subsystem} describes the most important subsystems of a WT following the conversion chain from wind to grid, \autoref{sec:control_objective} discusses the operation regions alongside the objectives of the controllers, in \autoref{sec:c_10MW_OWT} the most important characteristics of the target reference turbine are computed starting from its physical parameters, \autoref{sec:c_basic_model_model} describes the functional blocks used in the Simulink simulation and their interconnection, \autoref{sec:c_basic_model_control} reports the principle of operation of generator and pitch controllers, in \autoref{sec:c_basic_model_simulation} the results of some simulations are analyzed and discussed, in \autoref{sec:c_other_controls} a control law based on a not-perfect knowledge of the physical parameters is discussed and tested, finally \autoref{sec:c_conclusions} collects the comments and conclusions on the conducted analysis.
+
+The scope of the thesis can be summarized by means of the following technical questions. How does the different subsystems (i.e. electrical generator and blades) have to be controlled in order to maximize the power converted from the wind to mechanical? How does this control changes if the objective is the maximization of the electrical power output of the generator? Is the knowledge of the physical parameters of the systems necessary for controlling the turbine and achieving the target objectives? 
+
+\subsection{Limitation of the scope}\label{subsec:limitation_of_scope}
+Since the wind turbines are complex devices their study includes a lot of different aspects and domains, such as aerodynamical, mechanical, and electrical. This implies that the same system can be studied from different prospective, making the analysis very complex. In order to restrict and concentrate the analysis, some limitation of the scope has been done:
 \begin{itemize}
-    \item Motivation and scope for the thesis
-    \item Use of a reference turbine for benchmarking the results
-    \item Presentation of the structure of the thesis and its different chapters
+  \item The aerodynamic interaction between the incoming wind and the blades has been studied using a formulation relaying on static assumptions even with variable wind speeds.
+  \item Even tough the DTU 10 MW is an offshore turbine the effects of waves has not been considered, as the type of foundation or floating platform. Furthermore, the presence of the tower shadowing the wind flow in the stream has been included.
+  \item The blades have been considered as rigid, and deployed exactly on the rotor plane, so neither deflection nor vibration related issues have been taken into account.
+  \item The yaw control (i.e. the one ensuring the orientation of the rotor plane with respect to the wind speed direction) has not been considered because of lower importance when the focus is on the operation of a stand-alone turbine rather than on wind farms, as it is the case of this thesis.
+  \item The real devices performing the actuation have not been explicitly modeled, but their presence included in the simulation by means of a time delay between the imposed control signal and the one applied to the system. These are in particular the actuators of the blade pithing mechanism and the power electronics controlling the generator. This assumption is valid because the focus of the thesis is on the generation of the reference signal that have to tracked by the different subsystems rather then on the real actuators performing the control actions.
+  \item Since the grid integration of the turbine is not considered in the thesis, the grid interface has not been studied, neither the aspects of power quality.    
 \end{itemize}
-
-
-The scope of the thesis is the development of an emulator of a large size wind turbine and its use for the development of its controllers.\\
-
-Since it is necessary to validate and cross-check the obtained results during the development of the work, then the DTU 10 MW Offshore Wind Reference Turbine will be used as benchmark.\\
-
-The structure of the work is here presented.\\
-
-\subsection{Limitation of scope}\label{sec:limitation_of_scope}
-write here what it is not considered in the thesis because it is not relevant or because it is out of the scope of the thesis itself
-\begin{itemize}
-    \item Vibration induced by the rotor on the tower
-    \item Coupling with the waves in case of offshore deployment
-    \item Grid interface and grid regulations
-\end{itemize}
-
-Dopo aver riletto tutta la tesi, cercare di formulare due tre domande tecniche che potrebbero essere quelle a cui la tesi cerca di rispondere, che dovrebbero in qualche modo conincidere con gli obbiettivi stessi. Nella parte di conclusione poi bisognerà in qualche modo dare una risposta a queste.

@@ -134,7 +134,7 @@ elseif simulation.model == 4 % extremum seeking controller
 elseif simulation.model == 5 % extremum seeking controller
     simulation.mdl = 'winter_simulink_IMM_control'; 
 end
-simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 150*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 1;        % 1 -> constant wind speed

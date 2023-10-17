@@ -12,6 +12,7 @@ if simulation.model == 5
     plot(time, reshape(tmp, 1, size(tmp,3)), 'LineWidth', line_width, 'DisplayName', leg(i));
   end
   plot(time, out_store{1}.omega_tilde.Data(s_start:end), ':', 'LineWidth', line_width, 'DisplayName', 'Estimation');
+  plot(time, out_store{1}.omega_R.Data(s_start:end), '--', 'LineWidth', line_width, 'DisplayName', 'Simulation');
   yline(omega_rated, '--', 'LineWidth', line_width, 'DisplayName', 'Rated');
   ylabel('$\omega_R$ [rad/s]')
   xlabel('Time [s]')
@@ -32,6 +33,7 @@ if simulation.model == 5
   end
   xlim([30 30.5])
   plot(time_zoom, out_store{1}.omega_tilde.Data(sz_start:sz_stop), ':', 'LineWidth', line_width);
+  plot(time_zoom, out_store{1}.omega_R.Data(sz_start:sz_stop), '--', 'LineWidth', line_width, 'DisplayName', 'Simulation');  
   title('Zoom')
   set(gca, 'FontSize', font_size)
   if simulation.print_figure == 1
@@ -61,7 +63,7 @@ if simulation.model == 5
   end
   xlabel('Time [s]')
   ylabel('$\mu$ [-]')
-  legend('Location', 'East')
+  legend('Location', 'NorthEast')
   title('Probability')
 
 end

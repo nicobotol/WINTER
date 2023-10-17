@@ -1,11 +1,12 @@
 % main
-\documentclass[11pt, a4paper]{article}
+\documentclass[11pt, a4paper, draft]{article}
 \input{a_packages.tex}
 \input{b_glossary.tex}
 
 \begin{document}
 % chapters
 \input{b_front_page.tex}
+\newpage
 \begin{multicols}{2}
   \printnoidxglossaries
 \end{multicols}
@@ -26,6 +27,8 @@
 \input{c_basic_model_simulation.tex}
 \newpage
 \input{c_other_controls.tex}
+\newpage
+\input{c_conclusions.tex}
 
 % \input{c_active_power_control.tex}
 
