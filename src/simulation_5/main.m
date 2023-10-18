@@ -45,6 +45,9 @@ for i = 1:wind.WS_len
       wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, stop_time);
       % wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i), wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, stop_time);
       [rotor, generator, blade, T_R0, omega_rated_GE] = run_Kopt_KoptGE(rho, lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, wind_speed(i, 2), rated_values, rated_values_P_GE_no_B, lookup_Pitch, lookup_pitch_P_GE, simulation, i);
+    case 11 % wind speed ramp and change the value of K_opt
+      wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i),      wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
+      [generator] = run_K_opt_sensitivity(generator, i);
 
   end
 
@@ -77,5 +80,5 @@ end
 
   %% Post processing
   if simulation.type ~= 4
-    RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch);
+    RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE);
   end

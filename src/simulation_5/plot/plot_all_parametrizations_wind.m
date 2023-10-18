@@ -14,10 +14,10 @@ plot_parametrization_wind('fig_rotor_power_param',out_store,'P_R',lookup_static_
 plot_parametrization_wind('fig_electrical_power_param',out_store,'P_GE',lookup_P_GE(1,:),lookup_P_GE(2,:)/1e6,'Wind speed [m/s]','P [MW]','Generator electrical power',1e6,simulation,date_fig)
 
 % generator torque parametrization
-plot_parametrization_wind('fig_torque_param',out_store,'T_G',  lookup_static_values(1,pos_4:pos_25),  lookup_static_values(5,pos_4:pos_25)/1e6,'Wind speed [m/s]','T [MNm]',  'Generator torque',1e6,simulation,date_fig)
+plot_parametrization_wind('fig_torque_param',out_store,'T_G', lookup_static_values(1,pos_4:pos_25),  lookup_static_values(5,pos_4:pos_25)/1e6,'Wind speed [m/s]','T [MNm]',  'Generator torque',1e6,simulation,date_fig)
 
 % pitch parametrization
-plot_parametrization_wind('fig_pitch_param',out_store,'pitch',   lookup_Pitch(1,pos_4:pos_25),lookup_Pitch(3,pos_4:pos_25)*180/pi,   'Wind speed [m/s]','$\theta$ [deg.]','Pitch angle',pi/180,simulation,date_fig)
+plot_parametrization_wind('fig_pitch_param',out_store,'pitch', lookup_Pitch(1,pos_4:pos_25),lookup_Pitch(3,pos_4:pos_25)*180/pi,   'Wind speed [m/s]','$\theta$ [deg.]','Pitch angle',pi/180,simulation,date_fig)
 
 % pitch parametrization with map made based on P_GE
 x_my_ref = cell(2);
@@ -28,25 +28,15 @@ x_my_ref{2} = lookup_pitch_P_GE(1,:);
 y_my_ref{2} = lookup_pitch_P_GE(2,:)*180/pi;
 leg = string(2);
 leg = ["Ref. rotor", "Ref. generator"];
-plot_parametrization_windN('fig_pitch_param',out_store,'pitch', ...
-  x_my_ref,y_my_ref, ...
-  'Wind speed [m/s]','$\theta$ [deg.]','Pitch angle',pi/180,simulation,leg,date_fig)
+plot_parametrization_windN('fig_pitch_param',out_store,'pitch', x_my_ref,y_my_ref, 'Wind speed [m/s]','$\theta$ [deg.]','Pitch angle',pi/180,simulation,leg,date_fig)
 
 % rotational speed
-plot_parametrization_wind('fig_omega_param',out_store,'omega_R', ...
-  lookup_static_values(1,pos_4:pos_25), ...
-  lookup_static_values(2,pos_4:pos_25)*30/pi, ...
-  'Wind speed [m/s]','$\omega$ [rpm]','Rotor rotational speed', ...
-  pi/30,simulation,date_fig)
+plot_parametrization_wind('fig_omega_param',out_store,'omega_R', lookup_static_values(1,pos_4:pos_25), lookup_static_values(2,pos_4:pos_25)*30/pi, 'Wind speed [m/s]','$\omega$ [rpm]','Rotor rotational speed', pi/30,simulation,date_fig)
 
   if simulation.type == 10 % comparison K_opt and K_opt_GE
-    plot_parametrization_wind_zoom_P_GE('fig_electrical_power_param_zoom',out_store,'P_GE', lookup_P_GE(1,:), lookup_P_GE(2,:)/1e6,'Wind speed [m/s]','$P_{GE}$ [MW]','Generator electrical power', 1e6,simulation,date_fig)
+    plot_parametrization_wind_zoom_P_GE('fig_electrical_power_param_zoom',out_store,'P_GE', lookup_P_GE(1,:), lookup_P_GE(3,:)/1e6,'Wind speed [m/s]','$P_{GE}$ [MW]','Generator electrical power', 1e6,simulation,date_fig)
 
-    plot_parametrization_wind_zoom_P_GE('fig_power_param_zoom',out_store,'P_G', lookup_static_values(1,pos_4:pos_25), ...
-    lookup_static_values(6,pos_4:pos_25)/1e6,'Wind speed [m/s]','P [MW]', ...
-    'Generator input power', 1e6,simulation,date_fig)
+    plot_parametrization_wind_zoom_P_GE('fig_power_param_zoom',out_store,'P_G', lookup_static_values(1,pos_4:pos_25), lookup_static_values(6,pos_4:pos_25)/1e6,'Wind speed [m/s]','P [MW]', 'Generator input power', 1e6,simulation,date_fig)
 
-    plot_parametrization_wind_zoom_P_GE('fig_power_param_zoom',out_store,'P_R', lookup_static_values(1,pos_4:pos_25), ...
-    lookup_static_values(6,pos_4:pos_25)/1e6,'Wind speed [m/s]','P [MW]', ...
-    'Generator input power', 1e6,simulation,date_fig)
+    plot_parametrization_wind_zoom_P_GE('fig_power_param_zoom',out_store,'P_R', lookup_static_values(1,pos_4:pos_25), lookup_static_values(6,pos_4:pos_25)/1e6,'Wind speed [m/s]','P [MW]', 'Generator input power', 1e6,simulation,date_fig)
   end

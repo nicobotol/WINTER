@@ -116,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 5;       % choice of the model
+simulation.model = 3;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator
@@ -134,10 +134,10 @@ elseif simulation.model == 4 % extremum seeking controller
 elseif simulation.model == 5 % extremum seeking controller
     simulation.mdl = 'winter_simulink_IMM_control'; 
 end
-simulation.stop_time = 150*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 1000*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 1;        % 1 -> constant wind speed
+simulation.type = 11;        % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -147,14 +147,15 @@ simulation.type = 1;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-simulation.plot_time = 480*ones(10, 1);  % time from the end of the simulation to 
+                            % 11 -> sensitivity analysis on the gains
+simulation.plot_time = 980*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 140*ones(10,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 980*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -200,8 +201,10 @@ generator.iq_omegaBP = 7.5e2;%1.5e3; % Iq controller crossover freq. [rad/s]
 generator.TG_pm = 70;  % phase margin for the speed controller [°]
 generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
-% generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
-generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
+generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
+% generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
+generator.K_opt_sensitivity = [0.85 0.9 1 1.1 1.15]; % gain for the sensitivity analysis on K_opt
+generator.gain_K_opt = 1; % default value for the k_opt 
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 % generator.design_TG = 0; % 0 enables manual design of speed controller
@@ -246,15 +249,15 @@ wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = [4];        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = [13];         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 4*ones(5,1);        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 12*ones(5,1);         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(5, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
   case {1, 3, 5, 7, 8, 9, 10 }
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6  }
+  case {2, 6, 11}
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 

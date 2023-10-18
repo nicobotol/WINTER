@@ -1,4 +1,4 @@
-function [RMS_errors] = post_process(out_cell, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch)
+function [RMS_errors] = post_process(out_cell, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE)
 % This function performs the post processing opoerations of the obtained data
 
 RMS_errors =  cell(1, wind.WS_len);
@@ -17,6 +17,11 @@ if simulation.type ~= 5
     % generatator input torque
     [RMS_errors{i}.T_G] = compute_RMS_error(out_cell{i}, 'T_G', simulation.post_process_time(i), generator.P_rated/generator.omega_rated);
     RMS_errors{i}.T_G_norm = RMS_errors{i}.T_G/(generator.P_rated/generator.omega_rated)*100;
+
+    % generatator electrical output power
+    rated = [lookup_P_GE(1,:); lookup_P_GE(3,:)];
+    [RMS_errors{i}.P_GE] = compute_RMS_error(out_cell{i}, 'P_GE', simulation.post_process_time(i), rated);
+    RMS_errors{i}.P_GE_norm = RMS_errors{i}.P_G/lookup_P_GE(3,end)*100;
   end
 else
   for i = 1:wind.WS_len

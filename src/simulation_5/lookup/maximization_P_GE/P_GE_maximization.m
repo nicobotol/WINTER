@@ -27,6 +27,8 @@ physical_no_B(3) = 0;
 
 % V0_b = 4:0.01:6-0.01;
 V0_b = [4:0.05:V0_rated+0.001]; % [m/s] wind speed 
+V0_a = V0_rated:0.5:25;         % [m/s] wind speed above rated one 
+V0_v = unique(sort([V0_b, V0_a])); % windspeed [m/s]
 
 % Maximize the power output by selecting the proper combination of TSR and pitch angle
 % The variable x containts x = (TSR, pitch angle)
@@ -62,7 +64,6 @@ cp_GE_mean_no_B = mean(cp_GE_no_B);          % mean cp for the generator maximiz
 cp_E = P_GE_b./(0.5*A*rho*V0_b'.^3); % electrical generator power normalized by the wind one
 
 %% Static generator power curve
-V0_v = 4:1:25;                    % windspeed [m/s]
 lambda = zeros(length(V0_v), 1);  % TSR
 P_f = zeros(length(V0_v), 1);     % [W] power
 for v=1:length(V0_v)
@@ -88,7 +89,6 @@ P_joule_eta = 1.5*Rs*(iq*eta).^2; % [W] Joule losses
 
 
 %% Maximization of the genertaor power curve above the rated windspeed
-V0_a = V0_rated:0.5:25;                   % [m/s] wind speed above rated one 
 theta_p = [-1:0.1:25]*pi/180;       % [rad] range of angle where to search for the optimum 
 lambda_a = zeros(length(V0_a), 1);  % [-] TSR
 cp_a = zeros(length(theta_p), length(V0_a));
@@ -279,8 +279,8 @@ if simulation.print_figure == 1
 end
 
 %% Save the data in a lookup table
-% clear("lookup_P_GE")
-% clear("rated_values_P_GE")
+clear("lookup_P_GE")
+clear("rated_values_P_GE")
 % clear("lookup_pitch_P_GE")
 % 
 rated_values_P_GE(1) = lambda_GE_mean;
@@ -299,7 +299,8 @@ save('lookup\rated_values_P_GE_no_B.mat', "rated_values_P_GE_no_B");
 % lookup_pitch_P_GE(2, :) = [0 feather_a];
 % save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
 % 
-% % generator electrical power
-% lookup_P_GE(1, :) = [V0_b, V0_a];
-% lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
-% save('lookup\lookup_P_GE.mat', "lookup_P_GE");
+% generator electrical power
+lookup_P_GE(1, :) = [V0_b, V0_a];
+lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
+lookup_P_GE(3, :) = P_electro'*eta;
+save('lookup\lookup_P_GE.mat', "lookup_P_GE");
