@@ -46,7 +46,6 @@ box on
 set(gca, 'FontSize', font_size)
 ylim([0.95*y_lim_min 1.05*y_lim_max])
 
-
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
   export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
