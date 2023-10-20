@@ -102,6 +102,7 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   
   % Mode probability updating
   model = probability_updating(model, z, param);
+  K_opt = wls_K_opt(model)
   
   % State combination
   x_est_g = zeros(states_len, 1); % global state
@@ -109,7 +110,6 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   omega_tilde = x_est_g(1); % estimation of the rotational speed
 
   [model, model_prob] = filter_interaction(model, Pi);
-  K_opt = wls_K_opt(model)
   
   % Assemble the model cell
   for j=1:n_models
