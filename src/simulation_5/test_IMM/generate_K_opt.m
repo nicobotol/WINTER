@@ -1,4 +1,4 @@
-% this function is necessary to identify the lower and upper value where  to distribute the values of Kopt
+,% this function is necessary to identify the lower and upper value where  to distribute the values of Kopt
 
 close all;
 clc;
@@ -41,22 +41,32 @@ cp_d = interp2(lambda_vector, pitch_vector, lookup_cP, lambda_d, theta_d);
 %  | |\/| |/ _ \| '_ \| __/ _ \ | |   / _` | '__| |/ _ \  
 %  | |  | | (_) | | | | ||  __/ | |__| (_| | |  | | (_) | 
 %  |_|  |_|\___/|_| |_|\__\___|  \____\__,_|_|  |_|\___/  
-                                                        
-                                                    
+                                                                              
 K = 0.5*cp_d.*rho_d.*pi.*R_d_s.^2.*(V0_d./omega_d).^3;
 p1 = 1; % lower perentile
 p2 = 99; % higher perentile
 q_10 = quantile(K, p1/100);
 q_90 = quantile(K, p2/100);
 
+K_opt_vector = linspace(q_10, q_90, 5); % distribute the values of K_opt between the 1th and 99th percentile
+
+%   _  __      _ _     _        _ _           _   _             
+%  | |/ /   __| (_)___| |_ _ __(_) |__  _   _| |_(_) ___  _ __  
+%  | ' /   / _` | / __| __| '__| | '_ \| | | | __| |/ _ \| '_ \ 
+%  | . \  | (_| | \__ \ |_| |  | | |_) | |_| | |_| | (_) | | | |
+%  |_|\_\  \__,_|_|___/\__|_|  |_|_.__/ \__,_|\__|_|\___/|_| |_|
+                                                              
+
 fig = figure('Color', 'w'); grid on; box on; hold on;
-histogram(K, 'Normalization', 'pdf', 'BinMethod', 'sturges', 'DisplayName', 'Disribution')
+histogram(K, 'Normalization', 'pdf', 'BinMethod', 'sturges', 'DisplayName', 'Disribution', 'FaceAlpha',0.2)
 xlabel('K [$Nms^2$]')
 ylabel('pdf [-]')
-xline(generator.K_opt_GE, 'r--', 'LineWidth', line_width, 'DisplayName', 'Nominal $K_{opt,GE}$')
-x1 = xline(q_10, 'b--', {num2str(q_10, '%.2e')}, 'LineWidth', line_width, 'DisplayName', [num2str(p1), ' percentile'], 'FontSize', font_size);
+xline(generator.K_opt_GE, '--', 'Color', color(1), 'LineWidth', 2*line_width, 'DisplayName', 'Nominal $K_{opt,GE}$')
+xline(K_opt_vector, 'LineStyle', ':', 'Color', color(4), 'LineWidth', 2*line_width, 'HandleVisibility', 'off')
+plot(NaN, NaN, 'Color', color(4), 'DisplayName', '$K_{opt,GE}$ for IMM', 'LineStyle', ':', 'LineWidth', 2*line_width)
+x1 = xline(q_10,'LineStyle', '--', 'Color', color(2), 'LineWidth', 2*line_width, 'DisplayName', [num2str(p1), ' percentile'], 'FontSize', font_size);
 x1.LabelHorizontalAlignment = 'left';
-xline(q_90, 'b-.', {num2str(q_90, '%.2e')}, 'LineWidth', line_width, 'DisplayName',  [num2str(p2), ' percentile'], 'FontSize', font_size)
+xline(q_90,'LineStyle', '-.', 'Color', color(5), 'LineWidth', 2*line_width, 'DisplayName',  [num2str(p2), ' percentile'], 'FontSize', font_size)
 legend()
 set(gca, 'FontSize', font_size)
 title('$K_{opt,GE}$ distribution')

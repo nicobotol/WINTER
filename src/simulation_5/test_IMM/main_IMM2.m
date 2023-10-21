@@ -1,4 +1,4 @@
-% This function wants to test the effectivness of the IMM for the estimation of the K_opt coefficient
+% This function wants to test the effectivness of the IMM for the estimation of the K_opt coefficient. What is done is to replicate the simulink simulation 
 
 close all; clear; clc;
 parameters
@@ -20,7 +20,7 @@ mu_store =[];
 T_R_store = [];
 T_G_store = [];
 x_est_store = zeros(IMM.n_models, t_tot);
-K_opt = output
+K_opt = mean(IMM.K_vector); % initial gain estimation
 omega_tilde = omega; % initial speed estimation
 
 for t=1:t_tot
@@ -43,15 +43,24 @@ for t=1:t_tot
 
 end
 
+%         _       _   
+%   _ __ | | ___ | |_ 
+%  | '_ \| |/ _ \| __|
+%  | |_) | | (_) | |_ 
+%  | .__/|_|\___/ \__|
+%  |_|                
+
 figure(); hold on; grid on;
 plot(K_store, 'LineWidth', 2)
 yline(K_real, 'LineWidth', 2)
+title('$K_{opt}$ estimation')
 
 figure(); hold on; grid on;
 for i=1:IMM.n_models
   plot(mu_store(i, :), 'DisplayName', ['Model ', num2str(i)]);
 end
 legend()
+title('Probabilities of the models')
 
 figure(); hold on; grid on;
 for i=1:IMM.n_models
@@ -60,11 +69,20 @@ end
 plot(omega_store, 'LineWidth', 2, 'DisplayName', 'Real')
 plot(omega_tilde_store, '--', 'LineWidth', 2, 'DisplayName', 'Mean')
 legend()
+title('Rotational speed')
 
 figure(); hold on; grid on;
 plot(T_R_store, 'LineWidth', 2, 'DisplayName', 'Aero torque')
 plot(T_G_store, 'LineWidth', 2, 'DisplayName', 'Feedback torque')
 legend()
+title('Torques')
+
+%               _         ___ __  __ __  __ 
+%    __ _  __ _(_)_ __   |_ _|  \/  |  \/  |
+%   / _` |/ _` | | '_ \   | || |\/| | |\/| |
+%  | (_| | (_| | | | | |  | || |  | | |  | |
+%   \__, |\__,_|_|_| |_| |___|_|  |_|_|  |_|
+%   |___/                                   
 
 function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, P_est, mu_vector, T_R, IMM, I_eq, B_eq)
   % x_est -> (states_len, n_models) items containing the state estimation
@@ -102,14 +120,17 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   
   % Mode probability updating
   model = probability_updating(model, z, param);
-  K_opt = wls_K_opt(model)
-  
+  K_opt = compute_K_opt(model); % weighted mean of the filters
+
   % State combination
   x_est_g = zeros(states_len, 1); % global state
   [x_est_g(1:states_len, 1), ~] = state_combination(model);
   omega_tilde = x_est_g(1); % estimation of the rotational speed
 
+  % Filter interaction
   [model, model_prob] = filter_interaction(model, Pi);
+  [~, idx] = max(model_prob);
+%   K_opt = IMM.K_vector(idx);
   
   % Assemble the model cell
   for j=1:n_models
@@ -369,26 +390,15 @@ function [omega_tilde, x_est, P_est, mu_vector, K_opt] = gain_IMM(omega, x_est, 
   %  | |_| | |_| | |_| |_) | |_| | |_ 
   %   \___/ \__,_|\__| .__/ \__,_|\__|
   %                  |_|              
-  function K_opt = wls_K_opt(model)
+  function K_opt = compute_K_opt(model)
     % This function computes the local estimation of the global centroid, so where each agent thinks the network centroid is
     
       n_models = size(model, 1);
     
-      % build the measurement matrix
-      H = kron(ones(n_models,1), 1);
-    
-      for i=1:n_models
-        Z = []; % measurements
-        C = []; % covariance matrix
-        for j=1:n_models
-          % rearrange the measurements in a vector
-          Z = [Z; models{i}.K_opt];
-          
-          % build the covariance matrix
-          C = blkdiag(C, models{i}.P_est);
-        end
-        % compute the WLS
-        K_opt = inv(H'*inv(C)*H)*H'*inv(C)*Z;
+      K_opt = 0;
+      for j=1:n_models
+        K_opt = K_opt + model{j}.mu*model{j}.K_opt;
       end
+      
      
     end
