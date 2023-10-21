@@ -43,11 +43,11 @@ if simulation.model == 5
 
   fig = figure('Color', 'w');grid on;box on;hold on;
   plot(out_store{1}.K_opt.Time(s_start:end), out_store{1}.K_opt.Data(s_start:end), 'LineWidth',line_width, 'DisplayName', 'Estimation');
-  yline(rotor.K_opt,'--', 'LineWidth',line_width, 'DisplayName', 'Reference');
+  yline(generator.K_opt_GE,'--', 'LineWidth',line_width, 'DisplayName', 'Reference');
   xlabel('Time [s]')
-  ylabel('$\omega_R$ [rad/s]')
+  ylabel('$K_{opt} [Nms^2]$')
   legend('Location', 'SouthEast')
-  ylim([0.95 1.03]*rotor.K_opt)
+  ylim([0.95 1.1]*generator.K_opt_GE)
   title('$K_{opt}$')
   set(gca, 'FontSize', font_size)
   if simulation.print_figure == 1
