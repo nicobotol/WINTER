@@ -59,8 +59,8 @@ Here the procedure for implementing the IMM is reported, following the method pr
   \text{Noise on the dynamic: } \nu_k \sim \mathcal{N}(0, Q) \\
   \text{Model of the measurement instrument: } y = h(x, u, \varepsilon) = \omega_{R} + \varepsilon \\
   \text{Noise on the measurement: } \varepsilon \sim \mathcal{N}(0, W)  \\
-  \text{Covariance matrix of the process: } Q = \textcolor{red}{Put a value}\\
-  \text{Covariance matrix of the measurement: } W = \textcolor{red}{Put a value}\\
+  \text{Covariance matrix of the process: } Q = \left[\left(\frac{\omega_{rated}}{50 \cdot3}\right)^2\right] =\left[0.0068^2\right]\\
+  \text{Covariance matrix of the measurement: } W = \left[\left(\frac{\omega_{rated}}{10 \cdot3}\right)^2\right] = \left[0.0338^2\right]\\
   \text{Covariance matrix of the state estimation for the \textit{j-th} filter, and for the IMM: } P^{(j)} \, P\\
   \text{Linearized model of the plant w.r.t. the states: } F = \frac{\partial f}{\partial x}(x, u, 0) = \left[-\frac{2\,K_{opt}}{I_{eq}}x - \frac{B_{eq}}{I_{eq}}\right]\\
   \text{Linearized model of the measurement w.r.t. the states: } H = \frac{\partial h}{\partial x}(x, u) = \left[1\right]\\

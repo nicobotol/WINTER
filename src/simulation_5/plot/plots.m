@@ -43,10 +43,10 @@ switch simulation.type
     % wind speed
     % plot_time_series("fig_wind_TS",out_store, 'wind', 'Time [s]', 'Wind speed [m/s]', 'Wind speed time serie', 1, date_fig, 'northwest');
     plot_all_parametrizations_wind
+    plot_IMM
     % plot_all_parametrizations
     % [~, ~, ~] = power_check(out_store, I_eq, B_eq, wind.WS_len, line_width, date_fig, "power_check", simulation, font_size, path_images);
     % rotor power parametrization
-
 
   case 9 % different pitch mechanis dynamic
     plot_all_dynamic

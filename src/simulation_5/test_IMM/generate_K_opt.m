@@ -14,11 +14,11 @@ N = 1e6; % sampes to generate
 %  | .__/ \__,_|_|  \__,_|_| |_| |_|\___|\__\___|_|  |___/ |___/\__\__,_|
 %  |_|                                                                   
 
-mu_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
-mu_rho = rho*0.05/3; % fixed as 5% of the nominal value
-mu_R = (4/3); % assuming a  deflection of 4 meters
-mu_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value 
-mu_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
+mu_omega = IMM.mu_omega;
+mu_rho = IMM.mu_rho;
+mu_R = IMM.mu_R;
+mu_V0_rated = IMM.mu_V0_rated;
+mu_theta = IMM.mu_theta;
 
 %   ____  _     _        _ _           _   _                 
 %  |  _ \(_)___| |_ _ __(_) |__  _   _| |_(_) ___  _ __  ___ 

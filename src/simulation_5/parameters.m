@@ -137,7 +137,7 @@ end
 simulation.stop_time = 1000*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 1;        % 1 -> constant wind speed
+simulation.type = 6;        % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -249,9 +249,9 @@ wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4*ones(5,1);        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 12*ones(5,1);         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(5, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 7*ones(5,1);        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 7*ones(5,1);         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -282,12 +282,17 @@ IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 1;           % number of states
 IMM.prob_transition = 0.99; % probability of transition
 IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
-IMM.R = (0.05/3)^2; % measurement noise
+IMM.W = 1e-3;%(omega_rated/10/3)^2; % measurement noise
 % IMM.Q = [(1e-7/3)^2 0; 0 (wind.turbulence(1)/100/3)^2]; % process noise
-IMM.Q = [1e-3]; % process noise
-IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
+IMM.Q = 1e-3;%(omega_rated/50/3)^2;%(omega_rated/100/3)^2; % process noise
+IMM.P_est = 1e5*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
 IMM.cp_vector = [0.44, 0.45, 0.46];
+IMM.mu_omega = 0*omega_rated*0.05/3; % fixed as 5% of the nominal value
+IMM.mu_rho = 0*rho*0.05/3; % fixed as 5% of the nominal value
+IMM.mu_R = 0*(4/3); % assuming a  deflection of 4 meters
+IMM.mu_V0_rated = 0*V0_rated*0.15/3; % fixed as 15% of the nominal value 
+IMM.mu_theta = 0*1*pi/180/3; % assuming 1 deg of uncertainty
 % Initialize the models
 P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
 x_est_initial = zeros(IMM.states_len, IMM.n_models);  
