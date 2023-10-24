@@ -7,9 +7,9 @@ if simulation.model == 5
   time = out_store{1}.model_x_est.Time(s_start:end);
   fig = figure('Color', 'w');hold on;box on;grid on;
   for i=1:IMM.n_models
-    tmp = out_store{1}.model_x_est.Data(1,i,s_start:end);
+    tmp = out_store{1}.model_x_est.Data(s_start:end, i);
     leg(i) = ['Mod. ', num2str(i)];
-    plot(time, reshape(tmp, 1, size(tmp,3)), 'LineWidth', line_width, 'DisplayName', leg(i));
+    plot(time, tmp, 'LineWidth', line_width, 'DisplayName', leg(i));
   end
   plot(time, out_store{1}.omega_tilde.Data(s_start:end), ':', 'LineWidth', line_width, 'DisplayName', 'Estimation');
   plot(time, out_store{1}.omega_R.Data(s_start:end), '--', 'LineWidth', line_width, 'DisplayName', 'Simulation');
@@ -27,9 +27,9 @@ if simulation.model == 5
   tz_stop = 30.5; % [s]
   [~, sz_stop] = min(abs(out_store{1}.model_x_est.Time - tz_stop)); % sample from where to start
   for i=1:IMM.n_models
-    tmp = out_store{1}.model_x_est.Data(1,i,sz_start:sz_stop);
+    tmp = out_store{1}.model_x_est.Data(sz_start:sz_stop, i);
     time_zoom = out_store{1}.model_x_est.Time(sz_start:sz_stop);
-    plot(time_zoom, reshape(tmp, 1, size(tmp,3)), 'LineWidth', line_width, 'DisplayName', leg(i));
+    plot(time_zoom, tmp, 'LineWidth', line_width, 'DisplayName', leg(i));
   end
   xlim([30 30.5])
   plot(time_zoom, out_store{1}.omega_tilde.Data(sz_start:sz_stop), ':', 'LineWidth', line_width);
@@ -57,8 +57,8 @@ if simulation.model == 5
 
   fig = figure('Color', 'w');hold on;grid on;
   for i=1:IMM.n_models
-    data = out_store{1}.mu.Data(i,1,s_start:end);
-    data = reshape(data, 1, size(data,3));
+    data = out_store{1}.mu.Data(s_start:end, i);
+    % data = reshape(data, 1, size(data,3));
     plot(time, data, 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
   end
   xlabel('Time [s]')

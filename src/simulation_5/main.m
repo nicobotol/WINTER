@@ -53,7 +53,7 @@ for i = 1:wind.WS_len
 
   % Set the initial conditions
   if simulation.model ~= 3 && simulation.type ~= 10 
-    [rotor, generator, blade, T_R0, x_est_initial, P_est_initial] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch, IMM);
+    [rotor, generator, blade, T_R0] = initial_conditions(rho,lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, wind_speed(1, 2), rated_values, lookup_Pitch);
   elseif simulation.model == 3 && simulation.type ~= 10
     [rotor, generator, blade, T_R0] = initial_conditions_GE(rho,lambda_vector, pitch_vector, lookup_cP, rotor, blade, generator, gearbox, wind_speed(1, 2), V0_rated, rated_values_P_GE, lookup_pitch_P_GE);
   end
