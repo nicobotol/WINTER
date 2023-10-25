@@ -56,11 +56,13 @@ if simulation.model == 5
 
 
   fig = figure('Color', 'w');hold on;grid on;
-  for i=1:IMM.n_models
-    data = out_store{1}.mu.Data(i,1,s_start:end);
-    data = reshape(data, 1, size(data,3));
-    plot(time, data, 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
-  end
+  data = reshape(out_store{1}.mu.Data(:,1,:), IMM.n_models, []);
+  bar(time, data', 'stacked')
+  % for i=1:IMM.n_models
+  %   data = out_store{1}.mu.Data(i,1,s_start:end);
+  %   data = reshape(data, 1, size(data,3));
+  %   plot(time, data, 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
+  % end
   xlabel('Time [s]')
   ylabel('$\mu$ [-]')
   legend('Location', 'NorthEast')

@@ -286,17 +286,16 @@ if IMM.n_models > 1
 else
   IMM.Pi = 1;
 end
-IMM.W = (omega_rated/10/3)^2; % measurement noise
-% IMM.Q = [(1e-7/3)^2 0; 0 (wind.turbulence(1)/100/3)^2]; % process noise
-IMM.Q = (omega_rated/50/3)^2;%(omega_rated/100/3)^2; % process noise
+IMM.W = 1e0*(omega_rated/10/3)^2; % measurement noise
+IMM.Q = 1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
-IMM.cp_vector = [0.44, 0.45, 0.46];
-IMM.mu_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
-IMM.mu_rho = rho*0.05/3; % fixed as 5% of the nominal value
-IMM.mu_R = (4/3); % assuming a  deflection of 4 meters
-IMM.mu_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value 
-IMM.mu_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
+IMM.sigma_omega = 0*omega_rated*0.05/3; % fixed as 5% of the nominal value
+IMM.sigma_rho = 0*rho*0.05/3; % fixed as 5% of the nominal value
+IMM.sigma_R = 0*(4/3); % assuming a  deflection of 4 meters
+IMM.sigma_V0_rated = 0*V0_rated*0.15/3; % fixed as 15% of the nominal value 
+IMM.sigma_theta = 0*1*pi/180/3; % assuming 1 deg of uncertainty
+IMM.sample_time = simulation.time_step_H*5;
 % Initialize the models
 P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
 x_est_initial = zeros(IMM.states_len, IMM.n_models);  
@@ -305,6 +304,7 @@ for j = 1:IMM.n_models
   model{j}.P_est = IMM.P_est; % covariance
   model{j}.mu = 1/IMM.n_models; % mode probability
   x_est_initial(1:IMM.states_len, j) = model{j}.x_est; 
+  mu_initial(1, j) = model{j}.mu;
   P_est_initial(1:IMM.states_len, 1:IMM.states_len, j) = model{j}.P_est; 
 end
 

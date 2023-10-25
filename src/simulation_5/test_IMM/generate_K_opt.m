@@ -14,11 +14,11 @@ N = 1e6; % sampes to generate
 %  | .__/ \__,_|_|  \__,_|_| |_| |_|\___|\__\___|_|  |___/ |___/\__\__,_|
 %  |_|                                                                   
 
-mu_omega = IMM.mu_omega;
-mu_rho = IMM.mu_rho;
-mu_R = IMM.mu_R;
-mu_V0_rated = IMM.mu_V0_rated;
-mu_theta = IMM.mu_theta;
+sigma_omega = IMM.sigma_omega;
+sigma_rho = IMM.sigma_rho;
+sigma_R = IMM.sigma_R;
+sigma_V0_rated = IMM.sigma_V0_rated;
+sigma_theta = IMM.sigma_theta;
 
 %   ____  _     _        _ _           _   _                 
 %  |  _ \(_)___| |_ _ __(_) |__  _   _| |_(_) ___  _ __  ___ 
@@ -26,13 +26,13 @@ mu_theta = IMM.mu_theta;
 %  | |_| | \__ \ |_| |  | | |_) | |_| | |_| | (_) | | | \__ \
 %  |____/|_|___/\__|_|  |_|_.__/ \__,_|\__|_|\___/|_| |_|___/
                                                            
-theta_d = random('Normal', 0, mu_theta, N, 1); % pitch angle
-rho_d = random('Normal', rho, mu_rho, N, 1); % air density
-R_d = random('Normal', rotor.R, mu_R, 3*N, 1); % undeformed rotor radius
+theta_d = random('Normal', 0, sigma_theta, N, 1); % pitch angle
+rho_d = random('Normal', rho, sigma_rho, N, 1); % air density
+R_d = random('Normal', rotor.R, sigma_R, 3*N, 1); % undeformed rotor radius
 R_d_s = R_d(R_d<=rotor.R); % take only the radius smaller than the undeformed
 R_d_s = R_d_s(1:N); % remove extra values to have N samples
-omega_d = random('Normal', omega_rated_GE, mu_omega, N, 1);
-V0_d = random('Normal', V0_rated, mu_V0_rated, N, 1);
+omega_d = random('Normal', omega_rated_GE, sigma_omega, N, 1);
+V0_d = random('Normal', V0_rated, sigma_V0_rated, N, 1);
 lambda_d = omega_d.*R_d_s./V0_d; % tip speed ratio at rated conditions
 cp_d = interp2(lambda_vector, pitch_vector, lookup_cP, lambda_d, theta_d);
 

@@ -4,8 +4,8 @@ close all;
 parameters;
 
 N = 1e6;
-mu_R = (4/3)^2;
-R_d = random('Normal', rotor.R, mu_R, 3*N, 1);
+sigma_R = (4/3)^2;
+R_d = random('Normal', rotor.R, sigma_R, 3*N, 1);
 R_d_s = R_d(R_d<=rotor.R);
 R_d_s = R_d_s(1:N);
 q_10_d = quantile(R_d, 0.05);

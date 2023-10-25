@@ -5,8 +5,8 @@ parameters;
 
 N = 1e6;
 rho_10 = 0.1*rho;
-mu_rho = (rho_10/3);
-rho_d = random('Normal', rho, mu_rho, N, 1);
+sigma_rho = (rho_10/3);
+rho_d = random('Normal', rho, sigma_rho, N, 1);
 q_10_d = quantile(rho_d, 0.01);
 q_90_d = quantile(rho_d, 0.99);
 
