@@ -299,12 +299,13 @@ IMM.sample_time = simulation.time_step_H*5;
 % Initialize the models
 P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
 x_est_initial = zeros(IMM.states_len, IMM.n_models);  
+mu_initial = zeros(IMM.states_len, IMM.n_models)';  
 for j = 1:IMM.n_models
   model{j}.x_est = IMM.x_est; % state
   model{j}.P_est = IMM.P_est; % covariance
   model{j}.mu = 1/IMM.n_models; % mode probability
   x_est_initial(1:IMM.states_len, j) = model{j}.x_est; 
-  mu_initial(1, j) = model{j}.mu;
+  mu_initial(j, 1) = model{j}.mu;
   P_est_initial(1:IMM.states_len, 1:IMM.states_len, j) = model{j}.P_est; 
 end
 
