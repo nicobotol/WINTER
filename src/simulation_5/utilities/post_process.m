@@ -1,4 +1,4 @@
-function [RMS_errors] = post_process(out_cell, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE)
+function [RMS_errors] = post_process(out_cell, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE, IMM)
 % This function performs the post processing opoerations of the obtained data
 
 RMS_errors =  cell(1, wind.WS_len);
@@ -53,6 +53,15 @@ else
     normalizer = interp1(lookup_Pitch(1, :), lookup_Pitch(3, :), wind.mean(i));
     RMS_errors{i}.var{4}.norm = RMS_errors{i}.var{4}.Data/normalizer*100;
   end
+end
+
+if simulation.type == 12 % comparison IMM / const. K_opt
+  % compute the mean and std value of the gain for all the cases
+  compute_mean_std(out_cell, simulation, IMM, wind);
+
+  % compute the energy 
+  compute_energy(out_cell, simulation, IMM, wind);
+
 end
 
 %% Write the RMS table to a file

@@ -48,6 +48,10 @@ for i = 1:wind.WS_len
     case 11 % wind speed ramp and change the value of K_opt
       wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i),      wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
       [generator] = run_K_opt_sensitivity(generator, i);
+    case 12 % wind speed ramp and enable or disable the IMM
+      % wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i),      wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
+      wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, stop_time);
+      [IMM] = run_IMM_comparison(IMM, i);
 
   end
 
@@ -78,7 +82,7 @@ else
   fprintf('Simulation ended with error\n');
 end
 
-  %% Post processing
-  if simulation.type ~= 4
-    RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE);
-  end
+%% Post processing
+if simulation.type ~= 4
+  RMS_errors = post_process(out_store, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE, IMM);
+end

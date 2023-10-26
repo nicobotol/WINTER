@@ -1,8 +1,8 @@
 ,% this function is necessary to identify the lower and upper value where  to distribute the values of Kopt
 
-close all;
-clc;
-clear;
+% close all;
+% clc;
+% clear;
 
 parameters;
 N = 1e6; % sampes to generate
@@ -49,6 +49,10 @@ q_10 = quantile(K, p1/100);
 q_90 = quantile(K, p2/100);
 
 K_opt_vector = linspace(q_10, q_90, 5); % distribute the values of K_opt between the 1th and 99th percentile
+
+% Distribution of the torque, it is necessary to identify the varaince of the noise applied on the system 
+T_R = 0.5*rho_d.*pi.*R_d_s.^2.*V0_d.^3.*cp_d./omega_d;
+Q = var(T_R); % variance of the torque
 
 %   _  __      _ _     _        _ _           _   _             
 %  | |/ /   __| (_)___| |_ _ __(_) |__  _   _| |_(_) ___  _ __  
