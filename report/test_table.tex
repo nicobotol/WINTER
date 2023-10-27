@@ -14,20 +14,31 @@
 \begin{document}
 
 \section{Ciao}
+\begin{table}[htb]
+  \caption{Comparison of the energy extracted from the resource and at the generator's output for the use of IMM based or fixed gain controllers, and their error}
+  \centering
+  \begin{tabular}{cc|ccc|ccc}
+    \toprule
+    % write R above the third and fourth column and GE above the last two
+    Integration & & \multicolumn{3}{c|}{Rotor} & \multicolumn{3}{c}{Generator Electrical output}\\
+    time & WS & IMM & Const. & Err. & IMM & Const. & Err.\\
+    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$& $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$ \\
+    \midrule
+    \input{macro/energy.tex}
+  \end{tabular}
+  \label{tab:comparison_IMM}
+\end{table}
 
 \begin{table}[htb]
+  \caption{Mean value and standard deviation of the K gains in the simulations using the IMM}
   \centering
-  \caption{RMS errors of the simulations done in REF.1 and REF.2 alongside their normalized values}
-  \begin{tabular}{cccccccccc}
+  \begin{tabular}{ccccc}
     \toprule
-      $V_0$  & Sim. & $\omega_R$ & $\omega_{R,norm}$ & $P_{G}$ & $P_{G,norm}$ & $T_{G}$ & $T_{G,norm}$ & $\theta$ & $\theta_{norm}$ \\ 
-      $\mesunt{\meter\per\second}$ & & $\mesunt{\radian\per\second}$ & $\left[\%\right]$ & $\mesunt{\mega\watt}$ & $\left[\%\right]$ & $\mesunt{\mega\newton\per\meter}$ & $\left[\%\right]$ & $\mesunt{\radian}$ & $\left[\%\right]$ \\ \hline
-      \multirow{2}{*}{6.0}  & REF.1 &  0.04 &  7.27 & 0.36 & 23.66 & 0.45 & 15.73 & 0.00 &  0.00 \\
-      & REF.2 &  0.04 &  7.27 & 0.36 & 23.66 & 0.45 & 15.73 & 0.00 &  0.00 \\   \hline
-      \multirow{2}{*}{11.5} & REF.1 & 0.04 &  3.83 & 0.93 &  9.19 & 0.67 & 6.66 & 0.05 & 148.81 \\
-      & REF.2 & 0.04 &  3.68 & 0.93 &  9.16 & 0.66 &  6.62 & 0.04 & 144.00 \\ \hline 
-      \multirow{2}{*}{20.0} & REF.1 & 0.02 &  1.49 &  0.08 & 0.79 &  0.12 & 1.24 & 0.01 & 4.86 \\
-      & REF.2 & 0.02 &  1.52 & 0.16 &  1.56 & 0.15 &  1.54 & 0.02 &  7.80 \\ \bottomrule
+    Avg. time & WS & Mean & Std & Error \\
+    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\newton\meter\square\second}$ & $\mesunt{\newton\meter\square\second}$ & $\left[\%\right]$\\  \midrule
+    \input{macro/mean_std_IMM.tex}
   \end{tabular}
+  \label{tab:mean_std_IMM}
 \end{table}
+
 \end{document}

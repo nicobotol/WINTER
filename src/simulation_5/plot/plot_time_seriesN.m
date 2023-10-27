@@ -13,12 +13,12 @@ for i = 1:wind.WS_len
     % Time from where start to print
     t_start = out_cell{i}.(data(j)).Time(end) - simulation.plot_time(i); % [s]
     [~, s_start] = min(abs(out_cell{i}.(data(j)).Time - t_start)); % sample from where to start
-    plot(out_cell{i}.(data(j)).Time(s_start:end), out_cell{i}.(data(j)).Data(s_start:end)/scaling, 'LineWidth', font_scale, 'Color', colors_vect(i, :), 'LineStyle',line_style(j));
+    plot(out_cell{i}.(data(j)).Time(s_start:end), out_cell{i}.(data(j)).Data(s_start:end)/scaling, 'LineWidth', font_scale, 'Color', color(i), 'LineStyle',line_style(j));
 %     leg{N*i - N*j} = [leg(j),' sim. ', num2str(i)];
   end
 end
 if strcmp(y_line, 'none') == 0
-  yline(y_line/scaling, 'LineStyle', '-.', 'LineWidth', font_scale, 'Color', colors_vect(i + 1, :));
+  yline(y_line/scaling, 'LineStyle', '-.', 'LineWidth', font_scale, 'Color', color(i + 1));
   leg{N*wind.WS_len + 1} = ['Rated'];
 end
 legend(leg, 'Location', leg_loc, 'FontSize', font_size, 'interpreter', 'latex', 'NumColumns', wind.WS_len);

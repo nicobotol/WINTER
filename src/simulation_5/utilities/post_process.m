@@ -57,10 +57,10 @@ end
 
 if simulation.type == 12 % comparison IMM / const. K_opt
   % compute the mean and std value of the gain for all the cases
-  compute_mean_std(out_cell, simulation, IMM, wind);
+  compute_mean_std_develop(out_cell, simulation, IMM, wind, generator);
 
   % compute the energy 
-  compute_energy(out_cell, simulation, IMM, wind);
+  compute_energy_develop(out_cell, simulation, IMM, wind);
 
 end
 

@@ -20,6 +20,9 @@ plot_time_series2('fig_torque_dynamic', out_store,'T_G_reference', 'T_G', 'none'
 % generator power dynamic
 plot_time_series2('fig_generator_power_dynamic', out_store,'P_GE', 'P_G', generator.P_rated, 'Time [s]', 'P [MW]', 'Generator input and output power', 1e6, 'Electro', 'Mech.', date_fig, 'southeast');
 
+% rotor and generator output power dynamic
+plot_time_series3('fig_rotor_generator_power_dynamic', out_store,'P_R', 'P_GE', generator.P_rated, 'Time [s]', 'P [MW]', 'Rotor input $P_R$ and Generator output $P_{GE}$ power', 1e6, '$P_{R}$', '$P_{GE}$', date_fig, 'bestoutside', 2);
+
 if simulation.type ~= 10
   for i=1:wind.WS_len % sum the electrical and joule losses
     out_store{i}.P_check = [];

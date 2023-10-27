@@ -134,7 +134,7 @@ elseif simulation.model == 4 % extremum seeking controller
 elseif simulation.model == 5 % extremum seeking controller
     simulation.mdl = 'winter_simulink_IMM_control'; 
 end
-simulation.stop_time = 100*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 300*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 12;        % 1 -> constant wind speed
@@ -149,14 +149,14 @@ simulation.type = 12;        % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 80*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 250*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 70*ones(10,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 250*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -297,7 +297,7 @@ IMM.sigma_R = (4/3); % assuming a  deflection of 4 meters
 IMM.sigma_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value 
 IMM.sigma_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
 IMM.enable = 1; % enables or disables the IMM controller/constant gain
-IMM.sigma_gain = kron([1 1 1 1 1], [1 1]); % gain to scale the sigmas
+IMM.sigma_gain = kron(1.0*[1 1 1 1 1], [1 1]); % gain to scale the sigmas
 
 % Initialize the models
 P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);

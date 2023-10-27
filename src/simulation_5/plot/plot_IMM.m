@@ -26,23 +26,23 @@ if simulation.model == 5
     % zoom
     axes('position',[1/5 0.52 .30 .30])
     box on;hold on;grid on;
-    tz_start = 30; % [s]
+    tz_start = 160; % [s]
     [~, sz_start] = min(abs(out_store{j}.model_x_est.Time - tz_start)); % sample from where to start
-    tz_stop = 30.5; % [s]
+    tz_stop = 160.5; % [s]
     [~, sz_stop] = min(abs(out_store{j}.model_x_est.Time - tz_stop)); % sample from where to start
     for i=1:IMM.n_models
       tmp = out_store{j}.model_x_est.Data(sz_start:sz_stop, i);
       time_zoom = out_store{j}.model_x_est.Time(sz_start:sz_stop);
       plot(time_zoom, tmp, 'LineWidth', line_width, 'DisplayName', ['Mod. ', num2str(i)]);
     end
-    xlim([30 30.5])
+    xlim([tz_start tz_stop])
     plot(time_zoom, out_store{j}.omega_tilde.Data(sz_start:sz_stop), ':', 'LineWidth', line_width);
     plot(time_zoom, out_store{j}.omega_R.Data(sz_start:sz_stop), '--', 'LineWidth', line_width, 'DisplayName', 'Simulation');  
     plot(time_zoom, out_store{j + 1}.omega_R.Data(sz_start:sz_stop), '--', 'LineWidth', line_width, 'DisplayName', 'Sim. fix');
     title('Zoom')
     set(gca, 'FontSize', font_size)
     if simulation.print_figure == 1
-      export_figure(fig, strcat(date_fig, 'omega_IMM.eps'), path_images);
+      export_figure(fig, strcat(date_fig, 'omega_IMM_',num2str(j), '.eps'), path_images);
     end
   end
 
@@ -61,23 +61,29 @@ if simulation.model == 5
   % ylim([0.9*min_tmp 1.1*max_tmp])
   title('$K_{opt}$')
   set(gca, 'FontSize', font_size)
-  set(gca, 'YScale', 'log')
   if simulation.print_figure == 1
     export_figure(fig, strcat(date_fig, 'omega_IMM.eps'), path_images);
   end
 
-
-  fig = figure('Color', 'w');hold on;grid on;
-  data = reshape(out_store{1}.mu.Data(:,1,s_start:end), IMM.n_models, []);
-  bar(time, data', 'stacked')
-  % for i=1:IMM.n_models
-  %   data = out_store{1}.mu.Data(i,1,s_start:end);
-  %   data = reshape(data, 1, size(data,3));
-  %   plot(time, data, 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
+%                   _           _     _ _ _ _         
+%   _ __  _ __ ___ | |__   __ _| |__ (_) (_) |_ _   _ 
+%  | '_ \| '__/ _ \| '_ \ / _` | '_ \| | | | __| | | |
+%  | |_) | | | (_) | |_) | (_| | |_) | | | | |_| |_| |
+%  | .__/|_|  \___/|_.__/ \__,_|_.__/|_|_|_|\__|\__, |
+%  |_|                                          |___/ 
+  % for i=1:2:wind.WS_len
+  %   fig = figure('Color', 'w');hold on;grid on;
+  %   data = reshape(out_store{i}.mu.Data(:,1,s_start:end), IMM.n_models, []);
+  %   bar(time, data', 'stacked')
+  %   % for i=1:IMM.n_models
+  %   %   data = out_store{1}.mu.Data(i,1,s_start:end);
+  %   %   data = reshape(data, 1, size(data,3));
+  %   %   plot(time, data, 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
+  %   % end
+  %   xlabel('Time [s]')
+  %   ylabel('$\mu$ [-]')
+  %   legend('Location', 'NorthEast')
+  %   title('Probability')
   % end
-  xlabel('Time [s]')
-  ylabel('$\mu$ [-]')
-  legend('Location', 'NorthEast')
-  title('Probability')
 
 end

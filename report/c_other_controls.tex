@@ -6,6 +6,7 @@ One possibility is to use model-free methods, such as the extremum seeking, whil
 \subsection{Comparison of the electrical power output in the case of different gains in the power controller}\label{subsec:c_different_KoptGE}
 The first study done to identify the effect of a changing $K_{opt,GE}$ is to compare the electrical power output of the generator for its  different values. In particular, a simulation with 5 values in the neighborhood of the optimal has been identified (second column of \autoref{tab:error_KoptGE}) and then a ramp WS profile between 4 and 12 $\mesunt{\meter\per\second}$ lasting 1000 $\mesunt{\second}$ has been applied.
 \begin{table}[htb]
+  \caption{Error with the use of different $K_{opt,GE}$ values}
   \centering
   \begin{tabular}{cc|cc}
   \toprule
@@ -17,7 +18,6 @@ The first study done to identify the effect of a changing $K_{opt,GE}$ is to com
   4 & 1.10$K_{opt,GE}$  & 0.12 & 7.00\\
   5 & 1.15$K_{opt,GE}$  & 0.14 & 7.13\\ \bottomrule
   \end{tabular}
-  \caption{Error with the use of different $K_{opt,GE}$ values}
   \label{tab:error_KoptGE}
 \end{table}
 
@@ -143,6 +143,7 @@ The $c_P$ is obtained by the use of the usual lookup table. Alongside the one of
 The parameters and assumptions used for generating the distributions are reported in \autoref{tab:parameters_KoptGE}. It must be noted that the choice of these parameters are realistic but arbitrary, and so the numerical value of the final result can be compromised by them.
 
 \begin{table}[htb]
+  \caption{Error with the use of different $K_{opt,GE}$ values}
   \centering
   \begin{tabular}{lcccc}
   \toprule
@@ -154,7 +155,6 @@ The parameters and assumptions used for generating the distributions are reporte
   Pitch angle $\theta$ & 0.0 & 0.0058 & $\mesunt{\radian}$ & More than 99\% distribution within  1 $\si{\degree}$ \\
  \bottomrule
   \end{tabular}
-  \caption{Error with the use of different $K_{opt,GE}$ values}
   \label{tab:parameters_KoptGE}
 \end{table}
 
@@ -173,8 +173,75 @@ The parameters and assumptions used for generating the distributions are reporte
   \end{subfigure}
 \end{figure}
 
-Given the distribution of the $K_{opt,GE}$ gain it is possible to use it in order to design the IMM, by means of selecting a given number of gains between two values of the distributions such as the 1 and 99 percentile, $7.19 \, \cdot 10^7 \mesunt{\newton \meter \square \second}$ and $1.50 \cdot 10^7 \, \mesunt{\newton \meter \square \second}$ respectively. In this specific case, 5 values have been chosen, and their are identified by the purple dotted line in \autoref{fig:K_GE_distribution}. To be specific these values are: $\left\[0.72, 0.91, 1.11, 1.30, 1.49 \right\] \cdot 10^7 \, \mesunt{\newton\meter\square\second}$. 
+Given the distribution of the $K_{opt,GE}$ gain it is possible to use it in order to design the IMM, by means of selecting a given number of gains between two values of the distributions such as the 1 and 99 percentile, $7.19 \, \cdot 10^7 \mesunt{\newton \meter \square \second}$ and $1.50 \cdot 10^7 \, \mesunt{\newton \meter \square \second}$ respectively. In this specific case, 5 values have been chosen, and their are identified by the purple dotted line in \autoref{fig:K_GE_distribution}. To be specific these values are: $\left[0.72, 0.91, 1.11, 1.30, 1.49 \right] \cdot 10^7 \, \mesunt{\newton\meter\square\second}$. 
 
 
 \subsubsection{Results of the IMM} 
-\textcolor{red}{Not done yet}
+The first test done is the comparison between the IMM-based control and the one based on the constant gain for 5 constant WSs between the cut-in and the rated one (4, 6, 8, 10, and 11 $\mesunt{\meter\per\second}$). In particular, for each input wind velocity a couple of simulation has been run, with the same noise, in order to better compare them. \\
+In order to compare the control methods, the integral of the powers has been computed. It has been observed that the power in the two cases were quite similar, and so the choice of the time interval to be integrated was important to identify which method provides more energy. The results of teh tests are reported in \auotref{tab:comparison_IMM}. The first colum reports the time from the end of the simulation were the integration started, the second reports the wind speed of the tested case, the third, and fourth the energy extracted from the rotor with the two considered control techniques, while the fifth the error between them. The last three columns report the energy at the electrical output of the generator and the corresponding normalized error. The error has been computed as:
+\begin{equation}
+  \text{Error} = \frac{E_{Const}-E_{IMM}}{E_{Const}}\cdot 100 \left[-\right]
+  \label{eq:energy_error}
+\end{equation}
+
+\begin{table}[htb]
+  \caption{Comparison of the energy extracted from the resource and at the generator's output for the use of IMM based or fixed gain controllers, and their error}
+  \centering
+  \begin{tabular}{cc|ccc|ccc}
+    \toprule
+    % write R above the third and fourth column and GE above the last two
+    Integration & & \multicolumn{3}{c|}{Rotor} & \multicolumn{3}{c}{Generator Electrical output}\\
+    time & WS & IMM & Const. & Err. & IMM & Const. & Err.\\
+    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$& $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$ \\
+    \midrule
+    \input{macro/energy.tex}
+  \end{tabular}
+  \label{tab:comparison_IMM}
+\end{table}
+
+From the numerical values of the error, it can be seen that the difference between the methods are small. This can be explained by observing the time evolution of the K gain, the power, and the rotational speed. In particular, the values of the gains in the IMM control cases are not far from the constant value case (see \autoref{fig:fig_K_IMM} and \autoref{tab:mean_std_IMM} with the error defined as \autoref{eq:K_error}), and so the generator torques are similar.
+\begin{equation}
+  \text{Error} = \frac{K_{IMM}-K_{GE}}{K_{GE}}\cdot 100 \left[-\right]
+  \label{eq:K_error}
+\end{equation}
+Furthermore, the high rotor inertia filters out the torque fluctuations and stabilizes the rotational speed around a similar value, as could be seen in \autoref{fig:fig_omega_IMM} where the rotor speeds for the two cases are reported alongside the estimation done by each of the filter run in the IMM, and the overall IMM estimation. 
+
+\begin{figure}[htb]
+  \centering
+  \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_10_27_16_20_52omega_IMM.eps}
+    \caption{K gains for the simulations with the IMM control}
+    \lebal{fig:fig_K_IMM}
+  \end{subfigure}
+  \\
+  \begin{subfigure}{0.65\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/2023_10_28_00_11_27fig_rotor_generator_power_dynamic.eps}
+    \caption{Input power from the generator and output power from the electrical generator. }
+    \lebal{fig:fig_power_IMM}
+  \end{subfigure}
+  \caption{\textcolor{red}{Write an overall caption for the two figures}}
+\end{figure}
+It could be seen that the generator output power in the case of the IMM control fluctuates whereas the other is constant. This difference is clearly given by the different generator's controller. On the other hand the two rotor power are almost equal, because the rotational speed in the two cases are very close each others. 
+
+\begin{table}[htb]
+  \caption{Mean value and standard deviation of the K gains in the simulations using the IMM}
+  \centering
+  \begin{tabular}{ccccc}
+    \toprule
+    Avg. time & WS & Mean & Std & Error \\
+    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\newton\meter\square\second}$ & $\mesunt{\newton\meter\square\second}$ & $\left[\%\right]$\\  \midrule
+    \input{macro/mean_std_IMM.tex}
+  \end{tabular}
+  \label{tab:mean_std_IMM}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{images/vectorial/2023_10_27_16_20_52omega_IMM_9.eps}
+  \caption{Comparison between the rotor rotational speed in the IMM and constant gain control cases for a WS of 9 $\mesunt{\meter\per\second}$. The figure shows also the estimation done by each filter run during the IMM and the combined estimation.}
+  \lebal{fig:fig_omega_IMM}
+\end{figure}
+
+\end{document}

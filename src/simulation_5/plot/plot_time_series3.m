@@ -1,5 +1,4 @@
-function plot_time_series2(plot_name,out_cell,series1,series2,y_line, ...
-  x_label,y_label,plot_title,scaling,leg1,leg2,date_fig, leg_loc)
+function plot_time_series2(plot_name,out_cell,series1,series2,y_line, x_label,y_label,plot_title,scaling,leg1,leg2,date_fig, leg_loc, num_col)
 
 parameters
 
@@ -16,8 +15,13 @@ for i = 1:wind.WS_len
 
   plot(out_cell{i}.(series1).Time(s_start:end), out_cell{i}.(series1).Data(s_start:end)/scaling, 'LineWidth',line_width*0.6,'Color',color(i),'LineStyle','--');
   plot(out_cell{i}.(series2).Time(s_start:end), out_cell{i}.(series2).Data(s_start:end)/scaling, 'LineWidth', line_width*1.2, 'Color', color(i));
-  leg{2*i - 1} = [leg1,' sim. ', num2str(i)];
-  leg{2*i} = [leg2,' sim. ', num2str(i)];
+  if rem(i, 2) == 1
+    txt = 'IMM';
+  else
+    txt = 'Const.';
+  end
+  leg{2*i - 1} = [leg1, ' ', num2str(wind.mean(i)), ' ' , txt ];
+  leg{2*i} = [leg2, ' ', num2str(wind.mean(i)), ' ' , txt ];
 
   y_min = min(out_cell{i}.(series1).Data(s_start:end)/scaling);
   y_max = max(out_cell{i}.(series1).Data(s_start:end)/scaling);
@@ -33,7 +37,7 @@ if strcmp(y_line, 'none') == 0
   yline(y_line/scaling, 'LineStyle', '-.', 'LineWidth', line_width, 'Color', color(i+1));
   leg{2*wind.WS_len + 1} = ['Rated'];
 end
-legend(leg, 'Location', leg_loc, 'FontSize', font_size, 'interpreter','latex','NumColumns',wind.WS_len);
+legend(leg, 'Location', leg_loc, 'FontSize', font_size*4/5, 'interpreter','latex','NumColumns', num_col);
 xlabel(x_label,'interpreter','latex')
 ylabel(y_label,'interpreter','latex')
 title(plot_title, 'Interpreter','latex')
@@ -41,6 +45,7 @@ grid on
 box on
 set(gca, 'FontSize', font_size)
 ylim([0.95*y_lim_min 1.05*y_lim_max])
+xlim([160 190])
 
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
