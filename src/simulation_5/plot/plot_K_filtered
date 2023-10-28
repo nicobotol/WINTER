@@ -1,4 +1,4 @@
-function plot_time_series2(plot_name,out_cell,series1,series2,y_line, x_label,y_label,plot_title,scaling,leg1,leg2,date_fig, leg_loc)
+function plot_K_filtered(plot_name,out_cell,series1,series2,y_line, x_label,y_label,plot_title,scaling,leg1,leg2,date_fig, leg_loc)
 
 parameters
 

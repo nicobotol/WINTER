@@ -39,6 +39,7 @@ From this simulation can be seen that the optimal gain is the one computed previ
 \textcolor{red}{Describe the conditions on the noise of the filter.}\\
 The basic idea behind the IMM is first to run a parallel bank of $N_j$ filters estimating the same quantity, each of them using a different model of the system. Later on, the overall estimation of interest is given by the sum of all filters' output weighted by their likelihood conditioned on the measurement. In principle these filters may be of any type, such as Unscented Kalman Filter (UKF), but for its simplicity the EKF has been adopted here. \\
 \subsubsection{Motivation of the IMM}
+
 \subsubsection{Steps of the implementation of the IMM}
 Here the procedure for implementing the IMM is reported, following the method proposed in \cite{kalman_based_IMM}. In particular the estimation of the quantity is given in 4 subsequently steps named filtering, mode probability updating, state combination and filter interaction. A graphical visualization of the method is given in \autoref{fig:IKK_schema}
 \begin{figure}[H]
@@ -56,7 +57,7 @@ Here the procedure for implementing the IMM is reported, following the method pr
   \text{Input: } u = T_{R}\\
   \text{Measured quantity: } y = \omega_{R} \\
   \text{Model of the plant: }  x_{k+1} = f(x_k, u_k, \nu_k) = x_k + \frac{(T_{R,k} - K_{opt,GE}x_k^2 - B_{eq}x_k)}{I_{eq}} + \nu_{k}\\
-  \text{Noise on the dynamic: } \nu_k \sim \mathcal{N}(0, Q) \\
+  \text{Noise on the dynamic: } \nu_k \sim \mathcal{N}(0, Q) \\ \label{eq:noise_Q}
   \text{Model of the measurement instrument: } y = h(x, u, \varepsilon) = \omega_{R} + \varepsilon \\
   \text{Noise on the measurement: } \varepsilon \sim \mathcal{N}(0, W)  \\
   \text{Covariance matrix of the process: } Q = \left[\left(\frac{\omega_{rated}}{50 \cdot3}\right)^2\right] =\left[0.0068^2\right]\\
@@ -131,10 +132,11 @@ In this last step, the filter with higher probabilities modify the estimates of 
 Then the filtering step is repeated, with the mixed state $\tilde{x}_k^{(j)+}$ and covariance $\tilde{P}_k^{(j)+}$ in the prediction.
 \end{enumerate}
 
-\subsubsection{Definition of the boundaries for the variable parameters}
+\subsubsection{Implementation details of the IMM}
+\textit{Definition of the boundaries for the variable parameters}\\
 As said before, the IMM requires a-priori definitions of the parameters of the models run in each filter. It could be easily understood how the choice of these parameters is crucial for letting the algorithm work properly. In fact if the true model is not in the considered set, then the algorithm will converge to the most similar one, that may be \textit{close enough} or not according to the design choice.\\ 
-In order to define these models, a Monte Carlo approach has been used, since the relationship between physical parameters and the $K_{opt,GE}$ involves also the use of a lookup table, which cannot be treated analytically as it is.\\
-The principle of the Monte Carlo method is to generate the distribution of a quantity by means of evaluating its value multiple times, each one with a different value of the parameters, taking them from a distribution.\textcolor{red}{write better the introduction to the Monte Carlo method}\\
+In order to define these models, a \acrfull{MC} approach has been used, since the relationship between physical parameters and the $K_{opt,GE}$ involves also the use of a lookup table, which cannot be treated analytically as it is.\\
+The principle of the \acrshort{MC} method is to generate the distribution of a quantity by means of evaluating its value multiple times, each one with a different value of the parameters, taking them from a distribution.\textcolor{red}{write better the introduction to the \acrshort{MC} method}\\
 The parameters that have to be taken from distributions in this case are: R, $\rho$, $V_0$, $\omega$, and $c_P$.\\
 The distribution of $V_0$ is defined as normal with mean the rated value and a reasonable standard deviation. \\
 For what concerns $R$, in principle one can use the $V_0$ distribution for computing the deflection of the blade, using a suitable model for the deformation. A simplified method employed here is to initially suppose a normal distribution of the radius with mean in the undeformed blade length and a chosen standard deviation, and then removing all the sample greater than the undeformed one, observing that the length cannot be increased but only decreased. This will produced a distribution without one of the tails. \\
@@ -168,17 +170,27 @@ The parameters and assumptions used for generating the distributions are reporte
   \begin{subfigure}{0.5\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{images/vectorial/2023_10_21_10_25_47K_GE_distribution}
-    \caption{Distribution of the $K_{opt,GE}$ obtained by the Monte Carlo simulation}
+    \caption{Distribution of the $K_{opt,GE}$ obtained by the \acrshort{MC} simulation}
     \label{fig:K_GE_distribution}
   \end{subfigure}
 \end{figure}
 
 Given the distribution of the $K_{opt,GE}$ gain it is possible to use it in order to design the IMM, by means of selecting a given number of gains between two values of the distributions such as the 1 and 99 percentile, $7.19 \, \cdot 10^7 \mesunt{\newton \meter \square \second}$ and $1.50 \cdot 10^7 \, \mesunt{\newton \meter \square \second}$ respectively. In this specific case, 5 values have been chosen, and their are identified by the purple dotted line in \autoref{fig:K_GE_distribution}. To be specific these values are: $\left[0.72, 0.91, 1.11, 1.30, 1.49 \right] \cdot 10^7 \, \mesunt{\newton\meter\square\second}$. 
 
+\textit{Definition of the uncertainty}\\
+In the EKF equations run in the IMM it is necessary to identify the noise on the process $\nu_k \sim \mathcal{N}(0, Q)$ (see \autoref{eq:noise_Q}). The definition of Q is again done using the \acrshort{MC} approach, with the same distributions already used in the $K_{opt,GE}$ case. Here the equation for the method is:
+\begin{equation}
+  \tilde{T}_R=\frac{\frac{1}{2}\tilde{\rho}\pi\tilde{\R}^2cp\left(\tilde{\omega}, \tilde{V}_0,\tilde{R}\right)\tilde{V}_0^3}{\tilde{\omega}}
+  \label{eq:T_R_distribution}
+\end{equation}
+where the \textit{tildes} stress the fact that the parameters come from a distribution. The computed variance of the noise is $Q = 2.3715\cdot10^{12} \' \mesunt{\square\newton\square\meter}$.
+
+\textit{Filtering}\\
+
 
 \subsubsection{Results of the IMM} 
 The first test done is the comparison between the IMM-based control and the one based on the constant gain for 5 constant WSs between the cut-in and the rated one (4, 6, 8, 10, and 11 $\mesunt{\meter\per\second}$). In particular, for each input wind velocity a couple of simulation has been run, with the same noise, in order to better compare them. \\
-In order to compare the control methods, the integral of the powers has been computed. It has been observed that the power in the two cases were quite similar, and so the choice of the time interval to be integrated was important to identify which method provides more energy. The results of teh tests are reported in \auotref{tab:comparison_IMM}. The first colum reports the time from the end of the simulation were the integration started, the second reports the wind speed of the tested case, the third, and fourth the energy extracted from the rotor with the two considered control techniques, while the fifth the error between them. The last three columns report the energy at the electrical output of the generator and the corresponding normalized error. The error has been computed as:
+In order to compare the control methods, the integral of the powers has been computed. It has been observed that the power in the two cases were quite similar, and so the choice of the time interval to be integrated was important to identify which method provides more energy. The results of teh tests are reported in \autoref{tab:comparison_IMM}. The first colum reports the time from the end of the simulation were the integration started, the second reports the wind speed of the tested case, the third, and fourth the energy extracted from the rotor with the two considered control techniques, while the fifth the error between them. The last three columns report the energy at the electrical output of the generator and the corresponding normalized error. The error has been computed as:
 \begin{equation}
   \text{Error} = \frac{E_{Const}-E_{IMM}}{E_{Const}}\cdot 100 \left[-\right]
   \label{eq:energy_error}
@@ -212,14 +224,14 @@ Furthermore, the high rotor inertia filters out the torque fluctuations and stab
     \centering
     \includegraphics[width=\textwidth]{images/vectorial/2023_10_27_16_20_52omega_IMM.eps}
     \caption{K gains for the simulations with the IMM control}
-    \lebal{fig:fig_K_IMM}
+    \label{fig:fig_K_IMM}
   \end{subfigure}
   \\
   \begin{subfigure}{0.65\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/vectorial/2023_10_28_00_11_27fig_rotor_generator_power_dynamic.eps}
     \caption{Input power from the generator and output power from the electrical generator. }
-    \lebal{fig:fig_power_IMM}
+    \label{fig:fig_power_IMM}
   \end{subfigure}
   \caption{\textcolor{red}{Write an overall caption for the two figures}}
 \end{figure}
@@ -241,7 +253,15 @@ It could be seen that the generator output power in the case of the IMM control 
   \centering
   \includegraphics[width=0.5\columnwidth]{images/vectorial/2023_10_27_16_20_52omega_IMM_9.eps}
   \caption{Comparison between the rotor rotational speed in the IMM and constant gain control cases for a WS of 9 $\mesunt{\meter\per\second}$. The figure shows also the estimation done by each filter run during the IMM and the combined estimation.}
-  \lebal{fig:fig_omega_IMM}
+  \label{fig:fig_omega_IMM}
+\end{figure}
+
+The effect of the filter on the gain value could be seen in \autoref{fig:filter_K}.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\columnwidth]{images/vectorial/2023_10_28_09_38_53fig_K.eps}
+  \caption{Value of the gain K obtained from the IMM before and after the application of a low pass filter}
+  \label{fig:filter_K}
 \end{figure}
 
 \end{document}
