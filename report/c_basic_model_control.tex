@@ -7,7 +7,7 @@ For what concerns the blade pitch control, the method implemented is firstly exp
 \subsection{Generator's torque reference synthesis based on rotor}\label{subsec:torque_reference}
 In this section it is described the main idea used for controlling the generated power. This approach is in some sense general, and in fact it will be firstly applied here and then also on \autoref{subsec:method_control_P_GE}. The difference between the two is that now (as presented in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}) the focus is on the power extracted from the resource while later it will be the power produced by the generator.
 
-\subsubsection{Generator's torque reference below rated \acrshort{WS}}\label{subsec:below_rotor}
+\subsubsection{Generator's torque reference below rated WS}\label{subsec:below_rotor}
 As said before, below the rated WS the objective is to ensure the maximum power extraction from the resource, and so working at the maximum power coefficient:
 \begin{gather}
     T_G=\frac{P_G}{\omega_G}=\frac{\frac{1}{2}\rho c_{P,MAX} \pi R^2 V_0^3}{\omega_G} \ \ \left[\si{\newton\per\meter}\right]
@@ -51,7 +51,7 @@ Since the $K_{opt}$ coefficient may be used either for computing the power and t
  \end{equation}
  With this expression a more fine tracking of the power is possible, and it is particularly suitable to strictly enforce a desired velocity to the machine. The drawback of the approach is the necessity to know the value of the damping coefficient, which in principle is something that may be not available. For this reason, in the tested cases that will be proposed later, \autoref{eq:T_G1} will be used, unless where explicitly specified.
 
-\subsubsection{Generator's torque reference above rated \acrshort{WS}}
+\subsubsection{Generator's torque reference above rated WS}
 Above rated WS the objective is to keep the constant rotational speed and so the command:
 \begin{equation}
     T_G = \frac{P_{R,rated}}{\omega_{rated}^G} = \frac{nP_{R,rated}}{\omega_{rated}^R}\ \ \left[\si{\newton\per\meter}\right]
@@ -131,8 +131,15 @@ To study the problem, a numerical method is employed. For a reasonably fine samp
 \end{figure}
 
 From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_damping} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provided a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Furthermore, since the minimization is performed with the Matlab's function $\texttt{fmincon}$, then the possible presence of local minima has to be taken into account by properly choosing the boundaries of the variables, that in this specific case have been set to $\lambda \in \left[7.5, 10\right]$ and $\theta\in\left[-5, 5\right] \si{\degree}$.  \\
-Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ may be still valid. The simplest choice for these parameters is their mean, but also another choice may be possible. For example, if one considers the wind speed distribution of the location where the turbine is going to be deployed, then the mean can be weighted by the probability that each WS occurs during the year. \\
+Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ may be still valid. The simplest choice for these parameters is their mean, but also another choice may be possible. For example, if one considers the wind speed distribution of the location where the turbine is going to be deployed, then the mean can be weighted by the probability that each WS occurs during the year. 
+
 When B=0 $\mesunt{\kilo\gram\square\meter\per\second}$ $\lambda=8.11$ and $\theta=0 \si{\degree}$ has been chosen, while for the case with damping $\lambda=7.70$ and $\theta=0 \si{\degree}$ has been chosen.\\
+
+The new value of the gain $K_{opt}$ becomes:
+\begin{equation}
+  K_{opt,GE} = \frac{\rho \, \pi \, R^5 \, cp_{GE}}{2\lambda_{GE}^3} = 1.10\cdot10^7 \ \ \mesunt{\newton\meter\square\second}
+  \label{eq:K_opt_GE}
+\end{equation}
 
 \subsubsection{Generator's torque reference above WS}
 Above rated WS, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study on the pitch angle has been done, meaning that for each WS, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, the higher the power extracted is).

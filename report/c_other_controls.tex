@@ -1,5 +1,5 @@
 \section{Turbine control considering model's uncertainty}\label{sec:c_other_controls}
-The control methods developed so far relay on the knowledge of the system by means of their parameters (structural and environmental) and models. In fact in the calculation of the gains $K_{opt}$ and $K_{opt,GE}$, considered in the torque reference generation, a single deterministic constant in time value of all the different terms in \autoref{eq:T_G2} \textcolor{red}{check this reference} have been used. In order to take into account possible variabilities of the parameters, for example due to the wrong estimation of some quantities or ageing, a different approach has to been used. This is particularly important nowadays because the turbines that are going to be set in these years will have to operate for at least 20 years, while the global worming will change the average environmental conditions. For example the increase of temperature would lead to a air density change of 0.5\% in the site presented in \cite{en12112038}.
+The control methods developed so far relay on the knowledge of the system by means of their parameters (structural and environmental) and models. In fact, in the calculation of the gains $K_{opt}$ and $K_{opt,GE}$ considered in the torque reference generation, a single deterministic constant in time value of all the different terms in \autoref{eq:T_G2} \textcolor{red}{check this reference} have been used. In order to take into account possible variabilities of the parameters, for example due to the wrong estimation of some quantities or ageing, a different approach has to been used. This is particularly important nowadays because the turbines that are going to be set in these years will have to operate for at least 20 years, while the global worming will change the average environmental conditions. For example the increase of temperature would lead to a air density change of 0.5\% in the site presented in \cite{en12112038}.
 
 One possibility is to use model-free methods, such as the extremum seeking, while another is to suppose that the system may evolve following a model within a finite set, without explicitly defining which, such as the \acrfull{IMM}. Another advantage of this last method is to be able to provide an estimation of the value of $K_{opt}$ to be used in the feedback line of the controller. 
 
@@ -34,11 +34,9 @@ For what concerns the last two simulations, the error committed in the below rat
 From this simulation can be seen that the optimal gain is the one computed previously, and each deviation produces a degradation of the power curve. On the other hand, an overestimation of the gain is less worse than an underestimation, because in the latter case the saturation of the generator's torque command and so the output power is not achieved.
 
 \subsection{Interactive Multiple Model}\label{subsec:IMM}
-\textcolor{red}{What does a filter is? }\\
-\textcolor{red}{What does a EKF is and which are its properties}\\
-\textcolor{red}{Describe the conditions on the noise of the filter.}\\
-The basic idea behind the IMM is first to run a parallel bank of $N_j$ filters estimating the same quantity, each of them using a different model of the system. Later on, the overall estimation of interest is given by the sum of all filters' output weighted by their likelihood conditioned on the measurement. In principle these filters may be of any type, such as Unscented Kalman Filter (UKF), but for its simplicity the EKF has been adopted here. \\
-\subsubsection{Motivation of the IMM}
+\cite{Kalman_Filter_and_Its_Application} states that the \textit{Kalman filter is an algorithm that uses a series of data observed over time, which contains noise and other inaccuracies, to estimates unknown variables with more accuracy.} In other words this algorithm uses the model of the dynamic system, the measurement from a sensor and their uncertainty to provide an estimation of the desired quantity better than what would be done by employing the solely measure or model.\\
+ A great disadvantage of the \acrfull{KF} is that it is only suitable for linear systems and linear measurement models. To overcome this issues the \acrfull{EKF} is an algorithms that extend the KF concepts in the nonlinear case. The basic idea behind it is to linearize the nonlinear dynamic around the status of the estimation at the first order of the Taylor expansion, and then apply the same equations of the linear \acrshort{KF}. The \acrfull{UKF} is another approach to solve the non-linearity issues and it is based on the second order Taylor expansion. This method will not be considered in the thesis, and it is cited here only for completeness.\\
+In general, all the described methods relay on the knowledge of the model of the system which, as said before, it is not always available. One possibility to try to solve this problem is given by the \acrshort{IMM}. This algorithm firstly runs a parallel bank of $N_j$ filters estimating the same quantity, each of them using a different model of the system and later on weights the filters' output by their likelihood conditioned on the measurement in order to provide the overall estimation of interest. In principle the filters run in parallel may be of any type (e.g. KF, EKF, UKF, or further ones), but for its simplicity the EKF has been adopted here. 
 
 \subsubsection{Steps of the implementation of the IMM}
 Here the procedure for implementing the IMM is reported, following the method proposed in \cite{kalman_based_IMM}. In particular the estimation of the quantity is given in 4 subsequently steps named filtering, mode probability updating, state combination and filter interaction. A graphical visualization of the method is given in \autoref{fig:IKK_schema}
@@ -51,28 +49,30 @@ Here the procedure for implementing the IMM is reported, following the method pr
 
 \textit{Adopted notation}\\
 \textcolor{red}{Coherence on the notation of subscript k}
-\begin{gather}
+\begin{multline}
   \text{State of the \textit{j-th} filter: } x^{(j)} = \omega_{R} \\
   \text{State of the IMM: } \hat{x} = \omega_R\\
   \text{Input: } u = T_{R}\\
   \text{Measured quantity: } y = \omega_{R} \\
-  \text{Model of the plant: }  x_{k+1} = f(x_k, u_k, \nu_k) = x_k + \frac{(T_{R,k} - K_{opt,GE}x_k^2 - B_{eq}x_k)}{I_{eq}} + \nu_{k}\\
-  \text{Noise on the dynamic: } \nu_k \sim \mathcal{N}(0, Q) \\ \label{eq:noise_Q}
+  \text{Model of the plant: }  x_{k+1} = f(x_k, u_k, \nu_k) = \\ \notag
+  = x_k + \frac{(T_{R,k} + \tilde{T}_{R,k} - K_{opt,GE}x_k^2 - B_{eq}x_k)}{I_{eq}}\\
+  \text{Noise on the dynamic: } \tilde{T}_{R,k} \sim \mathcal{N}(0, Q) \\ \label{eq:noise_Q}
   \text{Model of the measurement instrument: } y = h(x, u, \varepsilon) = \omega_{R} + \varepsilon \\
   \text{Noise on the measurement: } \varepsilon \sim \mathcal{N}(0, W)  \\
-  \text{Covariance matrix of the process: } Q = \left[\left(\frac{\omega_{rated}}{50 \cdot3}\right)^2\right] =\left[0.0068^2\right]\\
-  \text{Covariance matrix of the measurement: } W = \left[\left(\frac{\omega_{rated}}{10 \cdot3}\right)^2\right] = \left[0.0338^2\right]\\
+  \text{Covariance matrix of the process: } Q = 2.3715e+12 \, \mesunt{\square\newton\square \meter}\\
+  \text{Covariance matrix of the measurement: } W = \left[\left(\frac{\omega_{rated}}{10 \cdot3}\right)^2\right] = \left[0.0338^2\right] \, \mesunt{\square\newton\square \meter}\\
   \text{Covariance matrix of the state estimation for the \textit{j-th} filter, and for the IMM: } P^{(j)} \, P\\
   \text{Linearized model of the plant w.r.t. the states: } F = \frac{\partial f}{\partial x}(x, u, 0) = \left[-\frac{2\,K_{opt}}{I_{eq}}x - \frac{B_{eq}}{I_{eq}}\right]\\
   \text{Linearized model of the measurement w.r.t. the states: } H = \frac{\partial h}{\partial x}(x, u) = \left[1\right]\\
-  \text{Linearized model of the noise: } G = \frac{\partial f}{\partial \nu}(x, u, 0)\\
+  \text{Linearized model of the noise: } G = \frac{\partial f}{\partial \tilde{T}_R}(x, u, 0)=\left[\frac{1}{I_{eq}}\right]\\
   \text{Mode probability: } \mu^{(j)}\\
   \text{Likelihood of a filter: } \Lambda^{(j)}
-\end{gather}
+\end{multline}
 
 \begin{enumerate}
-\item \textit{Filtering}\\
-The EKF is based on two step, named prediction and update which will be here presented. The apex (j) stresses the fact that EKF algorithm has to be repeated for each of the $N_j$ filters. 
+\item \textit{Filtering}
+
+The EKF is based on two steps, named prediction and update which will be here presented. The apex (j) stresses the fact that EKF algorithm has to be repeated for each of the $N_j$ filters. It must be remembered that the KF/EKF work under the assumptions that the noises are uncorrelated, zero mean and Gaussian distributed \cite{Kalman_Filter_and_Its_Application}. 
 
 Prediction step: the state dynamic and covariance are propagated based on the model only 
 \begin{gather}
@@ -91,7 +91,7 @@ Update step: the state dynamic and covariance are modified based on a measuremen
 \end{gather}
 
 \item \textit{Mode probability updating}\\
-In this step the mode probabilities are updated from the filter likelihood (i.e. how likely the filter provides a good state estimate from the measurement). This is done assuming that the error residuals are Gaussianly distributed.  
+In this step the mode probabilities are updated from the filter likelihood (i.e. how likely the filter provides a good state estimate from the measurement). This is done assuming that the error residuals are Gaussian distributed.  
 \begin{gather}
   \text{Residual: } z_k^{(j)} = y_k - \hat{y}_k^{(j)}\\
   \text{Uncertainty on the residual: }S_k^{(j)} = H_k^{(j)} P_k^{(j)-} (H_k^{(j)})^T + R_k^{(j)}\\
@@ -180,13 +180,20 @@ Given the distribution of the $K_{opt,GE}$ gain it is possible to use it in orde
 \textit{Definition of the uncertainty}\\
 In the EKF equations run in the IMM it is necessary to identify the noise on the process $\nu_k \sim \mathcal{N}(0, Q)$ (see \autoref{eq:noise_Q}). The definition of Q is again done using the \acrshort{MC} approach, with the same distributions already used in the $K_{opt,GE}$ case. Here the equation for the method is:
 \begin{equation}
-  \tilde{T}_R=\frac{\frac{1}{2}\tilde{\rho}\pi\tilde{\R}^2cp\left(\tilde{\omega}, \tilde{V}_0,\tilde{R}\right)\tilde{V}_0^3}{\tilde{\omega}}
+  \tilde{T}_R=\frac{\frac{1}{2}\tilde{\rho}\pi\tilde{R}^2cp\left(\tilde{\omega}, \tilde{V}_0,\tilde{R}\right)\tilde{V}_0^3}{\tilde{\omega}}
   \label{eq:T_R_distribution}
 \end{equation}
-where the \textit{tildes} stress the fact that the parameters come from a distribution. The computed variance of the noise is $Q = 2.3715\cdot10^{12} \' \mesunt{\square\newton\square\meter}$.
+where the \textit{tildes} stress the fact that the parameters come from a distribution. The computed variance of the noise is $Q = 2.3715 \cdot 10^{12} \, \mesunt{\square\newton\square\meter}$.
 
-\textit{Filtering}\\
-
+\textit{Filter of the state and the K gain}\\
+In order to reduce the variability of the rotational speed estimations done by the parallel \acrshort{EKF}, the value in the feedback line is filtered using a low pass filter
+\begin{equation}
+  G(s) = \frac{1}{\frac{1}{25.1}s + 1}
+\end{equation}
+Also the value of the gain $K$ is low pass filtered with a similar filter
+\begin{equation}
+  G(s) = \frac{1}{\frac{1}{2.51}s + 1}
+\end{equation}
 
 \subsubsection{Results of the IMM} 
 The first test done is the comparison between the IMM-based control and the one based on the constant gain for 5 constant WSs between the cut-in and the rated one (4, 6, 8, 10, and 11 $\mesunt{\meter\per\second}$). In particular, for each input wind velocity a couple of simulation has been run, with the same noise, in order to better compare them. \\
@@ -263,5 +270,3 @@ The effect of the filter on the gain value could be seen in \autoref{fig:filter_
   \caption{Value of the gain K obtained from the IMM before and after the application of a low pass filter}
   \label{fig:filter_K}
 \end{figure}
-
-\end{document}
