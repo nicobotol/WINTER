@@ -116,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 5;       % choice of the model
+simulation.model = 6;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator
@@ -129,12 +129,14 @@ elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
-elseif simulation.model == 4 % extremum seeking controller
+  elseif simulation.model == 4 % extremum seeking controller
     simulation.mdl = 'winter_simulink_extremum_seeking_control'; 
 elseif simulation.model == 5 % extremum seeking controller
     simulation.mdl = 'winter_simulink_IMM_control'; 
-end
-simulation.stop_time = 300*ones(10,1); % max time to investigaste [s]
+elseif simulation.model == 6 
+    simulation.mdl = 'winter_simulink_with_PC_generator_control_Copy'; 
+  end
+simulation.stop_time = 50*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 1;        % 1 -> constant wind speed
@@ -152,7 +154,7 @@ simulation.type = 1;        % 1 -> constant wind speed
 simulation.plot_time = 250*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
@@ -245,7 +247,7 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [11];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = [6];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
@@ -287,7 +289,7 @@ if IMM.n_models > 1
 else
   IMM.Pi = 1;
 end
-IMM.W = 1e0*(omega_rated/10/3)^2; % measurement noise
+IMM.W = 1e0*(omega_rated*0.05/3)^2; % measurement noise
 IMM.Q = 2.3715e+12; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
