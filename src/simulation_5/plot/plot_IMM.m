@@ -9,7 +9,9 @@ if simulation.model == 5
     fig = figure('Color', 'w');hold on;box on;grid on;
     max_tmp = 0;  min_tmp = 1e9;
     for i=1:IMM.n_models
-      tmp = out_store{j}.model_x_est.Data(s_start:end, i);
+      tmp = zeros(1, size(out_store{1}.model_x_est.Time,1));
+      tmp(:,:) = out_store{j}.model_x_est.Data(1, i, :);
+      tmp = tmp(s_start:end);
       plot(time, tmp, 'LineWidth', line_width, 'DisplayName', ['Mod. ', num2str(i)]);
       max_tmp = max(max_tmp, max(tmp));
       min_tmp = min(min_tmp, min(tmp));
@@ -31,7 +33,9 @@ if simulation.model == 5
     tz_stop = 160.5; % [s]
     [~, sz_stop] = min(abs(out_store{j}.model_x_est.Time - tz_stop)); % sample from where to start
     for i=1:IMM.n_models
-      tmp = out_store{j}.model_x_est.Data(sz_start:sz_stop, i);
+      tmp = zeros(1, size(out_store{1}.model_x_est.Time,1));
+      tmp(:,:) = out_store{j}.model_x_est.Data(1, i, :);
+      tmp = tmp(sz_start:sz_stop);
       time_zoom = out_store{j}.model_x_est.Time(sz_start:sz_stop);
       plot(time_zoom, tmp, 'LineWidth', line_width, 'DisplayName', ['Mod. ', num2str(i)]);
     end
@@ -71,19 +75,25 @@ if simulation.model == 5
 %  | |_) | | | (_) | |_) | (_| | |_) | | | | |_| |_| |
 %  | .__/|_|  \___/|_.__/ \__,_|_.__/|_|_|_|\__|\__, |
 %  |_|                                          |___/ 
-  % for i=1:2:wind.WS_len
-  %   fig = figure('Color', 'w');hold on;grid on;
-  %   data = reshape(out_store{i}.mu.Data(:,1,s_start:end), IMM.n_models, []);
-  %   bar(time, data', 'stacked')
-  %   % for i=1:IMM.n_models
-  %   %   data = out_store{1}.mu.Data(i,1,s_start:end);
-  %   %   data = reshape(data, 1, size(data,3));
-  %   %   plot(time, data, 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
-  %   % end
-  %   xlabel('Time [s]')
-  %   ylabel('$\mu$ [-]')
-  %   legend('Location', 'NorthEast')
-  %   title('Probability')
-  % end
+  for i=1:2:wind.WS_len
+    fig = figure('Color', 'w');hold on;grid on;
+    data = reshape(out_store{i}.mu.Data(:,1,s_start:end), IMM.n_models, []);
+    bar(time, data', 'stacked')
+    % for i=1:IMM.n_models
+    %   data = out_store{1}.mu.Data(i,1,s_start:end);
+    %   data = reshape(data, 1, size(data,3));
+    %   plot(time, data, 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
+    % end
+    xlabel('Time [s]')
+    ylabel('$\mu$ [-]')
+    legend('Location', 'NorthEast')
+    title('Probability')
+  end
+
+
+figure(); hold on;
+plot(out_store{1}.T_R.Data);
+plot(out_store{1}.T_R_no_noise.Data)
+legend('Eff', 'No noise')
 
 end

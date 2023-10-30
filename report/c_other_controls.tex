@@ -199,7 +199,7 @@ Also the value of the gain $K$ is low pass filtered with a similar filter
 The first test done is the comparison between the IMM-based control and the one based on the constant gain for 5 constant WSs between the cut-in and the rated one (4, 6, 8, 10, and 11 $\mesunt{\meter\per\second}$). In particular, for each input wind velocity a couple of simulation has been run, with the same noise, in order to better compare them. \\
 In order to compare the control methods, the integral of the powers has been computed. It has been observed that the power in the two cases were quite similar, and so the choice of the time interval to be integrated was important to identify which method provides more energy. The results of teh tests are reported in \autoref{tab:comparison_IMM}. The first colum reports the time from the end of the simulation were the integration started, the second reports the wind speed of the tested case, the third, and fourth the energy extracted from the rotor with the two considered control techniques, while the fifth the error between them. The last three columns report the energy at the electrical output of the generator and the corresponding normalized error. The error has been computed as:
 \begin{equation}
-  \text{Error} = \frac{E_{Const}-E_{IMM}}{E_{Const}}\cdot 100 \left[-\right]
+  \text{Error} = \frac{E_{IMM}-E_{Const}}{E_{Const}}\cdot 100 \left[-\right]
   \label{eq:energy_error}
 \end{equation}
 

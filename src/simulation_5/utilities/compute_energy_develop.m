@@ -13,8 +13,8 @@ function energy = compute_energy_develop(out_store, simulation, IMM, wind)
       energy_R(i) = trapz(out_store{i}.P_R.Time(s_start:end), out_store{i}.P_R.Data(s_start:end));
     end
     for i=1:wind.WS_len/2
-      diff_energy(2*i - 1) = (energy_R(2*i) - energy_R(2*i - 1))./energy_R(2*i)*100;
-      diff_energy(2*i) = (energy_GE(2*i) - energy_GE(2*i - 1))./energy_GE(2*i)*100;
+      diff_energy(2*i - 1) = -(energy_R(2*i) - energy_R(2*i - 1))./energy_R(2*i)*100;
+      diff_energy(2*i) = -(energy_GE(2*i) - energy_GE(2*i - 1))./energy_GE(2*i)*100;
     end
     % write a latex table on a .txt file. In the first column there should be the value insiede IMM.sigma_gain, in the second the odd values in energy, while in the third the even values in energy
     fprintf(fileID, '\\multirow{%d}{*}{%.2f}', length(wind.mean)/2, vector(j));
