@@ -252,9 +252,9 @@ wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 7*ones(5,1);        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 7*ones(5,1);         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 6*ones(2,1);        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 6*ones(2,1);         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(2, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -281,6 +281,8 @@ I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side
 
 % parameters for the IMM control
 IMM.K_vector = [0.7178, 0.9117, 1.1055, 1.2994, 1.4932]*1e7;
+IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
+% IMM.K_vector = linspace(0.5, 4, 20)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 1;           % number of states
 IMM.prob_transition = 0.99; % probability of transition
@@ -300,6 +302,15 @@ IMM.sigma_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value
 IMM.sigma_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
 IMM.enable = 1; % enables or disables the IMM controller/constant gain
 IMM.sigma_gain = kron(1.0*[1 1 1 1 1], [1 1]); % gain to scale the sigmas
+IMM.freq_theta = 0.5;
+IMM.phase_theta = 2*pi*rand();
+IMM.freq_rho = 0.5;
+IMM.phase_rho = 2*pi*rand();
+IMM.freq_R = 0.5;
+IMM.phase_R = 2*pi*rand();
+
+% generate a random number between 0 and 2pi
+
 
 % Initialize the models
 P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);

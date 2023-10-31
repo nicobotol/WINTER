@@ -92,8 +92,8 @@ if simulation.model == 5
 
 
 figure(); hold on;
-plot(out_store{1}.T_R.Data);
-plot(out_store{1}.T_R_no_noise.Data)
+plot(out_store{1}.T_R);
+plot(out_store{1}.T_R_no_noise)
 legend('Eff', 'No noise')
 
 end
