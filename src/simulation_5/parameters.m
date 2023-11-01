@@ -278,10 +278,12 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 I_eq = (rotor.I + generator.I/gearbox.ratio^2); % equiv. inertia [kgm^2]
 B_eq = (rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
+dt = simulation.time_step_H;
 
 % parameters for the IMM control
 IMM.K_vector = [0.7178, 0.9117, 1.1055, 1.2994, 1.4932]*1e7;
 IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
+% IMM.K_vector =  generator.K_opt_GE;
 % IMM.K_vector = linspace(0.5, 4, 20)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 1;           % number of states
@@ -291,7 +293,7 @@ if IMM.n_models > 1
 else
   IMM.Pi = 1;
 end
-IMM.W = 1e0*(omega_rated*0.05/3)^2; % measurement noise
+IMM.W = 1e-10;%1e0*(omega_rated*0.01/3)^2; % measurement noise
 IMM.Q = 2.3715e+12; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate

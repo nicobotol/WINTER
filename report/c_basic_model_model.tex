@@ -211,7 +211,7 @@ It could be seen that the aerodynamical torque $T_R$ enters as a disturb in the 
 %    \label{fig:iq_control}
 % \end{figure}
 The friction has been considered $ 0 \, \mesunt{\kilo\gram\square\meter\per\second}$ because it has been already considered in the equivalent one of the transmission. \\
- Once the inverter switching frequency is defined \textcolor{blue}{where can I find some references justifying this choice? pag 112 reference}, then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
+ Once the inverter switching frequency is defined (for example $f_{inverter}=1\, \mesunt{\kilo\hertz}$ is in a range reasonably close to the one reported in \cite{ABB_manual}), then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:PMSM_control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
  \begin{gather}
  \uptau_{c}=\frac{\frac{1}{f_{inverter}}}{2}=\frac{\frac{1}{1000}}{2}=500 \ \ \mesunt{\micro \second}
  \end{gather}

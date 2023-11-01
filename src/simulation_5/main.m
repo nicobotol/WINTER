@@ -49,9 +49,9 @@ for i = 1:wind.WS_len
       wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i),      wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
       [generator] = run_K_opt_sensitivity(generator, i);
     case 12 % wind speed ramp and enable or disable the IMM
-      wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i), wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
+      % wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i), wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
       % wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, stop_time);
-      % wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [IMM] = run_IMM_comparison(IMM, i);
 
   end
