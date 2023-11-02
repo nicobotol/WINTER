@@ -247,8 +247,8 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [6 6];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
-wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
+wind.mean = kron([4 6 8], [1 1]);%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.turbulence = 1.0*ones(10,1); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
@@ -260,10 +260,12 @@ wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ram
 switch simulation.type
   case {1, 3, 5, 7, 8, 9, 10, 12 }
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6, 11}
+  case {2, 6}
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 
+  case 11
+    wind.WS_len = 7;
 end
 
 % Struct where to save the simulations results
@@ -293,7 +295,7 @@ if IMM.n_models > 1
 else
   IMM.Pi = 1;
 end
-IMM.W = 1e-10;%1e0*(omega_rated*0.01/3)^2; % measurement noise
+IMM.W =  1e0*(omega_rated*0.01/3)^2; % measurement noise
 IMM.Q = 2.3715e+12; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
