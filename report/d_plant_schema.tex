@@ -60,7 +60,7 @@ dot/.default = 4pt % size of the circle diameter
   \draw [->] (11) -- node {$\omega_R$} (3);
   \draw [-] (11) -- node {} (13);
   \draw [->] (1.160) ++(1.15,0) -- node {$T_R$} (2.165);
-  \draw [-] (2) -| node {} (12); 
+  \draw [-] (2) -| node[pos=0.65] {$\omega_R$} (12); 
   \draw [-] (12) -- node {} (13);
   \draw [->] (13) |- node {} (1.175);
   \draw [->] (3) -> node {$\omega_G$} (4);
@@ -72,12 +72,12 @@ dot/.default = 4pt % size of the circle diameter
   \draw [->] (25) |- node {} (6.160);
   \draw [->] (21) |- node {} (6.180);
   \draw [->] (6) -- node {$T_G^*$} (24);
-  \draw [->] (24) -- node {$I_q^*$} (7);
-  \draw [->] (7) -> node[pos=0.65] {$P_G$} (8);
+  \draw [->] (24) -- node {$I_q^*, \, P_{G}$} (7);
+  \draw [->] (7) -> node[pos=0.65] {$P_{GE}$} (8);
   % \draw [-] (18) |- node {} (19);
   \draw [-] (18) -- node {} (20);
   \draw [->] (19) |- node {$T_G$} (2.200);
-  \draw [->] (8) -> node {$P_{GE}$} (9);
+  \draw [->] (8) -> node {} (9);
   \draw [-] (20) -- node {} (21);
   \draw [-] (22) -- node {} (23);
   \draw [-] (23) |- node {} (19);

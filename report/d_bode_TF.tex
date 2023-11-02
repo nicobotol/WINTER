@@ -1,0 +1,60 @@
+\centering
+\tikzstyle{block} = [draw, fill=white, rectangle, 
+    minimum height=2.5em, minimum width=3em]
+\tikzstyle{sum} = [draw, fill=white, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+%   _   _       _                          _       _           _ 
+%  | \ | | ___ | |_   _ __ ___  __ _ _   _| | __ _| |_ ___  __| |
+%  |  \| |/ _ \| __| | '__/ _ \/ _` | | | | |/ _` | __/ _ \/ _` |
+%  | |\  | (_) | |_  | | |  __/ (_| | |_| | | (_| | ||  __/ (_| |
+%  |_| \_|\___/ \__| |_|  \___|\__, |\__,_|_|\__,_|\__\___|\__,_|
+%                              |___/                             
+    \node [input, name=input] {};
+    \node [block, right of=input] (G_c) {$G_c$};
+    \node [block, right of=G_c] (Yq) {$Y_{iq}$};
+    \node [output, right of=Yq] (output) {};
+    \node [left of=input] {Not regulated};
+    
+    \draw [draw,->] (input) -- node {$u$} (G_c);
+    \draw [->] (G_c) -- node {} (Yq);
+    \draw [->] (Yq) -- node {$y$} (output);
+
+    %   ____                  _       _             
+    %  |  _ \ ___  __ _ _   _| | __ _| |_ ___  _ __ 
+    %  | |_) / _ \/ _` | | | | |/ _` | __/ _ \| '__|
+    %  |  _ <  __/ (_| | |_| | | (_| | || (_) | |   
+    %  |_| \_\___|\__, |\__,_|_|\__,_|\__\___/|_|   
+    %             |___/                             
+    \node [input, below of=input] (input3) {};
+    \node [block, right of=input3] (R3) {$R$};
+    \node [output, right of=R3] (output3) {};
+    \node [left of=input3] {Regulator};
+
+    \draw [draw,->] (input3) -- node {$u$} (R3);
+    \draw [->] (R3) -- node {$y$} (output3);
+
+    %   ____                  _       _           _ 
+    %  |  _ \ ___  __ _ _   _| | __ _| |_ ___  __| |
+    %  | |_) / _ \/ _` | | | | |/ _` | __/ _ \/ _` |
+    %  |  _ <  __/ (_| | |_| | | (_| | ||  __/ (_| |
+    %  |_| \_\___|\__, |\__,_|_|\__,_|\__\___|\__,_|
+    %             |___/                             
+    \node [input, below of=input3] (input2) {};
+    \node [block, right of=input2] (R2) {$R$};
+    \node [block, right of=R2] (G_c2) {$G_c$};
+    \node [block, right of=G_c2] (Yq2) {$Y_{iq}$};
+    \node [output, right of=Yq2] (output2) {};
+    \node [left of=input2] {Regulated};
+
+    \draw [draw,->] (input2) -- node {$u$} (R2);
+    \draw [->] (R2) -- node {} (G_c2);
+    \draw [->] (G_c2) -- node {} (Yq2);
+    \draw [->] (Yq2) -- node {$y$} (output2);
+
+
+
+\end{tikzpicture}

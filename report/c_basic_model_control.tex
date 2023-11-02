@@ -204,19 +204,26 @@ For its simplicity the chosen controller is a \acrshort{PID} one, and the design
      \label{tab:tab_pid_tuning}
  \end{table}
  
- The Bode diagram of the open loop system without any controller (i.e. taking into account the shaft mechanical dynamic, the generator's electrical dynamic, and the inverter time delay), the open loop system with the controller and the controller itself are reported in \autoref{fig:fig_bode_generator}. The bode plot of the close loop is shown in \autoref{fig:fig_bode_cl}. Given G(s) the direct transfer function (i.e. from input to output) and H(s) the feedback one, then the close loop transfer function is given by:
+ The Bode diagram of the open loop system without any controller (i.e. taking into account the shaft mechanical dynamic, the generator's electrical dynamic, and the inverter time delay), the open loop system with the controller, and the controller itself (see \autoref{fig:d_bode_TF}) are reported in \autoref{fig:fig_bode_generator}.
+  \begin{figure}[htb]
+    \input{d_bode_TF.tex}
+    \caption{Block diagram of the q-axis current control of a PMSM}
+    \label{fig:d_bode_TF}
+  \end{figure}
+  \begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_10_2_16_06_13fig_bode_generator.eps}
+    \caption{Bode plots of the open loop system, the controller and the controlled open loop system}
+    \label{fig:fig_bode_generator}
+   \end{figure}
+  
+ The bode plot of the close loop is shown in \autoref{fig:fig_bode_cl}. Given G(s) the direct transfer function (i.e. from input to output) and H(s) the feedback one, then the close loop transfer function is given by:
  \begin{gather}
      G_{CL}=\frac{G(s)}{1+G(s)H(s)}=\frac{R_{iq}(s)G_c(s)Y_{iq}(s)}{1+R_{iq}(s)G_c(s)Y_{iq}(s)}
      \label{eq:close_loop_TF}
  \end{gather}
  where $R_{iq}(s)$, $G_c(s)$, $Y_{iq}(s)$, have the meaning of \autoref{subsec:PMSM_control}, and $H(s)=1$ since there is no transfer function on the feedback line.
  
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_10_2_16_06_13fig_bode_generator.eps}
-    \caption{Bode plots of the open loop system, the controller and the controlled open loop system}
-    \label{fig:fig_bode_generator}
- \end{figure}
 
  \begin{figure}[htb]
     \centering
