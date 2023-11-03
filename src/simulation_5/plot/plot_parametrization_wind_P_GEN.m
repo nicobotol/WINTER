@@ -20,10 +20,10 @@ for i=1:wind.WS_len
   wind_resampled = out_cell{i}.wind.Data;
 
     if rem(i, 2)==1
-      sign = '-';
+      sign = 'x'; % sign = '-';
       col = color(1);
     else
-      sign = '-'; 
+      sign = 'o'; % sign = '-';
       col = color(2);
     end
       plot(wind_resampled(s_start:end), out_cell{i}.(series).Data(s_start:end)/scaling, sign,'LineWidth', line_width, 'Color', col, 'HandleVisibility','off', 'MarkerSize', marker_size);

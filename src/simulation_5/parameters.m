@@ -116,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 5;       % choice of the model
+simulation.model = 3;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator
@@ -136,10 +136,10 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
   end
-simulation.stop_time = 250*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 2000*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 12;        % 1 -> constant wind speed
+simulation.type = 10;        % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -158,7 +158,7 @@ simulation.print_figure = 0;% enables or disable plot's autosaving
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 250*ones(10,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 150*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -247,14 +247,14 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = kron([4 6 8], [1 1]);%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = [4 4 6 6 8 8 10 10];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = 1.0*ones(10,1); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 6*ones(2,1);        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 6*ones(2,1);         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(2, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 4*ones(2,1);        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = 10*ones(2,1);         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type

@@ -14,11 +14,11 @@ for i=1:wind.WS_len
   series_length = out_cell{i}.(series).TimeInfo.Length;
   wind_resampled = zeros(series_length, 1);
   wind_resampled = interp1(out_cell{i}.wind.Time,out_cell{i}.wind.Data,   out_cell{i}.(series).Time);
-  % if i==1
-  %   sign = 'o';
-  % else
-  %   sign = 'x'; 
-  % end
+%   if i==1
+%     sign = 'o';
+%   else
+%     sign = 'x'; 
+%   end
   sign = '-';
   plot(wind_resampled(s_start:end), out_cell{i}.(series).Data(s_start:end)/scaling, sign,  'LineWidth', line_width, 'Color', colors_vect(i,:));
   leg{i} = ['Sim. ', num2str(i)];
