@@ -121,21 +121,13 @@ simulation.model = 3;       % choice of the model
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator
                             % power
-                            % 4 -> extremum seeking controller
-                            % 5 -> IMM controller
 if simulation.model == 1    % without power controller
   simulation.mdl = 'winter_simulink_without_PC'; 
 elseif simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
-  elseif simulation.model == 4 % extremum seeking controller
-    simulation.mdl = 'winter_simulink_extremum_seeking_control'; 
-elseif simulation.model == 5 % IMM controller
-    simulation.mdl = 'winter_simulink_IMM_control'; 
-elseif simulation.model == 6 
-    simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
-  end
+end
 simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
@@ -149,8 +141,6 @@ simulation.type = 10;        % 1 -> constant wind speed
                             % 8 -> with gain scheduling or stall regulation
                             % 9 -> with different pitching dynamics
                             % 10 -> comparison with K_opt and K_opt_GE
-                            % 11 -> sensitivity analysis on the gains
-                            % 12 -> test IMM or constant gain
 simulation.plot_time = 10*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
@@ -204,10 +194,8 @@ generator.iq_omegaBP = 7.5e2;%1.5e3; % Iq controller crossover freq. [rad/s]
 generator.TG_pm = 70;  % phase margin for the speed controller [°]
 generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
-generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
-% generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
-generator.K_opt_sensitivity = [0.85 0.9 1 1.1 1.15]; % gain for the sensitivity analysis on K_opt
-generator.gain_K_opt = 1; % default value for the k_opt 
+% generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
+generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
 % generator.design_TG = 0; % 0 enables manual design of speed controller
@@ -247,25 +235,23 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [4 4 6 6 8 8 10 10 V0_rated V0_rated];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
-wind.turbulence = 1.0*ones(10,1); % 10 min std (i.e. turbulence) [m/s]
+wind.mean = [4 4 6 6 8 8 10 10 V0_rated V0_rated];           % 10 minutes mean wind speed [m/s]
+wind.turbulence = [1.0 1.0 1.0]; % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4*ones(2,1);        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 10*ones(2,1);         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = [10 10];        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = [12 12];         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(2, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
-  case {1, 3, 5, 7, 8, 9, 10, 12 }
+  case {1, 3, 5, 7, 8, 9, 10 }
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6}
+  case {2, 6  }
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 
-  case 11
-    wind.WS_len = 7;
 end
 
 % Struct where to save the simulations results
@@ -277,58 +263,9 @@ rotor.B = rotor.K_opt*omega_rated*(1 - generator.eta); % [kgm^2/s]
 
 % Equivlent inertia and damping, referred to the rotor side of the
 % transmission
-I_eq = (rotor.I + generator.I/gearbox.ratio^2); % equiv. inertia [kgm^2]
-B_eq = (rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
+I_eq = rotor.I + generator.I/gearbox.ratio^2; % equiv. inertia [kgm^2]
+B_eq = 0*(rotor.B + generator.B/gearbox.ratio^2); % equiv. damping [kgm^2/s]
 I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side [kgm^2]
-dt = simulation.time_step_H;
-
-% parameters for the IMM control
-IMM.K_vector = [0.7178, 0.9117, 1.1055, 1.2994, 1.4932]*1e7;
-IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
-% IMM.K_vector =  generator.K_opt_GE;
-% IMM.K_vector = linspace(0.5, 4, 20)*1e7;
-IMM.n_models = size(IMM.K_vector, 2);           % number of models
-IMM.states_len = 1;           % number of states
-IMM.prob_transition = 0.99; % probability of transition
-if IMM.n_models > 1
-  IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
-else
-  IMM.Pi = 1;
-end
-IMM.W =  1e0*(omega_rated*0.01/3)^2; % measurement noise
-IMM.Q = 2.3715e+12; %1e-10*(omega_rated/50/3)^2; % process noise
-IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
-IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
-IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
-IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
-IMM.sigma_R = (4/3); % assuming a  deflection of 4 meters
-IMM.sigma_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value 
-IMM.sigma_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
-IMM.enable = 1; % enables or disables the IMM controller/constant gain
-IMM.sigma_gain = kron(1.0*[1 1 1 1 1], [1 1]); % gain to scale the sigmas
-IMM.freq_theta = 0.5;
-IMM.phase_theta = 2*pi*rand();
-IMM.freq_rho = 0.5;
-IMM.phase_rho = 2*pi*rand();
-IMM.freq_R = 0.5;
-IMM.phase_R = 2*pi*rand();
-
-% generate a random number between 0 and 2pi
-
-
-% Initialize the models
-P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
-x_est_initial = zeros(IMM.states_len, IMM.n_models);  
-mu_initial = zeros(IMM.states_len, IMM.n_models)';  
-for j = 1:IMM.n_models
-  model{j}.x_est = IMM.x_est; % state
-  model{j}.P_est = IMM.P_est; % covariance
-  model{j}.mu = 1/IMM.n_models; % mode probability
-  x_est_initial(1:IMM.states_len, j) = model{j}.x_est; 
-  mu_initial(j, 1) = model{j}.mu;
-  P_est_initial(1:IMM.states_len, 1:IMM.states_len, j) = model{j}.P_est; 
-end
-
 
 % Transform the struct of parameters into buses for simulink
 % rotor_bus_info = Simulink.Bus.createObject(rotor); 
