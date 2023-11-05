@@ -50,7 +50,7 @@ dot/.default = 4pt % size of the circle diameter
   \node [dot=1pt] (17) at (4.5, -2.5) {};
   \node [dot=1pt] (18) at (10.5, -4.25) {};
   \node [dot=1pt] (19) at (4.5, -0.75) {};
-  \node [dot=1pt] (20) at (10.5, -5.25) {};
+  \node [dot=1pt] (20) at (9, -5.25) {};
   \node [dot=1pt] (21) at (1.25, -5.25) {};
   \node [dot=1pt] (22) at (10, -4) {};
   \node [dot=1pt] (23) at (10.5, -4) {};
@@ -72,10 +72,10 @@ dot/.default = 4pt % size of the circle diameter
   \draw [->] (25) |- node {} (6.160);
   \draw [->] (21) |- node {} (6.180);
   \draw [->] (6) -- node {$T_G^*$} (24);
-  \draw [->] (24) -- node {$I_q^*, \, P_{G}$} (7);
+  \draw [->] (24) -- node {$I_q^*$ } (7);
   \draw [->] (7) -> node[pos=0.65] {$P_{GE}$} (8);
   % \draw [-] (18) |- node {} (19);
-  \draw [-] (18) -- node {} (20);
+  \draw [-] (7) -- node[pos=0.5] {$P_{G}$} (20);
   \draw [->] (19) |- node {$T_G$} (2.200);
   \draw [->] (8) -> node {} (9);
   \draw [-] (20) -- node {} (21);

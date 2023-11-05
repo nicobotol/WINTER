@@ -85,7 +85,7 @@ if exist('lookup_pitch_P_GE.mat', 'file')
   cp_GE = rated_values_P_GE(2);     % max power coefficients
   omega_rated_GE = rated_values_P_GE(3);     % rotor rotatioanal speed
   lambda_GE_no_B = rated_values_P_GE_no_B(1); % TSR for the maximization of P_GE
-  cp_GE_no_B = rated_values_P_GE(2);     % max power coefficients
+  cp_GE_no_B = rated_values_P_GE_no_B(2);     % max power coefficients
   omega_rated_GE_no_B = rated_values_P_GE_no_B(3);     % rotor rotatioanal speed
 else
    disp(['Attention: pitch angle values may not have been computed. Run P_GE_maximization.m first']);
@@ -205,7 +205,7 @@ generator.TG_pm = 70;  % phase margin for the speed controller [°]
 generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
 generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
-% generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
+generator.K_opt_GE_no_B = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
 generator.K_opt_sensitivity = [0.85 0.9 1 1.1 1.15]; % gain for the sensitivity analysis on K_opt
 generator.gain_K_opt = 1; % default value for the k_opt 
 generator.design = 0;       % 0 enables manual design of the controller

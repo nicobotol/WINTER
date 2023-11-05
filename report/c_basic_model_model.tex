@@ -14,10 +14,10 @@ This part deals with the generation of a realistic \acrshort{WS} time series. Th
 Calling \acrshort{Deltat} $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of \acrshort{fs} $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time \acrshort{T} $\left[\si{\second}\right]$ is \acrshort{Ns}. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
 Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum \cite{Aerodynamics_of_wind_turbines}:
 \begin{equation}
-    PSD(f) = \frac{\mathcal{I} ^2V_{10}\mathbb{L} }{\left(1+1.5\frac{f \ \mathbb{L} }{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
+    PSD(f) = \frac{\mathcal{I} ^2V_{10}\mathcal{L} }{\left(1+1.5\frac{f \ \mathcal{L} }{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
     \label{eq:PSD}
 \end{equation}
-where \acrshort{I}$=\sigma_{10}/V_{10}$ is the turbulence intensity, \acrshort{sigma10} is the wind standard deviation $\left[\si{\meter\per\second}\right]$, $f$ is the frequency $\left[\si{\hertz}\right]$, \acrshort{V10} is the 10 minutes average wind speed, \acrshort{L} is the length scale (said $h \ \left[\si{\meter}\right]$ the height above ground, $\mathbb{L}=20h$ for $h<30 \ \left[\si{\meter}\right]$, and  $\mathbb{L}=600 \ \left[\si{\meter}\right]$ otherwise).\\
+where \acrshort{I}$=\sigma_{10}/V_{10}$ is the turbulence intensity, \acrshort{sigma10} is the wind standard deviation $\left[\si{\meter\per\second}\right]$, $f$ is the frequency $\left[\si{\hertz}\right]$, \acrshort{V10} is the 10 minutes average wind speed, \acrshort{L} is the length scale (said $h \ \left[\si{\meter}\right]$ the height above ground, $\mathcal{L}=20h$ for $h<30 \ \left[\si{\meter}\right]$, and  $\mathcal{L}=600 \ \left[\si{\meter}\right]$ otherwise).\\
 A wind series that fulfils the prescribed \acrshort{PSD} is:
 \begin{gather}
     u(t) = V_{10}+\sum_{j=1}^{N_s}\sqrt{\frac{2PSD(f_j)}{T}}\cos{(\omega_jt-\varphi_j)} \ \ \left[\si{\meter \per \second}\right]
@@ -88,9 +88,20 @@ In this configuration the turbine is assumed to be direct drive, but a general n
 \subsection{Dynamical equation}
 \begin{figure}
   \centering
-  \input{d_mech_equation_block.tex}
-  \caption{Logical block representing the mechanical equation}
-  \label{fig:d_mech_equation_block}
+  \begin{subfigure}{0.6\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/transmission_schema.eps}
+    \caption{Torque convention schema}
+    \label{fig:transmission_convention}
+  \end{subfigure}
+  
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+      \input{d_mech_equation_block.tex}
+      \caption{Logical block}
+    \label{fig:d_mech_equation_block}
+  \end{subfigure}
+  \caption{Torque convention of the logical block representing the mechanical equation}
 \end{figure}
 The dynamical equation block solves the Newton's law written on the rotor side of the transmission:
 \begin{equation}
@@ -155,7 +166,7 @@ In this frame the equations of the machine are:
   \omega_{me}\Lambda_{mg}=u_q+L_{s}i_d\omega_{me}+L_{s}\frac{di_q}{dt}+R_{s}i_q
   \label{eq:q_axis_eq}
 \end{gather}
-where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{p} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\mesunt{\radian \per \second}$), \acrshort{Ls} is the inductance and \acrshort{Rs} the resistance of the stator, \acrshort{Lambdamg} is the flux linkage of the permanent magnets.\\
+where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\mesunt{\radian \per \second}$), \acrshort{Ls} is the inductance and \acrshort{Rs} the resistance of the stator, \acrshort{Lambdamg} is the flux linkage of the permanent magnets.\\
 By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
   p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L_{s}\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R_{s}(i_d^2 + i_q^2)

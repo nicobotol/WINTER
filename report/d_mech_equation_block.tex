@@ -1,8 +1,8 @@
 \tikzstyle{output} = [coordinate]
 
-\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex', scale=0.3]
   
-  \node (adc) [draw,minimum size=24mm,align=center] {Mechanical \\ equation};
+  \node (adc) [draw,minimum size=18mm,align=center] {Mechanical \\ equation};
   
   \path (adc.north west)--(adc.south west) foreach \j in {1,...,2} {  coordinate [pos=1/3*\j] (y\j)};
   

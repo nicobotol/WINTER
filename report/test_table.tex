@@ -13,32 +13,15 @@
 
 \begin{document}
 
-\section{Ciao}
 \begin{table}[htb]
-  \caption{Comparison of the energy extracted from the resource and at the generator's output for the use of IMM based or fixed gain controllers, and their error}
   \centering
-  \begin{tabular}{cc|ccc|ccc}
-    \toprule
-    % write R above the third and fourth column and GE above the last two
-    Integration & & \multicolumn{3}{c|}{Rotor} & \multicolumn{3}{c}{Generator Electrical output}\\
-    time & WS & IMM & Const. & Err. & IMM & Const. & Err.\\
-    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$& $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$ \\
-    \midrule
-    \input{macro/energy.tex}
-  \end{tabular}
-  \label{tab:comparison_IMM}
-\end{table}
-
-\begin{table}[htb]
-  \caption{Mean value and standard deviation of the K gains in the simulations using the IMM}
-  \centering
+  \caption{Parameters for the control of the generator below rated WS}
   \begin{tabular}{ccccc}
     \toprule
-    Avg. time & WS & Mean & Std & Error \\
-    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\newton\meter\square\second}$ & $\mesunt{\newton\meter\square\second}$ & $\left[\%\right]$\\  \midrule
-    \input{macro/mean_std_IMM.tex}
+    & $\lambda_{GE} \, \left[-\right]$ & $\theta \, \mesunt{\radian}$ & $cp_{GE} \, \left[-\right]$ & $K_{opt,GE} \, \mesunt{\newton\meter\square\second}$ \\ \midrule
+    B=0 & 8.11 & 0 & 0.4645 & $9.462 \cdot 10^6$\\
+    $B\ne0$ & 7.70 & 0 & 0.4641 & $11.01 \cdot 10^6$\\ \bottomrule
   \end{tabular}
-  \label{tab:mean_std_IMM}
 \end{table}
 
 \end{document}

@@ -3,17 +3,22 @@
 
 \begin{document}
 
-\begin{figure}[htb]
+\begin{figure}
   \centering
-  \begin{subfigure}{0.49\textwidth}
+  \begin{subfigure}{0.6\columnwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_10_27_16_20_52omega_IMM.eps}
+    \includegraphics[width=\columnwidth]{images/transmission_schema.eps}
+    \caption{Torque convention schema}
+    \label{fig:transmission_convention}
   \end{subfigure}
-  \\
-  \begin{subfigure}{0.65\textwidth}
+  
+  \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_10_27_16_40_34fig_rotor_generator_power_dynamic.eps}
+      \input{d_mech_equation_block.tex}
+      \caption{Logical block}
+    \label{fig:d_mech_equation_block}
   \end{subfigure}
+  \caption{Torque convention of the logical block representing the mechanical equation}
 \end{figure}
 
 \end{document}

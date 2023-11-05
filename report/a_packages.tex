@@ -112,5 +112,14 @@
 \newcommand{\mesunt}[1]{\left[\si{#1}\right]}
 \newcommand{\rpm}{\left[\text{rpm}\right]}
 
+% for subscripts in the headers
+\makeatletter
+% \textsubscript defined equivalent to \textsuperscript in latex.ltx
+\DeclareRobustCommand*\textsubscript[1]{%
+  \@textsubscript{\selectfont#1}}
+\def\@textsubscript#1{%
+  {\m@th\ensuremath{_{\mbox{\fontsize\sf@size\z@#1}}}}}
+\makeatother
+
 % gains of the controllers
 \input{macro/macro}

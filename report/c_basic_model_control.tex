@@ -131,15 +131,25 @@ To study the problem, a numerical method is employed. For a reasonably fine samp
 \end{figure}
 
 From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_damping} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provides a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Furthermore, since the minimization is performed with the Matlab's function $\texttt{fmincon}$, then the possible presence of local minima has to be taken into account by properly choosing the boundaries of the variables, that in this specific case have been set to $\lambda \in \left[7.5, 10\right]$ and $\theta\in\left[-5, 5\right] \si{\degree}$.  \\
-Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ may be still valid. The simplest choice for these parameters is their mean, but also others may be possible. For example, if one considers the wind speed distribution of the location where the turbine is going to be deployed, then the mean can be weighted by the probability that each WS occurs during the year. 
+Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ it is supposed to be still valid. The simplest choice for these parameters is their mean, but also more articulated values may be possible, such as considering the wind speed distribution of the location where the turbine is going to be deployed and then consider the probability that each WS occurs during the year.\\
+With this assumption in mind, the numerical values of the parameters and the $K_{opt,GE}$ gains are computed with the \autoref{eq:K_opt_GE} and the numerical values are the ones reported in \autoref{tab:tab_k_opt_GE}, for both the assumptions on the damping. The subscription \textit{GE} stresses the fact that the gains are computed considering the power at the generator side rather than the rotor one.
 
-When B=0 $\mesunt{\kilo\gram\square\meter\per\second}$ $\lambda=8.11$ and $\theta=0 \si{\degree}$ has been chosen, while for the case with damping $\lambda=7.70$ and $\theta=0 \si{\degree}$ has been chosen.\\
-
-The new value of the gain $K_{opt}$ becomes:
 \begin{equation}
   K_{opt,GE} = \frac{\rho \, \pi \, R^5 \, cp_{GE}}{2\lambda_{GE}^3} = 1.10\cdot10^7 \ \ \mesunt{\newton\meter\square\second}
   \label{eq:K_opt_GE}
 \end{equation}
+
+\begin{table}[htb]
+  \centering
+  \caption{Parameters for the control of the generator below rated WS}
+  \begin{tabular}{ccccc}
+    \toprule
+    & $\lambda_{GE} \, \left[-\right]$ & $\theta \, \mesunt{\radian}$ & $cp_{GE} \, \left[-\right]$ & $K_{opt,GE} \, \mesunt{\newton\meter\square\second}$ \\ \midrule
+    B=0 & 8.11 & 0 & 0.4645 & $9.462 \cdot 10^6$\\
+    $B\ne0$ & 7.70 & 0 & 0.4641 & $11.01 \cdot 10^6$\\ \bottomrule
+  \end{tabular}
+  \label{tab:tab_k_opt_GE}
+\end{table}
 
 \subsubsection{Generator's torque reference above WS}
 Above rated WS, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study on the pitch angle has been done, meaning that for each WS, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, the higher the power extracted is).
@@ -171,7 +181,7 @@ Once the desired torque is generated according to the desired control law as des
     \label{eq:T_G4}
 \end{equation}
 where $\Lambda_{mg}$ is the permanent magnets flux $\left[\si{\weber}\right]$ and p is the number of pole pairs of the electrical machine.\\
-Then the current is stabilized with the proper controller and finally the \autoref{eq:T_G4} is backwards applied to transform again $I_q$ into $T_G$. The feedback scheme has the structure reported in \autoref{fig:d_torque_control}.
+Then the current is stabilized with the proper controller and finally the \autoref{eq:T_G4} is backwards applied to transform again $I_q$ into $T_G$. For its simplicity the chosen controller is a \acrfull{PID} one. The feedback scheme has the structure reported in \autoref{fig:d_torque_control}.
 
 \begin{figure}[htb]
     \centering
@@ -180,24 +190,24 @@ Then the current is stabilized with the proper controller and finally the \autor
     \label{fig:d_torque_control}
 \end{figure}
 
-The transfer functions inside the loop are the regulator, the delay of the electronic necessary to the machine and the generator itself. They are modelled as follow:
+The transfer functions inside the loop are the regulator \acrshort{Riq}, the delay of the electronic necessary to the machine \acrshort{Gc} and the generator itself \acrshort{Yiq}. They are modelled as follow:
 \begin{gather}
-    R_{iq}=k_P + \frac{k_I}{s}+k_Ds=k_I\left( \frac{k_P}{k_I} + \frac{1}{s} + \frac{k_D}{k_I}s \right) = \frac{k_I}{s}\left(1+s\uptau_P\right)\left(1+s\uptau_I\right)
+    R_{iq}=k_{p,iq} + \frac{k_{i,iq}}{s}+k_{d,iq}s=k_{i,iq}\left( \frac{k_{p,iq}}{k_{i,iq}} + \frac{1}{s} + \frac{k_{d,iq}}{k_{i,iq}}s \right) = \frac{k_{i,iq}}{s}\left(1+s\uptau_P\right)\left(1+s\uptau_I\right)
     \label{eq:R_iq}\\
     G_c = \frac{1}{1+\uptau_cs}
     \label{eq:G_c}\\
     Y_{iq} = -\frac{B_{eq} + J_{eq}s}{L_sJ_{eq}s^2+\left(R_sJ_{eq} + L_s B_{eq}\right)s + R_sB_{eq} + \frac{3}{2}(p\Lambda_{mg})^2}
     \label{eq:Y_iq}
 \end{gather}
-Where $k_P$ and $k_I$ are the proportional and integral gain respectively, $\uptau_c$ is a time delay introduced by the power electronic converter, and $J_{eq}$ and $B_{eq}$ are the inertia and damping of the drivetrain respectively, for example as expressed in \autoref{eq:mech_eq}.\\
-For its simplicity the chosen controller is a \acrshort{PID} one, and the design method exposed in \autoref{sec:e_pid_tuning} is used on the open loop function $G(s) = G_c(s)Y_{iq}(s)$, after having specified the crossover frequency of $\omega_{cp}=750 \, \mesunt{\radian\per\second}$, which is less than $\frac{1}{6}$ of the switching one. This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
- The tuning of the PID controller has been done following the procedures described in the \autoref{sec:e_pid_tuning}. The resulting gains ($k_p$, $k_i$, $k_d$), the frequency of the added pole and the phase margin $\varphi$ are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \texttt{pidtune}, that may be used to have at least the order of magnitude of the expected values.
+Where \acrshort{kpiq}, \acrshort{kiiq}, \acrshort{kdiq} are the proportional, integral and derivative gain respectively, \acrshort{tauc} is a time delay introduced by the power electronic converter, and $J_{eq}$ and $B_{eq}$ are the inertia and damping of the drivetrain respectively, for example as expressed in \autoref{eq:mech_eq}.\\
+The design method used for tuning the PID controller is exposed in \autoref{sec:e_pid_tuning}. The chosen crossover frequency is \acrshort{omegacp}$=750 \, \mesunt{\radian\per\second}$, which is less than $\frac{1}{6}$ of the switching one. This design choice is intended to limit the maximum changing rate of the control signal that may be followed by the controller. Moreover, to avoid the propagation of the high frequency dynamics, a further pole is added at a frequency one decade greater than the crossover one. \\
+ The values of the gains ($k_{p,iq}$, $k_{i,iq}$, $k_{d,iq}$), the frequency of the added pole and the phase margin \acrshort{phiiq} are reported in \autoref{tab:tab_pid_tuning} alongside the same values computed from the Matlab frequency \texttt{pidtune}, that may be used to have at least the order of magnitude of the expected values.
 \begin{table}[htb]
     \caption{Gains for the PMSM machine controller}
      \centering
      \begin{tabular}{cccccc}
      \toprule
-          & $k_p$ & $k_i$ $\mesunt{\per\second}$ & $k_d$ $\mesunt{\second}$ & $\uptau_{d1} \ \mesunt{\second}$ & $\varphi \mesunt{\degree}$\\ \midrule
+          & $k_{p,iq}$ & $k_{i,iq}$ $\mesunt{\per\second}$ & $k_{d,iq}$ $\mesunt{\second}$ & $\uptau_{d1} \ \mesunt{\second}$ & $\varphi \mesunt{\degree}$\\ \midrule
          manual & \GenkpMacroMan & \GenkiMacroMan & \GenkdMacroMan & \GentaudOneMacroMan & \GenMarginMan\\
          \texttt{pidtune} & \GenkpMacroAuto & \GenkiMacroAuto & \GenkdMacroAuto & \GentaudOneMacroAuto & \GenMarginAuto\\ \bottomrule
      \end{tabular}
@@ -217,7 +227,7 @@ For its simplicity the chosen controller is a \acrshort{PID} one, and the design
     \label{fig:fig_bode_generator}
    \end{figure}
   
- The bode plot of the close loop is shown in \autoref{fig:fig_bode_cl}. Given G(s) the direct transfer function (i.e. from input to output) and H(s) the feedback one, then the close loop transfer function is given by:
+ The bode plot of the close loop \acrshort{GCL} is shown in \autoref{fig:fig_bode_cl}. Given \acrshort{G} the direct transfer function (i.e. from input to output) and \acrshort{H} the feedback one, then the close loop transfer function is given by:
  \begin{gather}
      G_{CL}=\frac{G(s)}{1+G(s)H(s)}=\frac{R_{iq}(s)G_c(s)Y_{iq}(s)}{1+R_{iq}(s)G_c(s)Y_{iq}(s)}
      \label{eq:close_loop_TF}
@@ -251,14 +261,14 @@ As suggested in \cite{Aerodynamics_of_wind_turbines} and \cite{SMILDEN2016386}, 
     \label{fig:pitch_control}
 \end{figure}
 
-The core part of the controller is a \acrfull{PI} action driven by the speed error defining the pitch angle. A saturation block on the pitch angle is used to impose the mechanical constraints, so to limit the blade rotation: $\theta \in \left[0, 90\right] \si{\degree}$. This threshold prevents that a negative speed error produces a pitching towards stalling.
+The core part of the controller is a \acrfull{PI} action driven by the speed error defining the pitch angle. A saturation block on the pitch angle is used to impose the mechanical constraints, so to limit the blade rotation within $\theta \in \left[0, 90\right] \si{\degree}$. The lower threshold prevents that a negative speed error produces a pitching towards stalling.
 
 The tuning of this PI is not straightforward because the system to be controlled is not linear, and so the standard techniques cannot be implemented. In particular, at high wind speeds the aerodynamic loads are more sensitive to changes in the angles of attack, and so the change in pitch should be limited \cite{Aerodynamics_of_wind_turbines}. A possible solution is to treat the turbine as a linear varying-parameter system and schedule the gain during the operation of the mechanism, for example based on one state of the system itself, assuming that this state changes slowly compared to the controlled dynamic. This is an advantageous choice, because the approach simplifies the description of the system and does not require a lot of measurements. A frequently made choice is to use the pitch angle itself to schedule the gains, \cite{Olimpo_Anaya‐Lara}, \cite{DTU_Wind_Energy_E_0028}, \cite{NREL_5MW_reference}. In \autoref{subsec:gain_poly} a gain scheduling law proposed in the literature is reported, while \autoref{subsec:gain_schdeuling_aero} briefly describes how to compute the gains starting from the aerodynamic. In this latter case, the procedure is initially validate on the NREL 5 MW in \autoref{subsec:gain_schdeuling_NREL5MW} and then applied to the DTU 10 MW in \autoref{subsec:gain_schdeuling_DTU10MW}.\\
 As final remark, \cite{Olimpo_Anaya‐Lara} notes that using the actual pitch angle as scheduling variable violates the assumption that the scheduling parameter evolves slower compared to the controlled dynamic, and so it may not behave as expected in the vicinity of the rated WS, which is where the sensitivity to the gain changes are stronger.
 
 
-\subsubsection{Simplified approach from literature}\label{subsec:gain_poly}       
-Specifically for the DTU 10 MW, \cite{Olimpo_Anaya‐Lara} proposes the schedule based on the polynomials in \autoref{eq:k_p_poly} and \ref{eq:k_i_poly}:
+\subsubsection{Simplified approach from literature for the control of the blade pitch angle}\label{subsec:gain_poly}       
+Specifically for the DTU 10 MW, \cite{Olimpo_Anaya‐Lara} proposes the schedule based on the polynomials in \autoref{eq:k_p_poly} and \ref{eq:k_i_poly} for \acrshort{kp} and \acrshort{ki} respectively:
 \begin{gather}
     k_p(\theta)=1.000-2.541 \ \theta-7.814 \ \theta^2+46.281 \ \theta^3-59.871 \ \theta^4
     \label{eq:k_p_poly}\\
@@ -278,17 +288,17 @@ Another option could have been to schedule the pitch based on the \acrshort{WS} 
 
 As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference}, and \cite{ris_r_1500} applying a linearization of the \autoref{eq:mech_eq} and further mathematical manipulations that are out of the scope of this thesis,  the gains may be expressed in close form as :
 \begin{gather}
-    k_P(\theta) = \frac{2J_{eq}\omega_{rated}\zeta_{\Phi}\omega_{\Phi\eta}}{\frac{1}{n}\left(-\frac{dP(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
+    GK(\theta) = \frac{1}{1+\frac{\theta}{\theta_K}} \label{eq:GK}\\
+    k_P(\theta) = \frac{2J_{eq}\omega_{rated}\zeta_{\Phi}\omega_{\Phi\eta}}{\frac{1}{n}\left(-\frac{dP_R(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
     \label{eq:kp}\\
-    k_I(\theta) = \frac{J_{eq}\omega_{rated}\omega_{\Phi\eta}^2}{\frac{1}{n}\left(-\frac{dP(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
-    \label{eq:ki}\\
-    GK(\theta) = \frac{1}{1+\frac{\theta}{\theta_K}} \label{eq:GK}
+    k_{i,iq}(\theta) = \frac{J_{eq}\omega_{rated}\omega_{\Phi\eta}^2}{\frac{1}{n}\left(-\frac{dP_R(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
+    \label{eq:ki}
 \end{gather}
-where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, \textit{n} is the gear ratio, $\zeta_{\Phi}$ and $\omega_{\Phi\eta}$ are the damping ratio and the resonant frequency of the second order dynamic response of the idealized PI-controlled rotor-speed error (source \cite{NREL_5MW_reference}). \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6\mesunt{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power w.r.t. the pitch angle $-\frac{dP}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
+where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, \textit{n} is the gear ratio, \acrshort{zetaphi} and \acrshort{omegaphieta} are the damping ratio and the resonant frequency of the second order dynamic response of the idealized PI-controlled rotor-speed error (source \cite{NREL_5MW_reference}), and \acrshort{thetaK} is a parameter related to the pitch sensitivity and will be further discussed in \autoref{subsec:gain_schdeuling_NREL5MW}. \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6\mesunt{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power w.r.t. the pitch angle $-\frac{dP_R}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
 The frozen wake BEM is implemented in two steps, then repeated for all the \acrshort{WS} between the rated and the cut out one. In the first one, the standard BEM presented in \autoref{subsec:BEM_algorithm} is applied on the blade, considering that it is pitched as to produce the rated power (i.e. the pitch angle is the one scheduled in \autoref{subsec:pitch_map}). In this step the induction coefficients \textit{a} and \textit{$a_{prime}$} found are stored. In the second step, the previously described BEM is applied but the pitch angle is changed on a set around the optimal one, while the induction coefficients are kept constant (i.e. they are not computed with the iterative procedure). The power is then computed for each pitch angle and finally the power derivative with respect to the pitch angle is obtained applying the finite difference method.
 
 \subsubsection{Validation of the procedure on the NREL 5MW}\label{subsec:gain_schdeuling_NREL5MW}
-In order to validate the procedure, the gains are initially computed for the NREL 5MW turbine because more intermediate steps are available in literature \cite{NREL_5MW_reference}.\\
+In order to validate the procedure, the gains are initially computed for the NREL 5 MW turbine because more intermediate steps are available in literature \cite{NREL_5MW_reference}.\\
 The derivative of the power computed at the expected pitch angle is  reported in \autoref{fig:fig_dPdtheta}, alongside its interpolation done by a first and second order polynomials. It could be seen that the second order approximation seems to better follow the trend of the computed points with respect to the first order one. 
 \begin{figure}[htb]
     \centering
@@ -297,7 +307,7 @@ The derivative of the power computed at the expected pitch angle is  reported in
     \label{fig:fig_dPdtheta}
 \end{figure}
 
-The interpolations are used to find two important parameters, called $\theta_{K}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0}$. The first is the blade-pitch angle at which the pitch sensitivity is twice the value at the rated operating point, while the second is the pitch sensitivity at 0 pitch (i.e. the intercept of the interpolation). For the turbine under investigations, these two parameters are $\theta_K=10.25 \mesunt{\degree}$ and  $\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -29.15 \mesunt{\mega\watt\per\radian}$, while the ones reported in the report are $\theta_K=6.3 \mesunt{\degree}$ and  $-\frac{dP(\theta)}{d\theta}\vert_{\theta=0} = -25.52\mesunt{\mega\watt\per\radian}$ (for the linear case). These values seem to be reasonably close each other.\\ 
+The interpolations are used to find two important parameters, called $\theta_{K}$ and  $-\frac{dP_R(\theta)}{d\theta}\vert_{\theta=0}$. The first is the blade-pitch angle at which the pitch sensitivity is twice the value at the rated operating point, while the second is the pitch sensitivity at 0 pitch (i.e. the intercept of the interpolation). For the turbine under investigations, these two parameters are $\theta_K=10.25 \mesunt{\degree}$ and  $\frac{dP_R(\theta)}{d\theta}\vert_{\theta=0} = -29.15 \mesunt{\mega\watt\per\radian}$, while the ones reported in the report are $\theta_K=6.3 \mesunt{\degree}$ and  $-\frac{dP_R(\theta)}{d\theta}\vert_{\theta=0} = -25.52\mesunt{\mega\watt\per\radian}$ (for the linear case). These values seem to be reasonably close each other.\\ 
 Once all the terms in \autoref{eq:ki}, \ref{eq:kp}, and \ref{eq:GK} are available and the gain scheduling can be determined, and the comparison reported in \autoref{fig:fig_gain_pitch}.
 \begin{figure}[htb]
     \centering
@@ -312,7 +322,7 @@ The procedure described in the \autoref{subsec:gain_schdeuling_NREL5MW} is appli
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/fig_torque_gain_DTU10MW.eps}
-    \caption{Aerodynamic torque gain for the DTU 10 MW}
+    \caption{Aerodynamic torque gain for the DTU 10 MW as in \cite{DTU_Wind_Energy_E_0028}}
     \label{fig:fig_torque_gain_DTU10MW}
 \end{figure}
 

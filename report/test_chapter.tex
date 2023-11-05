@@ -1,8 +1,15 @@
 % main
-\documentclass[11pt, a4paper]{article}
+\documentclass[11pt, a4paper, draft]{article}
 \input{a_packages.tex}
 \input{b_glossary.tex}
 \begin{document}
-\input{c_other_controls.tex}
-\end{equation}
+
+\begin{multicols}{2}
+  \printnoidxglossaries
+\end{multicols}
+\acrshort{L}
+\acrshort{I}
+% \input{c_basic_model_model.tex}
+\clearpage
+\printbibliography
 \end{document}
