@@ -116,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 3;       % choice of the model
+simulation.model = 5;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator
@@ -136,10 +136,10 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
   end
-simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
-simulation.time_step_H=1e-2;% time step for the mechanical part [s]
+simulation.stop_time = 250*ones(10,1); % max time to investigaste [s]
+simulation.time_step_H=5e-3;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 10;        % 1 -> constant wind speed
+simulation.type = 12;        % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -151,7 +151,7 @@ simulation.type = 10;        % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 10*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 250*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
@@ -247,7 +247,7 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [4 4 6 6 8 8 10 10 V0_rated V0_rated];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = [6 6];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = 1.0*ones(10,1); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
@@ -295,7 +295,7 @@ if IMM.n_models > 1
 else
   IMM.Pi = 1;
 end
-IMM.W =  1e0*(omega_rated*0.01/3)^2; % measurement noise
+IMM.W = 1e0*(omega_rated*0.01/3)^2; % measurement noise
 IMM.Q = 2.3715e+12; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate

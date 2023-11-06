@@ -44,7 +44,7 @@ dot/.default = 1pt % size of the circle diameter
     \node [block, below of=prop_gain, node distance=1.5cm] (int_gain) {$k_{i,P}$};
     \node [block, right of=int_gain, node distance=1.3cm] (integrator) {$\frac{1}{s}$};
     \node [sum, right of=prop_gain, node distance=2.1cm] (sum2) {};
-    \node [block, right of=sum2] (iq_gain) {$\frac{2T_G^*}{3p\Lambda_{mg}}$};
+    \node [block, right of=sum2] (iq_gain) {$\frac{2}{3p\Lambda_{mg}}$};
     \node [block, right of=iq_gain, node distance=2.2cm,align=center] (current_controller) {$I_q / U_q$ \\ controllers};
     \node [block, right of=current_controller, node distance=2.2cm] (PMSM) {$PMSM$};
     \node [output, right of=PMSM] (output) {};
