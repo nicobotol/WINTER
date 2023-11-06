@@ -15,25 +15,36 @@
   \hfill
   \begin{subfigure}{0.5\columnwidth}
     \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_2_16_53_37fig_omega_param.eps}
-    \caption{Rotational speed}
-    \label{fig:omega_sim_I}
-  \end{subfigure}
-  \vskip\baselineskip
-  \begin{subfigure}{0.5\columnwidth}
-    \centering
     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_3_15_58_03fig_rotor_power_param.eps}
     \caption{Power extracted from the wind by the rotor}
     \label{fig:power_sim_I}
   \end{subfigure}
+
+  \vskip\baselineskip
+
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_2_16_53_37fig_omega_param.eps}
+    \caption{Rotational speed without $B_{eq}$ on the torque reference line}
+    \label{fig:omega_sim_I}
+  \end{subfigure}
   \hfill
+  \begin{subfigure}{0.5\columnwidth}
+    \centering
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_3_18_06_59fig_omega_param.eps}
+    \caption{Rotor rotational speed with $B_{eq}$ on the torque reference line}
+    \label{fig:omega_full_fedback}
+  \end{subfigure}
+
+  \vskip\baselineskip
+
   \begin{subfigure}{0.5\columnwidth}
     \centering
     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_2_16_53_26fig_pitch_param.eps}
     \caption{Pitch angle}
     \label{fig:pitch_sim_I}
   \end{subfigure}
-  \vskip\baselineskip
+  \hfill
   \centering
   \begin{subfigure}{0.5\columnwidth}
     \centering
@@ -41,18 +52,14 @@
     \caption{Generator torque}
     \label{fig:torque_sim_I}
   \end{subfigure}
+
   \vskip\baselineskip
+
   \begin{subfigure}{0.7\columnwidth}
     \centering
     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_2_16_50_31power_check.eps}
     \caption{Power check: harvested by rotor $P_R$, incoming mech. generator $P_G$, stored in inertia $P_I$, lost in damping $P_D$ }
     \label{fig:power_check_sim_I}
-  \end{subfigure}
-  \begin{subfigure}{0.7\columnwidth}
-    \centering
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_3_18_06_59fig_omega_param.eps}
-    \caption{Rotor rotational speed with $B_{eq}$ on the torque reference line}
-    \label{fig:omega_full_fedback}
   \end{subfigure}
 
   \caption{Results of simulation number I}

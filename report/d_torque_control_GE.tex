@@ -40,8 +40,8 @@ dot/.default = 1pt % size of the circle diameter
     \node [sum, right of=k_opt, node distance=1.3cm] (sum3) {};
     \node [record,minimum size=1cm,fill=white!30,draw,right of=sum3, node distance=1.3cm] (saturation) {};
     \node [sum, right of=saturation, node distance=1.5cm] (sum) {};
-    \node [block, right of=sum, node distance=1.3cm] (prop_gain) {$k_p$};
-    \node [block, below of=prop_gain, node distance=1.5cm] (int_gain) {$k_i$};
+    \node [block, right of=sum, node distance=1.3cm] (prop_gain) {$k_{p,P}$};
+    \node [block, below of=prop_gain, node distance=1.5cm] (int_gain) {$k_{i,P}$};
     \node [block, right of=int_gain, node distance=1.3cm] (integrator) {$\frac{1}{s}$};
     \node [sum, right of=prop_gain, node distance=2.1cm] (sum2) {};
     \node [block, right of=sum2] (iq_gain) {$\frac{2T_G^*}{3p\Lambda_{mg}}$};

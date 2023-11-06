@@ -133,7 +133,8 @@ Then the filtering step is repeated, with the mixed state $\tilde{x}_k^{(j)+}$ a
 \end{enumerate}
 
 \subsubsection{Implementation details of the IMM}
-\textit{Definition of the boundaries for the variable parameters}\\
+% \textit{Definition of the boundaries for the variable parameters}\\
+\paragraph{Definition of the boundaries for the variable parameters}
 As said before, the IMM requires a-priori definitions of the parameters of the models run in each filter. It could be easily understood how the choice of these parameters is crucial for letting the algorithm work properly. In fact if the true model is not in the considered set, then the algorithm will converge to the most similar one, that may be \textit{close enough} or not according to the design choice.\\ 
 In order to define these models, a \acrfull{MC} approach has been used, since the relationship between physical parameters and the $K_{opt,GE}$ involves also the use of a lookup table, which cannot be treated analytically as it is.\\
 The principle of the \acrshort{MC} method is to generate the distribution of a quantity by means of evaluating its value multiple times, each one with a different value of the parameters, taking them from a distribution.\textcolor{red}{write better the introduction to the \acrshort{MC} method}\\

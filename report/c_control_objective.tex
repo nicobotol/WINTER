@@ -1,8 +1,7 @@
 \section{WT controllers and their objectives} \label{sec:control_objective}
-\textcolor{red}{Riscrivere introduzione}\\
-In this section of the work first of all the operating regions of a WT are presented and then the two main controllers are discussed. The first one is in charge of limiting the power extracted from the resource, when needed, by acting on the pitch angle, while the second ensures the correct rotational speed of the rotor in order to fullfil the requirements of the specific operational region.
+This section of the work gives an overview of the different controllers present in a WT and their motivation. First of all, it is highlighted that the controllers act on different time scales and so they are stacked in multiple hierarchical levels. In a second part, the different standard operating regions of a WT are presented. These are wind ranges in which the turbine is controlled to extract the power in a specific way, and are usually defined according to the maximum power that can be extracted with respect to the nominal. In the third part, three approaches to implement the power limitations are described. Finally the yaw and electrical generator controllers are briefly discussed. The former will not be taken into account in the thesis, while the latter will be deeply studied in following sections of the work.  
 
-\subsection{Control objectives}
+\subsection{Hierarchical levels of control objectives}
 There are different conceptual levels of control for the wind turbines, each of them with a specific target, as could be seen in \autoref{fig:control_levels} (source \cite{9535421}).
 \begin{figure}[htb]
   \centering
@@ -26,7 +25,7 @@ The further identified region in \cite{5874598} and region I in \cite{10-MW_Dire
 \subsection{Power control}
 As could be seen in \autoref{eq:power}, the mechanical power scales with the cubic of the wind speed, meaning that operating at the maximum power coefficient ($c_{P, max}$) may quickly lead to exceeding the maximum load for which the blades are designed and the power manageable by the different subsystems. In order to limit these loads, control actions have to be taken. The most common approaches go under the families of stall regulation and the variable-speed pitch regulation, as reported in \cite{Aerodynamics_of_wind_turbines}.
 
-\subsubsection{Stall regulation}\label{subsec:stall_regulation_theory}
+\subsubsection{Power control based on stall regulation}\label{subsec:stall_regulation_theory}
 The \acrshort{WTs} employing this method are the simplest ones from the mechanical point of view and in fact it was used in the first generators. Nowadays it is no more chosen in the MW-size turbines, even though \cite{Grasso_2016} reports that it may be still used in some small and medium kW turbines because their construction require a reduced number of components and sensors and hence reduce design complexity and costs. This simplicity is due to the fact that the blades are bolted to the hub and cannot be pitched once they are setted. Furthermore the electrical generator often employed is the robust asynchronous machine, requiring an almost constant rotational speed.
 
 From the aerodynamic point of view, when the incoming wind increases its speed, then the \acrshort{AOA} decreases reducing the lift \textit{l} and increasing the drag \textit{d}, leading to a lower tangential load, which is given by:
@@ -38,13 +37,13 @@ From the aerodynamic point of view, when the incoming wind increases its speed, 
 The construction has the drawback of being rigid since the maximum power reduction is limited by the initial positioning of the blades, and their re-setting is possible only by unbolting and repositioning them.\\
 Furthermore, whenever the generator stops to produce a resisting torque, it is possible that the stalling would not be effective enough to avoid the acceleration of the drivetrain, increasing the risks of breakage for the components. In that case aerodynamic safety systems are activated, for example by turning the outer part of the blades of 90$\si{\degree}$ w.r.t. the rotor plane. 
 
-\subsubsection{Pitch regulation with constant rotor rotational speed}
+\subsubsection{Power control based on pitch regulation with constant rotor rotational speed}
 This control mechanism is in some way an extension of the previous one, since the pitch angle can be actively controlled along the blade while the rotor rotation speed is kept constant. This method allows the use of an asynchronous machine while limits the power when the incoming tends to grow too much. \\
  The pitching mechanism may be implemented with different kinds of mechanical systems, such as hydraulic pistons, hydraulic motors, or electrical motors. \\
 Since the dynamic of the wind fluctuations are faster than the ones of the blade pitching system, then it is possible that the pitch regulated WT behaves like a stall regulated \acrshort{WT} for some time and so the output power locally exceeds the rated one.\\
 Neither this kind of machines are nowadays employed.
 
-\subsubsection{Variable-speed pitch regulation}
+\subsubsection{Power control based on pitch regulation with variable rotor rotational speed}
 This is the most common type nowadays, and the \acrshort{WTs} investigated in this work belongs to this kind. Their working philosophy in partial load regime is to vary the rotor speed in order to keep $\lambda = \lambda_{MAX}$ in \autoref{eq:TSR}, and consequently $c_p=c_{p,max}$. On the other hand, in the full load region the rotational speed is kept constant at $\omega = \omega_{rated}$ while the power is limited by acting on the pitch angle, and so on the $c_P$ in the relation $c_P(\lambda, \theta)$. The switching between the regions may be done using some smoothing functions. \\
 Since the rotational speed of the rotor is not fixed anymore, as it was in the stall regulated machine, here the electrical generator should be able to operate in a wide range of velocities. Such kind of machines cannot be directly connected to the electrical grid, because the produced voltage has a frequency proportional to the operating speed, which is not constant. The problem may be solved by employing an electrical conditioning interface firstly rectifying the voltage, and then converting the DC to AC with desired frequency. \\
 In addition to the classification done in \ref{subsec:mech_pow_and_pow_coeff} (i.e. feather/stall) another one can be done based on the number of blades simultaneously controlled. In fact, both feathering and stalling can be implemented either as collective or individual strategy. In the first one the same pitching angle is applied to all the blades, while in the second a specific angle is set to each blade according its azimuthal position (which has to be known from measurements).

@@ -9,7 +9,7 @@ In this section of the work, the models adopted in the different sub-components 
   \label{fig:d_plant_schema}
 \end{figure}
 
-\subsection{Wind speed generation}
+\subsection[Wind speed temporal series]{Model of the wind speed temporal series}
 This part deals with the generation of a realistic \acrshort{WS} time series. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
 Calling \acrshort{Deltat} $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of \acrshort{fs} $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time \acrshort{T} $\left[\si{\second}\right]$ is \acrshort{Ns}. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
 Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum \cite{Aerodynamics_of_wind_turbines}:
@@ -40,7 +40,7 @@ An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$
     \label{fig:wind_generation_PSD}
 \end{figure}
 
-\subsection{Aerodynamic}
+\subsection[Aerodynamic]{Model of the aerodynamic}
 The inputs of this logical block are the wind speed, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor (see \autoref{fig:d_aerodynamic_block}). 
 \begin{figure}
   \centering
@@ -54,7 +54,7 @@ In the block the actual \acrshort{TSR} is firstly computed, then the power coeff
     T_R = \frac{P_R}{\omega_R} \ \ \left[\si{\newton\meter}\right]
 \end{equation}
 
-\subsection{Pitch actuation}
+\subsection[Pitch actuation]{Model of the pitch actuation}
 In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. 
 \begin{figure}[htb]
   \centering
@@ -71,7 +71,7 @@ The simplest mechanical model has a second order dynamic, as suggested by \cite{
 with \acrshort{zetap}$=0.7$ and \acrshort{omegap}$=2\pi \left[\si{\radian}\right]$ provided by the same reference.\\
 The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}\right]$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \left[\si{\degree\per\second}\right]$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \left[\si{\degree\per\second}\right]$ is placed after the actuation block.
 
-\subsection{Mechanical transmission}
+\subsection[Mechanical transmission]{Model of the mechanical transmission}
 \begin{figure}[htb]
   \centering
   \input{d_mechanical_transmission_block.tex}
@@ -85,7 +85,7 @@ In this simple simulation, the transmission ratio is unitary, and so the relatio
 \end{equation}
 In this configuration the turbine is assumed to be direct drive, but a general n is considered in the derivations for making it more general.
 
-\subsection{Dynamical equation}
+\subsection[Mechanical dynamic]{Model of the mechanical dynamic}
 \begin{figure}
   \centering
   \begin{subfigure}{0.6\columnwidth}
@@ -119,7 +119,7 @@ This system of equations may be solved and finally the mechanical dynamic equati
 \end{gather}
 Where the apex indicates if the quantity is referred to the rotor or to the generator, while the subscript indicates the side of the transmission in which it is expressed.
 
-\subsection{Transmission damping}
+\subsection[Transmission damping]{Model of the transmission damping}
 Finding information on the mechanical damping of real turbines is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equations in \autoref{eq:damping_sys} may be set up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, while the latter is the torque balance:
 \begin{gather}
 \left\{
@@ -150,7 +150,7 @@ It could be noticed that, for a chosen value of efficiency $\eta$, then the damp
   B_{eq}^R = K_{opt}\omega_R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
 \end{equation}
 
-\subsection{Electrical generator}\label{subsec:electrical_generator_description}
+\subsection[Electrical generator]{Model of the electrical generator}\label{subsec:electrical_generator_description}
 \begin{figure}[htb]
   \centering
   \input{d_generator_block.tex}
@@ -227,7 +227,7 @@ The friction has been considered $ 0 \, \mesunt{\kilo\gram\square\meter\per\seco
  \end{gather}
  In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually of 1.5 the switching delay.
  
- \subsubsection{Extension of the static power curve}\label{subsec:genertaor_power_curve}
+ \subsubsection[Power curve with damping]{Extension of the static power curve including the damping}\label{subsec:genertaor_power_curve}
  Now that the generator's characteristics have been introduced, it is possible to extend the static power curve presented in \autoref{subsec:static_power_curve} taking into account the electrical losses. These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, considering both unity and lower efficiency.
 \begin{figure}[htb]
   \centering

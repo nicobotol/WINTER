@@ -9,7 +9,7 @@ In this section the developed model is tested applying different controllers and
   \item comparison between the control laws based on the rotor power (as described in \autoref{subsec:torque_reference}) or the generator one (\autoref{subsec:method_control_P_GE}), for constant wind speed.
 \end{itemize}
 \subsection{Simulation with velocity ramp}
-\subsubsection{Simulation setting}
+\subsubsection[Simulation setting]{Simulation setting for test with velocity ramp}
 The model is tested providing as wind input a ramp starting at time 0 $\left[\si{\second}\right]$. The parameters that may be changed in the simulation: starting and finishing wind speeds, time length of the ramp.\\
 It is decided to test 3 wind velocity conditions to investigate the three main operating regions. \autoref{tab:simulation_config} reports the configurations of these simulations. 
 \begin{table}[htb]
@@ -32,12 +32,12 @@ A post-process check can be done on the powers, in particular that the one provi
     J_{eq}\dot{\omega_{R}} = T_R^R - T_R^G-B_{eq}\omega_R\\
     J_{eq}\dot{\omega_{R}} + T_R^G + B_{eq}\omega^R = T_R^R\\
     \left(J_{eq}\dot{\omega_{R}} + T_R^G + B_{eq}\omega^R\right)\omega^R = \left(T_R^R\right)\omega^R\\
-    J_{eq}\dot{\omega_{R}}\omega_{R} + T_R^{G}\omega_{R} + B_{eq}\omega^{R^{2}} = T_R_{R}\omega_{R}\\
+    J_{eq}\dot{\omega_{R}}\omega_{R} + T_R^{G}\omega_{R} + B_{eq}\omega^{R^{2}} = T_R^{R}\omega_{R}\\
     P_{inertia} + P_{generator} + P_{damping} = P_{rotor} 
     \label{eq:power_balance}
 \end{gather}
 
-\subsubsection{Simulation results}
+\subsubsection[Simulation results]{Simulation results for test with velocity ramp}
 The results of the simulations are reported in \autoref{fig:simulation_1}, \ref{fig:simulation_2}, \ref{fig:simulation_3}. \\
 In particular:
 \begin{itemize}
@@ -53,13 +53,13 @@ In particular:
 % plots of the results
 \input{c_basic_model_results}
 
-It could be seen that below rated wind speed there is a deviation between the rotor speed computed with the equations and the one obtained in the simulation. The main two possible sources of this difference are that the rate of change of the wind speed is higher then the time required to the rotor to reach the steady state conditions. 
+It could be seen that below rated wind speed (in the case of control signal using only the $K_{opt}$, \cite{fig:omega_sim_I}) there is a deviation between the rotor speed in static conditions and the one obtained in the simulation. The main source of this mismatch is the exclusion of the damping term because the same error is much more reduced when the additional term is considered (as in \autoref{fig:omega_full_fedback}). The additional difference is due to the inertial terms. 
 
 \subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
-\subsubsection{Simulation settings}
+\subsubsection[Simulation settings]{Simulation settings for test with wind time series}
 The model is tested with an input wind time series three times, the first with mean \acrshort{WS} of 6 $\mesunt{\meter\per\second}$, the second with 11.5 $\mesunt{\meter\per\second}$, and the third with 20 $\mesunt{\meter\per\second}$. These values are chosen to test the simulator in the three characteristics wind regimes. In the first simulation the turbulence is chosen to be $\sigma=0.6 \mesunt{\meter\per\second}$ while for the other $\sigma=1 \mesunt{\meter\per\second}$. The simulation is run for $t=150\ \mesunt{\second}$ and the results of the last 100 $\mesunt{\second}$ are plotted in order to get rid of the transient behavior. The sampling frequency for the wind series generation is set to be $f_s=50 \left[\si{\hertz}\right]$.
 
-\subsubsection{Simulation results}
+\subsubsection[Simulation results]{Simulation results for test with wind time series}
 The results of this simulation are reported in \autoref{fig:simulation_rand_wind_NPC}, where the wind time series and the parametrizations of some quantities as function of the instantaneous wind speed are reported on top of the corresponding reference lines obtained by static analysis. Futhermore, the \acrfull{RMS} error between the value of some observed quantities and their static values will be presented in \autoref{tab:RMS_comparison}, where they will be also compared with the results of another similar simulation. \\
 What can be seen from the results is that the observed quantities are clustered around the static curve. This is reasonable since if the turbulence would have been set to 0 then the expected results would have been a point on the static curve corresponding to the investigated WS. It must be highlighted that in these curves the initial transient part has been eliminated in order to have a better visualization. 
 
@@ -92,11 +92,11 @@ What can be seen from the results is that the observed quantities are clustered 
   \label{fig:simulation_rand_wind_NPC}
 \end{figure}
 
-\subsection{Disabling of the pitch angle gain scheduling}\label{subsec:gain_scheduling_disabling}
+\subsection{Test disabling the pitch angle gain scheduling}\label{subsec:gain_scheduling_disabling}
 In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, three simulations with different wind speeds are proposed, $V_{10} = 11.5, 15, 20 \ \mesunt{\meter\per\second}$. For each of them four different gains are used. The settings for all of them are reported in \autoref{tab:simulation_config_variable_gains}, \autoref{tab:simulation_config_variable_gains2}, and \autoref{tab:simulation_config_variable_gains3}. \\
 In particular, the first and the fourth simulations use the gain scheduling paradigm while the other two have a fixed gains. The specific numerical value chosen in the constant case are representative of two very different regions of the scheduling case since \textit{simulation 2} has values close to the ones used at low wind speeds, while \textit{3} has value close to the high wind speeds. 
 
-\subsubsection{Disabling of the pitch angle gain scheduling and WS of V\textsubscript{10}= 11.5 $\left[ \text{ms}\textsuperscript{-1} \right]$}
+\subsubsection[$V_{10}=11.5 \, \mesunt{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS of V\textsubscript{10}= 11.5 $\left[ \text{ms}\textsuperscript{-1} \right]$}
 The first of the three simulations is run at $V_{10} = 11.5 \ \mesunt{\meter\per\second}$. Here an intermitting activation of the pitching mechanism is expected since the wind speed fluctuates around its nominal value.\\
 \autoref{tab:simulation_config_variable_gains} reports the simulation settings while \autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque obtained from the simulations. 
 
@@ -183,7 +183,7 @@ In this simulation these error metrics are not so representative since the wind 
 
 The first two simulations are very close to each other, since the static gain of \textit{sim. 2} is almost the same of the scheduling at rated speed. Furthermore, the results of the fourth simulation are not too different from the first two. Finally, it could be also noticed that the gain in case \textit{3} is very different from the other one, suggesting that this choice is not suitable for this condition. 
 
-\subsubsection{Disabling of the pitch angle gain scheduling and WS of $V_{10}=15 \ \mesunt{\meter\per\second}$}
+\subsubsection[$V_{10}=15 \, \mesunt{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS of $V_{10}=15 \ \mesunt{\meter\per\second}$}
 The second simulation is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and so the wind speed is expected to be always above the rated one. The simulation settings are reported in \autoref{tab:simulation_config_variable_gains2}.
 \begin{table}[htb]
   \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency2}}
@@ -269,7 +269,7 @@ The \acrshort{RMS} error between the steady state value and the corresponding ex
 
 As could be seen from the root mean square errors, the gain scheduling simulations performs better than the fixed one. In fact, even tough \textit{simulation 2} has lowest error value, the ones of \textit{3} are almost double than the \textit{1}. This means that a fixed gain may perform well in a certain wind region (i.e. the one corresponding at the same gain in the scheduling approach) but probably it will underperform in another different from that one.  
 
-\subsubsection{Disabling of the pitch angle gain scheduling and WS of $V_{10} =  20 \ \mesunt{\meter\per\second}$}
+\subsubsection[$V_{10}=20 \, \mesunt{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS of $V_{10} =  20 \ \mesunt{\meter\per\second}$}
 The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation parameters are reported in \autoref{tab:simulation_config_variable_gains3} while the results in \autoref{fig:gain_scheduling_time_dependency3} and \autoref{tab:res_variable_gains3}.
 
 \begin{table}[htb]
@@ -353,8 +353,7 @@ The last tested \acrshort{WS} is 20 $\mesunt{\meter\per\second}$. The simulation
 
 The considerations that can be done on this case are similar to the previous ones. 
 
-\subsubsection{Gain disabled and parametrization plot}\label{subsec:gain_disabled}
-
+\subsubsection[Parametrization with respect to the wind speed]{Test disabling the gain scheduling and plotting the results parametrized for the WS}\label{subsec:gain_disabled}
 Another comparison between the use or not of the gain scheduling may be done repeating the simulations done in \autoref{sec:wind_series_sim} (random WS) but disabling the blade gain scheduling, and letting the gains of the previous \textit{simulation 2} (i.e. $k_p = 2 \ \mesunt{\second}$, $k_i=0.9 \ [-]$). The corresponding results are reported in \autoref{fig:simulation_rand_wind_no_gain_scheduling}.
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
@@ -404,7 +403,7 @@ Another comparison between the use or not of the gain scheduling may be done rep
 
 Even though the results of the normalized errors have been reported for completeness in \autoref{tab:RMS_comparison}, their value is not always meaningful, since the normalization has been done for the value of the quantity of interest at the mean wind velocity, while the quantity itself evolves in time during the simulation. This could be well seen in the pitch error, where the high value is due to the fact that the normalization factor is a value close to 0 $\mesunt{\degree}$ while the pitch changes around this value.
 
-\subsubsection{Conclusions}
+\subsubsection[Conclusions]{Conclusions on the tests without the gain scheduling for the pitching}
 The results obtained in \autoref{subsec:gain_scheduling_disabling} show that the choice of the gain influences the performance of the system. In particular the gain used in the \text{sim. 3} seems to be always the worst choice in the tested cases. Between the scheduling rule, the one proposed in \autoref{subsec:gain_schdeuling_DTU10MW} seems to perform better than the one of \cite{Olimpo_Anaya‐Lara}. Finally, it seems that the constant gain used in \textit{sim. 2} is always the best choice, probably because it is the highest one and so produces the response with the highest effort.
 
 % \subsection{Disabling of the pitch angle controller}
@@ -457,7 +456,7 @@ The results obtained in \autoref{subsec:gain_scheduling_disabling} show that the
 %   \label{fig:simulation_rand_wind_no_pitch_control}
 % \end{figure}
 
-\subsection{Changing of the pitching actuator dynamic}\label{subsec:changing_pitch_actuator}  
+\subsection{Test changing the pitching actuator dynamic}\label{subsec:changing_pitch_actuator}  
 In this section the dynamic of the pitching mechanism is changed in order to see the different reactivity in the reduction of the power extracted form the wind. It is expected that making the dynamic faster allow to follow the wind fluctuations better at the price of a higher effort, while a slower dynamic will introduce some delay in the control between the incoming speed and the corresponding blade actuation.\\
 To validate this hypothesis, three simulations are run with different transfer functions modelling the blade actuator. All of them are run with the usual wind speed of $V_{10}=15\ \mesunt{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \mesunt{\meter\per\second}$. \\
 The employed transfer functions are reported in \autoref{tab:tf_blade_mechanism}:
@@ -507,7 +506,7 @@ It must be noted that Simulation 1 is what suggested in \cite{Olimpo_Anaya‐Lar
 \end{figure}
 The results of the simulations are reported in \autoref{fig:simulation_with_different_pitch_dynamic} and they show how the first two mechanisms are pretty similar, meaning that the transfer function suggested by \cite{Olimpo_Anaya‐Lara} and employed in all the other simulation so far does not introduce a great delay in the response of the blade actuation. On the other hand, the third transfer function is slower, meaning that the blades follow the wind change with some delay and for this reason they are rotated by of larger amount.
 
-\subsection{Simulation with the generator's torque reference based on the generator output} \label{subsec:validation_control_P_GE}
+\subsection[Below rated WS]{Simulation with the generator's torque reference based on the generator output} \label{subsec:validation_control_P_GE}
 In this section the control law for the generators's torque based on the generator output power developed in \autoref{subsec:method_control_P_GE} is tested and compared with the one based on the rotor power and developed in \autoref{subsec:torque_reference}.
 % For this simulation, in order to avoid the interference of the controller not allowing the generator to reach the steady state, this component has been removed and the torque reference value has been directly used into the dynamic equation of the rotor power.
 \subsubsection{Simulation with the generator's torque reference based on the generator output for WS below rated wind speed}
@@ -532,7 +531,7 @@ In the simulation, 5 constant wind speeds has been provided and the correspondin
 Even tough the differences are small, it could be seen that the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to deliver more electrical power. \\
 When the damping is included in the picture, the results (\autoref{fig:comparison_control_laws_B}) are similar to the already described ones for the lower velocities, while they become different approaching the rated wind speed, when the law base on the rotor is able to produce a grater electrical output rather than the one based on the generator. A possible explanation is that the inclusion of the damping makes the assumption of considering $\lambda$ and $\theta$ constant no more valid, and so the designed control not effective as expected. 
 
-\subsubsection{Transition below-above rated WS}
+\subsubsection[Transition below-above rated WS]{Simulation with the generator's torque reference based on the generator output for WS across rated wind speed}
 The test has been done in \textit{quasi-steady state} conditions, with a velocity ramp between 10 and 12 $\mesunt{\meter\per\second}$ in 500 seconds.\\
 The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}. \autoref{fig:2023_10_6_20_44_00fig_omega_param} reports the parametrization of the rotor rotational speed as function of the WS. It could be seen that both the control laws are able to follow the expected static curve, while the small perturbations around the rated wind speed are due to the action of the pitch mechanism.\\
 In \autoref{fig:2023_10_6_20_40_58comparison_control_laws} shows how also in this simulation the control law based on the maximization of the rotor extracts more power from the resource, while the other one delivers more electrical power.
