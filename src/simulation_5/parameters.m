@@ -136,10 +136,10 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
   end
-simulation.stop_time = 250*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 200*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=5e-3;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 12;        % 1 -> constant wind speed
+simulation.type = 12;       % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -289,16 +289,19 @@ IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
 % IMM.K_vector = linspace(0.5, 4, 20)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 1;           % number of states
-IMM.prob_transition = 0.99; % probability of transition
+IMM.prob_transition = 0.999; % probability of transition
 if IMM.n_models > 1
   IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
 else
   IMM.Pi = 1;
 end
-IMM.W = 1e0*(omega_rated*0.01/3)^2; % measurement noise
-IMM.Q = 2.3715e+12; %1e-10*(omega_rated/50/3)^2; % process noise
+% IMM.W = [1e0*(omega_rated*0.01/3)^2 0; 0 1e-10]; % measurement noise
+IMM.W = [1e0*(omega_rated*0.01/3)^2]; % measurement noise
+% IMM.Q = [2.3715e+12 0; 0 1e-10]; %1e-10*(omega_rated/50/3)^2; % process noise
+IMM.Q = [2.3715e+12]; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
+% IMM.x_est(2) = 1;
 IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
 IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
 IMM.sigma_R = (4/3); % assuming a  deflection of 4 meters
