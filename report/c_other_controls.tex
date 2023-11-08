@@ -3,20 +3,22 @@ The control methods developed so far relay on the knowledge of the system by mea
 
 One possibility is to use model-free methods, such as the extremum seeking, while another is to suppose that the system may evolve following a model within a finite set, without explicitly defining which, such as the \acrfull{IMM}. Another advantage of this last method is to be able to provide an estimation of the value of $K_{opt}$ to be used in the feedback line of the controller. 
 
+\textcolor{red}{Scrivere che da ora in poi si considera la presenza di un sensore di misura con una propria incertezza per permettere di usare il KF}
+
 \subsection{Comparison of the electrical power output in the case of different gains in the power controller}\label{subsec:c_different_KoptGE}
-The first study done to identify the effect of a changing $K_{opt,GE}$ is to compare the electrical power output of the generator for its  different values. In particular, a simulation with 5 values in the neighborhood of the optimal has been identified (second column of \autoref{tab:error_KoptGE}) and then a ramp WS profile between 4 and 12 $\mesunt{\meter\per\second}$ lasting 1000 $\mesunt{\second}$ has been applied.
+The first study done to identify the effect of a changing $K_{opt,GE}$ is to compare the electrical power output of the generator for its  different values. In particular, a simulation with 5 values in the neighborhood of the optimal has been identified (second column of \autoref{tab:error_KoptGE}) and then a ramp WS profile between 4 and 12 $\mesunt{\meter\per\second}$ lasting 1000 $\mesunt{\second}$ has been applied. \textcolor{red}{Scrivere di a che potenza faccia riferimento l'errore }
 \begin{table}[htb]
-  \caption{Error with the use of different $K_{opt,GE}$ values}
+  \caption{Error with the use of different $K_{opt,GE}$ values, \textcolor{red}{Check the numerical values}}
   \centering
   \begin{tabular}{cc|cc}
   \toprule
   Sim. & K & RMS error & Norm. RMS error\\ 
    &  $\mesunt{\newton \meter \square \second}$ & $\mesunt{\mega\watt}$ & \% $\left[-\right]$ \\ \midrule
-  1 & 0.85$K_{opt,GE}$  & 1.20 & 16.01\\
-  2 & 0.90$K_{opt,GE}$  & 0.75 & 11.15\\
-  3 & 1.00$K_{opt,GE}$  & 0.08 & 6.90\\
-  4 & 1.10$K_{opt,GE}$  & 0.12 & 7.00\\
-  5 & 1.15$K_{opt,GE}$  & 0.14 & 7.13\\ \bottomrule
+  1 & $0.85\cdot K_{opt,GE}$  & 1.20 & 16.01\\
+  2 & $0.90\cdot K_{opt,GE}$  & 0.75 & 11.15\\
+  3 & $1.00\cdot K_{opt,GE}$  & 0.08 & 6.90 \\
+  4 & $1.10\cdot K_{opt,GE}$  & 0.12 & 7.00 \\
+  5 & $1.15\cdot K_{opt,GE}$  & 0.14 & 7.13 \\ \bottomrule
   \end{tabular}
   \label{tab:error_KoptGE}
 \end{table}
@@ -55,16 +57,18 @@ Here the procedure for implementing the IMM is reported, following the method pr
   \text{Input: } u = T_{R}\\
   \text{Measured quantity: } y = \omega_{R} \\
   \text{Model of the plant: }  x_{k+1} = f(x_k, u_k, \nu_k) = \\ \notag
-  = x_k + \frac{(T_{R,k} + \tilde{T}_{R,k} - K_{opt,GE}x_k^2 - B_{eq}x_k)}{I_{eq}}\\
-  \text{Noise on the dynamic: } \tilde{T}_{R,k} \sim \mathcal{N}(0, Q) \\ \label{eq:noise_Q}
+  = x_k + \frac{\Delta_t\left(\hat{T}_{R,k} - T_G - B_{eq}x_k\right)}{I_{eq}}=\\ \notag
+  = x_k + \frac{\Delta_t\left[T_{R,k} + \tilde{T}_{R,k} - \left(K_{opt,GE}x_k^2 + B_{eq}x_k \right) - B_{eq}x_k\right]}{I_{eq}}\\ \notag
+  = x_k + \frac{\Delta_t\left(T_{R,k}  - K_{opt,GE}x_k^2 \right)}{I_{eq}} + \frac{\Delta_t \tilde{T}_{R,k}}{I_{eq}}\\ 
+  \textcolor{red}{\text{Noise on the dynamic: } \tilde{T}_{R,k} \sim \mathcal{N}(0, Q)} \\ \label{eq:noise_Q}
   \text{Model of the measurement instrument: } y = h(x, u, \varepsilon) = \omega_{R} + \varepsilon \\
   \text{Noise on the measurement: } \varepsilon \sim \mathcal{N}(0, W)  \\
-  \text{Covariance matrix of the process: } Q = 2.3715e+12 \, \mesunt{\square\newton\square \meter}\\
-  \text{Covariance matrix of the measurement: } W = \left[\left(\frac{\omega_{rated}}{10 \cdot3}\right)^2\right] = \left[0.0338^2\right] \, \mesunt{\square\newton\square \meter}\\
+  \text{Covariance matrix of the process: } Q = 2.3715\cdot10^{12} \, \mesunt{\square\newton\square \meter}\\
+  \text{Covariance matrix of the measurement: } W = \left[\left(\frac{\omega_{rated}\cdot 0.01}{3}\right)^2\right] = \left[0.0338^2\right] \, \mesunt{\square\newton\square \meter}\\
   \text{Covariance matrix of the state estimation for the \textit{j-th} filter, and for the IMM: } P^{(j)} \, P\\
-  \text{Linearized model of the plant w.r.t. the states: } F = \frac{\partial f}{\partial x}(x, u, 0) = \left[-\frac{2\,K_{opt}}{I_{eq}}x - \frac{B_{eq}}{I_{eq}}\right]\\
+  \text{Linearized model of the plant w.r.t. the states: } F = \frac{\partial f}{\partial x}(x, u, 0) = \left[1-\frac{2\,\Delta_t\,K_{opt}}{I_{eq}}x\right]\\
   \text{Linearized model of the measurement w.r.t. the states: } H = \frac{\partial h}{\partial x}(x, u) = \left[1\right]\\
-  \text{Linearized model of the noise: } G = \frac{\partial f}{\partial \tilde{T}_R}(x, u, 0)=\left[\frac{1}{I_{eq}}\right]\\
+  \text{Linearized model of the noise: } G = \frac{\partial f}{\partial \tilde{T}_R}(x, u, 0)=\left[\frac{\Delta_t}{I_{eq}}\right]\\
   \text{Mode probability: } \mu^{(j)}\\
   \text{Likelihood of a filter: } \Lambda^{(j)}
 \end{multline}
@@ -132,9 +136,9 @@ In this last step, the filter with higher probabilities modify the estimates of 
 Then the filtering step is repeated, with the mixed state $\tilde{x}_k^{(j)+}$ and covariance $\tilde{P}_k^{(j)+}$ in the prediction.
 \end{enumerate}
 
-\subsubsection{Implementation details of the IMM}
+% \subsubsection{Implementation details of the IMM}
 % \textit{Definition of the boundaries for the variable parameters}\\
-\paragraph{Definition of the boundaries for the variable parameters}
+\subsubsection{Definition of the boundaries for the variable parameters}
 As said before, the IMM requires a-priori definitions of the parameters of the models run in each filter. It could be easily understood how the choice of these parameters is crucial for letting the algorithm work properly. In fact if the true model is not in the considered set, then the algorithm will converge to the most similar one, that may be \textit{close enough} or not according to the design choice.\\ 
 In order to define these models, a \acrfull{MC} approach has been used, since the relationship between physical parameters and the $K_{opt,GE}$ involves also the use of a lookup table, which cannot be treated analytically as it is.\\
 The principle of the \acrshort{MC} method is to generate the distribution of a quantity by means of evaluating its value multiple times, each one with a different value of the parameters, taking them from a distribution.\textcolor{red}{write better the introduction to the \acrshort{MC} method}\\
@@ -162,13 +166,14 @@ The parameters and assumptions used for generating the distributions are reporte
 \end{table}
 
 \begin{figure}[H]
-  \begin{subfigure}{0.5\columnwidth}
+  \centering
+  \begin{subfigure}{0.65\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{images/vectorial/2023_10_19_15_17_27R_distribution}
     \caption{Distribution of the rotor radius}
     \label{fig:R_distribution}
   \end{subfigure}
-  \begin{subfigure}{0.5\columnwidth}
+  \begin{subfigure}{0.65\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{images/vectorial/2023_10_21_10_25_47K_GE_distribution}
     \caption{Distribution of the $K_{opt,GE}$ obtained by the \acrshort{MC} simulation}
@@ -178,7 +183,7 @@ The parameters and assumptions used for generating the distributions are reporte
 
 Given the distribution of the $K_{opt,GE}$ gain it is possible to use it in order to design the IMM, by means of selecting a given number of gains between two values of the distributions such as the 1 and 99 percentile, $7.19 \, \cdot 10^7 \mesunt{\newton \meter \square \second}$ and $1.50 \cdot 10^7 \, \mesunt{\newton \meter \square \second}$ respectively. In this specific case, 5 values have been chosen, and their are identified by the purple dotted line in \autoref{fig:K_GE_distribution}. To be specific these values are: $\left[0.72, 0.91, 1.11, 1.30, 1.49 \right] \cdot 10^7 \, \mesunt{\newton\meter\square\second}$. 
 
-\textit{Definition of the uncertainty}\\
+\subsubsection{Definition of the uncertainty}
 In the EKF equations run in the IMM it is necessary to identify the noise on the process $\nu_k \sim \mathcal{N}(0, Q)$ (see \autoref{eq:noise_Q}). The definition of Q is again done using the \acrshort{MC} approach, with the same distributions already used in the $K_{opt,GE}$ case. Here the equation for the method is:
 \begin{equation}
   \tilde{T}_R=\frac{\frac{1}{2}\tilde{\rho}\pi\tilde{R}^2cp\left(\tilde{\omega}, \tilde{V}_0,\tilde{R}\right)\tilde{V}_0^3}{\tilde{\omega}}
@@ -186,7 +191,7 @@ In the EKF equations run in the IMM it is necessary to identify the noise on the
 \end{equation}
 where the \textit{tildes} stress the fact that the parameters come from a distribution. The computed variance of the noise is $Q = 2.3715 \cdot 10^{12} \, \mesunt{\square\newton\square\meter}$.
 
-\textit{Filter of the state and the K gain}\\
+\subsubsection{Filter of the state and the K gain}
 In order to reduce the variability of the rotational speed estimations done by the parallel \acrshort{EKF}, the value in the feedback line is filtered using a low pass filter
 \begin{equation}
   G(s) = \frac{1}{\frac{1}{25.1}s + 1}
