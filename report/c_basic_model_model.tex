@@ -103,7 +103,7 @@ In this configuration the turbine is assumed to be direct drive, but a general n
   \end{subfigure}
   \caption{Torque convention of the logical block representing the mechanical equation}
 \end{figure}
-The dynamical equation block solves the Newton's law written on the rotor side of the transmission:
+The dynamical equation block solves the Newton's law written on the rotor side of the transmission (see \autoref{fig:transmission_convention}):
 \begin{equation}
     \begin{cases}
       J_R \dot{\omega_R} = T_R^R - B_R\omega_R - T_R^T\\
@@ -144,7 +144,7 @@ T_G^G = \eta n T_R^R \\
 B_{eq}^R= \frac{T_R^R}{\omega_R}(1 - \eta)= \frac{K_{opt}(\omega_R)^2}{\omega_R}(1 - \eta) = K_{opt}\omega_R(1 - \eta) \ \ \mesunt{\kilo\gram\square\meter}
 \label{eq:damping}
 \end{gather} 
-where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the units of $\mesunt{\newton \meter \square\second }$.\\
+where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the unit of $\mesunt{\newton \meter \square\second }$.\\
 It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature information at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these assumptions in mind, the damping becomes:
 \begin{equation}
   B_{eq}^R = K_{opt}\omega_R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
@@ -158,7 +158,7 @@ It could be noticed that, for a chosen value of efficiency $\eta$, then the damp
   \label{fig:d_generator_block}
 \end{figure}
 
-As said before, nowadays the Permanent Magnet Syncronous Machines (PMSM) are the most commonly employed generators, and so they are going to be studied in this work. For studying them it is convenient to project the fundamental equations from a reference frame fixed in the stator windings (named \textit{abc}) in a reference frame synchronous with the rotor, named \textit{dq}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
+As said before, nowadays the Permanent Magnet Syncronous Machines (PMSM) are the most commonly employed generators, and so they are going to be studied in this work. For modelling them it is convenient to project the fundamental equations from a reference frame fixed in the stator windings (named \textit{abc}) in a reference frame synchronous with the rotor, named \textit{dq}, in which the alternate electrical quantities of voltage and current are represented as their amplitude values. 
 In this frame the equations of the machine are:
 \begin{gather}
   0=u_d-L_{s}i_q\omega_{me}+L_{s}\frac{di_d}{dt}+R_{s}i_d 
@@ -166,7 +166,7 @@ In this frame the equations of the machine are:
   \omega_{me}\Lambda_{mg}=u_q+L_{s}i_d\omega_{me}+L_{s}\frac{di_q}{dt}+R_{s}i_q
   \label{eq:q_axis_eq}
 \end{gather}
-where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\mesunt{\radian \per \second}$), \acrshort{Ls} is the inductance and \acrshort{Rs} the resistance of the stator, \acrshort{Lambdamg} is the flux linkage of the permanent magnets.\\
+where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\mesunt{\radian \per \second}$), \acrshort{Ls} $\mesunt{\henry}$ is the inductance and \acrshort{Rs} $\mesunt{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\mesunt{\weber}$ is the flux linkage of the permanent magnets.\\
 By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
   p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L_{s}\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R_{s}(i_d^2 + i_q^2)

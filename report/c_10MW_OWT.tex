@@ -17,7 +17,7 @@ The DTU 10 MW reference WT has the following characteristics reported in \autore
     Cut out wind speed & 25 & $\left[\si{\meter \per \second}\right]$ \\
     Rotor diameter & 178.3 & $\left[\si{\meter}\right]$\\
     Hub Height & 119 & $\mesunt{\meter}$\\
-    Air density & 1.225 & $\left[\si{\kilo\gram\per\cubic\meter}\right]$\\
+    Reference air density & 1.225 & $\left[\si{\kilo\gram\per\cubic\meter}\right]$\\
     \bottomrule
     \end{tabular}
     \label{tab:DTU_10_struct}
@@ -170,7 +170,7 @@ Even though both fathering and stall limit the power at the same amount (see \au
     \begin{subfigure}{0.49\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/vectorial/fig_power_vs_V0.eps}
-    \caption{Mechanical power as function of wind speed}
+    \caption{Mechanical power as function of wind speed\textcolor{red}{Rifare questa figura e quella accanto ingrndendone il testo}}
     \label{fig:fig_power_vs_V0}
     \end{subfigure}
     %\hfill
@@ -186,6 +186,6 @@ Even though both fathering and stall limit the power at the same amount (see \au
 In \autoref{fig:fig_pitch_vs_V0} it is possible to see again some differences at low \acrshort{WSs} ($4\div7 \, \mesunt{\meter\per\second}$), which are related to the one of \autoref{subsec:lookup_cp}. Since operating at a fixed rotational speed in that range of \acrshort{WS} is not optimal because the \acrshort{TSR} is fixed at a value lower than the nominal, then the blades are pitched to obtain the highest $c_P$ allowed by the constraint on $\lambda$. Again this effect is not taken into account in the thesis and the pitch is considered to be 0 $\mesunt{\degree}$ below rated \acrshort{WS}.
 
 \subsection{Definition of the control objective}
-In this thesis the main control focus is the power extraction meaning that the aim is the extraction of most of the available power up to the rated one without exceeding it. In real turbines other kind of controller run alongside the power one, such as one for limiting the aerodynamic load, the vibrations, contrasting the wave effect and providing ancillary services to the grid. \\
+In this thesis the main control focus is the power extraction meaning that the aim is the extraction of most of the available power up to the rated one without exceeding it. In real turbines other kind of controller run alongside the power one, such as one for limiting the aerodynamic load, the vibrations, contrasting the wave effect (in case of offshore plants) and providing ancillary services to the grid. \\
 The literature about controllers applied to wind turbines is very wide. In this thesis the main followed references are \cite{Olimpo_Anaya‐Lara}, \cite{NREL_5MW_reference} and \cite{DTU_Wind_Energy_E_0028}. 
 \newpage

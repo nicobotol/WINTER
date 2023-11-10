@@ -53,8 +53,8 @@ P_GE_b_no_B = -P_no_B; % power coming from minimization (change sign because neg
 omega_rotor = lambda_opt.*V0_b/R; % [rad/s] omega based on the maximization of the rotor power
 omega_GE = min_v(:,1)'.*V0_b/R;
 omega_GE_no_B = min_v_no_B(:,1)'.*V0_b/R;
-lambda_GE =  min_v(:, 1);  % optimal TSR based on generator maximization 
-lambda_GE_no_B =  min_v_no_B(:, 1);  % optimal TSR based on generator maximization 
+lambda_GE = min_v(:, 1);  % optimal TSR based on generator maximization 
+lambda_GE_no_B = min_v_no_B(:, 1);  % optimal TSR based on generator maximization 
 lambda_GE_mean = mean(lambda_GE);  % mean TSR based on the generator
 lambda_GE_mean_no_B = mean(lambda_GE_no_B);  % mean TSR based on the generator
 cp_GE = interp2(lambda_vector, pitch_vector, lookup_cP, min_v(:, 1), min_v(:, 2)); % cp for the maximization of the generator
@@ -278,29 +278,29 @@ if simulation.print_figure == 1
   export_figure(fig_cpE, '\fig_fig_cpE.eps', path_images);
 end
 
-%% Save the data in a lookup table
-clear("lookup_P_GE")
-clear("rated_values_P_GE")
-% clear("lookup_pitch_P_GE")
-% 
-rated_values_P_GE(1) = lambda_GE_mean;
-rated_values_P_GE(2) = cp_GE_mean;
-rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
-save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
-%
-rated_values_P_GE_no_B(1) = lambda_GE_mean_no_B;
-rated_values_P_GE_no_B(2) = cp_GE_mean_no_B;
-rated_values_P_GE_no_B(3) = lambda_GE_mean_no_B*V0_rated/rotor.R;
-save('lookup\rated_values_P_GE_no_B.mat', "rated_values_P_GE_no_B");
-% 
-% % pitch to feather
-% lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
-% lookup_pitch_P_GE(1, :) = [0 V0_a];
-% lookup_pitch_P_GE(2, :) = [0 feather_a];
-% save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
-% 
-% generator electrical power
-lookup_P_GE(1, :) = [V0_b, V0_a];
-lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
-lookup_P_GE(3, :) = P_electro'*eta;
-save('lookup\lookup_P_GE.mat', "lookup_P_GE");
+% %% Save the data in a lookup table
+% clear("lookup_P_GE")
+% clear("rated_values_P_GE")
+% % clear("lookup_pitch_P_GE")
+% % 
+% rated_values_P_GE(1) = lambda_GE_mean;
+% rated_values_P_GE(2) = cp_GE_mean;
+% rated_values_P_GE(3) = lambda_GE_mean*V0_rated/rotor.R;
+% save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
+% %
+% rated_values_P_GE_no_B(1) = lambda_GE_mean_no_B;
+% rated_values_P_GE_no_B(2) = cp_GE_mean_no_B;
+% rated_values_P_GE_no_B(3) = lambda_GE_mean_no_B*V0_rated/rotor.R;
+% save('lookup\rated_values_P_GE_no_B.mat', "rated_values_P_GE_no_B");
+% % 
+% % % pitch to feather
+% % lookup_pitch_P_GE = zeros(2, length(V0_a) + 1);
+% % lookup_pitch_P_GE(1, :) = [0 V0_a];
+% % lookup_pitch_P_GE(2, :) = [0 feather_a];
+% % save('lookup\lookup_pitch_P_GE.mat', "lookup_pitch_P_GE");
+% % 
+% % generator electrical power
+% lookup_P_GE(1, :) = [V0_b, V0_a];
+% lookup_P_GE(2, :) = [P_GE_b', P_GE_a'];
+% lookup_P_GE(3, :) = P_electro'*eta;
+% save('lookup\lookup_P_GE.mat', "lookup_P_GE");

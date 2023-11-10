@@ -100,7 +100,7 @@ In this step the mode probabilities are updated from the filter likelihood (i.e.
   \text{Residual: } z_k^{(j)} = y_k - \hat{y}_k^{(j)}\\
   \text{Uncertainty on the residual: }S_k^{(j)} = H_k^{(j)} P_k^{(j)-} (H_k^{(j)})^T + R_k^{(j)}\\
   \text{Likelihood: } \Lambda_k^{(j)} = \frac{1}{\sqrt{2 \pi \lvert S_k^{(j)} \rvert}} \exp{\left(-\frac{1}{2}\left(z_k^{(j)}\right)^T \left(S_k^{(j)}\right)^{-1} z_k^{(j)}\right)}\\
-  \mu_k^{(j)+} = \frac{\mu_k^{(j)-}\Lambda_k^{(j)}}{\sum_{j} \mu_k^{(j)-}\Lambda_k^{(j)}}
+  \mu_k^{(j)+} = \frac{\mu_k^{(j)-}\Lambda_k^{(j)}}{\sum_{i} \mu_k^{(i)-}\Lambda_k^{(i)}}
 \end{gather}
 In the application presented in \cite{kalman_based_IMM}, the IMM is used only for an estimation of the state. Here, differently, there is also the necessity of identifying the model for closing the control loop, meaning that at each step a value of $\hat{K}_{opt,GE}$ has to be provided and used for generating the reference torque. To do so, two methods have been identified. The first is to assign the value of the model with the highest probability, while the second is to compute the mean of the models' gain weighted by their probabilities. The second approach is here preferred, because it takes into account the information of all the models run in parallel.
 \begin{gather}
@@ -154,12 +154,12 @@ The parameters and assumptions used for generating the distributions are reporte
   \centering
   \begin{tabular}{lcccc}
   \toprule
-  Parameter & Mean & Std & MU & Motivation\\ \midrule
-  Rotational speed $\omega$ & 0.988 & 0.0169 & $\mesunt{\radian\per\second}$ & More than 99\% distribution within 5\% rated value\\
-  Air density $\rho$ &  1.225 & 0.0204 & $\mesunt{\kilo\gram\per\cubic\meter}$ & More than 99\% distribution within 5\% nominal value \\
-  Rotor radius $R$  & 89.17 & 1.3333 & $\mesunt{\meter}$ & More than 99\% distribution within 4 $\mesunt{\meter}$ deformation \\
-  Wind speed $V_0$  & 11.44 & 0.5719 & $\mesunt{\meter\per\second}$ & More than 99\% distribution within 15\% nominal value \\
-  Pitch angle $\theta$ & 0.0 & 0.0058 & $\mesunt{\radian}$ & More than 99\% distribution within  1 $\si{\degree}$ \\
+  Par. & Mean & Std & MU & Motivation\\ \midrule
+  $\omega_R$ & 0.988 & 0.0169 & $\mesunt{\radian\per\second}$ & More than 99\% distribution within 5\% rated value\\
+  $\rho$ &  1.225 & 0.0204 & $\mesunt{\kilo\gram\per\cubic\meter}$ & More than 99\% distribution within 5\% nominal value \\
+  $R$  & 89.17 & 0.289 & $\mesunt{\meter}$ & \makecell{More than 99\% distribution within 0.867 $\mesunt{\meter}$ radial deformation\\ (assuming 12.4 $\mesunt{\meter}$ radial deformation \cite{Light_rotor}) }\\
+  $V_0$  & 11.44 & 0.5719 & $\mesunt{\meter\per\second}$ & More than 99\% distribution within 15\% nominal value \\
+  $\theta$ & 0.0 & 0.0058 & $\mesunt{\radian}$ & More than 99\% distribution within  1 $\si{\degree}$ \\
  \bottomrule
   \end{tabular}
   \label{tab:parameters_KoptGE}
@@ -169,13 +169,13 @@ The parameters and assumptions used for generating the distributions are reporte
   \centering
   \begin{subfigure}{0.65\columnwidth}
     \centering
-    \includegraphics[width=\columnwidth]{images/vectorial/2023_10_19_15_17_27R_distribution}
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_9_16_57_05R_distribution}
     \caption{Distribution of the rotor radius}
     \label{fig:R_distribution}
   \end{subfigure}
   \begin{subfigure}{0.65\columnwidth}
     \centering
-    \includegraphics[width=\columnwidth]{images/vectorial/2023_10_21_10_25_47K_GE_distribution}
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_9_16_57_05K_GE_distribution}
     \caption{Distribution of the $K_{opt,GE}$ obtained by the \acrshort{MC} simulation}
     \label{fig:K_GE_distribution}
   \end{subfigure}

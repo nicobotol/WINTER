@@ -13,26 +13,20 @@
 
 \begin{document}
 
-\begin{multline}
-  \text{State of the \textit{j-th} filter: } x^{(j)} = \omega_{R} \\
-  \text{State of the IMM: } \hat{x} = \omega_R\\
-  \text{Input: } u = T_{R}\\
-  \text{Measured quantity: } y = \omega_{R} \\
-  \text{Model of the plant: }  x_{k+1} = f(x_k, u_k, \nu_k) = \\ \notag
-  = x_k + \frac{\Delta_t\left(\hat{T}_{R,k} - T_G - B_{eq}x_k\right)}{I_{eq}}=\\ \notag
-  = x_k + \frac{\Delta_t\left[T_{R,k} + \tilde{T}_{R,k} - \left(K_{opt,GE}x_k^2 + B_{eq}x_k \right) - B_{eq}x_k\right]}{I_{eq}}\\ \notag
-  = x_k + \frac{\Delta_t\left(T_{R,k}  - K_{opt,GE}x_k^2 \right)}{I_{eq}} + \frac{\Delta_t \tilde{T}_{R,k}}{I_{eq}}\\ 
-  \textcolor{red}{\text{Noise on the dynamic: } \tilde{T}_{R,k} \sim \mathcal{N}(0, Q)} \\ \label{eq:noise_Q}
-  \text{Model of the measurement instrument: } y = h(x, u, \varepsilon) = \omega_{R} + \varepsilon \\
-  \text{Noise on the measurement: } \varepsilon \sim \mathcal{N}(0, W)  \\
-  \text{Covariance matrix of the process: } Q = 2.3715\cdot10^{12} \, \mesunt{\square\newton\square \meter}\\
-  \text{Covariance matrix of the measurement: } W = \left[\left(\frac{\omega_{rated}\cdot 0.01}{3}\right)^2\right] = \left[0.0338^2\right] \, \mesunt{\square\newton\square \meter}\\
-  \text{Covariance matrix of the state estimation for the \textit{j-th} filter, and for the IMM: } P^{(j)} \, P\\
-  \text{Linearized model of the plant w.r.t. the states: } F = \frac{\partial f}{\partial x}(x, u, 0) = \left[1-\frac{2\,\Delta_t\,K_{opt}}{I_{eq}}x\right]\\
-  \text{Linearized model of the measurement w.r.t. the states: } H = \frac{\partial h}{\partial x}(x, u) = \left[1\right]\\
-  \text{Linearized model of the noise: } G = \frac{\partial f}{\partial \tilde{T}_R}(x, u, 0)=\left[\frac{\Delta_t}{I_{eq}}\right]\\
-  \text{Mode probability: } \mu^{(j)}\\
-  \text{Likelihood of a filter: } \Lambda^{(j)}
-\end{multline}
+\begin{table}[htb]
+  \caption{Error with the use of different $K_{opt,GE}$ values}
+  \centering
+  \begin{tabular}{lcccc}
+  \toprule
+  Par. & Mean & Std & MU & Motivation\\ \midrule
+  $\omega_R$ & 0.988 & 0.0169 & $\mesunt{\radian\per\second}$ & More than 99\% distribution within 5\% rated value\\
+  $\rho$ &  1.225 & 0.0204 & $\mesunt{\kilo\gram\per\cubic\meter}$ & More than 99\% distribution within 5\% nominal value \\
+  $R$  & 89.17 & 0.289 & $\mesunt{\meter}$ & \makecell{More than 99\% distribution within 0.867 $\mesunt{\meter}$ radial deformation\\ (assuming 12.4 $\mesunt{\meter}$ radial deformation \cite{Light_rotor}) }\\
+  $V_0$  & 11.44 & 0.5719 & $\mesunt{\meter\per\second}$ & More than 99\% distribution within 15\% nominal value \\
+  $\theta$ & 0.0 & 0.0058 & $\mesunt{\radian}$ & More than 99\% distribution within  1 $\si{\degree}$ \\
+ \bottomrule
+  \end{tabular}
+  \label{tab:parameters_KoptGE}
+\end{table}
 
 \end{document}

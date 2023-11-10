@@ -4,26 +4,7 @@ function [RMS_errors] = post_process(out_cell, wind, omega_rated, generator, sim
 RMS_errors =  cell(1, wind.WS_len);
 
 %% Errors on the obtained quantities wrt their expected values and their normalized values
-if simulation.type ~= 5
-  for i = 1:wind.WS_len
-    % rotaional speed
-    [RMS_errors{i}.omega_R] = compute_RMS_error(out_cell{i}, 'omega_R', simulation.post_process_time(i), omega_rated);
-    RMS_errors{i}.omega_R_norm = RMS_errors{i}.omega_R/omega_rated*100;
-
-    % generatator input power
-    [RMS_errors{i}.P_G] = compute_RMS_error(out_cell{i}, 'P_G', simulation.post_process_time(i), generator.P_rated);
-    RMS_errors{i}.P_G_norm = RMS_errors{i}.P_G/generator.P_rated*100;
-    
-    % generatator input torque
-    [RMS_errors{i}.T_G] = compute_RMS_error(out_cell{i}, 'T_G', simulation.post_process_time(i), generator.P_rated/generator.omega_rated);
-    RMS_errors{i}.T_G_norm = RMS_errors{i}.T_G/(generator.P_rated/generator.omega_rated)*100;
-
-    % generatator electrical output power
-    rated = [lookup_P_GE(1,:); lookup_P_GE(3,:)];
-    [RMS_errors{i}.P_GE] = compute_RMS_error(out_cell{i}, 'P_GE', simulation.post_process_time(i), rated);
-    RMS_errors{i}.P_GE_norm = RMS_errors{i}.P_G/lookup_P_GE(3,end)*100;
-  end
-else
+if simulation.type == 5
   for i = 1:wind.WS_len
     % rotaional speed
     RMS_errors{i}.var{1}.Name = 'omega_R';
@@ -53,15 +34,33 @@ else
     normalizer = interp1(lookup_Pitch(1, :), lookup_Pitch(3, :), wind.mean(i));
     RMS_errors{i}.var{4}.norm = RMS_errors{i}.var{4}.Data/normalizer*100;
   end
-end
+elseif simulation.type == 11
+  compute_comp_gains(out_cell, simulation, IMM, wind, simulation.post_process_time(1), 'energy_com_const_gains');
+elseif simulation.type == 12
+    % compute the mean and std value of the gain for all the cases
+    compute_mean_std_develop(out_cell, simulation, IMM, wind, generator);
 
-if simulation.type == 12 % comparison IMM / const. K_opt
-  % compute the mean and std value of the gain for all the cases
-  compute_mean_std_develop(out_cell, simulation, IMM, wind, generator);
+    % compute the energy 
+    compute_energy_develop(out_cell, simulation, IMM, wind, simulation.post_process_time, 'energy');
+else
+  for i = 1:wind.WS_len
+    % rotaional speed
+    [RMS_errors{i}.omega_R] = compute_RMS_error(out_cell{i}, 'omega_R', simulation.post_process_time(i), omega_rated);
+    RMS_errors{i}.omega_R_norm = RMS_errors{i}.omega_R/omega_rated*100;
 
-  % compute the energy 
-  compute_energy_develop(out_cell, simulation, IMM, wind);
+    % generatator input power
+    [RMS_errors{i}.P_G] = compute_RMS_error(out_cell{i}, 'P_G', simulation.post_process_time(i), generator.P_rated);
+    RMS_errors{i}.P_G_norm = RMS_errors{i}.P_G/generator.P_rated*100;
+    
+    % generatator input torque
+    [RMS_errors{i}.T_G] = compute_RMS_error(out_cell{i}, 'T_G', simulation.post_process_time(i), generator.P_rated/generator.omega_rated);
+    RMS_errors{i}.T_G_norm = RMS_errors{i}.T_G/(generator.P_rated/generator.omega_rated)*100;
 
+    % generatator electrical output power
+    rated = [lookup_P_GE(1,:); lookup_P_GE(3,:)];
+    [RMS_errors{i}.P_GE] = compute_RMS_error(out_cell{i}, 'P_GE', simulation.post_process_time(i), rated);
+    RMS_errors{i}.P_GE_norm = RMS_errors{i}.P_GE/lookup_P_GE(3,end)*100;
+  end
 end
 
 %% Write the RMS table to a file

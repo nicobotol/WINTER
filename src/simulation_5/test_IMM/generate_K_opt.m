@@ -1,8 +1,8 @@
 ,% this function is necessary to identify the lower and upper value where  to distribute the values of Kopt
 
-% close all;
-% clc;
-% clear;
+close all;
+clc;
+clear;
 
 parameters;
 N = 1e6; % sampes to generate
@@ -95,7 +95,7 @@ fig = figure('Color', 'w');hold on;grid on;box on;
 plot(NaN, NaN, 'k--', 'DisplayName',  [num2str(p3), ' percentile'], 'LineWidth', line_width)
 plot(NaN, NaN, 'k-.', 'DisplayName',  [num2str(p4), ' percentile'], 'LineWidth', line_width)
 histogram(R_d, 'Normalization', 'pdf', 'BinMethod', 'sturges', 'FaceColor', color(1), 'DisplayName', 'Undeform Dist.')
-histogram(R_d_s, 'Normalization', 'pdf', 'BinMethod', 'sturges', 'FaceColor', color(2), 'DisplayName', 'deform Dist.')
+histogram(R_d_s, 'Normalization', 'pdf', 'BinMethod', 'sturges', 'FaceColor', color(2), 'DisplayName', 'Deform Dist.')
 xline([q_10_d], 'b--', 'LineWidth', line_width, 'FontSize', font_size, 'Handlevisibility', 'off')
 xline([q_90_d], 'b-.', 'LineWidth', line_width, 'FontSize', font_size, 'Handlevisibility', 'off')
 xline([q_10_d_s], 'r--', 'LineWidth', line_width, 'FontSize', font_size, 'HandleVisibility', 'off')

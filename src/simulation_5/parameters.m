@@ -116,11 +116,10 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 5;       % choice of the model
+simulation.model = 3;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
-                            % 3 -> with controller based on the generator
-                            % power
+                            % 3 -> with controller based on the generator power
                             % 4 -> extremum seeking controller
                             % 5 -> IMM controller
 if simulation.model == 1    % without power controller
@@ -136,10 +135,10 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
   end
-simulation.stop_time = 200*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 5e3*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 12;       % 1 -> constant wind speed
+simulation.type = 11;       % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -151,14 +150,14 @@ simulation.type = 12;       % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 1e3*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 4980*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 950*ones(10,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 4980*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -206,7 +205,7 @@ generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
 generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
 generator.K_opt_GE_no_B = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
-generator.K_opt_sensitivity = [0.85 0.9 1 1.1 1.15]; % gain for the sensitivity analysis on K_opt
+generator.K_opt_sensitivity = [0.8 0.9 1 1.1 1.2]; % gain for the sensitivity analysis on K_opt
 generator.gain_K_opt = 1; % default value for the k_opt 
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
@@ -247,14 +246,14 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [6 6];%kron([4 6 8 10 11], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = kron([4 8 11], [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = 1.0*ones(10,1); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
 wind.ramp_WS_start = 4*ones(5,1);        % wind speed at the start of the ramp [m/s]
 wind.ramp_WS_stop = 12*ones(5,1);         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(1, 1); % time speed at the start of the ramp [s]
+wind.ramp_time_start = 0*ones(5, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
@@ -289,14 +288,14 @@ IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
 % IMM.K_vector = linspace(0.5, 4, 20)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 1;           % number of states
-IMM.prob_transition = 0.999; % probability of transition
+IMM.prob_transition = 0.995; % probability of transition
 if IMM.n_models > 1
   IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
 else
   IMM.Pi = 1;
 end
 % IMM.W = [1e0*(omega_rated*0.01/3)^2 0; 0 1e-10]; % measurement noise
-IMM.W = [1e0*(omega_rated*0.01/3)^2]; % measurement noise
+IMM.W = 1e-10*[1e0*(omega_rated*0.01/3)^2]; % measurement noise
 % IMM.Q = [2.3715e+12 0; 0 1e-10]; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.Q = [2.3715e+12]; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
@@ -304,7 +303,9 @@ IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
 % IMM.x_est(2) = 1;
 IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
 IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
-IMM.sigma_R = (4/3); % assuming a  deflection of 4 meters
+max_long_def = 12.4; % maximum longitudinal deflection of the blade
+max_radial_def = rotor.R*(1-sqrt(1 - (max_long_def/rotor.R)^2)); % maximum radial deflection of the blade [m]
+IMM.sigma_R = (max_radial_def/3); % assuming a  deflection of 4 meters
 IMM.sigma_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value 
 IMM.sigma_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
 IMM.enable = 1; % enables or disables the IMM controller/constant gain

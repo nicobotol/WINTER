@@ -58,7 +58,7 @@ switch simulation.type
     % [E_R, E_G, E_GE] = power_check(out_store, I_eq, B_eq, wind.WS_len,line_width, date_fig, "power_check", simulation, font_size, path_images);
 
   case 11 % control based on different K_opt and the 
-    plot_parametrization_wind_zoom_P_GE('fig_electrical_power_param_zoom',out_store,'P_GE', lookup_P_GE(1,:), lookup_P_GE(3,:)/1e6,'Wind speed [m/s]','$P_{GE}$ [MW]','Generator electrical power', 1e6,simulation,date_fig)
+    plot_parametrization_wind_zoom_P_GE('fig_electrical_power_param_zoom',out_store,'P_GE', lookup_P_GE(1,:), lookup_P_GE(2,:)/1e6,'Wind speed [m/s]','$P_{GE}$ [MW]','Generator electrical power', 1e6,simulation,date_fig)
 
   case 12
     plot_IMM
