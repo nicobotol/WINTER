@@ -73,7 +73,9 @@ The values of the gains are \acrshort{kiP}$= 5.5$ and \acrshort{kpP}$=0.5$, acco
 \subsection{Generator's torque reference synthesis based on generator}\label{subsec:method_control_P_GE}
 Considering that the maximization of the harvested mechanical power not always corresponds to the maximization of the produced electrical power, then it may be interesting to quantify this difference, and possibly to propose a control strategy taking it into account this. The problem of possible mismatch between the powers has been identified also in \cite{VLAD2010305}, where some experimental results for a low-power wind energy systems are presented.\\
 In this section a control approach based on the maximization of the power at the generator side of the driveline rather than the rotor one is proposed. Similarly to what was already done in \autoref{subsec:torque_reference}, also in this case two operational conditions are identified, between below and above the rated \acrshort{WS}.
-
+{\Huge
+\textcolor{red}{Mettere nuove equazioni}
+}
 First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
 Starting from a torque balance, the \textit{q-axis} current can be expressed as:
 \begin{gather}
@@ -103,25 +105,25 @@ To study the problem, a numerical method is employed. For a reasonably fine samp
 \begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_lambda_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_11_11_23_31_31fig_lambda_GE.eps}
     \caption{Tip speed ratio}
     \label{fig:2023_06_24_15_57_04fig_lambda_GE}
   \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_pitch_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_11_11_23_31_31fig_pitch_GE.eps}
     \caption{Optimal pitch angle}
     \label{fig:2023_06_24_15_57_04fig_pitch_GE}
   \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_omega_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_11_11_23_31_31fig_omega_GE.eps}
     \caption{Rotational speed}
     \label{fig:2023_07_10_14_18_25fig_omega_GE}
   \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_09_28_23_23_20fig_cP_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_11_11_23_31_31fig_cP_GE.eps}
     \caption{Power coefficient}
     \label{fig:2023_06_24_15_57_04fig_cP_GE}
   \end{subfigure}
@@ -134,7 +136,7 @@ Strictly speaking, this study states that the approach proposed in \autoref{eq:T
 With this assumption in mind, the numerical values of the parameters and the $K_{opt,GE}$ gains are computed with the \autoref{eq:K_opt_GE} and the numerical values are the ones reported in \autoref{tab:tab_k_opt_GE}, for both the assumptions on the damping. The subscription \textit{GE} stresses the fact that the gains are computed considering the power at the generator side rather than the rotor one.
 
 \begin{equation}
-  K_{opt,GE} = \frac{\rho \, \pi \, R^5 \, cp_{GE}}{2\lambda_{GE}^3} = 1.10\cdot10^7 \ \ \mesunt{\newton\meter\square\second}
+  K_{opt,GE} = \frac{\rho \, \pi \, R^5 \, cp_{GE}}{2\lambda_{GE}^3} = 1.093\cdot10^7 \ \ \mesunt{\newton\meter\square\second}
   \label{eq:K_opt_GE}
 \end{equation}
 
@@ -143,9 +145,9 @@ With this assumption in mind, the numerical values of the parameters and the $K_
   \caption{Parameters for the control of the generator below rated WS}
   \begin{tabular}{ccccc}
     \toprule
-    & $\lambda_{GE} \, \left[-\right]$ & $\theta \, \mesunt{\radian}$ & $cp_{GE} \, \left[-\right]$ & $K_{opt,GE} \, \mesunt{\newton\meter\square\second}$ \\ \midrule
-    B=0 & 8.11 & 0 & 0.4645 & $9.462 \cdot 10^6$\\
-    $B\ne0$ & 7.70 & 0 & 0.4641 & $11.01 \cdot 10^6$\\ \bottomrule
+    & $\lambda_{GE} \, \left[-\right]$ & $\theta \, \mesunt{\degree}$ & $cp_{GE} \, \left[-\right]$ & $K_{opt,GE} \, \mesunt{\newton\meter\square\second}$ \\ \midrule
+    B=0 & 8.20 & 0.2328 & 0.4645 & $9.146 \cdot 10^6$\\
+    $B\ne0$ & 7.73 & -0.272 & 0.4643 & $10.93 \cdot 10^6$\\ \bottomrule
   \end{tabular}
   \label{tab:tab_k_opt_GE}
 \end{table}

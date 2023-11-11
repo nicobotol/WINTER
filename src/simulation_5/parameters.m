@@ -153,7 +153,7 @@ simulation.type = 11;       % 1 -> constant wind speed
 simulation.plot_time = 4980*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 0;% enables or disable plot's autosaving 
+simulation.print_figure = 1;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
