@@ -1,4 +1,4 @@
-,% this function is necessary to identify the lower and upper value where  to distribute the values of Kopt
+% this function is necessary to identify the lower and upper value where  to distribute the values of Kopt
 
 close all;
 clc;

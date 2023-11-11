@@ -11,7 +11,12 @@ Lambda = generator.Lambda; % [Wb] generator flux linkage
 eta = generator.eta; % [-] generator efficiency
 R = rotor.R; % [m]
 
-%% Below rated wind speed
+%   ____       _                           _           _  __        ______  
+%  | __ )  ___| | _____      __  _ __ __ _| |_ ___  __| | \ \      / / ___| 
+%  |  _ \ / _ \ |/ _ \ \ /\ / / | '__/ _` | __/ _ \/ _` |  \ \ /\ / /\___ \ 
+%  | |_) |  __/ | (_) \ V  V /  | | | (_| | ||  __/ (_| |   \ V  V /  ___) |
+%  |____/ \___|_|\___/ \_/\_/   |_|  \__,_|\__\___|\__,_|    \_/\_/  |____/ 
+                                                                          
 physical(1) = generator.Rs; % [Ohm] stator resistance
 physical(2) = rotor.A; % [m^2] rotor swept area
 physical(3) = B_eq; % [kgm^2] transmission equiuvalent damping
@@ -28,7 +33,7 @@ physical_no_B(3) = 0;
 % V0_b = 4:0.01:6-0.01;
 V0_b = [4:0.05:V0_rated+0.001]; % [m/s] wind speed 
 V0_a = V0_rated:0.5:25;         % [m/s] wind speed above rated one 
-V0_v = unique(sort([V0_b, V0_a])); % windspeed [m/s]
+V0_v = unique(sort([V0_b, V0_a])); % [m/s] windspeed 
 
 % Maximize the power output by selecting the proper combination of TSR and pitch angle
 % The variable x containts x = (TSR, pitch angle)
@@ -38,7 +43,7 @@ P = zeros(length(V0_b),1);
 min_v = zeros(length(V0_b),2); % minimization values (lambda, theta)
 x0 = [7.5, 0]; % initial guess value
 min_v_no_B = zeros(length(V0_b),2); % minimization values (lambda, theta)
-options = optimoptions(@fmincon,'Display', 'off');
+options = optimoptions(@fmincon,'Display','off');
 for i=1:length(V0_b)
   V0 = V0_b(i);    
   [min_v(i, :), P(i, :)] = fmincon(@(x)compute_P_GE(x, physical, lambda_vector, pitch_vector, lookup_cP, V0), x0, [], [], [], [], lb, ub, [], options);
@@ -88,7 +93,12 @@ P_electro_eta = 1.5*uq.*iq*eta;   % [W] electrical power
 P_joule_eta = 1.5*Rs*(iq*eta).^2; % [W] Joule losses
 
 
-%% Maximization of the genertaor power curve above the rated windspeed
+%      _    _                                _           _  __        ______  
+%     / \  | |__   _____   _____   _ __ __ _| |_ ___  __| | \ \      / / ___| 
+%    / _ \ | '_ \ / _ \ \ / / _ \ | '__/ _` | __/ _ \/ _` |  \ \ /\ / /\___ \ 
+%   / ___ \| |_) | (_) \ V /  __/ | | | (_| | ||  __/ (_| |   \ V  V /  ___) |
+%  /_/   \_\_.__/ \___/ \_/ \___| |_|  \__,_|\__\___|\__,_|    \_/\_/  |____/ 
+                                                                            
 theta_p = [-1:0.1:25]*pi/180;       % [rad] range of angle where to search for the optimum 
 lambda_a = zeros(length(V0_a), 1);  % [-] TSR
 cp_a = zeros(length(theta_p), length(V0_a));
