@@ -46,7 +46,7 @@ Since the $K_{opt}$ coefficient may be used either for computing the power and t
 
  A deeper derivation may observe that the damping can be included in \autoref{eq:T_G1}:
  \begin{equation}
-  T_G = \frac{P_G}{\omega_G} = \frac{P_R-B_{eq}(\omega_R)^2}{\omega_G} = K_{opt} - B_{eq}n^2\omega_G  
+  T_G^{G} = \frac{P_G}{\omega_G} = \frac{P_R-B_{eq}(\omega_R)^2}{\omega_G} = K_{opt} - B_{eq}n^2\omega_G  
   \label{eq:T_G5}
  \end{equation}
  With this expression a more fine tracking of the power is possible, and it is particularly suitable to strictly enforce a desired velocity to the machine. The drawback of the approach is the necessity to know the value of the damping coefficient, which in principle is something that may be not available. For this reason, in the tested cases that will be proposed later, \autoref{eq:T_G1} will be used, unless where explicitly specified.
@@ -54,7 +54,7 @@ Since the $K_{opt}$ coefficient may be used either for computing the power and t
 \subsubsection[Above WS]{Generator's torque reference based on rotor above rated WS}
 Above rated WS the objective is to keep the constant rotational speed and so the command:
 \begin{equation}
-    T_G = \frac{P_{R,rated}}{\omega_{G,rated}} = \frac{nP_{R,rated}}{\omega_{R,rated}}\ \ \left[\si{\newton\meter}\right]
+    T_G^{G} = \frac{P_{G,rated}}{\omega_{G,rated}} = \frac{n\left(P_{R,rated}-B_{eq}\left(\omega_{rated}\right)\right)^2}{\omega_{R,rated}}\ \ \left[\si{\newton\meter}\right]
     \label{eq:T_G3}
 \end{equation}
 is given.
@@ -73,39 +73,32 @@ The values of the gains are \acrshort{kiP}$= 5.5$ and \acrshort{kpP}$=0.5$, acco
 \subsection{Generator's torque reference synthesis based on generator}\label{subsec:method_control_P_GE}
 Considering that the maximization of the harvested mechanical power not always corresponds to the maximization of the produced electrical power, then it may be interesting to quantify this difference, and possibly to propose a control strategy taking it into account this. The problem of possible mismatch between the powers has been identified also in \cite{VLAD2010305}, where some experimental results for a low-power wind energy systems are presented.\\
 In this section a control approach based on the maximization of the power at the generator side of the driveline rather than the rotor one is proposed. Similarly to what was already done in \autoref{subsec:torque_reference}, also in this case two operational conditions are identified, between below and above the rated \acrshort{WS}.
-{\Huge
-\textcolor{red}{Mettere nuove equazioni}
-}
+
 First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
 Starting from a torque balance, the \textit{q-axis} current can be expressed as:
 \begin{gather}
   T_G^G = n\left(T_R^R - B_{eq}^R\omega_R\right) = n\left(\frac{P_R}{\omega_R} - B_{eq}\omega_R\right) = n\left(\frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega_R)}{2\omega_R} - B_{eq}\omega_R\right) = \notag \\
    = \frac{3}{2}p\Lambda_{mg}i_q \Rightarrow iq = \frac{n\left(A \, c_P \, \rho \, V_0^3 \,-\,2B_{eq}{\omega_R}^2\right)}{3\omega_R\,p\,\Lambda_{mg}} 
 \end{gather}
-then it can be substituted in the expression of the power at the generator:
+then it can be substituted in the expression of the steady state power at the generator:
 \begin{gather}
-  P_{GE} = P_{G} - R_s i_q^2 = T_G^G \frac{\omega_R}{n} - R_s i_q^2 = \\ \notag
-  = \left(-B_{eq}\,\omega_R + \frac{A\,c_P\,\rho\,V_0^3}{2\omega_R}\right)\omega_R - \frac{R_s\, n^2\left(A\,V_0^3\,c_P\,\rho - 2B_{eq}{\omega_R}^{2}\right)^2}{9\,{\omega_R}^{2}\,p^2\,\Lambda_{mg}^2} \label{eq:P_G_out_eq}
+  P_{GE} = P_{G} - \frac{3}{2} R_s i_q^2 = P_R - B_{eq}\omega_R^2 - \frac{3}{2} R_s i_q^2 = \\ \notag
+  =\frac{\rho\pi R^2c_PV_0^3}{2} - B_{eq}\omega_R^2-\frac{3}{2}R_s\left(\frac{n\left(A \, c_P \, \rho \, V_0^3 \,-\,2B_{eq}{\omega_R}^2\right)}{3\omega_R\,p\,\Lambda_{mg}}\right)^2 \notag \label{eq:P_G_out_eq}
 \end{gather}
+where the $\frac{3}{2}$ factor is necessary to take into account that the transformation from the abc reference frame to the dq is not power invariant.\\
 The tip speed ratio can be introduced:
 \begin{gather}
-  P_{GE} = \left(-B_{eq}\frac{\lambda V_0}{R} + \frac{A\,c_P\,\rho\,V_0^2\,R}{2\lambda}\right)\frac{\lambda \, V_0}{R} - \frac{R_s\,R^2\,n\left(A\,V_0^3\,c_P\,\rho - 2B_{eq}\left(\frac{\lambda V_0}{R}\right)^2\right)^2}{9\,\lambda^2V_0^2\,p^2\,\Lambda_{mg}^2}\label{eq:P_G_out_lambda}
+  P_{GE} = \frac{\rho\pi R^2c_PV_0^3}{2} - B_{eq}\left(\frac{V0\lambda}{R}\right)^2-\frac{3}{2}R_s\left(\frac{n\left(A \, c_P \, \rho \, V_0^3 \,-\,2B_{eq}{\left(\frac{V0\lambda}{R}\right)}^2\right)}{3\left(\frac{V0\lambda}{R}\right)\,p\,\Lambda_{mg}}\right)^2 \label{eq:P_G_out_lambda}
 \end{gather} 
-and to highlight the terms composing this power expression, the equation can be rewritten as:
-\begin{gather} 
-   P_{GE} = \frac{A\,c_P\,\rho\,V_0^3}{2} - \frac{R_s\,n^2\,A^2\,c_P^2\,\rho^2\,V_0^4\,R^2}{9\,\lambda^2\,p^2\,\Lambda_{mg}^2} + \notag \\
-   +B_{eq}\left(\frac{4\,R_s\,n^2\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda_{mg}^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,n^2\,\lambda^2\,V_0^2\,B_{eq}^2}{9\,R^2\,p^2\,\Lambda_{mg}^2} =  \notag \\
-   = \underbrace{\frac{A\,c_P\,\rho\,V_0^3}{2}}_{\text{Mech. IN}} - \underbrace{R_s \left(\frac{n\,T_R^R}{3/2p\Lambda_{mg}}\right)^2}_{\text{Joule loss}} + \underbrace{B_{eq}\left(\frac{4\,R_s\,A\,c_P\,\rho\,V_0^3}{9\,p^2\,\Lambda_{mg}^2} - \frac{\lambda^2\,V_0^2}{R^2}\right) - \frac{4\,R_s\,\lambda^2\,V_0^2\,B_{eq}^2}{9\,R^2\,p^2\,\Lambda_{mg}^2}}_{\text{Mixed damping-electrical losses}} 
-   \label{eq:P_G_out_damping}
-\end{gather}
+
 
 \subsubsection[Below rated WS]{Generator's torque reference bsed on generator below rated WS}
 In the case describe in \autoref{subsec:below_rotor} the choice of the reference values of TSR and pitch angle to be used below rated WS were based on only aerodynamical considerations, with the aim of maximizing the power extracted from the resource. In this case the same could not be done, and in principle it is not ensured that the TSR and the pitch are univocal identified. This has also the implication that the $K_{opt}$ used in the synthesis of the generator reference torque may be not univocal identified, and so the approach followed in \autoref{eq:T_G2} may be no more valid. \\
-To study the problem, a numerical method is employed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximizing the power itself) with respect to the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}, alongside the corresponding counterpart found with the policy based on the rotor power maximization. The study has been repeated twice, considering or excluding the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_damping}, when the damping is not included in the picture, the output power is the incoming over in the rotor minus the joule loss (since in that case $T_R=T_G$).
+To study the problem, a numerical method is employed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximizing the power itself) with respect to the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}, alongside the corresponding counterpart found with the policy based on the rotor power maximization. The study has been repeated twice, considering or excluding the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_eq}, when the damping is not included in the picture, the output power is the incoming over in the rotor minus the joule loss (since in that case $T_R=T_G$).
 \begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_11_11_23_31_31fig_lambda_GE.eps}
+    \includegraphics[width=\textwidth]{images/vectorial/2023_11_12_17_56_46fig_lambda_GE.eps}
     \caption{Tip speed ratio}
     \label{fig:2023_06_24_15_57_04fig_lambda_GE}
   \end{subfigure}
@@ -131,9 +124,10 @@ To study the problem, a numerical method is employed. For a reasonably fine samp
   \label{fig:parameters_for_below_rated}
 \end{figure}
 
-From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_damping} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provides a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Furthermore, since the minimization is performed with the Matlab's function $\texttt{fmincon}$, then the possible presence of local minima has to be taken into account by properly choosing the boundaries of the variables, that in this specific case have been set to $\lambda \in \left[7.5, 10\right]$ and $\theta\in\left[-5, 5\right] \si{\degree}$.  \\
+From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_eq} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provides a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Furthermore, since the minimization is performed with the Matlab's function $\texttt{fmincon}$, then the possible presence of local minima has to be taken into account by properly choosing the boundaries of the variables, that in this specific case have been set to $\lambda \in \left[7.5, 10\right]$ and $\theta\in\left[-5, 5\right] \si{\degree}$.  \\
 Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ it is supposed to be still valid. The simplest choice for these parameters is their mean, but also more articulated values may be possible, such as considering the wind speed distribution of the location where the turbine is going to be deployed and then consider the probability that each WS occurs during the year.\\
-With this assumption in mind, the numerical values of the parameters and the $K_{opt,GE}$ gains are computed with the \autoref{eq:K_opt_GE} and the numerical values are the ones reported in \autoref{tab:tab_k_opt_GE}, for both the assumptions on the damping. The subscription \textit{GE} stresses the fact that the gains are computed considering the power at the generator side rather than the rotor one.
+It is worth noting that this assumption is expected to be less realistic where the mean values is further from the optimal speed-dependent ones, which corresponds to the lower and higher WSs. Hence it may be possible that for those WSs the control would not be able to realize the MTTP.\\ 
+The numerical values of the parameters and the $K_{opt,GE}$ gains are computed with the \autoref{eq:K_opt_GE} and the numerical values are the ones reported in \autoref{tab:tab_k_opt_GE}, for both the assumptions on the damping. The subscription \textit{GE} stresses the fact that the gains are computed considering the power at the generator side rather than the rotor one.
 
 \begin{equation}
   K_{opt,GE} = \frac{\rho \, \pi \, R^5 \, cp_{GE}}{2\lambda_{GE}^3} = 1.093\cdot10^7 \ \ \mesunt{\newton\meter\square\second}

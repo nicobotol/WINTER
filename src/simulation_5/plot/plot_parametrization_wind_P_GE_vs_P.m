@@ -48,7 +48,7 @@ for i=1:2:wind.WS_len
 
 end
 xlabel(x_label,'interpreter','latex')
-legends_name = {'Rotor $P_{in}$','Rotor $P_{out}$','Gen. $P_{in}$','Gen. $P_{out}$'};
+legends_name = {'Rotor $P_{R}$','Rotor $P_{GE}$','Gen. $P_{R}$','Gen. $P_{GE}$'};
 if wind.WS_len ~= 2
   legend(legends_name, 'position', [0.75,0.238193265647898,0.127430735291504,0.058136925199618]);
 else

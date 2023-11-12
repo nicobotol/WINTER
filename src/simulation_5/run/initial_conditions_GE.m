@@ -17,7 +17,7 @@ generator.T_G0 = generator.K_opt_GE*gearbox.ratio*rotor.omega_R0^2; % [Nm]
 generator.P_G0 = generator.K_opt_GE*rotor.omega_R0^3; % [W]
 
 % initial blade pitch angle
-blade.pitch0 = interp1(lookup_pitch_P_GE(1,:), lookup_pitch_P_GE(2,:), V0_0);
+blade.pitch0 = rated_values_P_GE(4);
 
 % Intial aero torque
 lambda0 = rotor.omega_R0*rotor.R/V0_0;

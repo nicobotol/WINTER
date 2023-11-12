@@ -515,12 +515,12 @@ In the simulation, 5 constant wind speeds has been provided and the correspondin
 \begin{figure}[htb]
   \centering
   \begin{subfigure}{\columnwidth}
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_7_17_20_00comparison_control_laws.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_12_17_17_05comparison_control_laws.eps}
     \caption{Simulation without damping}
     \label{fig:comparison_control_laws_no_B}
   \end{subfigure}
   \begin{subfigure}{\columnwidth}
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_10_7_15_40_22comparison_control_laws.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_12_17_33_32comparison_control_laws.eps}
     \caption{Simulation with damping}
     \label{fig:comparison_control_laws_B}
   \end{subfigure}
@@ -528,9 +528,11 @@ In the simulation, 5 constant wind speeds has been provided and the correspondin
   \label{fig:comparison_control_laws}
 \end{figure}
 
-Even tough the differences are small, it could be seen that the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to deliver more electrical power. \\
+\textcolor{red}{
+  \textcolor{blue}{Scrivere che l'errore maggiore si ottiene a bassa e alta velocità, perchè l'assunzione del valore costante è meno valida che altrove}\\
+Even tough the differences are small, it could be seen that without damping the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to deliver more electrical power. \\
 When the damping is included in the picture, the results (\autoref{fig:comparison_control_laws_B}) are similar to the already described ones for the lower velocities, while they become different approaching the rated wind speed, when the law base on the rotor is able to produce a grater electrical output rather than the one based on the generator. A possible explanation is that the inclusion of the damping makes the assumption of considering $\lambda$ and $\theta$ constant no more valid, and so the designed control not effective as expected. 
-
+}
 \subsubsection[Transition below-above rated WS]{Simulation with the generator's torque reference based on the generator output for WS across rated wind speed}
 The test has been done in \textit{quasi-steady state} conditions, with a velocity ramp between 10 and 12 $\mesunt{\meter\per\second}$ in 500 seconds.\\
 The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}. \autoref{fig:2023_10_6_20_44_00fig_omega_param} reports the parametrization of the rotor rotational speed as function of the WS. It could be seen that both the control laws are able to follow the expected static curve, while the small perturbations around the rated wind speed are due to the action of the pitch mechanism.\\

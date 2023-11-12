@@ -81,7 +81,7 @@ yl_3.LabelHorizontalAlignment = 'left';
 title('Tip speed ratio')
 xlabel('$V_0$ [m/s]')
 ylabel('$\lambda$ [-]')
-legend('location', 'east')
+legend('location', 'southeast')
 if simulation.print_figure == 1
   export_figure(fig, strcat(date_fig, 'fig_lambda_GE', '.eps'), path_images); 
 end
@@ -135,11 +135,13 @@ clear("lookup_pitch_P_GE")
 rated_values_P_GE(1) = lambda_GE_mean;
 rated_values_P_GE(2) = cp_GE_mean;
 rated_values_P_GE(3) = omega_rated;
+rated_values_P_GE(4) = theta_opt;
 save('lookup\rated_values_P_GE.mat', "rated_values_P_GE");
 
 rated_values_P_GE_no_B(1) = lambda_GE_mean_no_B;
 rated_values_P_GE_no_B(2) = cp_GE_mean_no_B;
 rated_values_P_GE_no_B(3) = omega_rated_no_B;
+rated_values_P_GE_no_B(4) = theta_opt_no_B;
 save('lookup\rated_values_P_GE_no_B.mat', "rated_values_P_GE_no_B");
  
 % pitch to feather
