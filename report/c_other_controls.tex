@@ -66,8 +66,8 @@ Here the procedure for implementing the IMM is reported, following the method pr
   \text{Covariance matrix of the process: } Q = 2.3715\cdot10^{12} \, \mesunt{\square\newton\square \meter}\\
   \text{Covariance matrix of the measurement: } W = \left[\left(\frac{\omega_{rated}\cdot 0.01}{3}\right)^2\right] = \left[0.0338^2\right] \, \mesunt{\square\newton\square \meter}\\
   \text{Covariance matrix of the state estimation for the \textit{j-th} filter, and for the IMM: } P^{(j)} \, P\\
-  \text{Linearized model of the plant w.r.t. the states: } F = \frac{\partial f}{\partial x}(x, u, 0) = \left[1-\frac{2\,\Delta_t\,K_{opt}}{I_{eq}}x\right]\\
-  \text{Linearized model of the measurement w.r.t. the states: } H = \frac{\partial h}{\partial x}(x, u) = \left[1\right]\\
+  \text{Linearized model of the plant with respect to the states: } F = \frac{\partial f}{\partial x}(x, u, 0) = \left[1-\frac{2\,\Delta_t\,K_{opt}}{I_{eq}}x\right]\\
+  \text{Linearized model of the measurement with respect to the states: } H = \frac{\partial h}{\partial x}(x, u) = \left[1\right]\\
   \text{Linearized model of the noise: } G = \frac{\partial f}{\partial \tilde{T}_R}(x, u, 0)=\left[\frac{\Delta_t}{I_{eq}}\right]\\
   \text{Mode probability: } \mu^{(j)}\\
   \text{Likelihood of a filter: } \Lambda^{(j)}

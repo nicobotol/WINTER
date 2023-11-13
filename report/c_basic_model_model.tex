@@ -41,7 +41,7 @@ An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$
 \end{figure}
 
 \subsection[Aerodynamic]{Model of the aerodynamic}
-The inputs of this logical block are the wind speed, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor (see \autoref{fig:d_aerodynamic_block}). 
+The inputs of this logical block are the WS, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor (see \autoref{fig:d_aerodynamic_block}). 
 \begin{figure}
   \centering
   \input{d_aerodynamic_block.tex}
@@ -78,7 +78,7 @@ The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}
   \caption{Logical block representing the mechanical transmission}
   \label{fig:d_mechanical_transmission_block}
 \end{figure}
-In this simple simulation, the transmission ratio is unitary, and so the relationship between the the rotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
+In this simple simulation, the transmission ratio is unitary, and so the relationship between therotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
 \begin{equation}
     n = \frac{\omega_{R}}{\omega_{G}} = \frac{1}{1}
     \label{eq:transmission_ratio}
@@ -166,7 +166,7 @@ In this frame the equations of the machine are:
   \omega_{me}\Lambda_{mg}=u_q+L_{s}i_d\omega_{me}+L_{s}\frac{di_q}{dt}+R_{s}i_q
   \label{eq:q_axis_eq}
 \end{gather}
-where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\mesunt{\radian \per \second}$), \acrshort{Ls} $\mesunt{\henry}$ is the inductance and \acrshort{Rs} $\mesunt{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\mesunt{\weber}$ is the flux linkage of the permanent magnets.\\
+where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as thevoltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\mesunt{\radian \per \second}$), \acrshort{Ls} $\mesunt{\henry}$ is the inductance and \acrshort{Rs} $\mesunt{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\mesunt{\weber}$ is the flux linkage of the permanent magnets.\\
 By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
   p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L_{s}\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R_{s}(i_d^2 + i_q^2)
@@ -228,7 +228,7 @@ The friction has been considered $ 0 \, \mesunt{\kilo\gram\square\meter\per\seco
  In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually of 1.5 the switching delay.
  
  \subsubsection[Power curve with generator]{Extension of the static power curve including the generator}\label{subsec:genertaor_power_curve}
- Now that the generator's characteristics have been introduced, it is possible to extend the static power curve presented in \autoref{subsec:static_power_curve} taking into account the electrical losses in order to represent the expected $P_{GE}$ for each WS. These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, with or without the damping.
+ Now that the generator's characteristics have been introduced, it is possible to extend the static power curve presented in \autoref{subsec:static_power_curve} taking into account the electrical losses $P_{joule}$ in order to represent the expected $P_{GE}$ for each WS. These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, with or without the damping.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.65\textwidth]{images/vectorial/fig_static_electro_power.eps}

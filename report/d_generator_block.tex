@@ -9,6 +9,7 @@ dot/.style = {circle, fill, minimum size=#1,
 dot/.default = 4pt % size of the circle diameter 
 }
 
+\usetikzlibrary {arrows.meta}
 \usetikzlibrary{positioning}
 \makeatletter
 \pgfdeclareshape{record}{
@@ -48,51 +49,13 @@ dot/.default = 4pt % size of the circle diameter
 
   \draw [-] (4) -| node {} (5);
   \draw [-] (5) -| node {} (1);
-  \draw [->] (1) -- node {$P_G$} (6);
+  \draw [arrows = {-Stealth[scale=1.5]}] (1) -- node {$P_G$} (6);
 
-  \draw [->] (3) -- node {$T^{*}_{G}$} (10);
+  \draw [arrows = {-Stealth[scale=1.5]}] (3) -- node {$T^{*}_{G}$} (10);
 
   \draw [-] (2) -- node {$\omega_G$} (8);
-  \draw [->] (8) -- node {} (7);
-  \draw [->] (8) |- node {} (9);
-  \draw [->] (11) -- node[pos=0.95] {$T_G$} (12);
-
-  % \node [style=block] (1) at (3, 0) {Aero};
-  % \node [style=block, align=center] (2) at (6, 0) {Mech. \\ dynamic};
-  % \node [style=block] (3) at (3, -2.5) {Mechanical \\ transmission};
-  % \node [style=block, align=center] (4) at (6, -2.5) {Pitch \\ controller};
-  % \node [style=block, align=center] (5) at (9, -2.5) {Pitch \\ actuator};
-  % \node [style=block, align=center] (6) at (6, -4) {Torque \\ controller};
-  % \node [style=block] (7) at (9, -4) {Generator};
-  % \node [style=block, align=center] (8) at (12, -4) {Power \\electronics};
-  % \node [style=block] (9) at (15, -4) {Grid};
-  % \node [style=input] (10) at (1.5,0.35) {};
-  % \node [dot=1pt] (11) at (1.25, -2.5) {};
-  % \node [dot=1pt] (12) at (7.5, 1) {};
-  % \node [dot=1pt] (13) at (1.25, 1) {};
-  % \node [dot=1pt] (14) at (10.25, -1.5) {};
-  % \node [dot=1pt] (15) at (2, -1.5) {};
-  % \node [dot=1pt] (17) at (4.5, -2.5) {};
-  % \node [dot=1pt] (18) at (10.5, -4) {};
-  % \node [dot=1pt] (19) at (4.5, -0.75) {};
-
-  % \draw [->] (10) -- node {$V_0$} (1.150);
-  % \draw [->] (11) -- node {$\omega_R$} (3);
-  % \draw [-] (11) -- node {} (13);
-  % \draw [->] (1.160) ++(1.15,0) -- node {$T_R$} (2.165);
-  % \draw [-] (2) -| node {} (12); 
-  % \draw [-] (12) -- node {} (13);
-  % \draw [->] (13) |- node {} (1.175);
-  % \draw [->] (3) -> node {$\omega_G$} (4);
-  % \draw [->] (4) -> node {$\hat{\theta}$} (5);
-  % \draw [-] (5) -| node {} (14);
-  % \draw [-] (15) -- node {$\theta$} (14);
-  % \draw [->] (15) |- node {} (1.200);
-  % \draw [-] (17) |- node {} (6);
-  % \draw [->] (6) -- node {$\hat{T}_G$} (7);
-  % \draw [->] (7) -> node[below] {$P_G$} (8);
-  % \draw [-] (18) |- node {} (19);
-  % \draw [->] (19) |- node {$T_G$} (2.200);
-  % \draw [->] (8) -> node {$P_{GE}$} (9);
+  \draw [arrows = {-Stealth[scale=1.5]}] (8) -- node {} (7);
+  \draw [arrows = {-Stealth[scale=1.5]}] (8) |- node {} (9);
+  \draw [arrows = {-Stealth[scale=1.5]}] (11) -- node[pos=0.95] {$T_G$} (12);
 
 \end{tikzpicture}

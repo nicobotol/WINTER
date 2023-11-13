@@ -1,5 +1,6 @@
 \section{Description of the most important subsystems} \label{sec:c_modelling_of_subsystem}
 A general schema of a WT energy conversion chain is reported in \autoref{fig:fig_drivetrain} (source \cite{Olimpo_Anaya‐Lara}). 
+
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.5\textwidth]{images/fig_drivetrain.jpg}
@@ -29,7 +30,8 @@ and it is computed from the analysis of the elementary blade cross section. More
     \lambda = \frac{\omega_R R}{V_0} \ \ \left[-\right]
     \label{eq:TSR}
 \end{equation}
-with \acrshort{omegaR} being the rotor rotational speed in $\left[\si{\radian \per \second}\right]$, \acrshort{R} is the rotor radius in $\left[\si{\meter}\right]$. The pitch angle is the rotation angle of the blade around its main axis, and by adjusting it the \acrfull{AOA} of the entire blade changes, producing a modification of the harvested power. The \acrshort{AOA} is the one between the incoming wind flow and blade's chordline, denoted as \acrshort{alpha} in \autoref{fig:velocity_triangle}. 
+with \acrshort{omegaR} being the rotor rotational speed in $\left[\si{\radian \per \second}\right]$, \acrshort{R} is the rotor radius in $\left[\si{\meter}\right]$.\\
+The pitch angle is the rotation angle of the blade around its main axis, and by adjusting it the \acrfull{AOA} of the entire blade changes, producing a modification of the harvested power. The \acrshort{AOA} is the one between the incoming wind flow and blade's chordline, denoted as \acrshort{alpha} in \autoref{fig:velocity_triangle}. 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.5\textwidth]{images/velocity_triangle.png}
@@ -112,8 +114,8 @@ Alongside with the previously discussed configurations, \cite{Olimpo_Anaya‐Lar
 \end{figure}
 
 \subsection{Rotor braking system}
-It is generally known that the lifespan of a wind turbine is in the order of 20 years, reaching even 30-35 with proper maintenance and repairing, as stated for example by the WT manufacturer Gamesa \cite{gamesa_life_turbine}. In all this long period of time the turbine has to be stopped for example in case of extreme events or maintenance, and so a rotor braking system is necessary.\\
-The primary brakes is the aerodynamic while an emergency mechanical brake is also present. The first one acts by pitching the entire blades of 90 $\si{\degree}$ upwind (if the blade can be pitched from the root) or turning only the tip (whenever the pitching mechanism is not present, such as the old stall-regulated turbines). The generated aero torque slows down the rotor in few rotations at the most \cite{brake_dromstorre}. Usually these mechanism are spring operated in order to work also under electrical or hydraulic power failures.\\
+It is generally known that the lifespan of a wind turbine is in the order of 20 years, reaching even 30-35 with proper maintenance and repairing, as stated for example by the WT manufacturer Gamesa \cite{gamesa_life_turbine}. In all this long period of time the turbine has to be stopped such as in case of extreme events or maintenance, and so a rotor braking system is necessary.\\
+The primary brakes is the aerodynamic while an emergency mechanical brake is also present. The first one acts by pitching the entire blades of 90$\si{\degree}$ upwind (if the blade can be pitched from the root) or turning only the tip (whenever the pitching mechanism is not present, such as the old stall-regulated turbines). The generated aero torque slows down the rotor in few rotations at the most \cite{brake_dromstorre}. Usually these mechanism are spring operated in order to work also under electrical or hydraulic power failures.\\
 The mechanical brake is mainly used as parking system and emergency brake \cite{brake_dromstorre}, and it is usually placed on the high speed shaft (in the geared turbines) and activated by an hydraulic circuit \cite{brake_wiley}. 
 
 \subsection{Yaw mechanism and yaw braking}

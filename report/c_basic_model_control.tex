@@ -74,7 +74,7 @@ The values of the gains are \acrshort{kiP}$= 5.5$ and \acrshort{kpP}$=0.5$, acco
 Considering that the maximization of the harvested mechanical power not always corresponds to the maximization of the produced electrical power, then it may be interesting to quantify this difference, and possibly to propose a control strategy taking it into account this. The problem of possible mismatch between the powers has been identified also in \cite{VLAD2010305}, where some experimental results for a low-power wind energy systems are presented.\\
 In this section a control approach based on the maximization of the power at the generator side of the driveline rather than the rotor one is proposed. Similarly to what was already done in \autoref{subsec:torque_reference}, also in this case two operational conditions are identified, between below and above the rated \acrshort{WS}.
 
-First of all, an expression of the power at the output of the generator as function of the the WS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
+First of all, an expression of the power at the output of the generator as function of theWS, the rotational speed, and the pitch angle through the power coefficient needs to be found. \\
 Starting from a torque balance, the \textit{q-axis} current can be expressed as:
 \begin{gather}
   T_G^G = n\left(T_R^R - B_{eq}^R\omega_R\right) = n\left(\frac{P_R}{\omega_R} - B_{eq}\omega_R\right) = n\left(\frac{A c_P \rho V_0^3 c_P(\theta, V_0, \omega_R)}{2\omega_R} - B_{eq}\omega_R\right) = \notag \\
@@ -92,7 +92,7 @@ The tip speed ratio can be introduced:
 \end{gather} 
 
 
-\subsubsection[Below rated WS]{Generator's torque reference bsed on generator below rated WS}
+\subsubsection[Below rated WS]{Generator's torque reference based on generator below rated WS}
 In the case describe in \autoref{subsec:below_rotor} the choice of the reference values of TSR and pitch angle to be used below rated WS were based on only aerodynamical considerations, with the aim of maximizing the power extracted from the resource. In this case the same could not be done, and in principle it is not ensured that the TSR and the pitch are univocal identified. This has also the implication that the $K_{opt}$ used in the synthesis of the generator reference torque may be not univocal identified, and so the approach followed in \autoref{eq:T_G2} may be no more valid. \\
 To study the problem, a numerical method is employed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximizing the power itself) with respect to the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}, alongside the corresponding counterpart found with the policy based on the rotor power maximization. The study has been repeated twice, considering or excluding the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_eq}, when the damping is not included in the picture, the output power is the incoming over in the rotor minus the joule loss (since in that case $T_R=T_G$).
 \begin{figure}[htb]
@@ -120,13 +120,19 @@ To study the problem, a numerical method is employed. For a reasonably fine samp
     \caption{Power coefficient}
     \label{fig:2023_06_24_15_57_04fig_cP_GE}
   \end{subfigure}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/vectorial/fig_K_map.eps}
+    \caption{$K_{opt}$ gain}
+    \label{fig:fig_K_map}
+  \end{subfigure}
   \caption{Comparison of the most important parameters for the operation below rated WS, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power. This latter case is investigated with and without taking the damping into account.}
   \label{fig:parameters_for_below_rated}
 \end{figure}
 
-From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible around $5.6 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_eq} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provides a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Furthermore, since the minimization is performed with the Matlab's function $\texttt{fmincon}$, then the possible presence of local minima has to be taken into account by properly choosing the boundaries of the variables, that in this specific case have been set to $\lambda \in \left[7.5, 10\right]$ and $\theta\in\left[-5, 5\right] \si{\degree}$.  \\
-Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ it is supposed to be still valid. The simplest choice for these parameters is their mean, but also more articulated values may be possible, such as considering the wind speed distribution of the location where the turbine is going to be deployed and then consider the probability that each WS occurs during the year.\\
-It is worth noting that this assumption is expected to be less realistic where the mean values is further from the optimal speed-dependent ones, which corresponds to the lower and higher WSs. Hence it may be possible that for those WSs the control would not be able to realize the MTTP.\\ 
+From the results in \autoref{fig:2023_06_24_15_57_04fig_lambda_GE} and \ref{fig:2023_06_24_15_57_04fig_pitch_GE}, it could be seen that the optimal TSR and pitch angle are not constant for any WS, and furthermore they do not change with a constant slope in the case of $B\neq0 \, \mesunt{\kilo\gram\square\meter\per\second}$. In this latter case, a change in the slope is visible between $5\div5.5 \mesunt{\meter \per\second}$. This could be explained remembering that the \autoref{eq:P_G_out_eq} contains the evaluation of a lookup table, that has to be in some way interpolated. For this specific application it has been seen that the use of the options $\texttt{cubic}$ in the $\texttt{interp2}$ Matlab function provides a smoother interpolation rather than the one obtained with the default option $\texttt{linear}$. Furthermore, since the minimization is performed with the Matlab's function $\texttt{fmincon}$, then the possible presence of local minima has to be taken into account by properly choosing the boundaries of the variables, that in this specific case have been set to $\lambda \in \left[7.5, 10\right]$ and $\theta\in\left[-5, 5\right] \si{\degree}$.  \\
+Strictly speaking, this study states that the approach proposed in \autoref{eq:T_G2} is not more valid because the gain $K_{opt}$ would have to be change according to the different WS, which is available only with the use of a proper sensor or estimator, never taken into account so far. Despite this, it could be seen that the variation of the two considered parameters is quite limited, and so the approximation of using a constant $K_{opt}$ it is supposed to be still valid. The simplest choice for these parameters are their mean, but also more articulated values may be possible, such as considering the wind speed distribution of the location where the turbine is going to be deployed and then consider the probability that each WS occurs during the year.\\
+It is worth noting that this assumption is expected to be less realistic where the mean values is further from the optimal speed-dependent ones, which corresponds to the lower and higher WSs. Hence it may be possible that for those WSs the control would not be able to realize the MPPT.\\ 
 The numerical values of the parameters and the $K_{opt,GE}$ gains are computed with the \autoref{eq:K_opt_GE} and the numerical values are the ones reported in \autoref{tab:tab_k_opt_GE}, for both the assumptions on the damping. The subscription \textit{GE} stresses the fact that the gains are computed considering the power at the generator side rather than the rotor one.
 
 \begin{equation}
@@ -146,8 +152,8 @@ The numerical values of the parameters and the $K_{opt,GE}$ gains are computed w
   \label{tab:tab_k_opt_GE}
 \end{table}
 
-\subsubsection[Above rated WS]{Generator's torque reference bsed on generator above WS}
-Above rated WS, the definition of the new pitch angle map followed the same approach done in the previous case. A parametric study on the pitch angle has been done, meaning that for each WS, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, the higher the power extracted is).
+\subsubsection[Above rated WS]{Generator's torque reference based on generator above WS}
+Above rated WS, the definition of the new pitch angle map follows the same approach done in the previous case. A parametric study on the pitch angle has been done, meaning that for each WS, \autoref{eq:P_G_out_eq} has been applied to a set of pitch angles and then the one limiting the power output (at the generator) at the rated value has been identified. The results are shown in \autoref{fig:fig_new_pitch_map}. It could be seen that this control leads to a lower limitation of the angle, meaning that an higher mechanical power is extracted from the resource (remember that the closer we are the to null pitch, the higher the power extracted is).
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.5\textwidth]{images/vectorial/fig_new_pitch_map.eps}
@@ -158,8 +164,8 @@ Above rated WS, the definition of the new pitch angle map followed the same appr
 \subsubsection[Implementation details]{Implementation details of the genereator's controller based on the power at the generator side}
 In order to validate these strategies, the two controllers have been modified with respect to the previous tests:
 \begin{itemize}
-  \item PMSM control: in the schema \autoref{fig:d_torque_control_GE} with respect to the one in \autoref{fig:d_torque_control_2}, the newly computed  $K_{opt}$ has been used%, and the mechanical input power to the generator $P_G$ has been replaced by the electrical power $P_{GE}$ in the feedback line
-  \item Blade pitch control: the new value of rated rotational speed has been used instead of the old one in \autoref{fig:pitch_control}
+  \item PMSM control: in the schema \autoref{fig:d_torque_control_GE} with respect to the one in \autoref{fig:d_torque_control_2}, the newly computed  $K_{opt,GE}$ has been used%, and the mechanical input power to the generator $P_G$ has been replaced by the electrical power $P_{GE}$ in the feedback line
+  \item Blade pitch control: the new value of rated rotational speed has been used instead of the old one in \autoref{fig:pitch_control}, and the initial condition of the integrator has been set to the newly identified mean pitch angle.
 \end{itemize}
 
 \begin{figure}[htb]
@@ -170,7 +176,7 @@ In order to validate these strategies, the two controllers have been modified wi
 \end{figure}
 
 \subsection{Generator's low level control}\label{subsec:generator_low_level-control}
-Once the desired torque is generated according to the desired control law as described in \autoref{subsec:torque_reference} or \autoref{subsec:method_control_P_GE}, the first operation of the control scheme is to transform it in a $I_q \, \mesunt{\ampere}$ current reference knowing that:
+Once the torque reference is synthesized according to the desired control law as described in \autoref{subsec:torque_reference} or \autoref{subsec:method_control_P_GE}, the first operation of the control scheme is to transform it in a $I_q \, \mesunt{\ampere}$ current reference knowing that:
 \begin{equation}
     T_G = \frac{3}{2}\Lambda_{mg} p I_q \ \ \left[\si{\newton\meter}\right]
     \label{eq:T_G4}
@@ -288,7 +294,7 @@ As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference},
     k_i(\theta) = \frac{J_{eq}\omega_{rated}\omega_{\Phi\eta}^2}{\frac{1}{n}\left(-\frac{dP_R(\theta)}{d\theta}\right)\vert_{\theta=0}}GK(\theta)
     \label{eq:ki}
 \end{gather}
-where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, \textit{n} is the gear ratio, \acrshort{zetaphi} and \acrshort{omegaphieta} are the damping ratio and the resonant frequency of the second order dynamic response of the idealized PI-controlled rotor-speed error (source \cite{NREL_5MW_reference}), and \acrshort{thetaK} is a parameter related to the pitch sensitivity and will be further discussed in \autoref{subsec:gain_schdeuling_NREL5MW}. \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6\mesunt{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power w.r.t. the pitch angle $-\frac{dP_R}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
+where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, \textit{n} is the gear ratio, \acrshort{zetaphi} and \acrshort{omegaphieta} are the damping ratio and the resonant frequency of the second order dynamic response of the idealized PI-controlled rotor-speed error (source \cite{NREL_5MW_reference}), and \acrshort{thetaK} is a parameter related to the pitch sensitivity and will be further discussed in \autoref{subsec:gain_schdeuling_NREL5MW}. \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6\mesunt{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power with respect to the pitch angle $-\frac{dP_R}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
 The frozen wake BEM is implemented in two steps, then repeated for all the \acrshort{WS} between the rated and the cut out one. In the first one, the standard BEM presented in \autoref{subsec:BEM_algorithm} is applied on the blade, considering that it is pitched as to produce the rated power (i.e. the pitch angle is the one scheduled in \autoref{subsec:pitch_map}). In this step the induction coefficients \textit{a} and \textit{$a_{prime}$} found are stored. In the second step, the previously described BEM is applied but the pitch angle is changed on a set around the optimal one, while the induction coefficients are kept constant (i.e. they are not computed with the iterative procedure). The power is then computed for each pitch angle and finally the power derivative with respect to the pitch angle is obtained applying a numerical differentiation method.
 
 \subsubsection{Validation of the procedure for the pitch gains on the NREL 5 MW}\label{subsec:gain_schdeuling_NREL5MW}

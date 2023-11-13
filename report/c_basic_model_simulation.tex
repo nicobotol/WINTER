@@ -6,7 +6,7 @@ In this section the developed model is tested applying different controllers and
   \item random wind series;
   \item disabling of the pitch controller;
   \item random wind series and different pitching dynamics;
-  \item comparison between the control laws based on the rotor power (as described in \autoref{subsec:torque_reference}) or the generator one (\autoref{subsec:method_control_P_GE}), for constant wind speed.
+  \item comparison between the control laws based on the rotor power (as described in \autoref{subsec:torque_reference}) or the generator one (\autoref{subsec:method_control_P_GE}), for constant, ramp, or generated wind speeds.
 \end{itemize}
 \subsection{Simulation with velocity ramp}
 \subsubsection[Simulation setting]{Simulation setting for test with velocity ramp}
@@ -183,7 +183,7 @@ In this simulation these error metrics are not so representative since the wind 
 
 The first two simulations are very close to each other, since the static gain of \textit{sim. 2} is almost the same of the scheduling at rated speed. Furthermore, the results of the fourth simulation are not too different from the first two. Finally, it could be also noticed that the gain in case \textit{3} is very different from the other one, suggesting that this choice is not suitable for this condition. 
 
-\subsubsection[$V_{10}=15 \, \mesunt{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS ofV\textsubscript{10}= 15 $\left[ \text{ms}\textsuperscript{-1} \right]$}
+\subsubsection[$V_{10}=15 \, \mesunt{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS of V\textsubscript{10}= 15 $\left[ \text{ms}\textsuperscript{-1} \right]$}
 The second simulation is run with $V_{10}=15 \ \mesunt{\meter\per\second}$, and so the wind speed is expected to be always above the rated one. The simulation settings are reported in \autoref{tab:simulation_config_variable_gains2}.
 \begin{table}[htb]
   \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency2}}
@@ -533,7 +533,7 @@ As could be seen in \autoref{fig:comparison_control_laws_B}, when the damping is
 As expected the control based on the generator is less valid for high and low WS, where the assumption of constant parameters is less valid rather than using the velocity-dependent parameters. 
 
 \subsubsection{Simulation with the generator's torque reference based on the generator output for generated wind series}
-The implemented control law is also tested for a generic wind series input. The chosen 5 means are 5, 6, 8, 10, 11.4 $\mesunt{\meter\per\second}$ and the turbulence 0.5 0.5 1 1 1 $\mesunt{\meter\per\second}$. For each wind condition, the simulation is run twice initially employing a control low based on the generator while later on the rotor. All the simulation lasted 500 $\mesunt{\second}$. The comparison of the results is done calculating the energy extracted, which depends both on the power and the time chosen for the integration. To get rid of the time dependency and have more fair results, the energy is evaluated for 4 time intervals form the end of the simulation. The results are reported in \autoref{tab:energy_K_opt_comp}. The normalized energy difference is given by:
+The implemented control law is also tested for a generic wind series input. The chosen 5 means are 5, 6, 8, 10, 11.4 $\mesunt{\meter\per\second}$ and the turbulence 0.5, 0.5, 1, 1, 1 $\mesunt{\meter\per\second}$. For each wind condition, the simulation is run twice, initially employing a control low based on the generator while later on the rotor. All the simulation lasted 500 $\mesunt{\second}$. The comparison of the results is done calculating the energy extracted by integrating the corresponding power, which depends both on the power and the time chosen for the integration. To get rid of the dependency introduced by the arbitrary choice of the integrations length and have more fair results, the energy is evaluated for 4 time intervals form the end of the simulation. The results are reported in \autoref{tab:energy_K_opt_comp}. The normalized energy difference is given by:
 \begin{equation}
   \Delta E = \frac{E_{generator} - E_{rotor}}{E_{generator}}\cdot 100 \, \left[\%\right]
 \end{equation}

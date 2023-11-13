@@ -37,8 +37,8 @@ P = zeros(length(V0_b),1);
 min_v = zeros(length(V0_b),2); % minimization values (lambda, theta)
 x0 = [7.5; 0]; % initial guess value
 
-[lambda_GE_mean, lambda_GE, theta_opt, theta, feather, omega_rated, omega_GE, cp_GE_mean, cp_GE, P_R, P_G, P_GE, P_electro, P_joule]= fun_compute_P(physical, lambda_vector, pitch_vector, lookup_cP, lookup_Pitch, V0_b, V0_a, V0_v, V0_rated, x0, lb, ub, line_width);
-[lambda_GE_mean_no_B, lambda_GE_no_B, theta_opt_no_B, theta_no_B, feather_no_B, omega_rated_no_B, omega_GE_no_B, cp_GE_mean_no_B, cp_GE_no_B, P_R_no_B, P_G_no_B, P_GE_no_B, P_electro_no_B, P_joule_no_B]= fun_compute_P(physical_no_B, lambda_vector, pitch_vector, lookup_cP, lookup_Pitch, V0_b, V0_a, V0_v, V0_rated, x0, lb, ub, line_width);
+[lambda_GE_mean, lambda_GE, theta_opt, theta, feather, omega_rated, omega_GE, cp_GE_mean, cp_GE, P_R, P_G, P_GE, P_electro, P_joule, K, K_opt]= fun_compute_P(physical, lambda_vector, pitch_vector, lookup_cP, lookup_Pitch, V0_b, V0_a, V0_v, V0_rated, x0, lb, ub, line_width);
+[lambda_GE_mean_no_B, lambda_GE_no_B, theta_opt_no_B, theta_no_B, feather_no_B, omega_rated_no_B, omega_GE_no_B, cp_GE_mean_no_B, cp_GE_no_B, P_R_no_B, P_G_no_B, P_GE_no_B, P_electro_no_B, P_joule_no_B, K_no_B, K_opt_no_B]= fun_compute_P(physical_no_B, lambda_vector, pitch_vector, lookup_cP, lookup_Pitch, V0_b, V0_a, V0_v, V0_rated, x0, lb, ub, line_width);
 
 %% Plots
 % Below rated
@@ -125,6 +125,28 @@ if simulation.print_figure == 1
   export_figure(fig_new_pitch_map, '\fig_new_pitch_map.eps', path_images);
 end
 
+% Pitch angle as function of V0
+fig_K_map = figure('Color','w');
+hold on
+plot(V0_b, K, 'LineWidth', line_width, 'DisplayName', '$K_{GE}$')
+plot(V0_b, K_no_B, 'LineWidth', line_width, 'DisplayName', '$K_{GE}$  B=0$[\frac{kgm^2}{s}]$')
+y1 = yline(K_opt, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibility','off','Color',color(1), 'FontSize', font_size);
+y2 = yline(K_opt_no_B, '--', 'Mean', 'LineWidth',line_width,'HandleVisibility','off','Color',color(2), 'FontSize', font_size);
+y1.LabelHorizontalAlignment = 'left';
+y1.LabelVerticalAlignment = 'top';
+y2.LabelHorizontalAlignment = 'left';
+y2.LabelVerticalAlignment = 'bottom';
+yline(rotor.K_opt, '--', 'LineWidth',line_width, 'DisplayName','$K_{R}$','Color',colors_vect(5,:))
+xlabel('$V_{0}$ [m/s]')
+ylabel('$K_{opt}$ [$Nms^2$]')
+title('Comparison of feedback gains')
+legend('location', 'northeast')
+grid on
+box on
+if simulation.print_figure == 1
+  export_figure(fig_K_map, '\fig_K_map.eps', path_images);
+end
+
 
 %   ____                    _             _                
 %  / ___|  __ ___   _____  | | ___   ___ | | ___   _ _ __  
@@ -167,7 +189,7 @@ save('lookup\lookup_P_GE.mat', "lookup_P_GE");
 %  |  _| |_| | | | |  | (_| (_) | | | | | | |_) | |_| | ||  __/   |  __/ 
 %  |_|  \__,_|_| |_|___\___\___/|_| |_| |_| .__/ \__,_|\__\___|___|_|    
 %                 |_____|                 |_|                |_____|     
-function [lambda_opt, lambda, theta_opt, theta, feather, omega_rated, omega, cp_mean, cp, P_R, P_G, P_GE, P_electro, P_joule] = fun_compute_P(physical, lambda_vector, pitch_vector, lookup_cP, lookup_Pitch, V0_b, V0_a, V0_v, V0_rated, x0, lb, ub, line_width)
+function [lambda_opt, lambda, theta_opt, theta, feather, omega_rated, omega, cp_mean, cp, P_R, P_G, P_GE, P_electro, P_joule, K, K_opt] = fun_compute_P(physical, lambda_vector, pitch_vector, lookup_cP, lookup_Pitch, V0_b, V0_a, V0_v, V0_rated, x0, lb, ub, line_width)
   %   ____                                _                
   %  |  _ \ __ _ _ __ __ _ _ __ ___   ___| |_ ___ _ __ ___ 
   %  | |_) / _` | '__/ _` | '_ ` _ \ / _ \ __/ _ \ '__/ __|
@@ -252,5 +274,8 @@ function [lambda_opt, lambda, theta_opt, theta, feather, omega_rated, omega, cp_
   uq =  omega_v*p*Lambda - Rs*iq;     % [V] generator voltage
   P_electro = 1.5*uq.*iq;           % [W] electrical power
   P_joule = 1.5*Rs*iq.^2;           % [W] Joule losses
+
+  K = rho*cp*pi*R^5./(2*lambda.^3); % optimal K_opt gain
+  K_opt = rho*cp_mean*pi*R^5./(2*lambda_opt.^3); % optimal K_opt gain
 
 end

@@ -27,7 +27,7 @@ The turbine works in three regions: region 1 is the one below rated wind speed w
 	\label{eq:dynamic_rotor_gen}
 \end{gather}
 with J the total inertia, $K_t$ is the total damping.\\
-Torque controller implemented estimating the the aerodynamic torque with an estimator. Pitch controller implementing the angle as function of the error between the actual power and the nominal one.\\
+Torque controller implemented estimating theaerodynamic torque with an estimator. Pitch controller implementing the angle as function of the error between the actual power and the nominal one.\\
 In the work a permanent magnets synchronous generator is used. The d-q current components are controlled via a PI controller. \\
 Torque estimation is quite good and so the speed tracking. The steady state tracking error is removed by the integral action on the torque estimator.\\
 The reference rotational speed is carried out from the measurements on the wind speed, however there are other methods to define the reference speed without wind speed measurements to avoid inaccuracy of the measurements and its relation to the wins speed as this is perceived by the wind turbine.
@@ -91,7 +91,7 @@ The rotor-generator dynamic are controlled by Eq. \ref{eq:dynamic_rotor_gen} in 
 \subsection{Proposed control system}
 The control has to: process the maximum amount of energy at different wind speed, increase efficiency, increase useful life of the WT, decrease structural mechanical effort, reduce energy production downtime, provide optimum dynamic performances, ensure system stability. The control is based on the typical theoretical power curve, featuring 5 operating regions.\\
 Region 1: the low wind speed does not provide enough torque to make the rotor turn and furthermore this low speed rotation may force a low frequency vibration of the tower. For those reasons, the generator is kept braked. Furthermore the blades are kept pitched at 90 \si{\degree}.\\
-Region 2: MPPT algorithm must be applied to extract the maximum power provided by the wind, and the pitch angle is kept at the value of maximum aerodynamic efficiency (usually 0\si{\degree} ). In this work the control is done with a method called Optimal Torque Control. Even though it has a slower dynamic response to variations in wind speed, it provides smoother transitions wrt to other methods. This reduces the mechanical stress on the components of the wind system. The OTC uses a rotational speed sensor and $\omega_m$ is used to compute the mechanical torque reference, assuming that the turbine works with the most convenient Cp and $\lambda$: 
+Region 2: MPPT algorithm must be applied to extract the maximum power provided by the wind, and the pitch angle is kept at the value of maximum aerodynamic efficiency (usually 0\si{\degree} ). In this work the control is done with a method called Optimal Torque Control. Even though it has a slower dynamic response to variations in wind speed, it provides smoother transitions with respect to to other methods. This reduces the mechanical stress on the components of the wind system. The OTC uses a rotational speed sensor and $\omega_m$ is used to compute the mechanical torque reference, assuming that the turbine works with the most convenient Cp and $\lambda$: 
 \begin{equation}
 	T_{w}^*=0.5 \rho \pi R^5 \frac{C_{p,max}}{\lambda_{opt}}\omega_m^2
 \end{equation} 
@@ -194,7 +194,7 @@ The mass and inertia reported in this report are compared to the one computed wi
 		& Rotational friction & 4.78$\cdot 10^5$ & $\left[\si{\kilo \gram \meter \square \per \second}\right]$ & computed from data \\ 
 		& K & 1.02$\cdot 10^7$ & $\left[\si{\newton\meter\square\second}\right]$ & computed from data \\
 		\hline 
-		Generator & Inertia & 0 & kgm2 & Negligible wrt the rotor one \\
+		Generator & Inertia & 0 & kgm2 & Negligible with respect to the rotor one \\
 		& Rotational friction & 0 & kgm2 & Included in the rotor one \\
 		& Poles & 198 & & \cite{Olimpo_Anaya‐Lara} pag 411 \\
 		& d-axis stator inductance & $5.29 \cdot 10^{-3}$ & $\left[\si{\henry}\right]$ & \cite{Olimpo_Anaya‐Lara} pag 411 \\
