@@ -37,7 +37,7 @@ y_my_ref{2} = lookup_static_values(2,pos_ramp_start:pos_ramp_stop)*30/pi;
 % x_my_ref{1} = [4, V0_rated, 25];
 % y_my_ref{1} = [[4 V0_rated]*lambda_GE/rotor.R*30/pi V0_rated*lambda_GE/rotor.R*30/pi];
 x_my_ref{1} = [wind.ramp_WS_start(1), V0_rated,  wind.ramp_WS_stop(1)];
-y_my_ref{1} = [[wind.ramp_WS_start(1) V0_rated]*lambda_GE_no_B/rotor.R*30/pi V0_rated*lambda_GE_no_B/rotor.R*30/pi];
+y_my_ref{1} = [[wind.ramp_WS_start(1) V0_rated]*lambda_GE/rotor.R*30/pi V0_rated*lambda_GE/rotor.R*30/pi];
 leg = string(2);
 leg = ["Ref. Generator", "Ref. Rotor"];
 plot_parametrization_wind_P_GEN('fig_omega_param',out_store,'omega_R', x_my_ref,y_my_ref, 'Wind speed [m/s]','$\omega$ [rpm]','Rotor rotational speed', pi/30,simulation,leg,date_fig)

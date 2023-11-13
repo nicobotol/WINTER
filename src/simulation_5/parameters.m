@@ -135,7 +135,7 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
   end
-simulation.stop_time = 5e3*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 5e2*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 10;       % 1 -> constant wind speed
@@ -150,14 +150,14 @@ simulation.type = 10;       % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 5*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 500*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
-simulation.print_figure = 1;% enables or disable plot's autosaving 
+simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 5*ones(10,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 500*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -246,20 +246,20 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = kron([4 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
-wind.turbulence = 1.0*ones(10,1); % 10 min std (i.e. turbulence) [m/s]
+wind.mean = kron([5 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.turbulence = kron([0.5 0.5 1 1 1], [1 1]); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4*ones(5,1);        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_start = 10*ones(5,1);        % wind speed at the start of the ramp [m/s]
 wind.ramp_WS_stop = 12*ones(5,1);         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(5, 1); % time speed at the start of the ramp [s]
+wind.ramp_time_start = 0*ones(10, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
-  case {1, 3, 5, 7, 8, 9, 10, 12 }
+  case {1, 3, 5, 7, 8, 9,  12 }
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6, 11}
+  case {2, 6, 10, 11}
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 

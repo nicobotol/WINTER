@@ -59,6 +59,10 @@ fig = figure('Color', 'w');
 hold on; box on; grid on;
 plot(V0_b, theta*180/pi, 'LineWidth',line_width, 'DisplayName','Gen.')
 plot(V0_b, theta_no_B*180/pi, 'LineWidth',line_width, 'DisplayName','Gen. B=0$[\frac{kgm^2}{s}]$')
+yl_1 = yline(theta_opt*180/pi, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibility', 'off', 'Color',color(1), 'FontSize', font_size);
+yl_1.LabelHorizontalAlignment = 'left';
+yl_2 = yline(theta_opt_no_B*180/pi, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibility', 'off', 'Color',color(2), 'FontSize', font_size);
+yl_2.LabelHorizontalAlignment = 'left';
 yline(0, '--', 'Color', colors_vect(5,:),'LineWidth',line_width, 'FontSize', font_size, 'DisplayName','Rotor')
 title('Pitch angle')
 xlabel('$V_0$ [m/s]')

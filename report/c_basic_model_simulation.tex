@@ -509,7 +509,7 @@ The results of the simulations are reported in \autoref{fig:simulation_with_diff
 \subsection[Below rated WS]{Simulation with the generator's torque reference based on the generator output} \label{subsec:validation_control_P_GE}
 In this section the control law for the generators's torque based on the generator output power developed in \autoref{subsec:method_control_P_GE} is tested and compared with the one based on the rotor power and developed in \autoref{subsec:torque_reference}.
 % For this simulation, in order to avoid the interference of the controller not allowing the generator to reach the steady state, this component has been removed and the torque reference value has been directly used into the dynamic equation of the rotor power.
-\subsubsection{Simulation with the generator's torque reference based on the generator output for WS below rated wind speed}
+\subsubsection{Simulation with the generator's torque reference based on the generator output for constant WS below rated}
 The generator torque's control law based on the generator has been compared with the one of the rotor, for WS between the cut in and the rated one. A critical condition for this tests is that the rotor rotational speed reaches exactly the ones producing the desired tip speed ratio. For this reason, initially the damping reducing the power sent by the rotor to the input of the generator is removed (i.e. $B_{eq}=0 \mesunt{\kilo\gram\square\meter\per\second}$). \\
 In the simulation, 5 constant wind speeds has been provided and the corresponding steady state values of mechanical input and electrical output powers to the generator have been evaluated. The results are reported in \autoref{fig:comparison_control_laws_no_B}.
 \begin{figure}[htb]
@@ -528,32 +528,30 @@ In the simulation, 5 constant wind speeds has been provided and the correspondin
   \label{fig:comparison_control_laws}
 \end{figure}
 
-\textcolor{red}{
-  \textcolor{blue}{Scrivere che l'errore maggiore si ottiene a bassa e alta velocità, perchè l'assunzione del valore costante è meno valida che altrove}\\
-Even tough the differences are small, it could be seen that without damping the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to deliver more electrical power. \\
-When the damping is included in the picture, the results (\autoref{fig:comparison_control_laws_B}) are similar to the already described ones for the lower velocities, while they become different approaching the rated wind speed, when the law base on the rotor is able to produce a grater electrical output rather than the one based on the generator. A possible explanation is that the inclusion of the damping makes the assumption of considering $\lambda$ and $\theta$ constant no more valid, and so the designed control not effective as expected. 
-}
-\subsubsection[Transition below-above rated WS]{Simulation with the generator's torque reference based on the generator output for WS across rated wind speed}
-The test has been done in \textit{quasi-steady state} conditions, with a velocity ramp between 10 and 12 $\mesunt{\meter\per\second}$ in 500 seconds.\\
-The results are reported in \autoref{fig:fig_blade_control_gen_side_validation}. \autoref{fig:2023_10_6_20_44_00fig_omega_param} reports the parametrization of the rotor rotational speed as function of the WS. It could be seen that both the control laws are able to follow the expected static curve, while the small perturbations around the rated wind speed are due to the action of the pitch mechanism.\\
-In \autoref{fig:2023_10_6_20_40_58comparison_control_laws} shows how also in this simulation the control law based on the maximization of the rotor extracts more power from the resource, while the other one delivers more electrical power.
-\begin{center}
-\begin{figure}[htb]
-  \begin{subfigure}{\textwidth}
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/vectorial/2023_10_7_17_14_08fig_omega_param.eps}
-    \caption{Rotational speed parametrized with the WS}
-    \label{fig:2023_10_6_20_44_00fig_omega_param}
-  \end{subfigure}
-  \\
-  \begin{subfigure}{\textwidth}
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/vectorial/2023_10_7_17_12_00comparison_control_laws.eps}
-    \caption{Comparison of the mechanical incoming and the electrical outgoing power at the generator side}
-    \label{fig:2023_10_6_20_40_58comparison_control_laws}
-  \end{subfigure}
-  \caption{Results of the validation of the control based on the power output at the generator side}
-  \label{fig:fig_blade_control_gen_side_validation}
-\end{figure}
-\end{center}
+It could be seen that without damping the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is always able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to deliver more electrical power for all the velocities except 4 $\mesunt{\meter\per\second}$, where still the difference is small.  \\
+As could be seen in \autoref{fig:comparison_control_laws_B}, when the damping is included into the picture the $P_R$ based on the rotor is higher than the other for all the velocities while the corresponding $P_{GE}$ is always lower except for the rated wind speed.\\
+As expected the control based on the generator is less valid for high and low WS, where the assumption of constant parameters is less valid rather than using the velocity-dependent parameters. 
+
+\subsubsection{Simulation with the generator's torque reference based on the generator output for generated wind series}
+The implemented control law is also tested for a generic wind series input. The chosen 5 means are 5, 6, 8, 10, 11.4 $\mesunt{\meter\per\second}$ and the turbulence 0.5 0.5 1 1 1 $\mesunt{\meter\per\second}$. For each wind condition, the simulation is run twice initially employing a control low based on the generator while later on the rotor. All the simulation lasted 500 $\mesunt{\second}$. The comparison of the results is done calculating the energy extracted, which depends both on the power and the time chosen for the integration. To get rid of the time dependency and have more fair results, the energy is evaluated for 4 time intervals form the end of the simulation. The results are reported in \autoref{tab:energy_K_opt_comp}. The normalized energy difference is given by:
+\begin{equation}
+  \Delta E = \frac{E_{generator} - E_{rotor}}{E_{generator}}\cdot 100 \, \left[\%\right]
+\end{equation}
+
+\begin{table}[htb]
+  \centering
+  \caption{Produced energy, given by the integration of the power over $\Delta t$ time from the end of the simulation. $E_R$ is the energy extracted form the wind, $E_G$ is the one produced by the generator, and $\Delta E$ is the normalized difference between the two energies. \textit{Gen.} and \textit{Rot.} stands for the control law based on the generator and the rotor respectively.}
+  \begin{tabular}{cc|ccc|ccc}
+    \toprule
+    & & \multicolumn{3}{c}{$E_R$} & \multicolumn{3}{|c}{$E_G$} \\
+     $\Delta t \,\mesunt{\second}$ &  $V_{10} \mesunt{\meter\per\second}$ & Gen. $\mesunt{\giga\joule}$ & Rot. $\mesunt{\giga\joule}$ & $\Delta E \, \left[\%\right]$ & Gen. $\mesunt{\giga\joule}$ & Rot. $\mesunt{\giga\joule}$ & $\Delta E \, \left[\%\right]$ \\ \midrule
+    \input{macro/energy_K_opt_comp.tex}
+  \end{tabular}
+  \label{tab:energy_K_opt_comp}
+\end{table}
+
+From the results it is well visible what was already described, meaning that the control law based on the generator is more effective than the other for WSs far from the rated ones. \\
+As final remark it must be remembered that with this type of input WS it is possible that $V_{0,rated}$ may be exceeded in the case of the highest tested speeds, and so also the pitching may have an influence on the results. The explicit impact of this further controller has not be evaluated because it is difficult to find a representative test case to do so and furthermore because it is not so important. In fact one is interested in the overall performance of the turbine (i.e. how much energy is produced) without separating the contribution of the different components. 
+
+
 \newpage

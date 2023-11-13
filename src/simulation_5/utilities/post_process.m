@@ -34,8 +34,14 @@ if simulation.type == 5
     normalizer = interp1(lookup_Pitch(1, :), lookup_Pitch(3, :), wind.mean(i));
     RMS_errors{i}.var{4}.norm = RMS_errors{i}.var{4}.Data/normalizer*100;
   end
+elseif simulation.type == 10
+  
+  compute_energy_develop(out_cell, simulation, IMM, wind, simulation.stop_time(1)*[0.25 0.5 0.75 1], 'energy_K_opt_comp');
+
 elseif simulation.type == 11
+  
   compute_comp_gains(out_cell, simulation, IMM, wind, simulation.post_process_time(1), 'energy_com_const_gains');
+
 elseif simulation.type == 12
     % compute the mean and std value of the gain for all the cases
     compute_mean_std_develop(out_cell, simulation, IMM, wind, generator);
