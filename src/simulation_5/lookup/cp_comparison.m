@@ -4,8 +4,8 @@ clc;
 
 % load the parameters
 addpath('..\');                        
-addpath('..\aerodynamic_functions');
-addpath('..\aerodynamic_functions\airfoil_data')
+% addpath('..\aerodynamic_functions');
+% addpath('..\aerodynamic_functions\airfoil_data')
 parameters;                                       % load the parameters
 load('lookup_cP_theta_lambda.mat');               % load the cP lookup 
 load('lookup_cT_theta_lambda.mat');               % load the cT lookup 
@@ -49,31 +49,25 @@ cT_interp = zeros(lambda_i, 1);
 fig_cP_cT_comp_polimi = figure('Color','w');
 %% result from the look up table
 for p = 1:pitch_i
-  cP_interp = interp2(lambda_vector, pitch_vector, lookup_cP, ...
-    lambda_v(:), pitch_v(p));
-  cT_interp = interp2(lambda_vector, pitch_vector, lookup_cT, ...
-    lambda_v(:), pitch_v(p));
+  cP_interp = interp2(lambda_vector, pitch_vector, lookup_cP,lambda_v(:), pitch_v(p));
+  cT_interp = interp2(lambda_vector, pitch_vector, lookup_cT,lambda_v(:), pitch_v(p));
 
   % plot
   subplot(121)
-  plot(lambda_v, cP_interp, '--', 'Color', colors_vect(p, :), ...
-    'LineWidth', line_width);
+  plot(lambda_v, cP_interp, '--', 'Color', colors_vect(p, :),'LineWidth', line_width);
   hold on
   subplot(122)
-  plot(lambda_v, cT_interp, '--', 'Color', colors_vect(p, :), ...
-    'LineWidth', line_width);
+  plot(lambda_v, cT_interp, '--', 'Color', colors_vect(p, :),'LineWidth', line_width);
   hold on
   LegS{p} = ['$\theta$ = ',num2str(rad2deg(pitch_v(p))),'[deg]'];
 end
 % results from the pubblication
 for p = 1:pitch_i
     subplot(121)
-    plot(lambda_t, table_cP(p, :), 'o', 'Color', colors_vect(p, :), ...
-      'MarkerSize', marker_size, 'LineWidth', line_width);
+    plot(lambda_t, table_cP(p, :), 'o', 'Color', colors_vect(p, :),  'MarkerSize', marker_size, 'LineWidth', line_width);
     hold on
     subplot(122)
-    plot(lambda_t, table_cT(p, :), 'o', 'Color', colors_vect(p, :), ...
-      'MarkerSize', marker_size, 'LineWidth', line_width);
+    plot(lambda_t, table_cT(p, :), 'o', 'Color', colors_vect(p, :),  'MarkerSize', marker_size, 'LineWidth', line_width);
     hold on
 end
 legend(LegS, 'location', 'best');
@@ -89,7 +83,9 @@ ylabel('cT [-]')
 title('Thrust coefficient')
 grid on
 set(gca, 'FontSize', font_size)
-export_figure(fig_cP_cT_comp_polimi, '\fig_cP_cT_comp_polimi.eps', path_images);
+if simulation.print_figure == 1
+  export_figure(fig_cP_cT_comp_polimi, '\fig_cP_cT_comp_polimi.eps', path_images);
+end
 
 %% Comparison between the results and the DTU report pag.34
 V0_v = 4:1:25;                  % windspeed [m/s]
@@ -132,7 +128,9 @@ legend('Computed', 'DTU report', 'location', 'best')
 title('Thrust coefficient')
 grid on
 set(gca, 'FontSize', font_size)
-export_figure(fig_cP_cT_comp, '\fig_cP_cT_comp.eps', path_images);
+if simulation.print_figure == 1
+  export_figure(fig_cP_cT_comp, '\fig_cP_cT_comp.eps', path_images);
+end
 
 %% Plot the power and thrust as functions of the wind speed
 stall = zeros(length(V0_v), 1);
@@ -182,7 +180,9 @@ xlabel('$V_0$ [m/s]')
 ylabel('Power [MW]')
 title('Power as function of the wind speed')
 set(gca, 'FontSize', font_size)
-export_figure(fig_power_vs_V0, '\fig_power_vs_V0.eps', path_images);
+if simulation.print_figure == 1
+  export_figure(fig_power_vs_V0, '\fig_power_vs_V0.eps', path_images);
+end
 
 fig_thrust_vs_V0 = figure('Color','w');
 plot(V0_v, T_s/1e6, 'LineWidth', line_width, 'Color', colors_vect(3,:));
@@ -194,7 +194,8 @@ xlabel('$V_0$ [m/s]')
 ylabel('Thrust [MN]')
 title('Thrust as function of the wind speed')
 set(gca, 'FontSize', font_size)
-export_figure(fig_thrust_vs_V0, '\fig_thrust_vs_V0.eps', path_images);
-
+if simulation.print_figure == 1
+  export_figure(fig_thrust_vs_V0, '\fig_thrust_vs_V0.eps', path_images);
+end
 
 

@@ -40,7 +40,7 @@ elseif simulation.type == 10
 
 elseif simulation.type == 11
   
-  compute_comp_gains(out_cell, simulation, IMM, wind, simulation.post_process_time(1), 'energy_com_const_gains');
+  compute_comp_gains(out_cell, simulation, IMM, wind, simulation.stop_time(1)*[0.25 0.5 0.75 1], 'energy_com_const_gains', generator);
 
 elseif simulation.type == 12
     % compute the mean and std value of the gain for all the cases

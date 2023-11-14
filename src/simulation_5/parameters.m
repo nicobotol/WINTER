@@ -135,10 +135,10 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
   end
-simulation.stop_time = 5e2*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 1e3*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 10;       % 1 -> constant wind speed
+simulation.type = 11;       % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -150,14 +150,14 @@ simulation.type = 10;       % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 500*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 980*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 500*ones(10,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 1e3*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -205,7 +205,7 @@ generator.TG_omegaBP=1500/5;% speed controller crossover frequency [rad/s]
 generator.K_opt = rho*pi*rotor.R^5*cp_max/(2*lambda_opt^3); % ref. torque const. [kgm^2]
 generator.K_opt_GE = rho*pi*rotor.R^5*cp_GE/(2*lambda_GE^3);
 generator.K_opt_GE_no_B = rho*pi*rotor.R^5*cp_GE_no_B/(2*lambda_GE_no_B^3);
-generator.K_opt_sensitivity = [0.8 0.9 1 1.1 1.2]; % gain for the sensitivity analysis on K_opt
+generator.K_opt_sensitivity = [0.5 0.8 0.9 1 1.1 1.2 1.5]; % gain for the sensitivity analysis on K_opt
 generator.gain_K_opt = 1; % default value for the k_opt 
 generator.design = 0;       % 0 enables manual design of the controller
                             % 1 enables pidtune design of the controller
@@ -251,9 +251,9 @@ wind.turbulence = kron([0.5 0.5 1 1 1], [1 1]); % 10 min std (i.e. turbulence) [
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 10*ones(5,1);        % wind speed at the start of the ramp [m/s]
-wind.ramp_WS_stop = 12*ones(5,1);         % wind speed at the stop of the ramp [m/s]
-wind.ramp_time_start = 0*ones(10, 1); % time speed at the start of the ramp [s]
+wind.ramp_WS_start = 4*ones(7,1);        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_stop = V0_rated*ones(7,1);         % wind speed at the stop of the ramp [m/s]
+wind.ramp_time_start = 0*ones(7, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type

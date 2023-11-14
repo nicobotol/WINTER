@@ -5,36 +5,6 @@ One possibility is to use model-free methods, such as the extremum seeking, whil
 
 \textcolor{red}{Scrivere che da ora in poi si considera la presenza di un sensore di misura con una propria incertezza per permettere di usare il KF}
 
-\subsection{Comparison of the electrical power output in the case of different gains in the power controller}\label{subsec:c_different_KoptGE}
-The first study done to identify the effect of a changing $K_{opt,GE}$ is to compare the electrical power output of the generator for its  different values. In particular, a simulation with 5 values in the neighborhood of the optimal has been identified (second column of \autoref{tab:error_KoptGE}) and then a ramp WS profile between 4 and 12 $\mesunt{\meter\per\second}$ lasting 1000 $\mesunt{\second}$ has been applied. \textcolor{red}{Scrivere di a che potenza faccia riferimento l'errore }
-\begin{table}[htb]
-  \caption{Error with the use of different $K_{opt,GE}$ values, \textcolor{red}{Check the numerical values}}
-  \centering
-  \begin{tabular}{cc|cc}
-  \toprule
-  Sim. & K & RMS error & Norm. RMS error\\ 
-   &  $\mesunt{\newton \meter \square \second}$ & $\mesunt{\mega\watt}$ & \% $\left[-\right]$ \\ \midrule
-  1 & $0.85\cdot K_{opt,GE}$  & 1.20 & 16.01\\
-  2 & $0.90\cdot K_{opt,GE}$  & 0.75 & 11.15\\
-  3 & $1.00\cdot K_{opt,GE}$  & 0.08 & 6.90 \\
-  4 & $1.10\cdot K_{opt,GE}$  & 0.12 & 7.00 \\
-  5 & $1.15\cdot K_{opt,GE}$  & 0.14 & 7.13 \\ \bottomrule
-  \end{tabular}
-  \label{tab:error_KoptGE}
-\end{table}
-
-The resulting static power curve has been reported in \autoref{fig:Kopt_GE_PGE}.
-\begin{figure}
-  \centering
-  \includegraphics[width=0.7\columnwidth]{images/vectorial/2023_10_18_14_54_25fig_electrical_power_param_zoom.eps}
-  \caption{Electrical power output of the generator for different values of $K_{opt,GE}$. The values of $K_{opt,GE}$ used in each simulation are the ones reported in \autoref{tab:error_KoptGE}.}
-  \label{fig:Kopt_GE_PGE}
-\end{figure}
-
-From the graphs reported in \autoref{fig:Kopt_GE_PGE} it could be seen that the gain used in the first two simulations provides a power curve that is quite close to the third one (i.e. the optimal) in the below rated region. On the other hand, once the rated WS is reached, then the power command is below the saturation and so the rated power is not reached. The committed errors in this zone (16.01\% and 11.15\% respectively) are highly influenced by the above rated mismatch. \\
-For what concerns the last two simulations, the error committed in the below rated region is higher (as could be seen in the figure) but the saturation of the power is reached, and so the overall error is lower than the first two cases. \\
-From this simulation can be seen that the optimal gain is the one computed previously, and each deviation produces a degradation of the power curve. On the other hand, an overestimation of the gain is less worse than an underestimation, because in the latter case the saturation of the generator's torque command and so the output power is not achieved.
-
 \subsection{Interactive Multiple Model}\label{subsec:IMM}
 \cite{Kalman_Filter_and_Its_Application} states that the \textit{Kalman filter is an algorithm that uses a series of data observed over time, which contains noise and other inaccuracies, to estimates unknown variables with more accuracy.} In other words this algorithm uses the model of the dynamic system, the measurement from a sensor and their uncertainty to provide an estimation of the desired quantity better than what would be done by employing the solely measure or model.\\
  A great disadvantage of the \acrfull{KF} is that it is only suitable for linear systems and linear measurement models. To overcome this issues the \acrfull{EKF} is an algorithms that extend the KF concepts in the nonlinear case. The basic idea behind it is to linearize the nonlinear dynamic around the status of the estimation at the first order of the Taylor expansion, and then apply the same equations of the linear \acrshort{KF}. The \acrfull{UKF} is another approach to solve the non-linearity issues and it is based on the second order Taylor expansion. This method will not be considered in the thesis, and it is cited here only for completeness.\\
@@ -150,7 +120,7 @@ The $c_P$ is obtained by the use of the usual lookup table. Alongside the one of
 The parameters and assumptions used for generating the distributions are reported in \autoref{tab:parameters_KoptGE}. It must be noted that the choice of these parameters are realistic but arbitrary, and so the numerical value of the final result can be compromised by them.
 
 \begin{table}[htb]
-  \caption{Error with the use of different $K_{opt,GE}$ values}
+  \caption{\textcolor{red}{Didascalia}}
   \centering
   \begin{tabular}{lcccc}
   \toprule

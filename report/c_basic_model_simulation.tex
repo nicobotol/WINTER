@@ -553,5 +553,32 @@ The implemented control law is also tested for a generic wind series input. The 
 From the results it is well visible what was already described, meaning that the control law based on the generator is more effective than the other for WSs far from the rated ones. \\
 As final remark it must be remembered that with this type of input WS it is possible that $V_{0,rated}$ may be exceeded in the case of the highest tested speeds, and so also the pitching may have an influence on the results. The explicit impact of this further controller has not be evaluated because it is difficult to find a representative test case to do so and furthermore because it is not so important. In fact one is interested in the overall performance of the turbine (i.e. how much energy is produced) without separating the contribution of the different components. 
 
+\subsection{Comparison of the electrical power output in the case of different gains in the power controller}\label{subsec:c_different_KoptGE}
+\textcolor{red}{Questa parte era stata messa nel capitolo 9, ma ha più senso anticiparlo qui.}
+Before going on with further analysis it may be interesting to quantify how does the turbine's performance changes if using a gain different than the one identified as optimal. In particular, 7 gains factors $\beta$ around the optimal one are identified 0.5, 0.8, 0.9, 1.0, 1.1, 1.2, and 1.5. Then a ramp WS profile between 4 and 12 $\mesunt{\meter\per\second}$ lasting 1000 $\mesunt{\second}$ has been applied. The comparison of the results is done again by means of the energy extracted, and again different integration times has been chosen to get rid of their arbitrary choice. The numerical results are reported in \autoref{tab:error_KoptGE}. 
+
+\begin{table}[htb]
+  \caption{Extracted energy by rescaling the value of the $K_{opt,GE}$ gain by $\beta$. $E_R$ and $E_G$ are the energy extracted from the wind and produced by the generator respectively, while $\Delta E_R$ and $\Delta E_G$ are the difference between the energy produced using $\beta K_{opt,GE}$ and the $K_{opt,GE}$}
+  \centering
+  \begin{tabular}{ccccccc}
+  \toprule
+  Int. time $\mesunt{\second}$ & Sim. & $\beta$ gain & $E_R \, \mesunt{\giga\joule}$ & $\Delta E_R \left[\%\right]$ & $E_G \, \mesunt{\giga\joule}$ & $\Delta E_G \left[\%\right]$\\ 
+   \midrule
+  \input{macro/energy_com_const_gains.tex}
+  \end{tabular}
+  \label{tab:error_KoptGE}
+\end{table}
+
+The resulting static power curves has been reported in \autoref{fig:Kopt_GE_PGE}.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\columnwidth]{images/vectorial/2023_11_14_20_41_07fig_electrical_power_param_zoom.eps}
+  \caption{Electrical power output of the generator for different values of $K_{opt,GE}$. The values of $K_{opt,GE}$ used in each simulation are the ones reported in \autoref{tab:error_KoptGE}.}
+  \label{fig:Kopt_GE_PGE}
+\end{figure}
+
+From the graphs reported in \autoref{fig:Kopt_GE_PGE} it could be seen that the gain used in the first three simulations provide a power curve that is quite close to the fourth one (i.e. the optimal) in the below rated region. On the other hand, once the rated WS is reached, then the power command is below the saturation and so the rated power is not reached. The committed errors in this zone are highly influenced by the above rated mismatch. \\
+For what concerns the last three simulations, the error committed in the below rated region is higher (as could be seen in the figure) but the saturation of the power is reached, and so the overall error is lower than the first cases. \\
+From this simulation can be seen that the optimal gain is the one computed previously, and each deviation produces a degradation of the power curve. On the other hand, an overestimation of the gain is less worse than an underestimation, because in the latter case the saturation of the generator's torque command and so the output power is not achieved.
 
 \newpage

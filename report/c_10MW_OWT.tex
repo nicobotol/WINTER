@@ -77,7 +77,8 @@ Given the optimal power coefficient it is possible to compute the rated wind spe
 \begin{equation}
     V_{0, rated} = \sqrt[3]{\frac{2 \ P_{R,rated}}{A \rho c_{P, max}}} \ \ \left[\si{\meter \per \second}\right]
 \end{equation}
-Even tough the nominal power of the turbine is $P_{R,rated} = 10 \left[\si{\mega \watt}\right]$, from the results presented in \cite{DTU_Wind_Energy_Report-I-0092} it could be seen that the mechanical power is slightly higher. This is reasonable because the turbines are usually identified by their electrical output power and not their incoming mechanical one. For this reason a reference value of $P_{R,rated} = 10.64 \left[\si{\mega \watt}\right]$ is considered during the computations. In order to compare the different results, the analysis are repeated twice, one for each of the two different $P_{R,rated}$: in \textit{Case 1} $P_{R,rated}=10 \ \left[\si{\mega \watt}\right]$ while in \textit{Case 2} $P_{R,rated}=10.64 \ \left[\si{\mega \watt}\right]$ and so the other values are recomputed by consequence. Furthermore, the \acrshort{TSR} from the DTU report is assumed to be 7.5 as design choice, while in the two computed cases they are the ones generating the maximum power coefficients, and are slightly higher (7.93 in the first case and 7.91 in the second). \\ 
+
+The wind turbines are usually identified by their electrical output power and not by their incoming mechanical one, so even tough the studied turbine is called \textit{10 MW} its rated $P_{R}$ is slightly higher. For this reason a reference value of $P_{R,rated} = 10.64 \left[\si{\mega \watt}\right]$ is considered during the computations, as reported in \cite{DTU_Wind_Energy_Report-I-0092}. In order to compare the different results, the analysis are repeated twice, one for each of the two different $P_{R,rated}$: in \textit{Case 1} $P_{R,rated}=10 \ \left[\si{\mega \watt}\right]$ while in \textit{Case 2} $P_{R,rated}=10.64 \ \left[\si{\mega \watt}\right]$ and so the other values are recomputed by consequence. Furthermore, the \acrshort{TSR} from the DTU report is assumed to be 7.5 as design choice, while in the two computed cases they are the ones generating the maximum power coefficients, and are slightly higher (7.93 in the first case and 7.91 in the second). \\ 
 The results are reported in \autoref{tab:DTU_10_aero} and \autoref{fig:fig_cP_cT_comp}, alongside with the reference values from the DTU report. They are quite consistent and differences may be due to the reduced number of cross-sections along the blade taken into account in the implementation of the \acrshort{BEM} algorithm and in the choice of the discretization of the intervals for \acrshort{TSR} and $\theta$. \\
 In \autoref{fig:fig_cP_cT_comp} it is possible to see a great difference between the results below 7 $\left[\si{\meter \per \second}\right]$. To understand this behavior, a further explanation about the vibration of the \acrshort{WT} is required. In general, the rotation of the rotor excites the tower at frequencies multiple of 3$\mathbb{P}$, with 
 \begin{equation}
@@ -170,7 +171,7 @@ Even though both fathering and stall limit the power at the same amount (see \au
     \begin{subfigure}{0.49\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/vectorial/fig_power_vs_V0.eps}
-    \caption{Mechanical power as function of wind speed\textcolor{red}{Rifare questa figura e quella accanto ingrndendone il testo}}
+    \caption{Mechanical power as function of wind speed}
     \label{fig:fig_power_vs_V0}
     \end{subfigure}
     %\hfill

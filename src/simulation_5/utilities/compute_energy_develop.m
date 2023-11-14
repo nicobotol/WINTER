@@ -23,8 +23,7 @@ function energy = compute_energy_develop(out_store, simulation, IMM, wind, vecto
     end
     fprintf(fileID, '\\midrule');
     fprintf(fileID, '\n \n');
-
-
+    
   end
   fclose(fileID);
 end
