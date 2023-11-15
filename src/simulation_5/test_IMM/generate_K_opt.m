@@ -45,14 +45,24 @@ cp_d = interp2(lambda_vector, pitch_vector, lookup_cP, lambda_d, theta_d);
 K = 0.5*cp_d.*rho_d.*pi.*R_d_s.^2.*(V0_d./omega_d).^3;
 p1 = 1; % lower perentile
 p2 = 99; % higher perentile
-q_10 = quantile(K, p1/100);
-q_90 = quantile(K, p2/100);
+q_1 = quantile(K, p1/100);
+q_99 = quantile(K, p2/100);
 
-K_opt_vector = linspace(q_10, q_90, 5); % distribute the values of K_opt between the 1th and 99th percentile
+K_opt_vector = linspace(q_1, q_99, 5); % distribute the values of K_opt between the 1th and 99th percentile
 
 % Distribution of the torque, it is necessary to identify the varaince of the noise applied on the system 
 T_R = 0.5*rho_d.*pi.*R_d_s.^2.*V0_d.^3.*cp_d./omega_d;
 Q = var(T_R); % variance of the torque
+
+save("\lookup\K_vector.mat", "K_opt_vector");
+fileID = fopen(['../../report/macro/K_opt_vector.tex'],'w');
+fprintf(fileID, "$\\left[");
+for i=1:length(K_opt_vector)-1
+  fprintf(fileID, "%.3f, \\, ", K_opt_vector(i)/1e6);
+end
+fprintf(fileID, "%.3f ", K_opt_vector(end)/1e6);
+fprintf(fileID, "\\right] \\cdot 10^6 \\, \\mesunt{\\newton\\meter\\square\\second}$");
+fclose(fileID);
 
 %   _  __      _ _     _        _ _           _   _             
 %  | |/ /   __| (_)___| |_ _ __(_) |__  _   _| |_(_) ___  _ __  
@@ -68,9 +78,9 @@ ylabel('pdf [-]')
 xline(generator.K_opt_GE, '--', 'Color', color(1), 'LineWidth', 2*line_width, 'DisplayName', 'Nominal $K_{opt,GE}$')
 xline(K_opt_vector, 'LineStyle', ':', 'Color', color(4), 'LineWidth', 2*line_width, 'HandleVisibility', 'off')
 plot(NaN, NaN, 'Color', color(4), 'DisplayName', '$K_{opt,GE}$ for IMM', 'LineStyle', ':', 'LineWidth', 2*line_width)
-x1 = xline(q_10,'LineStyle', '--', 'Color', color(2), 'LineWidth', 2*line_width, 'DisplayName', [num2str(p1), ' percentile'], 'FontSize', font_size);
+x1 = xline(q_1,'LineStyle', '--', 'Color', color(2), 'LineWidth', 2*line_width, 'DisplayName', [num2str(p1), ' percentile'], 'FontSize', font_size);
 x1.LabelHorizontalAlignment = 'left';
-xline(q_90,'LineStyle', '-.', 'Color', color(5), 'LineWidth', 2*line_width, 'DisplayName',  [num2str(p2), ' percentile'], 'FontSize', font_size)
+xline(q_99,'LineStyle', '-.', 'Color', color(5), 'LineWidth', 2*line_width, 'DisplayName',  [num2str(p2), ' percentile'], 'FontSize', font_size)
 legend()
 set(gca, 'FontSize', font_size)
 title('$K_{opt,GE}$ distribution')
@@ -87,19 +97,17 @@ end
 
 p3 = 1; % lower perentile
 p4 = 99; % higher perentile
-q_10_d = quantile(R_d, p3/100);
-q_90_d = quantile(R_d, p4/100);
-q_10_d_s = quantile(R_d_s, p3/100);
-q_90_d_s = quantile(R_d_s, p4/100);
+q_1_d = quantile(R_d, p3/100);
+q_99_d = quantile(R_d, p4/100);
+q_1_d_s = quantile(R_d_s, p3/100);
+q_99_d_s = quantile(R_d_s, p4/100);
 fig = figure('Color', 'w');hold on;grid on;box on;
-plot(NaN, NaN, 'k--', 'DisplayName',  [num2str(p3), ' percentile'], 'LineWidth', line_width)
-plot(NaN, NaN, 'k-.', 'DisplayName',  [num2str(p4), ' percentile'], 'LineWidth', line_width)
 histogram(R_d, 'Normalization', 'pdf', 'BinMethod', 'sturges', 'FaceColor', color(1), 'DisplayName', 'Undeform Dist.')
 histogram(R_d_s, 'Normalization', 'pdf', 'BinMethod', 'sturges', 'FaceColor', color(2), 'DisplayName', 'Deform Dist.')
-xline([q_10_d], 'b--', 'LineWidth', line_width, 'FontSize', font_size, 'Handlevisibility', 'off')
-xline([q_90_d], 'b-.', 'LineWidth', line_width, 'FontSize', font_size, 'Handlevisibility', 'off')
-xline([q_10_d_s], 'r--', 'LineWidth', line_width, 'FontSize', font_size, 'HandleVisibility', 'off')
-xline([q_90_d_s], 'r-.', 'LineWidth', line_width, 'FontSize', font_size, 'HandleVisibility', 'off')
+xline([q_1_d], 'b--', 'LineWidth', line_width, 'FontSize', font_size, 'DisplayName','1 percentile Def.')
+xline([q_99_d], 'b-.', 'LineWidth', line_width, 'FontSize', font_size, 'DisplayName','99 percentile Def.')
+xline([q_1_d_s], 'r--', 'LineWidth', line_width, 'FontSize', font_size, 'DisplayName','1 percentile Undef.')
+xline([q_99_d_s], 'r-.', 'LineWidth', line_width, 'FontSize', font_size, 'DisplayName','99 percentile Undef.')
 xline(rotor.R, '-', 'Color', color(3), 'FontSize', font_size, 'LineWidth', line_width, 'DisplayName', 'Undeform mean')
 xlabel('R [m]')
 ylabel('pdf [-]')

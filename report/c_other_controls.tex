@@ -6,7 +6,7 @@ One possibility is to use model-free methods, such as the extremum seeking, whil
 \textcolor{red}{Scrivere che da ora in poi si considera la presenza di un sensore di misura con una propria incertezza per permettere di usare il KF}
 
 \subsection{Interactive Multiple Model}\label{subsec:IMM}
-\cite{Kalman_Filter_and_Its_Application} states that the \textit{Kalman filter is an algorithm that uses a series of data observed over time, which contains noise and other inaccuracies, to estimates unknown variables with more accuracy.} In other words this algorithm uses the model of the dynamic system, the measurement from a sensor and their uncertainty to provide an estimation of the desired quantity better than what would be done by employing the solely measure or model.\\
+\cite{Kalman_Filter_and_Its_Application} states that the \textit{Kalman filter is an algorithm that uses a series of data observed over time, which contains noise and other inaccuracies, to estimates unknown variables with more accuracy.} In other words this algorithm uses the model of the dynamic system, the measurement from a sensor and their uncertainties to provide an estimation of the desired quantity better than what would be done by employing the solely measure or model.\\
  A great disadvantage of the \acrfull{KF} is that it is only suitable for linear systems and linear measurement models. To overcome this issues the \acrfull{EKF} is an algorithms that extend the KF concepts in the nonlinear case. The basic idea behind it is to linearize the nonlinear dynamic around the status of the estimation at the first order of the Taylor expansion, and then apply the same equations of the linear \acrshort{KF}. The \acrfull{UKF} is another approach to solve the non-linearity issues and it is based on the second order Taylor expansion. This method will not be considered in the thesis, and it is cited here only for completeness.\\
 In general, all the described methods relay on the knowledge of the model of the system which, as said before, it is not always available. One possibility to try to solve this problem is given by the \acrshort{IMM}. This algorithm firstly runs a parallel bank of $N_j$ filters estimating the same quantity, each of them using a different model of the system and later on weights the filters' output by their likelihood conditioned on the measurement in order to provide the overall estimation of interest. In principle the filters run in parallel may be of any type (e.g. KF, EKF, UKF, or further ones), but for its simplicity the EKF has been adopted here. 
 
@@ -120,14 +120,14 @@ The $c_P$ is obtained by the use of the usual lookup table. Alongside the one of
 The parameters and assumptions used for generating the distributions are reported in \autoref{tab:parameters_KoptGE}. It must be noted that the choice of these parameters are realistic but arbitrary, and so the numerical value of the final result can be compromised by them.
 
 \begin{table}[htb]
-  \caption{\textcolor{red}{Didascalia}}
+  \caption{Mean value and standard deviation of the variable parameters used in the computation of the $K_{opt,GE}$}
   \centering
   \begin{tabular}{lcccc}
   \toprule
   Par. & Mean & Std & MU & Motivation\\ \midrule
   $\omega_R$ & 0.988 & 0.0169 & $\mesunt{\radian\per\second}$ & More than 99\% distribution within 5\% rated value\\
   $\rho$ &  1.225 & 0.0204 & $\mesunt{\kilo\gram\per\cubic\meter}$ & More than 99\% distribution within 5\% nominal value \\
-  $R$  & 89.17 & 0.289 & $\mesunt{\meter}$ & \makecell{More than 99\% distribution within 0.867 $\mesunt{\meter}$ radial deformation\\ (assuming 12.4 $\mesunt{\meter}$ radial deformation \cite{Light_rotor}) }\\
+  $R$  & 89.17 & 0.289 & $\mesunt{\meter}$ & More than 99\% distribution within 0.867 $\mesunt{\meter}$ radial deformation\\
   $V_0$  & 11.44 & 0.5719 & $\mesunt{\meter\per\second}$ & More than 99\% distribution within 15\% nominal value \\
   $\theta$ & 0.0 & 0.0058 & $\mesunt{\radian}$ & More than 99\% distribution within  1 $\si{\degree}$ \\
  \bottomrule
@@ -135,23 +135,28 @@ The parameters and assumptions used for generating the distributions are reporte
   \label{tab:parameters_KoptGE}
 \end{table}
 
+The value of the standard deviation of the rotor radius in \autoref{tab:parameters_KoptGE} is chosen by assuming that the blade is rigid and it deflects of 12.4 $\mesunt{\meter}$ under the wind thrust force (this deformation is reported by \cite{Light_rotor}). Then this deflection in the direction of the wind flow produces a radial deformation reducing the swept area of the rotor. The amount of this deformation can be approximated (at least for the aims of this study) by means of:
+\begin{equation}
+  \Delta R = R\left[1-\sqrt{1-\left(\frac{\delta}{R}\right)} \right] = 89.17\left[1-\sqrt{1-\left(\frac{12.4}{89.17}\right)} \right] = 0.867 \, \mesunt{\meter}
+\end{equation} 
+
 \begin{figure}[H]
   \centering
   \begin{subfigure}{0.65\columnwidth}
     \centering
-    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_9_16_57_05R_distribution}
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_15_09_07_18R_distribution}
     \caption{Distribution of the rotor radius}
     \label{fig:R_distribution}
   \end{subfigure}
   \begin{subfigure}{0.65\columnwidth}
     \centering
-    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_9_16_57_05K_GE_distribution}
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_15_09_07_18K_GE_distribution}
     \caption{Distribution of the $K_{opt,GE}$ obtained by the \acrshort{MC} simulation}
     \label{fig:K_GE_distribution}
   \end{subfigure}
 \end{figure}
 
-Given the distribution of the $K_{opt,GE}$ gain it is possible to use it in order to design the IMM, by means of selecting a given number of gains between two values of the distributions such as the 1 and 99 percentile, $7.19 \, \cdot 10^7 \mesunt{\newton \meter \square \second}$ and $1.50 \cdot 10^7 \, \mesunt{\newton \meter \square \second}$ respectively. In this specific case, 5 values have been chosen, and their are identified by the purple dotted line in \autoref{fig:K_GE_distribution}. To be specific these values are: $\left[0.72, 0.91, 1.11, 1.30, 1.49 \right] \cdot 10^7 \, \mesunt{\newton\meter\square\second}$. 
+Given the distribution of the $K_{opt,GE}$ gain it is possible to use it in order to design the IMM, by means of selecting a given number of gains between two values of the distributions such as the 1 and 99 percentile, $7.19 \, \cdot 10^7 \mesunt{\newton \meter \square \second}$ and $1.50 \cdot 10^7 \, \mesunt{\newton \meter \square \second}$ respectively. In this specific case, 5 values have been chosen, and their are identified by the purple dotted line in \autoref{fig:K_GE_distribution}. To be specific these values are: \input{macro/K_opt_vector.tex}. 
 
 \subsubsection{Definition of the uncertainty}
 In the EKF equations run in the IMM it is necessary to identify the noise on the process $\nu_k \sim \mathcal{N}(0, Q)$ (see \autoref{eq:noise_Q}). The definition of Q is again done using the \acrshort{MC} approach, with the same distributions already used in the $K_{opt,GE}$ case. Here the equation for the method is:

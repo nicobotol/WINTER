@@ -29,7 +29,9 @@ ylim([6, 14])
 set(gca, 'FontSize', font_size)
 
 fig_name = strcat(path_images,'\', date_fig, 'wind_generation','.eps');
-export_figure(fig, strcat(date_fig, 'wind_generation', '.eps'), path_images);
+if simulation.print_figure == 1
+  export_figure(fig, strcat(date_fig, 'wind_generation', '.eps'), path_images);
+end
 %   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
 
 %% Plot the PSD
@@ -53,4 +55,6 @@ title('Wind PSD')
 legend('Location', 'northeast')
 
 fig_name = strcat(path_images,'\', date_fig, 'wind_generation_PSD','.eps');
-export_figure(fig, strcat(date_fig, 'wind_generation_PSD', '.eps'), path_images);
+if simulation.print_figure == 1
+  export_figure(fig, strcat(date_fig, 'wind_generation_PSD', '.eps'), path_images);
+end

@@ -116,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 3;       % choice of the model
+simulation.model = 5;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator power
@@ -135,10 +135,10 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
   end
-simulation.stop_time = 1e3*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 2e2*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 11;       % 1 -> constant wind speed
+simulation.type = 12;       % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -246,7 +246,7 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = kron([5 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = [8 8]; %kron([5 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = kron([0.5 0.5 1 1 1], [1 1]); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
@@ -282,20 +282,21 @@ I_eq_HS = rotor.I*gearbox.ratio^2 + generator.I;% equiv. inertia high speed side
 dt = simulation.time_step_H;
 
 % parameters for the IMM control
-IMM.K_vector = [0.7178, 0.9117, 1.1055, 1.2994, 1.4932]*1e7;
-IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
+load('lookup\K_vector.mat');
+IMM.K_vector = K_opt_vector;
+% IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
 % IMM.K_vector =  generator.K_opt_GE;
-% IMM.K_vector = linspace(0.5, 4, 20)*1e7;
+% IMM.K_vector = linspace(0.5, 4, 5)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 1;           % number of states
-IMM.prob_transition = 0.995; % probability of transition
+IMM.prob_transition = 0.9; % probability of transition
 if IMM.n_models > 1
   IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
 else
   IMM.Pi = 1;
 end
 % IMM.W = [1e0*(omega_rated*0.01/3)^2 0; 0 1e-10]; % measurement noise
-IMM.W = 1e-10*[1e0*(omega_rated*0.01/3)^2]; % measurement noise
+IMM.W = 1e-12*[(omega_rated*0.01/3)^2]; % measurement noise
 % IMM.Q = [2.3715e+12 0; 0 1e-10]; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.Q = [2.3715e+12]; %1e-10*(omega_rated/50/3)^2; % process noise
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
@@ -310,12 +311,15 @@ IMM.sigma_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value
 IMM.sigma_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
 IMM.enable = 1; % enables or disables the IMM controller/constant gain
 IMM.sigma_gain = kron(1.0*[1 1 1 1 1], [1 1]); % gain to scale the sigmas
-IMM.freq_theta = 0.5;
+IMM.freq_theta = 0.5*0.01;
 IMM.phase_theta = 2*pi*rand();
-IMM.freq_rho = 0.5;
+IMM.phase_theta2 = 2*pi*rand();
+IMM.freq_rho = 0.5*0.01;
 IMM.phase_rho = 2*pi*rand();
-IMM.freq_R = 0.5;
+IMM.phase_rho2 = 2*pi*rand();
+IMM.freq_R = 0.5*0.01;
 IMM.phase_R = 2*pi*rand();
+IMM.phase_R2 = 2*pi*rand();
 
 % generate a random number between 0 and 2pi
 

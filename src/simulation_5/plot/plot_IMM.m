@@ -109,4 +109,9 @@ ylabel('Torque [MNm]')
 % rotor and generator output power dynamic
 plot_time_series2('fig_power_dynamic', out_store, 'P_R', 'P_G',  generator.P_rated, 'Time [s]', 'P [MW]', 'Rotor and generator powers', 1e6, 'Aero.', 'Gen.', date_fig, 'southeast')
 
+
+figure(); hold on;
+plot(out_store{2}.K_opt)
+plot(out_store{2}.K)
+
 end
