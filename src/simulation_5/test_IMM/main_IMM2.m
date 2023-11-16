@@ -7,7 +7,7 @@ V0 = 8;
 omega = lambda_opt*V0/rotor.R;
 % x_est = omega*ones(IMM.states_len, IMM.n_models);
 % P_est = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
-x_est = x_est_initial';
+x_est = x_est_initial;
 P_est = P_est_initial;
 for i=1:IMM.n_models
   P_est(:,:,i) = 1e3*eye(IMM.states_len, IMM.states_len);
@@ -24,22 +24,24 @@ T_G_store = [];
 x_est_store = zeros(IMM.n_models, t_tot);
 K_opt = mean(IMM.K_vector); % initial gain estimation
 omega_tilde = omega; % initial speed estimation
-
+v=8;
+x_real = [0.5; 8];
 for t=1:t_tot
+  K_opt = generator.K_opt_GE;
   T_R = 0.5*V0^3*rho*cp_GE*rotor.A + 5e2*(rand(1) - 0.5)*2; % aero torque
   T_G = K_opt*omega^2; % feedback torque
   param{1} = I_eq;
   param{2} = B_eq;
   param{3} = K_real;
-  omega = dynamic(omega, T_R, param); %+ my_mvnrnd(0, IMM.Q, 1); % real model evolution
-
-  [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, mu_vector, T_R, omega, IMM, I_eq, B_eq);
+  x_real = dynamic(x_real, T_R, param, dt); %+ my_mvnrnd(0, IMM.Q, 1); % real model evolution
+  z = x_real(1) + my_mvnrnd(0, IMM.W, 1); % measurement 
+  [x_est, P_est, mu_vector, omega_tilde,  K_opt] = gain_IMM(x_est, P_est, mu_vector, 0, x_real(1), x_real(2), 0, 0, IMM, I_eq, B_eq, dt, z, generator);
 
   omega_store = [omega_store omega]; % real hystory
   omega_tilde_store = [omega_tilde_store omega_tilde];
   mu_store = [mu_store mu_vector];
   K_store = [K_store K_opt];
-  x_est_store(:, t) = [x_est'];
+  x_est_store(1:IMM.states_len, 1:IMM.n_models, t) = [x_est];
   T_R_store = [T_R_store, T_R];
   T_G_store = [T_G_store, T_G];
 
@@ -86,61 +88,63 @@ title('Torques')
 %   \__, |\__,_|_|_| |_| |___|_|  |_|_|  |_|
 %   |___/                                   
 
-function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, mu_vector, T_R, omega, IMM, I_eq, B_eq)
+function [x_est, P_est, mu_vector, omega_tilde,  K_opt] = gain_IMM(x_est, P_est, mu_vector, T_R, omega, V0, u_q, i_q, IMM, I_eq, B_eq, dt, z, generator)
   % x_est -> (states_len, n_models) items containing the state estimation
   % P_est -> (states_len, states_len, n_models) containing the covariance
   
   n_models = IMM.n_models; % number of models to test
   states_len = IMM.states_len; % length of the states
+  measure_len = IMM.measure_len; % length of the measurement
   Pi = IMM.Pi; 
-  W = IMM.W;
+  R = IMM.W;
   Q = IMM.Q;
+  K_vector = IMM.K_vector;
   mu = zeros(n_models);
   % Vector of parameters
   param = cell(5,1);
   param{1} = I_eq; % inertia
-  param{2} = B_eq; % damping
+  param{2} = 0; % cp*rho*R^2
   param{3} = 0; % K_opt
-  param{4} = W; % measure noise
+  param{4} = R; % measure noise
   param{5} = Q; % process noise 
-  x_real = [omega];
+
+  x_real = [omega; V0];
   omega_tilde = 0;
+  
   
   % Assamble the model cell
   model = cell(n_models, 1);
   for j=1:n_models
-    model{j} = struct('K_opt', IMM.K_vector(j), 'x_est', x_est(j, 1:states_len), 'P_est', P_est(1:states_len,1:states_len,j), 'z_hat', 0, 'P_prior', P_est(1:states_len,1:states_len,j), 'Lambda', 0, 'mu', mu_vector(j), 'mu_new', 0, 'x_tilde', zeros(states_len, 1), 'P_tilde', zeros(states_len));
+    param{3} = IMM.K_vector(j);
+    model{j} = struct('rho_cp_R2', IMM.K_vector(j), 'x_est', x_est(1:states_len, j), 'P_est', P_est(1:states_len,1:states_len,j), 'z_hat', zeros(measure_len, 1), 'P_prior', P_est(1:states_len,1:states_len,j), 'Lambda', 0, 'mu', mu_vector(j), 'mu_new', 0, 'x_tilde', zeros(states_len, 1), 'P_tilde', zeros(states_len));
   end
   
-  % Simulate the measurement
-  z = measurement(x_real) ;%+ my_mvnrnd([0], W, 1)'; % rotational speed measurement [rad/s]
-  
   % Filtering
-  model = filtering(model, z, T_R, param);
+  u = [0]; % input
+  model = filtering(model, z, u, param, dt);
   
   % Mode probability updating
-  model = probability_updating(model, z, param);
+  model = probability_updating(model, z, param, dt);
   K_opt = compute_K_opt(model); % weighted mean of the filters
 
   % State combination
   x_est_g = zeros(states_len, 1); % global state
-  [x_est_g(1:states_len, 1)] = state_combination(model);
+  [x_est_g(1:states_len, 1), ~] = state_combination(model);
   omega_tilde = x_est_g(1); % estimation of the rotational speed
 
   % Filter interaction
-  [model, ~] = filter_interaction(model, Pi);
-%   [model, model_prob] = filter_interaction(model, Pi);
+  [model, model_prob] = filter_interaction(model, Pi);
 %   [~, idx] = max(model_prob);
 %   K_opt = IMM.K_vector(idx);
   
   % Assemble the model cell
   for j=1:n_models
-    x_est(j, 1:states_len) = model{j}.x_est(1:states_len);
+    x_est(1:states_len, j) = model{j}.x_est(1:states_len);
     P_est(1:states_len,1:states_len,j) = model{j}.P_est(1:states_len, 1:states_len);
     mu_vector(j) = model{j}.mu_new(1);
   end
   
-  end
+end
   
   %   _____ _  _______ 
   %  | ____| |/ /  ___|
@@ -148,32 +152,34 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
   %  | |___| . \|  _|  
   %  |_____|_|\_\_|    
                      
-  function [model] = EKF(model, z, T_R, param, matrices)
+  function [model] = EKF(model, z, u, param, matrices, dt)
     % y -> measurement of the rotational speed [rad/s]
     
     x_est = model.x_est;
     P_est = model.P_est;
-    states_len = size(x_est, 2);
-  
+    states_len = size(x_est, 1);
+    measure_len = size(z, 1);
+
     F = matrices.F;
     H = matrices.H;
     Q = matrices.Q;
-    W = matrices.W;
+    R = matrices.R;
     G = matrices.G;
   
     % Prediction
-    x_est = dynamic(x_est(1:states_len), T_R, param);
+    x_est = dynamic(x_est(1:states_len), u, param, dt);
     P_est = F*P_est*F' + G*Q*G';
     P_prior = P_est;
     states_len = size(x_est, 1); % number of states
   
     % Update
-    [~, z_hat] = measurement(x_est); % estimation of the measurement using the sensor's model
+    [~, z_hat] = measurement(x_est, param{4}, measure_len); % estimation of the measurement using the sensor's model
     Innovation = z - z_hat;
-    S_Inno = H*P_est*H' + W;
-    W = P_est*H'/S_Inno; % kalman gain
+    S_Inno = H*P_est*H' + R;
+    W = P_est*H'*inv(S_Inno); % kalman gain
     x_est = x_est + W*Innovation; % update state estimate
     P_est = (eye(states_len) - W*H)*P_est; % update covariance matrix
+  
   
     model.x_est(1:states_len) = x_est(1:states_len);
     model.P_est(1:states_len, 1:states_len) = P_est(1:states_len, 1:states_len);
@@ -188,29 +194,23 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
   %  |____/ \__, |_| |_|\__,_|_| |_| |_|_|\___|
   %         |___/                              
   
-  function x_new = dynamic(x_est, T_R, param)
+  function x_new = dynamic(x_est, u, param, dt)
   
     states_len = size(x_est, 1);
     I_eq = param{1}; % Inertia
-    B_eq = param{2}; % Damping
+    rho_cp_R2 = param{2}; % Damping
     K_opt = param{3}; % Power coefficient
+    
+    omega = x_est(1);
+    V0 = x_est(2);
+
     x_new = zeros(states_len,1);
   
-    x_new(1) = x_est(1) + 1/I_eq*(T_R - K_opt*x_est(1)^2 - B_eq*x_est(1));
+    x_new(1) = omega + dt/I_eq*(1/2*pi*rho_cp_R2*V0^3/omega - K_opt*omega^2 ); % [rad/s] rotational speed
+    x_new(2) = V0; % [m/s] wind speed 
   end
   
-  %   __  __                                                    _   
-  %  |  \/  | ___  __ _ ___ _   _ _ __ ___ _ __ ___   ___ _ __ | |_ 
-  %  | |\/| |/ _ \/ _` / __| | | | '__/ _ \ '_ ` _ \ / _ \ '_ \| __|
-  %  | |  | |  __/ (_| \__ \ |_| | | |  __/ | | | | |  __/ | | | |_ 
-  %  |_|  |_|\___|\__,_|___/\__,_|_|  \___|_| |_| |_|\___|_| |_|\__|
-                                       
-  function [z, z_hat] = measurement(x)
-    % z_hat -> fake measuerement to be used in the KF
-  
-    z_hat = x(1); % rotational speed [rad/s]
-    z = x(1); %+ mvnrnd([0], W)'; % rotational speed [rad/s]
-  end
+
   
   %    ____                            _                         _     
   %   / ___|___  _ __ ___  _ __  _   _| |_ ___   _ __ ___   __ _| |_   
@@ -219,16 +219,18 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
   %   \____\___/|_| |_| |_| .__/ \__,_|\__\___| |_| |_| |_|\__,_|\__(_)
   %                       |_|                                          
   
-  function matrices = compute_matrices(x_est, param)
+  function matrices = compute_matrices(x_est, param, dt)
   
     I_eq = param{1}; % Inertia
-    B_eq = param{2}; % Density
+    rho_cp_R2 = param{2}; % Density
     K_opt = param{3}; % Power coefficient
-  
-    F = [-2*K_opt/I_eq*x_est(1)-B_eq/I_eq];
-    H = [1];
-    G = [1];
-  %   matrices = cell(4, 1);
+    omega = x_est(1);
+    V0 = x_est(2);
+
+    F = [1+dt/I_eq*(-1/2*rho_cp_R2*pi*V0^3/omega^2-2*K_opt*omega), (3*dt*pi*rho_cp_R2*V0^2)/(2*I_eq*omega); 0, 1];
+    H = [1 0];
+    G = [1 1];
+
     matrices = struct('F', F, 'H', H, 'G', G);
   end
   
@@ -239,17 +241,17 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
   %  |_|   |_|_|\__\___|_|  |_|_| |_|\__, |
   %                                  |___/ 
   
-  function model = filtering(model, z, T_G, param)
+  function model = filtering(model, z, u, param, dt)
     n_models = size(model, 1);
-    states_len = size(model{1}.x_est, 2);
+    states_len = size(model{1}.x_est, 1);
     for j=1:n_models
-      param{3} = model{j}.K_opt;
+      param{2} = model{j}.rho_cp_R2;
       % compute the linearized matrices
-      matrices = compute_matrices(model{j}.x_est(1:states_len), param);
-      matrices.W = param{4};
+      matrices = compute_matrices(model{j}.x_est(1:states_len), param, dt);
+      matrices.R = param{4};
       matrices.Q = param{5};
   
-      [model{j}] = EKF(model{j}, z, T_G, param, matrices);
+      [model{j}] = EKF(model{j}, z, u, param, matrices, dt);
     end
   end
   
@@ -260,33 +262,34 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
   %  |_|   |_|  \___/|_.__/   \__,_| .__/ \__,_|\__,_|\__|_|_| |_|\__, |
   %                                |_|                            |___/ 
   
-  function model = probability_updating(model, z, param)
+  function model = probability_updating(model, z, param, dt)
     n_models = size(model, 1);
     states_len = size(model{1}.x_est, 1);
     
     for j=1:n_models
       % compute the linearized matrices
-      matrices = compute_matrices(model{j}.x_est, param);
-      matrices.W = param{4};
+      matrices = compute_matrices(model{j}.x_est(1:states_len), param, dt);
+      matrices.R = param{4};
       matrices.Q = param{5}; 
 
       H = zeros(states_len);
-      W = zeros(states_len);
+      R = zeros(states_len);
       G = zeros(states_len);
       P_prior = zeros(states_len);
       model{j}.Lambda = zeros(1);
       zeta = zeros(states_len);
 
       H = matrices.H;
-      W = matrices.W;
+      R = matrices.R;
       G = matrices.G;
       z_hat = model{j}.z_hat;
       P_prior = model{j}.P_prior;
       
       S = zeros(states_len, states_len);
-      S = H*P_prior*H' + G*W*G';
+      S = H*P_prior*H' + G*R*G';
       zeta = z - z_hat;
       tmp = 1/sqrt(2*pi*det(S))*exp(-1/2*zeta'*inv(S)*zeta);
+%       tmp = max(tmp, 1e-80);
       model{j}.Lambda = tmp(1);
     end
     % Compute the denominator
@@ -306,28 +309,19 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
   %   ___) | || (_| | ||  __/ | (_| (_) | | | | | | |_) | 
   %  |____/ \__\__,_|\__\___|  \___\___/|_| |_| |_|_.__(_)
                                                         
-%   function [x_est, P_est] = state_combination(model)
-%     n_models = size(model, 1);
-%     states_len = size(model{1}.x_est, 1);
-%     x_est = zeros(states_len,1);
-%     P_est = zeros(states_len,states_len);
-%     for j=1:n_models
-%       x_est(1:states_len) = x_est(1:states_len) + model{j}.mu*model{j}.x_est(1:states_len);
-%     end
-%     
-%     for j=1:n_models
-%       P_est = P_est + model{j}.mu*(model{j}.P_est + (x_est - model{j}.x_est)*(x_est - model{j}.x_est)');
-%     end
-%   
-%   end
-
-  function [x_est] = state_combination(model)
+  function [x_est, P_est] = state_combination(model)
     n_models = size(model, 1);
     states_len = size(model{1}.x_est, 1);
     x_est = zeros(states_len,1);
+    P_est = zeros(states_len,states_len);
     for j=1:n_models
       x_est(1:states_len) = x_est(1:states_len) + model{j}.mu*model{j}.x_est(1:states_len);
     end
+    
+    for j=1:n_models
+      P_est = P_est + model{j}.mu*(model{j}.P_est + (x_est - model{j}.x_est)*(x_est - model{j}.x_est)');
+    end
+  
   end
   
   %   _____ _ _ _              _       _                      _   _             
@@ -355,16 +349,15 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
     end
   
     for j=1:n_models
-      model{j}.x_tilde(1:states_len) = zeros(states_len, 1);
+      model{j}.x_tilde(1:states_len, 1) = zeros(states_len, 1);
       model{j}.P_tilde = zeros(states_len, states_len);
       for i=1:n_models
-        tmp = model{j}.x_tilde(1:states_len) + mu(i, j)*model{i}.x_est;
-        model{j}.x_tilde(1:states_len) = tmp(1:states_len);
+        model{j}.x_tilde = model{j}.x_tilde + mu(i, j)*model{i}.x_est;
       end
       for i=1:n_models
           model{j}.P_tilde = model{j}.P_tilde + mu(i, j)*(model{i}.P_est + (model{j}.x_tilde - model{i}.x_est)*(model{j}.x_tilde - model{i}.x_est)');
       end
-      model{j}.x_est(1:states_len) = model{j}.x_tilde(1:states_len);
+      model{j}.x_est = model{j}.x_tilde;
       model{j}.P_est = model{j}.P_tilde;
     end
   
@@ -400,15 +393,26 @@ function [x_est, P_est, mu_vector, omega_tilde, K_opt] = gain_IMM(x_est, P_est, 
   %  | |_| | |_| | |_| |_) | |_| | |_ 
   %   \___/ \__,_|\__| .__/ \__,_|\__|
   %                  |_|              
+  
+%   function K_opt = compute_K_opt(model)
+%     % This function computes the local estimation of the global centroid, so where each agent thinks the network centroid is
+%     
+%     n_models = size(model, 1);
+%   
+%     K_opt = 0;
+%     for j=1:n_models
+%       K_opt = K_opt + model{j}.mu*model{j}.K_opt;
+%     end
+%   end
   function K_opt = compute_K_opt(model)
     % This function computes the local estimation of the global centroid, so where each agent thinks the network centroid is
     
-      n_models = size(model, 1);
-    
-      K_opt = 0;
-      for j=1:n_models
-        K_opt = K_opt + model{j}.mu*model{j}.K_opt;
-      end
-      
-     
+    n_models = size(model, 1);
+  
+    rho_cp_R2 = 0;
+    for j=1:n_models
+      rho_cp_R2 = rho_cp_R2 + model{j}.mu*model{j}.rho_cp_R2;
     end
+
+    K_opt = rho_cp_R2;
+  end

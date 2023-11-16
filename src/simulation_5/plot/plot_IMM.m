@@ -84,7 +84,7 @@ if simulation.model == 5
 %  | |_) | | | (_) | |_) | (_| | |_) | | | | |_| |_| |
 %  | .__/|_|  \___/|_.__/ \__,_|_.__/|_|_|_|\__|\__, |
 %  |_|                                          |___/ 
-  for i=1:2:wind.WS_len
+  for i=1:wind.WS_len
     fig = figure('Color', 'w');hold on;grid on;
     data = reshape(out_store{i}.mu.Data(:,1,s_start:end), IMM.n_models, []);
     bar(time, data', 'stacked')
@@ -111,7 +111,10 @@ plot_time_series2('fig_power_dynamic', out_store, 'P_R', 'P_G',  generator.P_rat
 
 
 figure(); hold on;
-plot(out_store{2}.K_opt)
-plot(out_store{2}.K)
+for i=1:wind.WS_len
+  plot(out_store{i}.K_opt, 'DisplayName', num2str(i))
+end
+legend()
+
 
 end

@@ -116,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 5;       % choice of the model
+simulation.model = 7;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator power
@@ -134,8 +134,10 @@ elseif simulation.model == 5 % IMM controller
     simulation.mdl = 'winter_simulink_IMM_control'; 
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
+elseif simulation.model == 7 
+    simulation.mdl = 'winter_simulink_IMM_control_2states'; 
   end
-simulation.stop_time = 2e2*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 2*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 12;       % 1 -> constant wind speed
@@ -283,24 +285,62 @@ dt = simulation.time_step_H;
 
 % parameters for the IMM control
 load('lookup\K_vector.mat');
-IMM.K_vector = K_opt_vector;
-% IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE]);
+% IMM.K_vector = K_opt_vector;
+% IMM.K_vector = sort([IMM.K_vector, generator.K_opt_GE, 0.8*generator.K_opt_GE]);
+% % IMM.K_vector =  generator.K_opt_GE;
+% % IMM.K_vector = linspace(0.3, 1.1, 5)*1e7;
+% IMM.n_models = size(IMM.K_vector, 2);           % number of models
+% IMM.states_len = 1;           % number of states
+% IMM.prob_transition = 0.995; % probability of transition
+% if IMM.n_models > 1
+%   IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
+% else
+%   IMM.Pi = 1;
+% end
+% % IMM.W = [1e0*(omega_rated*0.01/3)^2 0; 0 1e-10]; % measurement noise
+% IMM.W = 1e-4*[(omega_rated*0.05/3)^2]; % measurement noise
+% % IMM.Q = [2.3715e+12 0; 0 1e-10]; %1e-10*(omega_rated/50/3)^2; % process noise
+% IMM.Q = 1e-12*[2.3715e+12]; %1e-10*(omega_rated/50/3)^2; % process noise
+% IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
+% IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
+% % IMM.x_est(2) = 1;
+% IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
+% IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
+% max_long_def = 12.4; % maximum longitudinal deflection of the blade
+% max_radial_def = rotor.R*(1-sqrt(1 - (max_long_def/rotor.R)^2)); % maximum radial deflection of the blade [m]
+% IMM.sigma_R = (max_radial_def/3); % assuming a  deflection of 4 meters
+% IMM.sigma_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value 
+% IMM.sigma_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
+% IMM.enable = 1; % enables or disables the IMM controller/constant gain
+% IMM.sigma_gain = kron(1.0*[1 1 1 1 1], [1 1]); % gain to scale the sigmas
+% IMM.freq_theta = 0.5*0.01;
+% IMM.phase_theta = 2*pi*rand();
+% IMM.phase_theta2 = 2*pi*rand();
+% IMM.freq_rho = 0.5*0.01;
+% IMM.phase_rho = 2*pi*rand();
+% IMM.phase_rho2 = 2*pi*rand();
+% IMM.freq_R = 0.5*0.01;
+% IMM.phase_R = 2*pi*rand();
+% IMM.phase_R2 = 2*pi*rand();
+
+load('lookup\K_vector.mat');
+IMM.K_vector = rho*cp_GE*rotor.R^2*[0.8 1 1.2];
 % IMM.K_vector =  generator.K_opt_GE;
-% IMM.K_vector = linspace(0.5, 4, 5)*1e7;
+% IMM.K_vector = linspace(0.3, 1.1, 5)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
-IMM.states_len = 1;           % number of states
-IMM.prob_transition = 0.9; % probability of transition
+IMM.states_len = 2;           % number of states
+IMM.measure_len = 1;           % number of states
+IMM.prob_transition = 0.995; % probability of transition
 if IMM.n_models > 1
   IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
 else
   IMM.Pi = 1;
 end
-% IMM.W = [1e0*(omega_rated*0.01/3)^2 0; 0 1e-10]; % measurement noise
-IMM.W = 1e-12*[(omega_rated*0.01/3)^2]; % measurement noise
+IMM.W = 1e-4*[(omega_rated*0.05/3)^2]; % measurement noise
 % IMM.Q = [2.3715e+12 0; 0 1e-10]; %1e-10*(omega_rated/50/3)^2; % process noise
-IMM.Q = [2.3715e+12]; %1e-10*(omega_rated/50/3)^2; % process noise
+IMM.Q = 1e-4*eye(2);
 IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
-IMM.x_est = zeros(IMM.states_len, 1);       % initial state estimate
+IMM.x_est = [0.5; 8];       % initial state estimate
 % IMM.x_est(2) = 1;
 IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
 IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
