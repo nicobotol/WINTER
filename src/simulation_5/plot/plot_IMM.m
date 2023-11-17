@@ -1,6 +1,6 @@
 % plot the probabilities of each model and the estimated gain
 
-if simulation.model == 5
+if simulation.model == 5 || simulation.model==7
 
   t_start = out_store{1}.model_x_est.Time(end) - simulation.plot_time(1); % [s]
   [~, s_start] = min(abs(out_store{1}.model_x_est.Time - t_start)); % sample from where to start

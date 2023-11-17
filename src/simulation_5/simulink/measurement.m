@@ -10,7 +10,7 @@
     z_hat = zeros(measure_len, 1);
 
     z_hat(1) = x(1); % rotational speed [rad/s]
-    % z_hat(2) = x(2); % rotational speed [rad/s]
+    % z_hat(2) = x(3); % current
     z(1) = x(1); % rotational speed [rad/s]
-    % z(2) = x(2); % current
+    % z(2) = x(3); % current
   end

@@ -137,7 +137,7 @@ elseif simulation.model == 6
 elseif simulation.model == 7 
     simulation.mdl = 'winter_simulink_IMM_control_2states'; 
   end
-simulation.stop_time = 2*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 12;       % 1 -> constant wind speed
@@ -324,7 +324,7 @@ load('lookup\K_vector.mat');
 % IMM.phase_R2 = 2*pi*rand();
 
 load('lookup\K_vector.mat');
-IMM.K_vector = rho*cp_GE*rotor.R^2*[0.8 1 1.2];
+IMM.K_vector = rho*cp_GE*rotor.R^2*[0.8 0.9 1 1.1 1.2];
 % IMM.K_vector =  generator.K_opt_GE;
 % IMM.K_vector = linspace(0.3, 1.1, 5)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
@@ -336,10 +336,10 @@ if IMM.n_models > 1
 else
   IMM.Pi = 1;
 end
-IMM.W = 1e-4*[(omega_rated*0.05/3)^2]; % measurement noise
+IMM.W = 1e-10*[(omega_rated*0.01/3)^2]; % measurement noise
 % IMM.Q = [2.3715e+12 0; 0 1e-10]; %1e-10*(omega_rated/50/3)^2; % process noise
-IMM.Q = 1e-4*eye(2);
-IMM.P_est = 1e5*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
+IMM.Q = 1e-4*[2.3715*1e12 0; 0 (0.1*8/3)^2];
+IMM.P_est = 1e3*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.x_est = [0.5; 8];       % initial state estimate
 % IMM.x_est(2) = 1;
 IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
