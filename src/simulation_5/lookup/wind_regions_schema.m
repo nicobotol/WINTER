@@ -18,17 +18,35 @@ P_5 = [0 0];
 P = [P_1 P_2 P_3 P_4 P_5];
 Vw = [0:0.1:10];
 Pw = 1/2*rho*A*Vw.^3;
+Vbetz = [0:0.1:15];
+Pbetz = 16/27*1/2*rho*A*Vbetz.^3;
 line_width = 1.2*line_width;
+
+
+% for v=1:length(V)
+%   V0 = V(v);
+%   if V0 <= V0_rated
+%     lambda = rated_values(4);
+%   else
+%     lambda = omega_rated*rotor.R/V0;    
+%   end
+
+%   cP(:) = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, 0); % interpolate the look-up table
+%   P_plot(:, v) = 0.5*rotor.A*V0^3.*cP*rho; % compute the power
+
+% end
 
 fig = figure('Color','w');
 grid minor;hold on;box on;
 plot(V, P, 'LineWidth', line_width, 'DisplayName', 'Mech. power');
 plot(Vw, Pw, 'LineWidth', line_width, 'DisplayName', 'Wind power');
+plot(Vbetz, Pbetz, 'LineWidth', line_width, 'DisplayName', 'Betz limit');
 xline(V0_1(end), ':', 'LineWidth', line_width, 'Color', color(5), 'HandleVisibility','off', 'FontSize', font_size);
 xline(V0_2(end), ':', 'LineWidth', line_width, 'Color', color(5), 'HandleVisibility','off');
 xline(V0_3(end),  ':', 'LineWidth', line_width, 'Color', color(5), 'HandleVisibility','off');
 xline(V0_4(end), ':', 'LineWidth', line_width, 'Color', color(5), 'HandleVisibility','off', 'FontSize', font_size);
 xlim([0 35])
+ylim([0 max(Pw)])
 xticks([4 25]);
 xticklabels({'Cut in', 'Cut out'});
 text(2, 14e6, 'I', 'FontSize', font_size);

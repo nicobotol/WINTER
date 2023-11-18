@@ -72,8 +72,7 @@ for v=1:v_plot_len
     lambda = omega_rated*rotor.R/V0;    
   end
 
-  cP(:) = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, ...
-      p_vector); % interpolate the look-up table
+  cP(:) = interp2(lambda_vector, pitch_vector, lookup_cP, lambda, p_vector); % interpolate the look-up table
   P_plot(:, v) = 0.5*rotor.A*V0^3.*cP*rho; % compute the power
 
 end
