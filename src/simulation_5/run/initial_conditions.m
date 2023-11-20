@@ -31,8 +31,12 @@ function [rotor, generator, blade, T_R0, IMM] = initial_conditions(rho, lambda_v
   P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
   x_est_initial = zeros(IMM.states_len, IMM.n_models);  
   mu_initial = zeros(IMM.states_len, IMM.n_models)';  
-  % IMM.x_est = [rotor.omega_R0; V0_0]; % state
-  IMM.x_est = [rotor.omega_R0; V0_0; 1e-3]; % state
+  if IMM.states_len == 2
+    IMM.x_est = [rotor.omega_R0; V0_0]; % state
+  elseif IMM.states_len == 3
+    IMM.x_est = [rotor.omega_R0; V0_0; 1e-3]; % state
+  end
+  
   for j = 1:IMM.n_models
     model{j}.x_est = IMM.x_est; % state
     model{j}.P_est = IMM.P_est; % covariance

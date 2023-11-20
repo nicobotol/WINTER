@@ -1,4 +1,4 @@
-op% plot the probabilities of each model and the estimated gain
+% plot the probabilities of each model and the estimated gain
 
 if simulation.model == 5 || simulation.model==7
 

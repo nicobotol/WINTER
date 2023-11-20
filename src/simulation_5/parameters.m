@@ -135,9 +135,9 @@ elseif simulation.model == 5 % IMM controller
 elseif simulation.model == 6 
     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
 elseif simulation.model == 7 
-    simulation.mdl = 'winter_simulink_IMM_control_3states'; 
+    simulation.mdl = 'winter_simulink_IMM_control_2states'; 
   end
-simulation.stop_time = 20*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 100*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 12;       % 1 -> constant wind speed
@@ -286,22 +286,22 @@ dt = simulation.time_step_H;
 % parameters for the IMM control
 
 load('lookup\K_vector.mat');
-IMM.K_vector = rho*cp_GE*rotor.R^2*[0.2 1 1.8];
+IMM.K_vector = rho*cp_GE*rotor.R^2*[0.8 1 1.2];
 % IMM.K_vector =  generator.K_opt_GE;
 % IMM.K_vector = linspace(0.3, 1.1, 5)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
-IMM.states_len = 3;           % number of states
+IMM.states_len = 2;           % number of states
 IMM.measure_len = 3;           % number of measures
-IMM.prob_transition = 0.9; % probability of transition
+IMM.prob_transition = 0.99; % probability of transition
 if IMM.n_models > 1
   IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
 else
   IMM.Pi = 1;
 end
-% IMM.W = [(omega_rated*0.005/3)^2 0; 0 0.0001]; % measurement noise
-% IMM.Q = [2.3715*1e12 0; 0 (1/3)^2];
-IMM.W = [(omega_rated*0.01/3)^2 0 0; 0 1e-10 0; 0 0 1e-4]; % measurement noise
-IMM.Q = [2.3715*1e12 0 0; 0 1e-2 0; 0 0 (1/3)^2];
+IMM.W = [(omega_rated*0.01/3)^2 0 0; 0 (1e-2*10/3)^2 0; 0 0 (2/3)^2 ]; % measurement noise
+IMM.Q = [2.3715*1e12 0; 0 (0.8/3)^2];
+% IMM.W = [(omega_rated*0.001/3)^2 0 0; 0 (1e-4*2.2e-3/3)^2 0; 0 0 (1e-2*10/3)^2]; % measurement noise
+% IMM.Q = [2.3715*1e12 0 0; 0 (0.1)^2 0; 0 0 (5e-3*12.2*1e3/3)^2];
 IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
 IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
