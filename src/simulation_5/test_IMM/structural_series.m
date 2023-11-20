@@ -1,4 +1,4 @@
-function [u, t, PSD_store] = wind_series(V10, V10_std, fs, h, T)
+function [u, t, PSD_store] = structural_series(V10, V10_std, fs, h, T)
 % This function produces a wind series provided:
 % V10     -> averaged wind speed blowing in 10 minutes [m/s]
 % V10_std -> std of the V10 [m/s]

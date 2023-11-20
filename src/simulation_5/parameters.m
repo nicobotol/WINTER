@@ -137,8 +137,8 @@ elseif simulation.model == 6
 elseif simulation.model == 7 
     simulation.mdl = 'winter_simulink_IMM_control_3states'; 
   end
-simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
-simulation.time_step_H=1e-5;% time step for the mechanical part [s]
+simulation.stop_time = 20*ones(10,1); % max time to investigaste [s]
+simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 12;       % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
@@ -286,24 +286,23 @@ dt = simulation.time_step_H;
 % parameters for the IMM control
 
 load('lookup\K_vector.mat');
-IMM.K_vector = rho*cp_GE*rotor.R^2*[0.5 0.8 0.9 1 1.1 1.2 1.5];
+IMM.K_vector = rho*cp_GE*rotor.R^2*[0.2 1 1.8];
 % IMM.K_vector =  generator.K_opt_GE;
 % IMM.K_vector = linspace(0.3, 1.1, 5)*1e7;
 IMM.n_models = size(IMM.K_vector, 2);           % number of models
 IMM.states_len = 3;           % number of states
-IMM.measure_len = 2;           % number of states
-IMM.prob_transition = 0.99; % probability of transition
+IMM.measure_len = 3;           % number of measures
+IMM.prob_transition = 0.9; % probability of transition
 if IMM.n_models > 1
   IMM.Pi = IMM.prob_transition*eye(IMM.n_models, IMM.n_models) + (1 - IMM.prob_transition)/(IMM.n_models-1)*(ones(IMM.n_models, IMM.n_models)-eye(IMM.n_models)); % mode transition matrix
 else
   IMM.Pi = 1;
 end
-IMM.W = [(omega_rated*0.01/3)^2 0; 0 1e-6]; % measurement noise
-% IMM.Q = [2.3715e+12 0; 0 1e-10]; %1e-10*(omega_rated/50/3)^2; % process noise
-IMM.Q = [2.3715*1e12 0 0; 0 (1e-8*6/3)^2 0; 0 0 (1e-8*6/3)^2];
-IMM.P_est = 1e3*ones(IMM.states_len, IMM.states_len); % initial covariance matrix
-IMM.x_est = [0.5; 6; 1000];       % initial state estimate
-% IMM.x_est(2) = 1;
+% IMM.W = [(omega_rated*0.005/3)^2 0; 0 0.0001]; % measurement noise
+% IMM.Q = [2.3715*1e12 0; 0 (1/3)^2];
+IMM.W = [(omega_rated*0.01/3)^2 0 0; 0 1e-10 0; 0 0 1e-4]; % measurement noise
+IMM.Q = [2.3715*1e12 0 0; 0 1e-2 0; 0 0 (1/3)^2];
+IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
 IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
 max_long_def = 12.4; % maximum longitudinal deflection of the blade
@@ -322,33 +321,6 @@ IMM.phase_rho2 = 2*pi*rand();
 IMM.freq_R = 0.5*0.01;
 IMM.phase_R = 2*pi*rand();
 IMM.phase_R2 = 2*pi*rand();
-
-% generate a random number between 0 and 2pi
-
-
-% Initialize the models
-P_est_initial = zeros(IMM.states_len, IMM.states_len, IMM.n_models);
-x_est_initial = zeros(IMM.states_len, IMM.n_models);  
-mu_initial = zeros(IMM.states_len, IMM.n_models)';  
-for j = 1:IMM.n_models
-  model{j}.x_est = IMM.x_est; % state
-  model{j}.P_est = IMM.P_est; % covariance
-  model{j}.mu = 1/IMM.n_models; % mode probability
-  x_est_initial(1:IMM.states_len, j) = model{j}.x_est; 
-  mu_initial(j, 1) = model{j}.mu;
-  P_est_initial(1:IMM.states_len, 1:IMM.states_len, j) = model{j}.P_est; 
-end
-
-
-% Transform the struct of parameters into buses for simulink
-% rotor_bus_info = Simulink.Bus.createObject(rotor); 
-% rotor_bus = evalin('base', rotor_bus_info.busName);
-% generator_bus_info = Simulink.Bus.createObject(generator); 
-% generator_bus = evalin('base', generator_bus_info.busName);
-% gearbox_bus_info = Simulink.Bus.createObject(gearbox); 
-% gearbox_bus = evalin('base', gearbox_bus_info.busName);
-% blade_bus_info = Simulink.Bus.createObject(blade); 
-% blade_bus = evalin('base', blade_bus_info.busName);
 
 % Pitching startegy (feathering or stall)
 pitch_strategy = 0;  % 0     -> feathering
