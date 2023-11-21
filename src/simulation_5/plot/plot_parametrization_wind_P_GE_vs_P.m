@@ -74,15 +74,15 @@ end
 name = string();
 text = string();
 if B_eq < 1
-  name = '../../report/macro/powers_error_no_B.tex';
+  name = strcat('../../report/macro/', date_fig, 'powers_error_no_B.tex');
   text = 'Without $B_{eq}$';
 else 
-  name = '../../report/macro/powers_error.tex';
+  name = strcat('../../report/macro/', date_fig, 'powers_error.tex');
   text = 'With $B_{eq}$';
 end
 
 fileID = fopen(name,'w');
-fprintf(fileID, '\multirow{5}{*}{%s} \n', text);
+fprintf(fileID, '\\multirow{5}{*}{%s} \n', text);
 for i=1:wind.WS_len/2
 fprintf(fileID,' & %.2f & %.3f & %.3f & %.2f & %.3f & %.3f & %.2f\\\\ \n', [wind.mean(2*i), P_R_G(i)/1e6, P_R_R(i)/1e6, E_R(i), P_GE_G(i)/1e6, P_GE_R(i)/1e6, E_GE(i)]');
 end

@@ -9,7 +9,7 @@ V0_v = lookup_static_values(1, :);
 omega_R = lookup_static_values(2, :);
 P_R = lookup_static_values(6, :);
 
-omega_v = omega_R; % [rad/s] rotor speed
+omega_v = lambda_GE*11.4/rotor.R; % [rad/s] rotor speed
 
 P_G = P_R - B_eq*omega_v.^2; % [W] mechancial power to the generator
 iq = 2/3*P_G./(Lambda.*omega_v*p);  % [A] generator current

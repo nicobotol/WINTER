@@ -1,4 +1,4 @@
-function [RMS_errors] = post_process(out_cell, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE, IMM)
+function [RMS_errors] = post_process(out_cell, wind, omega_rated, generator, simulation, lookup_static_values, lookup_Pitch, lookup_P_GE, IMM, date_fig)
 % This function performs the post processing opoerations of the obtained data
 
 RMS_errors =  cell(1, wind.WS_len);
@@ -36,7 +36,7 @@ if simulation.type == 5
   end
 elseif simulation.type == 10
   
-  compute_energy_develop(out_cell, simulation, IMM, wind, simulation.stop_time(1)*[0.25 0.5 0.75 1], 'energy_K_opt_comp');
+  compute_energy_develop(out_cell, simulation, IMM, wind, simulation.stop_time(1)*[1], 'energy_K_opt_comp', date_fig);
 
 elseif simulation.type == 11
   

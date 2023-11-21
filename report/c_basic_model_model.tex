@@ -10,7 +10,7 @@ In this section of the work, the models adopted in the different sub-components 
 \end{figure}
 
 \subsection[Wind speed temporal series]{Model of the wind speed temporal series}
-This part deals with the generation of a realistic \acrshort{WS} time series. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
+This section deals with the generation of a realistic \acrshort{WS} time series. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
 Calling \acrshort{Deltat} $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of \acrshort{fs} $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time \acrshort{T} $\left[\si{\second}\right]$ is \acrshort{Ns}. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
 Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum \cite{Aerodynamics_of_wind_turbines}:
 \begin{equation}
@@ -24,12 +24,12 @@ A wind series that fulfils the prescribed \acrshort{PSD} is:
     \label{eq:wind_series}
 \end{gather}
 with $t = i\Delta_t$ for $i=1,\dots,N_s$ and \acrshort{phij} randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
-An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \mesunt{\meter\per\second}$, height above ground of $h=150 
- \ \mesunt{\meter}$, and for a time horizon of $T = 300 \ \mesunt{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which define the interval where the generated data are expected to be with more than the 99\% of probability. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
+An example of generated wind series for $V_{10}=10 \ \si{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$, height above ground of $h=150 
+ \ \si{\meter}$, and for a time horizon of $T = 300 \ \si{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which define the interval where the generated data are expected to be with more than the 99\% of probability. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation.eps}
-    \caption{Example of generated wind series with $V_{10}=10\mesunt{\meter\per\second}$ and $\sigma_{V_{10}}=1\mesunt{\meter\per\second}$ }
+    \caption{Example of generated wind series with $V_{10}=10\si{\meter\per\second}$ and $\sigma_{V_{10}}=1\si{\meter\per\second}$ }
     \label{fig:wind_generation}
 \end{figure}
 
@@ -40,7 +40,7 @@ An example of generated wind series for $V_{10}=10 \ \mesunt{\meter\per\second}$
     \label{fig:wind_generation_PSD}
 \end{figure}
 
-\subsection[Aerodynamic]{Model of the aerodynamic}
+\subsection[Aerodynamic]{Model of the aerodynamic response}
 The inputs of this logical block are the WS, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor (see \autoref{fig:d_aerodynamic_block}). 
 \begin{figure}
   \centering
@@ -55,7 +55,7 @@ In the block the actual \acrshort{TSR} is firstly computed, then the power coeff
 \end{equation}
 
 \subsection[Pitch actuation]{Model of the pitch actuation}
-In order to model the dynamic of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. 
+In order to model the dynamics of the mechanical pitch actuators, two main effects have to be taken into account. The first one is the transfer function delaying the real response compared to the command action, while the second one is the maximum pitching rate. 
 \begin{figure}[htb]
   \centering
   \input{d_pitch_actuator_block.tex}
@@ -80,7 +80,7 @@ The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}
 \end{figure}
 In this simple simulation, the transmission ratio is unitary, and so the relationship between therotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
 \begin{equation}
-    n = \frac{\omega_{R}}{\omega_{G}} = \frac{1}{1}
+    n = \frac{\omega_{R}}{\omega_{G}} = 1
     \label{eq:transmission_ratio}
 \end{equation}
 In this configuration the turbine is assumed to be direct drive, but a general n is considered in the derivations for making it more general.
@@ -103,24 +103,24 @@ In this configuration the turbine is assumed to be direct drive, but a general n
   \end{subfigure}
   \caption{Torque convention of the logical block representing the mechanical equation}
 \end{figure}
-The dynamical equation block solves the Newton's law written on the rotor side of the transmission (see \autoref{fig:transmission_convention}):
+The dynamical equation block solves Newton's law written on the rotor and the generator side of the transmission (see \autoref{fig:transmission_convention}):
 \begin{equation}
     \begin{cases}
-      J_R \dot{\omega_R} = T_R^R - B_R\omega_R - T_R^T\\
-      J_G \dot{\omega_G} = T_G^T - B_G\omega_G - T_G^G\\
+      J_R \dot{\omega}_R = T_R^R - B_R\omega_R - T_R^T\\
+      J_G \dot{\omega}_G = T_G^T - B_G\omega_G - T_G^G\\
       T_R^T\omega_R = T_G^T\omega_G\\
     \end{cases}
 \end{equation}
 This system of equations may be solved and finally the mechanical dynamic equation can be written on the rotor side:
 \begin{gather}
-    \left(J_R + \frac{J_G}{n^2}\right) \dot{\omega_R} = T_R^R - \frac{T_G^G}{n} - \left(B_R + \frac{B_G}{n^2}\right)\omega_R \\
-    J_{eq} \dot{\omega_R} = T_R^R - T_R^G - B_{eq}\omega_R
+    \left(J_R + \frac{J_G}{n^2}\right) \dot{\omega}_R = T_R^R - \frac{T_G^G}{n} - \left(B_R + \frac{B_G}{n^2}\right)\omega_R \\
+    J_{eq} \dot{\omega}_R = T_R^R - T_R^G - B_{eq}\omega_R
     \label{eq:mech_eq}
 \end{gather}
 Where the apex indicates if the quantity is referred to the rotor or to the generator, while the subscript indicates the side of the transmission in which it is expressed.
 
 \subsection[Transmission damping]{Model of the transmission damping}
-Finding information on the mechanical damping of real turbines is not simple because it is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equations in \autoref{eq:damping_sys} may be set up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, while the latter is the torque balance:
+Finding information on the mechanical damping of real turbines is not simple because this is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equations in \autoref{eq:damping_sys} may be set up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission,in steady-state conditions, while the latter is the torque balance:
 \begin{gather}
 \left\{
 \begin{aligned}
@@ -166,13 +166,13 @@ In this frame the equations of the machine are:
   \omega_{me}\Lambda_{mg}=u_q+L_{s}i_d\omega_{me}+L_{s}\frac{di_q}{dt}+R_{s}i_q
   \label{eq:q_axis_eq}
 \end{gather}
-where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as thevoltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\mesunt{\radian \per \second}$), \acrshort{Ls} $\mesunt{\henry}$ is the inductance and \acrshort{Rs} $\mesunt{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\mesunt{\weber}$ is the flux linkage of the permanent magnets.\\
+where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as thevoltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\si{\radian \per \second}$), \acrshort{Ls} $\si{\henry}$ is the inductance and \acrshort{Rs} $\si{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\si{\weber}$ is the flux linkage of the permanent magnets.\\
 By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
   p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L_{s}\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R_{s}(i_d^2 + i_q^2)
   \label{eq:gen_power_balance}
 \end{equation}
-Since in isotropic machines the relationship between a given input torque and the corresponding q-axis current is univocal (i.e. the d-axis does not play any role in the conversion of the torque) it is convenient to keep the total current as low as possible in order to minimize the joule losses. This is achieved by working in the so called \acrfull{MTPA} regime, in which the current on the d-axis is null. For this reason, knowing that the quadrature axis controller ensures $i_d=0 \, \mesunt{\ampere}$ one can rewrite:
+Since in isotropic machines the relationship between a given input torque and the corresponding q-axis current is univocal (i.e. the d-axis does not play any role in the conversion of the torque) it is convenient to keep the total current as low as possible in order to minimize the joule losses. This is achieved by working in the so called \acrfull{MTPA} regime, in which the current on the d-axis is null. For this reason, knowing that the quadrature axis controller ensures $i_d=0 \, \si{\ampere}$ one can rewrite:
 \begin{equation}
   \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L_{s} i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{R_{s}i_q^2}_{Joule}
   \label{eq:gen_power_balance2}
@@ -182,7 +182,7 @@ Since the power is not invariant in the transformation from the abc frame to the
   P_G = T_G\omega = \frac{3}{2}p\omega\Lambda_{mg}i_q = \frac{3}{2}u_qi_q + \frac{3}{2}L_{s} i_q\frac{di_q}{dt} + \frac{3}{2}R_{s} i_q^2
   \label{eq:gen_power_balance3}
 \end{equation}
-The choice of this frame makes the system of equations describing the generator linear, so the two axis can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0 \, \mesunt{\ampere}$.
+The choice of this frame makes the system of equations describing the generator linear, so the two axes can be controlled as two separated \acrfull{SISO} systems. In particular, the torque control is achieved by regulating the current of the q-axis, and letting the controller of the d-axis ensuring $i_d=0 \, \si{\ampere}$.
 \begin{figure}[htb]
 \input{d_pmsm.tex}
 \caption{Block diagram of the q-axis current control of a PMSM}
@@ -190,7 +190,7 @@ The choice of this frame makes the system of equations describing the generator 
 \end{figure}
 
 \autoref{fig:PMSM} represents the block diagram of q-axis current control of a \acrshort{PMSM}, coupled with also the mechanical equation. $R_{iq}$ is the controller, \acrshort{tauc} $\left[\si{\second}\right]$ is the time delay of the power electronic converter, $T_R \ \left[\si{\newton\meter}\right]$ is the torque imposed by the wind on the rotor.\\
-It could be seen that the aerodynamical torque $T_R$ enters as a disturb in the block diagram, but its source is not specified. In reality $T_R$ is affected by the \acrshort{WS}, the pitch angle, and the rotational speed $\Omega_G$, meaning that in principle the dependency of $T_R$ from $\Omega_G$ should have been introduced (as done in the aerodynamical block of \autoref{fig:d_plant_schema}). Unfortunately, this interaction is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved decoupling the aero and electrical domains observing that the fluid dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. 
+It could be seen that the aerodynamical torque $T_R$ enters as a disturb in the block diagram, and its source is not specified. In reality $T_R$ is affected by the \acrshort{WS}, the pitch angle, and the rotational speed $\Omega_G$, meaning that in principle the dependency of $T_R$ from $\Omega_G$ should have been introduced (as done in the aerodynamical block of \autoref{fig:d_plant_schema}). Unfortunately, this interaction is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved decoupling the aero and electrical domains observing that the fluid dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. 
 
  Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation.
 \begin{table}[htb]
@@ -220,19 +220,19 @@ It could be seen that the aerodynamical torque $T_R$ enters as a disturb in the 
 %    \caption{Feedback scheme of the q-axis control loop}
 %    \label{fig:iq_control}
 % \end{figure}
-The friction has been considered $ 0 \, \mesunt{\kilo\gram\square\meter\per\second}$ because it has been already considered in the equivalent one of the transmission. \\
- Once the inverter switching frequency is defined (for example $f_{inverter}=1\, \mesunt{\kilo\hertz}$ is in a range reasonably close to the one reported in \cite{ABB_manual}), then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:generator_low_level-control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
+The friction has been considered $ 0 \, \si{\kilo\gram\square\meter\per\second}$ because it has been already considered in the equivalent transmission damping. \\
+ Once the inverter switching frequency is defined (for example $f_{inverter}=1\, \si{\kilo\hertz}$ is in a range reasonably close to the one reported in \cite{ABB_manual}), then we can base on it the definition of the $\uptau_c$ and bandpass frequency. As described in \autoref{subsec:generator_low_level-control}, the time delay introduced by it in the response (i.e. the one used in the $G_c=\frac{1}{1+s\uptau_c}$ block of \autoref{fig:d_torque_control}) may be computed as half the switching period:
  \begin{gather}
  \uptau_{c}=\frac{\frac{1}{f_{inverter}}}{2}=\frac{\frac{1}{1000}}{2}=500 \ \ \mesunt{\micro \second}
  \end{gather}
  In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually of 1.5 the switching delay.
  
- \subsubsection[Power curve with generator]{Extension of the static power curve including the generator}\label{subsec:genertaor_power_curve}
- Now that the generator's characteristics have been introduced, it is possible to extend the static power curve presented in \autoref{subsec:static_power_curve} taking into account the electrical losses $P_{joule}$ in order to represent the expected $P_{GE}$ for each WS. These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are null. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, with or without the damping.
+ \subsubsection[Power curve with generator]{Recalculation of the static power curve including the generator}\label{subsec:genertaor_power_curve}
+ Now that the generator's characteristics have been introduced, it is possible to add to the static power curve presented in \autoref{subsec:static_power_curve} the expected $P_{GE}$ taking into account the electrical losses $P_{joule}$. These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are zero. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, with or without the damping.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.65\textwidth]{images/vectorial/fig_static_electro_power.eps}
-\caption{The blue line is the power curve of the power extracted from the resource. The solid yellow and orange lines are the electrical power outputs of the generator with and without damping respectively. The dashed yellow and orange lines are the power lost due to joule effect with and without damping respectively. }
+\caption{The blue line is the power curve of the mechanical power extracted from the resource. The solid yellow and orange lines are the electrical power outputs of the generator with and without damping respectively. The dashed yellow and orange lines are the power lost due to joule effect with and without damping respectively. }
   \label{fig:fig_static_electro_power}
 \end{figure}
 
