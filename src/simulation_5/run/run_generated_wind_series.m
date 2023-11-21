@@ -1,5 +1,4 @@
-function [wind_speed] = run_generated_wind_series(wind_mean, ...
-  wind_turbulence, wind_speed, stop_time, seed)
+function [wind_speed] = run_generated_wind_series(wind_mean, wind_turbulence, wind_speed, stop_time, seed)
 % This function generates s wind series based on the parameters setted in
 % parameters.m and runs the simulation for it
 

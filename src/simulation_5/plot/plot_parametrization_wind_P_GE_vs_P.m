@@ -34,8 +34,17 @@ for i=1:2:wind.WS_len
   plot(wind_resampled_ii(s_start_ii:end), out_cell{i+1}.P_GE.Data(s_start_ii:end)/scaling, line_type{2}, 'LineWidth',  line_width, 'Color', color(1), 'MarkerSize', marker_size); % rotor electrical power
   plot(wind_resampled(s_start:end), out_cell{i}.P_R.Data(s_start:end)/scaling, line_type{3},'LineWidth',  line_width, 'Color', color(2), 'MarkerSize', marker_size); % generator mechanical power
   plot(wind_resampled(s_start:end), out_cell{i}.P_GE.Data(s_start:end)/scaling, line_type{4},'LineWidth', line_width, 'Color', color(2), 'MarkerSize', marker_size); % generator electrical power
+
+  P_R_R(k) = mean(out_cell{i+1}.P_R.Data(s_start_ii:end)); % rotor mechanical power
+  P_GE_R(k) = mean(out_cell{i+1}.P_GE.Data(s_start_ii:end)); % rotor electrical power
+  P_R_G(k) = mean(out_cell{i}.P_R.Data(s_start:end)); % generator mechanical power
+  P_GE_G(k) = mean(out_cell{i}.P_GE.Data(s_start:end)); % generator electrical power
+
+  E_R(k) =  (P_R_G(k) - P_R_R(k))/P_R_G(k)*100;
+  E_GE(k) = (P_GE_G(k) - P_GE_R(k))/P_GE_G(k)*100;
+
   grid on
-  set(gca, 'FontSize', font_size)
+  set(gca, 'FontSize', 0.9*font_size)
   box on
   if wind.WS_len ~= 2
     if (k == 1 || k == 4) 
@@ -54,10 +63,27 @@ if wind.WS_len ~= 2
 else
   legend(legends_name, 'location', 'southeast');
 end
-% legend('Rotor $P_{in}$','Gen. $P_{in}$','Gen. $P_{out}$','Rotor $P_{out}$', 'Location', 'best', 'FontSize', font_size,'interpreter','latex');
-sgtitle(plot_title, 'Interpreter','latex', 'FontSize', font_size);
+% legend('Rotor $P_{in}$','Gen. $P_{in}$','Gen. $P_{out}$','Rotor $P_{out}$', 'Location', 'best', 'FontSize', 0.9*font_size,'interpreter','latex');
+sgtitle(plot_title, 'Interpreter','latex', 'FontSize', 0.9*font_size);
 if simulation.print_figure == 1
   fig_name = strcat(path_images,'\', date_fig, plot_name,'.eps');
   export_figure(fig, strcat(date_fig, plot_name, '.eps'), path_images);
 %   export_IEEE_figure(strcat(date_fig, plot_name, '.eps'), path_images); 
 end
+
+name = string();
+text = string();
+if B_eq < 1
+  name = '../../report/macro/powers_error_no_B.tex';
+  text = 'Without $B_{eq}$';
+else 
+  name = '../../report/macro/powers_error.tex';
+  text = 'With $B_{eq}$';
+end
+
+fileID = fopen(name,'w');
+fprintf(fileID, '\multirow{5}{*}{%s} \n', text);
+for i=1:wind.WS_len/2
+fprintf(fileID,' & %.2f & %.3f & %.3f & %.2f & %.3f & %.3f & %.2f\\\\ \n', [wind.mean(2*i), P_R_G(i)/1e6, P_R_R(i)/1e6, E_R(i), P_GE_G(i)/1e6, P_GE_R(i)/1e6, E_GE(i)]');
+end
+fclose(fileID);

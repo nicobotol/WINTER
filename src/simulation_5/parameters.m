@@ -137,7 +137,7 @@ elseif simulation.model == 6
 elseif simulation.model == 7 
     simulation.mdl = 'winter_simulink_IMM_control_2states'; 
   end
-simulation.stop_time = 100*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 400*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
 simulation.type = 12;       % 1 -> constant wind speed
@@ -152,7 +152,7 @@ simulation.type = 12;       % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 980*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 5*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
@@ -248,20 +248,20 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [8 8]; %kron([5 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = [8 8]; %kron([4 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = kron([0.5 0.5 1 1 1], [1 1]); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
 wind.sample_t = 1/wind.sample_f;% wind sample time [s]
-wind.ramp_WS_start = 4*ones(7,1);        % wind speed at the start of the ramp [m/s]
+wind.ramp_WS_start = 4*ones(10,1);        % wind speed at the start of the ramp [m/s]
 wind.ramp_WS_stop = V0_rated*ones(7,1);         % wind speed at the stop of the ramp [m/s]
 wind.ramp_time_start = 0*ones(7, 1); % time speed at the start of the ramp [s]
 wind.ramp_time_stop = simulation.stop_time;  % time speed at the stop of the ramp [s]
 
 switch simulation.type
-  case {1, 3, 5, 7, 8, 9,  12 }
+  case {1, 3, 5, 7, 8, 9, 10, 12 }
     wind.WS_len = length(wind.mean);  % number of separated WSs to test
-  case {2, 6, 10, 11}
+  case {2, 6,  11}
     wind.WS_len = length(wind.ramp_time_start);
   case 4
     wind.WS_len = 1; 
@@ -298,7 +298,7 @@ if IMM.n_models > 1
 else
   IMM.Pi = 1;
 end
-IMM.W = [(omega_rated*0.01/3)^2 0 0; 0 (1e-2*10/3)^2 0; 0 0 (2/3)^2 ]; % measurement noise
+IMM.W = [(omega_rated*0.01/3)^2 0 0; 0 2.3715*(1e-1/3)^2 0; 0 0 (2.5/3)^2 ]; % measurement noise
 IMM.Q = [2.3715*1e12 0; 0 (0.8/3)^2];
 % IMM.W = [(omega_rated*0.001/3)^2 0 0; 0 (1e-4*2.2e-3/3)^2 0; 0 0 (1e-2*10/3)^2]; % measurement noise
 % IMM.Q = [2.3715*1e12 0 0; 0 (0.1)^2 0; 0 0 (5e-3*12.2*1e3/3)^2];

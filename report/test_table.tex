@@ -12,15 +12,15 @@
 \input{a_packages.tex}
 
 \begin{document}
-
-\begin{table}[htb]
-  \caption{BLA}
+\begin{table}
+  \caption{Static powers for different WS \textcolor{red}{Scrivere meglio}}
   \begin{tabular}{cc|ccc|ccc}
-    & & \multicolumn{3}{c|}{$E_R$} & \multicolumn{3}{c}{$E_G$} \\
-    Int. time $\mesunt{\second}$ &  $V_{10} \mesunt{\meter\per\second}$ & Gen. $\mesunt{\giga\joule}$ & Rot. $\mesunt{\giga\joule}$ & $\Delta \, \left[\%\right]$ & Gen. $\mesunt{\giga\joule}$ & Rot. $\mesunt{\giga\joule}$ & $\Delta \, \left[\%\right]$ \\ \midrule
-    \input{macro/energy_K_opt_comp.tex}
+    \toprule
+    & & \multicolumn{3}{c|}{$P_R$} & \multicolumn{3}{c}{$P_{GE}$} \\
+    Configuration & $V_{10} \, \mesunt{\meter\per\second}$ & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[-\right]$  & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[-\right]$\\ \midrule
+    \input{macro/powers_error_no_B.tex} 
+    \input{macro/powers_error.tex} 
   \end{tabular}
-  \label{tab:energy_K_opt_comp}
 \end{table}
 
 \end{document}

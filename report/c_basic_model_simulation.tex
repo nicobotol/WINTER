@@ -511,22 +511,34 @@ In this section the control law for the generators's torque based on the generat
 % For this simulation, in order to avoid the interference of the controller not allowing the generator to reach the steady state, this component has been removed and the torque reference value has been directly used into the dynamic equation of the rotor power.
 \subsubsection{Simulation with the generator's torque reference based on the generator output for constant WS below rated}
 The generator torque's control law based on the generator has been compared with the one of the rotor, for WS between the cut in and the rated one. A critical condition for this tests is that the rotor rotational speed reaches exactly the ones producing the desired tip speed ratio. For this reason, initially the damping reducing the power sent by the rotor to the input of the generator is removed (i.e. $B_{eq}=0 \mesunt{\kilo\gram\square\meter\per\second}$). \\
-In the simulation, 5 constant wind speeds has been provided and the corresponding steady state values of mechanical input and electrical output powers to the generator have been evaluated. The results are reported in \autoref{fig:comparison_control_laws_no_B}.
+In the simulation, 5 constant wind speeds has been provided and the corresponding steady state values of mechanical input and electrical output powers to the generator have been evaluated. The results are reported in \autoref{fig:comparison_control_laws_no_B} and in \autoref{tab:comp_powers}.
 \begin{figure}[htb]
   \centering
   \begin{subfigure}{\columnwidth}
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_12_17_17_05comparison_control_laws.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_21_11_05_44comparison_control_laws.eps}
     \caption{Simulation without damping}
     \label{fig:comparison_control_laws_no_B}
   \end{subfigure}
   \begin{subfigure}{\columnwidth}
-    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_12_17_33_32comparison_control_laws.eps}
+    \includegraphics[width = \columnwidth]{images/vectorial/2023_11_21_10_17_02comparison_control_laws.eps}
     \caption{Simulation with damping}
     \label{fig:comparison_control_laws_B}
   \end{subfigure}
   \caption{Comparison of input power at the rotor and output power of the generator for the control laws based on the maximization of the power extracted from the resource (called \textit{Rotor} in the legend) and the maximization of the power generated electrical power (called \textit{Generator} in the legend).}
   \label{fig:comparison_control_laws}
 \end{figure}
+
+\begin{table}[htb]
+  \caption{Static powers for different WS \textcolor{red}{Scrivere meglio il significato della tabella}}
+  \begin{tabular}{cc|ccc|ccc}
+    \toprule
+    & & \multicolumn{3}{c|}{$P_R$} & \multicolumn{3}{c}{$P_{GE}$} \\
+    Configuration & $V_{10} \, \mesunt{\meter\per\second}$ & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[-\right]$  & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[-\right]$\\ \midrule
+    \input{macro/powers_error_no_B.tex} 
+    \input{macro/powers_error.tex} 
+  \end{tabular}
+  \label{tab:comp_powers}
+\end{table}
 
 It could be seen that without damping the control law based on the maximization of the power at the rotor side (called \textit{rotor} in the legend) is always able to provide more mechanical input power, while the one based on the generator electrical output power (called \textit{generator} in the legend) is able to deliver more electrical power for all the velocities except 4 $\mesunt{\meter\per\second}$, where still the difference is small.  \\
 As could be seen in \autoref{fig:comparison_control_laws_B}, when the damping is included into the picture the $P_R$ based on the rotor is higher than the other for all the velocities while the corresponding $P_{GE}$ is always lower except for the rated wind speed.\\
