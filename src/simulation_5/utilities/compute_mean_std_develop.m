@@ -1,5 +1,5 @@
-function compute_mean_std_develop(out_cell, simulation, IMM, wind, generator)
-  fileID = fopen('../../report/macro/mean_std_IMM.tex','w'); % file to write
+function compute_mean_std_develop(out_cell, simulation, IMM, wind, generator, date_fig)
+  fileID = fopen(strcat('../../report/macro/',date_fig,'mean_std_IMM.tex'),'w'); % file to write
   vector = [250]; % different time length to average
 
   for j=1:length(vector) % loop on every time to investigate

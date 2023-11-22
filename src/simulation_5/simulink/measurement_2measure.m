@@ -4,15 +4,12 @@
   %  | |  | |  __/ (_| \__ \ |_| | | |  __/ | | | | |  __/ | | | |_ 
   %  |_|  |_|\___|\__,_|___/\__,_|_|  \___|_| |_| |_|\___|_| |_|\__|
                                        
-  function [z, z_hat] = measurement_2states(x, param, measure_len)
+  function [z, z_hat] = measurement_2measure(x, param, measure_len)
     % z_hat -> fake measuerement to be used in the KF
+    % measure rotational speed and wind speed
 
     z = zeros(measure_len, 1);
     z_hat = zeros(measure_len, 1);
-
-    rho_cp_R2 = param{2};
-    B_eq = param{6};
-    pLambda = param{7};
 
     % In case of z_hat -> x = [omega; V0]
     z_hat(1) = x(1); % rotational speed [rad/s]

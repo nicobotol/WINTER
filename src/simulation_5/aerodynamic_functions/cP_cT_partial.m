@@ -1,6 +1,4 @@
-function [cp_partial, cT_partial, pt, pn] = cP_cT_partial(r_item_no_tip, r_vector, ...
-  beta_vector, thick_vector, c_vector, B, a_guess, a_prime_guess, R, lambda, ...
-  Theta_p, aoa_mat, cl_mat, cd_mat, thick_prof, fake_zero, rho, V0, omega, i_max)
+function [cp_partial, cT_partial, pt, pn] = cP_cT_partial(r_item_no_tip, r_vector, beta_vector, thick_vector, c_vector, B, a_guess, a_prime_guess, R, lambda, Theta_p, aoa_mat, cl_mat, cd_mat, thick_prof, fake_zero, rho, V0, omega, i_max)
 
 % Function to compute the cp and cT of the local blade section, looping
 % along all blade sections

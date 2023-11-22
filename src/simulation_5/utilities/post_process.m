@@ -44,10 +44,10 @@ elseif simulation.type == 11
 
 elseif simulation.type == 12
     % compute the mean and std value of the gain for all the cases
-    compute_mean_std_develop(out_cell, simulation, IMM, wind, generator);
+    compute_mean_std_develop(out_cell, simulation, IMM, wind, generator, date_fig);
 
     % compute the energy 
-    compute_energy_develop(out_cell, simulation, IMM, wind, simulation.post_process_time, 'energy');
+    compute_energy_develop(out_cell, simulation, IMM, wind, simulation.stop_time(1)*[1], 'energy', date_fig);
 else
   for i = 1:wind.WS_len
     % rotaional speed

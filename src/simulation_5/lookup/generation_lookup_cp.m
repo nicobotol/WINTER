@@ -30,10 +30,8 @@ for l = 1:lambda_item % loop over the TSR
     [cP_partial, cT_partial,~,~] = cP_cT_partial(r_item_no_tip, r_vector, beta_vector, thick_vector, c_vector, rotor.blades, a_guess, a_prime_guess, rotor.R, lambda, theta, aoa_mat, cl_mat, cd_mat, thick_prof, fake_zero, rho, 0, 0, i_max);
 
     % integrate the local cP and cT along the blade
-    cP = lambda*rotor.blades/(rotor.A*rotor.R)*...
-      trapezoidal_integral(r_vector(1:r_item_no_tip), cP_partial); 
-    cT = rotor.blades/rotor.A*...
-      trapezoidal_integral(r_vector(1:r_item_no_tip), cT_partial);
+    cP = lambda*rotor.blades/(rotor.A*rotor.R)*trapezoidal_integral(r_vector(1:r_item_no_tip), cP_partial); 
+    cT = rotor.blades/rotor.A*trapezoidal_integral(r_vector(1:r_item_no_tip), cT_partial);
 
     % store the results
     lookup_cP(p, l) = cP;

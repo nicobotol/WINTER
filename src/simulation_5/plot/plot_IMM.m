@@ -68,6 +68,8 @@ if simulation.model == 5 || simulation.model==7
     min_tmp = min(min_tmp, min(out_store{2*i - 1}.K_opt.Data(s_start:end)));
   end
   yline(generator.K_opt_GE,'--', 'LineWidth',line_width, 'DisplayName', 'Reference');
+  yline(IMM.K_vector, ':', 'LineWidth', line_width, 'HandleVisibility', 'Off', 'Color', color(2));
+  plot(NaN, NaN, ':', 'LineWidth', line_width, 'Color', color(2), 'DisplayName', 'IMM');
   xlabel('Time [s]')
   ylabel('$K_{opt} [Nms^2]$')
   legend('Location', 'SouthEast')
@@ -85,7 +87,7 @@ if simulation.model == 5 || simulation.model==7
 %  | .__/|_|  \___/|_.__/ \__,_|_.__/|_|_|_|\__|\__, |
 %  |_|                                          |___/ 
   for i=1:wind.WS_len
-    fig = figure('Color', 'w');hold on;grid on;
+    fig = figure('Color', 'w');hold on;grid on; box on;
     data = reshape(out_store{i}.mu.Data(:,1,s_start:end), IMM.n_models, []);
     bar(time, data', 'stacked')
     % for i=1:IMM.n_models
@@ -95,12 +97,21 @@ if simulation.model == 5 || simulation.model==7
     % end
     xlabel('Time [s]')
     ylabel('$\mu$ [-]')
-    legend('Location', 'NorthEast')
+    legend('Model 1', 'Model 2', 'Model 3','Location', 'NorthEast')
+    title('Probability')
+  end
+  for i=1:wind.WS_len
+    fig = figure('Color', 'w');hold on;grid on; box on;
+    data = reshape(out_store{i}.mu.Data(:,1,s_start:end), IMM.n_models, []);
+    plot(time, data', 'LineWidth', line_width, 'DisplayName', ['Model ', num2str(i)]);
+    xlabel('Time [s]')
+    ylabel('$\mu$ [-]')
+    legend('Model 1', 'Model 2', 'Model 3','Location', 'NorthEast')
     title('Probability')
   end
 
 
-figure(); hold on;
+figure(); hold on; box on; grid on;
 plot(out_store{1}.T_R*1e-6);
 plot(out_store{1}.T_R_no_noise*1e-6)
 legend('Eff', 'No noise')
@@ -110,11 +121,23 @@ ylabel('Torque [MNm]')
 plot_time_series2('fig_power_dynamic', out_store, 'P_R', 'P_G',  generator.P_rated, 'Time [s]', 'P [MW]', 'Rotor and generator powers', 1e6, 'Aero.', 'Gen.', date_fig, 'southeast')
 
 
-figure(); hold on;
+figure(); hold on; box on; grid on;
 for i=1:wind.WS_len
-  plot(out_store{i}.K_opt, 'DisplayName', num2str(i))
+  plot(out_store{i}.K_opt.Time(s_start:end), out_store{i}.K_opt.Data(s_start:end), 'DisplayName', num2str(i))
 end
 legend()
 
+figure(); hold on; box on; grid on;
+for i=1:2:wind.WS_len
+  plot(out_store{i}.rho.Time(s_start:end), out_store{i}.rho.Data(s_start:end), 'DisplayName', 'Estimated', 'LineWidth', line_width)
+  plot(out_store{i}.rho_filter.Time(s_start:end), out_store{i}.rho_filter.Data(s_start:end), 'DisplayName', 'Filtered', 'LineWidth', line_width)
+  plot(out_store{i}.rho_eff.Time(s_start:end), out_store{i}.rho_eff.Data(s_start:end), 'DisplayName', 'Real', 'LineWidth', line_width)
+end
+yline(IMM.rho_vector, '--', 'LineWidth', line_width, 'Color', color(5), 'HandleVisibility', 'Off');
+plot(NaN, NaN, '--', 'LineWidth', line_width, 'Color', color(5), 'DisplayName', 'IMM');
+legend('Location', 'SouthEast')
+xlabel('Time [s]')
+ylabel('$\rho [\frac{kg}{m^3}]$')
+title('Estimated and real $\rho$')
 
 end
