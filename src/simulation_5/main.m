@@ -52,9 +52,9 @@ for i = 1:wind.WS_len
       % wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       [generator, IMM] = run_K_opt_sensitivity(generator, IMM, i);
     case 12 % wind speed ramp and enable or disable the IMM
-      % wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i), wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed,      stop_time);
-      wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, stop_time);
-      % wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
+      % wind_speed = run_single_constant_speed(wind.mean(i), wind_speed, stop_time);
+      % wind_speed = run_ramp(wind.ramp_WS_start(i), wind.ramp_WS_stop(i), wind.ramp_time_start(i), wind.ramp_time_stop(i), wind_speed, stop_time);
+      wind_speed = run_generated_wind_series(wind.mean(i), wind.turbulence(i), wind_speed, stop_time, simulation.seed);
       % % [u_rho, t, PSD_rho] = structural_series(rho, IMM.sigma_rho, 1/simulation.time_step_H, 150, stop_time);
       % % [u_R, t, PSD_R] = structural_series(rotor.R, IMM.sigma_R, 1/simulation.time_step_H, 150, stop_time);
       % % [u_theta, t, PSD_theta] = structural_series(0, IMM.sigma_theta, 1/simulation.time_step_H, 150, stop_time);

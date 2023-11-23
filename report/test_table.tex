@@ -12,15 +12,19 @@
 \input{a_packages.tex}
 
 \begin{document}
-\begin{table}
-  \caption{Static powers for different WS \textcolor{red}{Scrivere meglio}}
+
+\begin{table}[htb]
+  \centering
+  \caption{Comparison of the static powers. $P_R$ and $P_{GE}$ are the mechanical extracted power and the generator output. \textit{Gen.} and \textit{Rot.} states whether the control law uses $K_{opt,GE}$ or $K_{opt}$ respectively.}
   \begin{tabular}{cc|ccc|ccc}
     \toprule
     & & \multicolumn{3}{c|}{$P_R$} & \multicolumn{3}{c}{$P_{GE}$} \\
-    Configuration & $V_{10} \, \mesunt{\meter\per\second}$ & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[-\right]$  & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[-\right]$\\ \midrule
-    \input{macro/powers_error_no_B.tex} 
-    \input{macro/powers_error.tex} 
+    Configuration & $V_{10}$ & Gen.  & Rot.& $\Delta P$  & Gen.  & Rot.& $\Delta P$ \\ 
+    & $\mesunt{\meter\per\second}$ & $\mesunt{\mega\watt}$ & $\mesunt{\mega\watt}$ & $\left[\%\right]$ & $\mesunt{\mega\watt}$ & $\mesunt{\mega\watt}$ & $\left[\%\right]$ \\  \midrule
+    \input{macro/powers_error_no_B_20231121.tex} 
+    \input{macro/powers_error_20231121.tex} 
   \end{tabular}
+  \label{tab:comp_powers}
 \end{table}
 
 \end{document}

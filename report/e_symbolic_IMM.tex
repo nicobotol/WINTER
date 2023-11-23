@@ -1,0 +1,28 @@
+\newpage
+\section{IMM matrices}\label{sec:e_symbolic_IMM}
+\begin{gather}
+  x^{(j)}_{k} = \left[\omega_{R,k}^{(j)}, v_{k}^{(j)}\right]^T \\
+  \hat{x}_{k} = \left[\hat{\omega}_{R,k}, \hat{v}_{k}\right]^T \\
+  u_{k} = \left[\omega_{R,k}, v_{k}\right]^T \\
+  y_k = h(x_k, u_k, \varepsilon_k) = \left[\hat{\omega}_{R,k}, \hat{v}_{k}\right]^T \\
+  \omega_{R,k+1} = f_{\omega_{R}}(x_k, u_k, \nu_k) = \omega_{R,k} + \frac{\Delta t}{I_{eq}} \left(\frac{1}{2}\pi\rho c_{p} R^2 \frac{v_k^3}{\omega_{R,k}} - \hat{K}_{opt,GE,k}\omega_{R,k}^2\right) + \frac{\Delta t}{I_{eq}}\tilde{T}_R\\
+  v_{k+1} = f_{v}(x_k, u_k, \nu_k) = v_k + \epsilon_{v,k} \\
+  f(x_k, u_k, \nu_k) = \left[f_{\omega_{R}}(x_k, u_k, \nu_k), f_{v}(x_k, u_k, \nu_k)\right]^T\\
+  \nu_k = \left[\tilde{T}_R, \epsilon_{v,k}\right]^T\\
+  h(x_k, u_k, \varepsilon_k) = \left[\hat{\omega}_{R,k}, \hat{v}_{k}\right]^T + \varepsilon_k\\
+  F_k = \frac{\partial f(x_k, u_k, 0)}{\partial x} = 
+    \begin{bmatrix}
+      1+\left(-\frac{1}{2}\pi\rho c_{p} R^2 \frac{v^3}{\omega_k^2}-2 \hat{K}_{opt,GE,k} \omega_k\right) & \frac{3\Delta t \pi \rho c_p R^2 v_k^2}{2 I_{eq} \omega_k}\\
+      0 & 1 
+    \end{bmatrix}\\
+  H_k = \frac{\partial h(x_k, u_k)}{\partial x}=
+    \begin{bmatrix}
+      1 & 0\\
+      0 & 1 
+    \end{bmatrix}\\
+ G_k = \frac{\partial f(x_k, u_k, 0)}{\partial \nu} = 
+  \begin{bmatrix}
+    \frac{\Delta t}{I_{eq}} & 0\\
+    0 & 1 
+  \end{bmatrix}
+\end{gather}

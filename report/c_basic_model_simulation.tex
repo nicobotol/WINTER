@@ -530,11 +530,13 @@ In the simulation, 5 constant WSs have been provided and the corresponding stead
 \end{figure}
 
 \begin{table}[htb]
+  \centering
   \caption{Comparison of the static powers. $P_R$ and $P_{GE}$ are the mechanical extracted power and the generator output. \textit{Gen.} and \textit{Rot.} states whether the control law uses $K_{opt,GE}$ or $K_{opt}$ respectively.}
   \begin{tabular}{cc|ccc|ccc}
     \toprule
     & & \multicolumn{3}{c|}{$P_R$} & \multicolumn{3}{c}{$P_{GE}$} \\
-    Configuration & $V_{10} \, \mesunt{\meter\per\second}$ & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[\%\right]$  & Gen. $\mesunt{\mega\watt}$ & Rot. $\mesunt{\mega\watt}$ & $\Delta P$ $\left[\%\right]$\\ \midrule
+    Configuration & $V_{10}$ & Gen.  & Rot.& $\Delta P$  & Gen.  & Rot.& $\Delta P$ \\ 
+    & $\mesunt{\meter\per\second}$ & $\mesunt{\mega\watt}$ & $\mesunt{\mega\watt}$ & $\left[\%\right]$ & $\mesunt{\mega\watt}$ & $\mesunt{\mega\watt}$ & $\left[\%\right]$ \\  \midrule
     \input{macro/powers_error_no_B_20231121.tex} 
     \input{macro/powers_error_20231121.tex} 
   \end{tabular}
@@ -553,7 +555,7 @@ The implemented control law is also tested for a generic wind series input. The 
 
 \begin{table}[htb]
   \centering
-  \caption{Produced energy, given by the integration of the power over $\Delta t$ time from the end of the simulation. $E_R$ is the energy extracted form the wind, $E_G$ is the one produced by the generator, and $\Delta E$ is the normalized difference between the two energies. \textit{Gen.} and \textit{Rot.} stands for the control law based on the generator and the rotor respectively. \textcolor{Red}{Rifare dati perchè avendo simulato nuovamente sono cambiati}}
+  \caption{Produced energy in the considered time. $E_R$ and $E_{GE}$ are the mechanical extracted energy and the generator output. \textit{Gen.} and \textit{Rot.} states whether the control law uses $K_{opt,GE}$ or $K_{opt}$ respectively. \textcolor{Red}{Rifare dati perchè avendo simulato nuovamente sono cambiati}}
   \begin{tabular}{cc|ccc|ccc}
     \toprule
     & & \multicolumn{3}{c}{$E_R$} & \multicolumn{3}{|c}{$E_G$} \\
