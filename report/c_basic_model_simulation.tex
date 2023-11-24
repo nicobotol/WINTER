@@ -8,8 +8,15 @@ In this section the developed model is tested applying different controllers and
   \item stochastic wind time series and different pitching dynamics;
   \item comparison between the control laws based on the rotor power (as described in \autoref{subsec:torque_reference}) or the generator one (\autoref{subsec:method_control_P_GE}), for constant, ramp, or generated wind speeds.
 \end{itemize}
-\subsection{Simulation with velocity ramp}
-\subsubsection[Simulation setting]{Simulation setting for test with velocity ramp}
+
+%   ____       _                                    
+%  |  _ \ ___ | |_ ___  _ __   _ __ ___   __ ___  __
+%  | |_) / _ \| __/ _ \| '__| | '_ ` _ \ / _` \ \/ /
+%  |  _ < (_) | || (_) | |    | | | | | | (_| |>  < 
+%  |_| \_\___/ \__\___/|_|    |_| |_| |_|\__,_/_/\_\
+                                                  
+\subsection{Rotor power maximization}
+\subsubsection{Velocity ramp}
 The model is tested providing as wind input a ramp starting at time 0 $\left[\si{\second}\right]$. The parameters that may be changed in the simulation: starting and finishing wind speeds, time length of the ramp.\\
 It is decided to test 3 wind velocity conditions to investigate the three main operating regions. \autoref{tab:simulation_config} reports the configurations of these simulations. 
 \begin{table}[htb]
@@ -37,7 +44,6 @@ A post-process check can be done on the powers, in particular that the one provi
     \label{eq:power_balance}
 \end{gather}
 
-\subsubsection[Simulation results]{Simulation results for test with velocity ramp}
 The results of the simulations are reported in \autoref{fig:simulation_1}, \ref{fig:simulation_2}, \ref{fig:simulation_3}. \\
 In particular:
 \begin{itemize}
@@ -55,11 +61,9 @@ In particular:
 
 It could be seen that below rated wind speed (in the case of control signal using only $K_{opt}$, \autoref{fig:omega_sim_I}) there is a deviation between the rotor speed in static conditions and the one obtained in the simulation. The main source of this mismatch is damping, because the same error is much more reduced when the additional damping term is considered in the power set-point generation (as in \autoref{fig:omega_full_fedback}). The additional difference is due to the inertial terms. 
 
-\subsection{Simulation with generated wind time series}\label{sec:wind_series_sim}
-\subsubsection[Simulation settings]{Simulation settings for test with wind time series}
+\subsubsection{Generated wind time series}\label{sec:wind_series_sim}
 The model is tested with an input wind time series three times, the first with mean \acrshort{WS} of 6 $\si{\meter\per\second}$, the second with 11.5 $\si{\meter\per\second}$, and the third with 20 $\si{\meter\per\second}$. These values are chosen to test the simulator in the three characteristics wind regimes. In the first simulation the turbulence is chosen to be $\sigma=0.6 \si{\meter\per\second}$ while for the other $\sigma=1 \si{\meter\per\second}$. The simulation is run for $t=150\ \si{\second}$ and the results of the last 100 $\si{\second}$ are plotted in order to get rid of the transient behavior. The sampling frequency for the wind series generation is set to be $f_s=50 \left[\si{\hertz}\right]$.
 
-\subsubsection[Simulation results]{Simulation results for test with wind time series}
 The results of this simulation are reported in \autoref{fig:simulation_rand_wind_NPC}, where the wind time series and the parametrizations of some quantities as function of the instantaneous wind speed are reported on top of the corresponding reference lines obtained by static analysis. Futhermore, the \acrfull{RMS} error between the value of some observed quantities and their static values will be presented in \autoref{tab:RMS_comparison}, where they will be also compared with the results of another similar simulation. \\
 What can be seen from the results is that the observed quantities are clustered around the static curve. This is reasonable since if the turbulence were set to 0, then the expected results would have been a point on the static curve corresponding to the investigated WS. It must be highlighted that in these curves the initial transient part has been eliminated in order to have a better visualization. 
 
@@ -92,11 +96,11 @@ What can be seen from the results is that the observed quantities are clustered 
   \label{fig:simulation_rand_wind_NPC}
 \end{figure}
 
-\subsection{Influence of the pitch angle gain scheduling}\label{subsec:gain_scheduling_disabling}
+\subsubsection{Influence of the pitch angle gain scheduling}\label{subsec:gain_scheduling_disabling}
 In order to verify the effect of the gain scheduling with respect a fixed gain for the pitch angle controller, three simulations with different wind speeds are proposed, $V_{10} = 11.5, 15, 20 \ \si{\meter\per\second}$. For each of them four different gains are used. The settings for all of them are reported in \autoref{tab:simulation_config_variable_gains}, \autoref{tab:simulation_config_variable_gains2}, and \autoref{tab:simulation_config_variable_gains3}. \\
 In particular, the first and the fourth simulations use the gain scheduling paradigm while the other two have a fixed gains. The specific numerical value chosen in the constant case are representative of two very different regions of the scheduling case since \textit{simulation 2} has values close to the ones used at low wind speeds, while \textit{3} has value close to the high wind speeds. 
 
-\subsubsection[$V_{10}=11.5 \, \si{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS of V\textsubscript{10}= 11.5 $\left[ \text{ms}\textsuperscript{-1} \right]$}
+\textbf{$V_{10}=11.5 \, \si{\meter\per\second}$}\\
 The first of the three simulations is run at $V_{10} = 11.5 \ \si{\meter\per\second}$. Here an intermitting activation of the pitching mechanism is expected since the wind speed fluctuates around its nominal value.\\
 \autoref{tab:simulation_config_variable_gains} reports the simulation settings while \autoref{fig:gain_scheduling_time_dependency} reports the time evolution of the pitch angle, rotor rotational speed, and the generator torque obtained from the simulations. 
 
@@ -183,7 +187,7 @@ In this simulation these error metrics are not so representative since the wind 
 
 The first two simulations are very close to each other, since the static gain of \textit{sim. 2} is almost the same of the scheduling at rated speed. Furthermore, the results of the fourth simulation are not too different from the first two. Finally, it could be also noticed that the gain in case \textit{3} is very different from the other one, suggesting that this choice is not suitable for this condition. 
 
-\subsubsection[$V_{10}=15 \, \si{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS of V\textsubscript{10}= 15 $\left[ \text{ms}\textsuperscript{-1} \right]$}
+\textbf{$V_{10}=15 \, \si{\meter\per\second}$}\\
 The second simulation is run with $V_{10}=15 \ \si{\meter\per\second}$, and so the wind speed is expected to be always above the rated one. The simulation settings are reported in \autoref{tab:simulation_config_variable_gains2}.
 \begin{table}[htb]
   \caption{Configuration parameters for the simulation in \autoref{fig:gain_scheduling_time_dependency2}}
@@ -269,7 +273,7 @@ The \acrshort{RMS} error between the steady state value and the corresponding ex
 
 As could be seen from the root mean square errors, using gain scheduling can be beneficial as compared to using fixed pair. In fact, even though \textit{simulation 2} has lowest error value, the ones of \textit{3} are almost double than the \textit{1}. This means that a fixed gain may perform well in a certain wind region (i.e. the one corresponding at the same gain in the scheduling approach) but probably it will underperform in another different from that one.  
 
-\subsubsection[$V_{10}=20 \, \si{\meter\per\second}$]{Test disabling the pitch angle gain scheduling and WS of V\textsubscript{10}= 20 $\left[ \text{ms}\textsuperscript{-1} \right]$}
+\textbf{$V_{10}=20 \, \si{\meter\per\second}$}\\
 The last tested \acrshort{WS} is 20 $\si{\meter\per\second}$. The simulation parameters are reported in \autoref{tab:simulation_config_variable_gains3} while the results in \autoref{fig:gain_scheduling_time_dependency3} and \autoref{tab:res_variable_gains3}.
 
 \begin{table}[htb]
@@ -353,7 +357,7 @@ The last tested \acrshort{WS} is 20 $\si{\meter\per\second}$. The simulation par
 
 The considerations that can be done on this case are similar to the previous ones. 
 
-\subsubsection[Parametrization with respect to the wind speed]{Test disabling the gain scheduling and plotting the results parametrized for the WS}\label{subsec:gain_disabled}
+\textbf{Parametrization with respect to the wind speed}\\
 Another comparison between the use or not of the gain scheduling may be done repeating the simulations done in \autoref{sec:wind_series_sim} (random WS) but disabling the blade gain scheduling, and letting the gains of the previous \textit{simulation 2} (i.e. $k_p = 2 \ \si{\second}$, $k_i=0.9 \ [-]$). The corresponding results are reported in \autoref{fig:simulation_rand_wind_no_gain_scheduling}.
 \begin{figure}[htb]
   \begin{subfigure}{0.5\columnwidth}
@@ -403,60 +407,11 @@ Another comparison between the use or not of the gain scheduling may be done rep
 
 Even though the results of the normalized errors have been reported for completeness in \autoref{tab:RMS_comparison}, their value is not always meaningful, since the normalization has been done for the value of the quantity of interest at the mean wind velocity, while the quantity itself evolves in time during the simulation. This could be well seen in the pitch error, where the high value is due to the fact that the normalization factor is a value close to 0 $\si{\degree}$ while the pitch changes around this value.
 
-\subsubsection[Conclusions]{Conclusions on the tests without the gain scheduling for the pitching}
+\textbf{Conclusions}\\
 The results obtained in \autoref{subsec:gain_scheduling_disabling} show that the choice of the gain influences the performance of the system. In particular the gain used in the \textit{sim. 3} seems to be always the worst choice in the tested cases. Between the scheduling rule, the one proposed in \autoref{subsec:gain_schdeuling_DTU10MW} seems to perform better than the one of \cite{Olimpo_Anaya‐Lara}. Finally, it seems that the constant gain used in \textit{sim. 2} is always the best choice, probably because it is the highest one and so produces the response with highest effort.
 
-% \subsection{Disabling of the pitch angle controller}
-% In order to show the effectiveness of the blade pitch controller one can disable it at all and let the turbine work at fixed pitch angle as happened for the purely stall regulated ones (see \autoref{subsec:stall_regulation_theory}). While in the old-styled stall regulated turbines the controller ensured the fixed rotor speed for letting the asynchronous machine to work at the desired velocity, here the controller's aim is to limit the generator power.\\
-% In the simulations, the disabling is performed setting $k_p=0 \ \mesunt{\second}$ and $k_i=0 \ [-]$. \textcolor{red}{WRITE IT BETTER, SUMMARIZING WHAT IT IS WRITTEN IN THE THEORETICAL PART - It is expected that increasing the wind speed above the rated one, the rotor rotational speeds increase (and consequently the extracted power), up to the drag becomes so high to let the rotor speed to decrease on its own. }\\
 
-% This test case is run for a total of 600 $\mesunt{\second}$ with a wind ramp from 6 up to 15 $\mesunt{\meter\per\second}$ in 400 $\mesunt{\second}$, and then the final velocity kept constant. Some of the results are reported in \autoref{fig:simulation_rand_wind_no_pitch_control}, where they are compared with the case of blade pitch scheduling, for better understanding the differences. In particular the \textit{sim. 1} uses the scheduling of \autoref{subsec:gain_schdeuling_DTU10MW} while the \textit{sim. 2} is the one with disabled gain.\\
-% More in detail, clearly \autoref{fig:pitch_dynamic_no_ctrl} shows that in \textit{sim. 2} the pitch is not changed, while the other does so after the reaching of the rated wind speed. \autoref{fig:omega_dynamic_no_ctrl} shows that the rotational speed is the same below the rated velocity, because both of the configuration pursue the MPPT, while they are different above, with \textit{sim. 1} limited at the rated value, while still continues to grow \textit{sim. 2} up to the end of the wind ramp. In this letter case the different slope is due to the decreasing of the torque (visible in \autoref{fig:torque_dynamic_no_ctrl}), necessary to keep the required constant power. \\
-% \autoref{fig:power_dynamic_no_ctrl} shows that the power extracted from the wind is much higher in the second simulation than in the first one while the mechanical power at the generator is the same. \autoref{fig:power_check_1} and \ref{fig:power_check_2} shows how the incoming rotor power is transformed in the different contributions introduced in \autoref{eq:power_balance}. In particular, in both of the simulations the energy stored in the rotor inertia is null when the regime speed is reached, while the difference between the incoming power and the mechanical provided as input at the generator is equal to the one dissipated by the damping.
-
-% \begin{figure}[htb]
-%   \begin{subfigure}{0.5\columnwidth}
-%     \centering
-%     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_38_45fig_pitch_dynamic.eps}
-%     \caption{Pitch angle time series}
-%     \label{fig:pitch_dynamic_no_ctrl}
-%   \end{subfigure}
-%   \begin{subfigure}{0.5\columnwidth}
-%     \centering
-%     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_38_56fig_omega_dynamic.eps}
-%     \caption{Rotor rotational speed time series}
-%     \label{fig:omega_dynamic_no_ctrl}
-%   \end{subfigure}
-%   \begin{subfigure}{0.5\columnwidth}
-%     \centering
-%     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_39_06fig_power_dynamic.eps}
-%     \caption{Rotor power and generator input power}
-%     \label{fig:power_dynamic_no_ctrl}
-%   \end{subfigure}
-%   \begin{subfigure}{0.5\columnwidth}
-%     \centering
-%     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_39_17fig_torque_dynamic.eps}
-%     \caption{Rotational speed}
-%     \label{fig:torque_dynamic_no_ctrl}
-%   \end{subfigure}
-%   \begin{subfigure}{0.5\columnwidth}
-%     \centering
-%     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_20_02power_check1.eps}
-%     \caption{Comparison of the powers of \textit{sim.1}}
-%     \label{fig:power_check_1}
-%   \end{subfigure}
-%   \begin{subfigure}{0.5\columnwidth}
-%     \centering
-%     \includegraphics[width = \columnwidth]{images/vectorial/2023_10_5_10_20_02power_check2.eps}
-%     \caption{Comparison of the powers of \textit{sim.2}}
-%     \label{fig:power_check_2}
-%   \end{subfigure}
-
-%   \caption{Results of simulation with a ramp wind series, disabling blade pitch control}
-%   \label{fig:simulation_rand_wind_no_pitch_control}
-% \end{figure}
-
-\subsection{Test changing the pitching actuator dynamic}\label{subsec:changing_pitch_actuator}  
+\subsubsection{Test changing the pitching actuator dynamic}\label{subsec:changing_pitch_actuator}  
 In this section the dynamic of the pitching mechanism is changed in order to see the different reactivity in the reduction of the power extracted form the wind. It is expected that making the dynamic faster allows to follow the wind fluctuations better at the price of a higher effort, while a slower dynamic will introduce some delay in the control between the incoming speed and the corresponding blade actuation.\\
 To validate this hypothesis, three simulations are run with different transfer functions modelling the blade actuator. All of them are run with the usual wind speed of $V_{10}=15\ \si{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$. \\
 The employed transfer functions are reported in \autoref{tab:tf_blade_mechanism}:
@@ -506,11 +461,18 @@ It must be noted that Simulation 1 uses the parameters suggested in \cite{Olimpo
 \end{figure}
 The results of the simulations are reported in \autoref{fig:simulation_with_different_pitch_dynamic} and they show how the first two mechanisms are pretty similar, meaning that the transfer function suggested by \cite{Olimpo_Anaya‐Lara} and employed in all the other simulation so far does not introduce a great delay in the response of the blade actuation. On the other hand, the third transfer function is slower, meaning that the blades follow the wind change with some delay and for this reason they are rotated by of larger amount.
 
-\subsection[Below rated WS]{Simulation with the generator's torque reference based on the generator output} \label{subsec:validation_control_P_GE}
+%    ____                           _             
+%   / ___| ___ _ __   ___ _ __ __ _| |_ ___  _ __ 
+%  | |  _ / _ \ '_ \ / _ \ '__/ _` | __/ _ \| '__|
+%  | |_| |  __/ | | |  __/ | | (_| | || (_) | |   
+%   \____|\___|_| |_|\___|_|  \__,_|\__\___/|_|   
+                                                
+
+\subsection{Comparison between rotor and generator power maximization} \label{subsec:validation_control_P_GE}
 In this section the control law for the generators's torque based on the generator output power developed in \autoref{subsec:method_control_P_GE} is tested and compared with the one based on the rotor power and developed in \autoref{subsec:torque_reference}.
 % For this simulation, in order to avoid the interference of the controller not allowing the generator to reach the steady state, this component has been removed and the torque reference value has been directly used into the dynamic equation of the rotor power.
-\subsubsection{Simulation with the generator's torque reference based on the generator output for constant WS below rated}
-The generator torque's control law based on the generator has been compared with the one of the rotor, for WS between the cut in and the rated one. A critical condition for this tests is that the rotor rotational speed reaches exactly the one producing the desired tip speed ratio. For this reason, initially the damping reducing the power sent by the rotor to the input of the generator is removed (i.e. $B_{eq}=0 \si{\kilo\gram\square\meter\per\second}$). \\
+\subsubsection{Constant WS below rated speed}
+The generator torque's control law based on the generator has been compared with the one of the rotor, for WS between the cut in and the rated one. A critical condition for this tests is that the rotor rotational speed reaches exactly the one producing the desired tip speed ratio. For this reason, initially the damping reducing the power sent by the rotor to the input of the generator is removed (i.e. $B_{eq}=0 \, \si{\kilo\gram\square\meter\per\second}$). \\
 In the simulation, 5 constant WSs have been provided and the corresponding steady state values of mechanical input and electrical output powers to the generator have been evaluated. The results are depicted in \autoref{fig:comparison_control_laws_no_B} while the numerical values and the percentage errors are reported also in \autoref{tab:comp_powers}, where the percentage error is defined as $\Delta P = \frac{P_{Gen.} - P_{Rot.}}{P_{Gen.}}\cdot 100$ where  \textit{Gen.} and \textit{Rot.} states whether the control law uses $K_{opt,GE}$ or $K_{opt}$ respectively.
 
 \begin{figure}[htb]
@@ -547,7 +509,7 @@ It could be seen that, without damping, the control law based on the maximizatio
 As could be seen in \autoref{fig:comparison_control_laws_B}, when the damping is included into the picture the $P_R$ based on the rotor is higher than the other for all the velocities while the corresponding $P_{GE}$ is always lower except for the rated wind speed.\\
 As expected the control based on the generator is less valid for high and low WS, where the assumption of constant parameters is less valid rather than using the velocity-dependent parameters. 
 
-\subsubsection{Simulation with the generator's torque reference based on the generator output for generated wind series}
+\subsubsection{Generated wind series}
 The implemented control law is also tested for a generic wind series input. The chosen 5 means are 5, 6, 8, 10, 11.4 $\si{\meter\per\second}$ and the turbulence 0.5, 0.5, 1, 1, 1 $\si{\meter\per\second}$. For each wind condition, the simulation is run twice, initially employing a control low based on the generator while later on the rotor. All the simulation lasted 500 $\si{\second}$. The comparison of the results is done calculating the energy extracted by integrating the corresponding power, which depends both on the power and the time chosen for the integration. To get rid of the dependency introduced by the arbitrary choice of the integrations length and have more fair results, the energy is evaluated for 4 time intervals form the end of the simulation. The results are reported in \autoref{tab:energy_K_opt_comp}. The normalized energy difference is given by:
 \begin{equation}
   \Delta E = \frac{E_{generator} - E_{rotor}}{E_{generator}}\cdot 100 \, \left[\%\right]
@@ -568,8 +530,7 @@ The implemented control law is also tested for a generic wind series input. The 
 From the results it is well visible what was already described, meaning that the control law based on the generator is more effective than the other for WSs far from the rated ones. \\
 As final remark it must be remembered that with this type of input WS it is possible that $V_{0,rated}$ may be exceeded in the case of the highest tested speeds, and so also the pitching may have an influence on the results. The explicit impact of this further controller has not be evaluated because it is difficult to find a representative test case to do so and furthermore because it is not so important. In fact one is interested in the overall performance of the turbine (i.e. how much energy is produced) without separating the contribution of the different components. 
 
-\subsection{Comparison of the electrical power output in the case of different gains in the power controller}\label{subsec:c_different_KoptGE}
-\textcolor{red}{Questa parte era stata messa nel capitolo 9, ma ha più senso anticiparlo qui.}
+\subsubsection{Use of non-optimal gains}\label{subsec:c_different_KoptGE}
 Before going on with further analysis it may be interesting to quantify how does the turbine's performance changes if using a gain different than the one identified as optimal. In particular, 7 gains factors $\beta$ around the optimal one are identified 0.5, 0.8, 0.9, 1.0, 1.1, 1.2, and 1.5. Then a ramp WS profile between 4 and 12 $\si{\meter\per\second}$ lasting 1000 $\si{\second}$ has been applied. The comparison of the results is done again by means of the energy extracted, and again different integration times has been chosen to get rid of their arbitrary choice. The numerical results are reported in \autoref{tab:error_KoptGE}. 
 
 \begin{table}[htb]
@@ -595,5 +556,137 @@ The resulting static power curves has been reported in \autoref{fig:Kopt_GE_PGE}
 From the graphs reported in \autoref{fig:Kopt_GE_PGE} it could be seen that the gain used in the first three simulations provide a power curve that is quite close to the fourth one (i.e. the optimal) in the below rated region. On the other hand, once the rated WS is reached, then the power command is below the saturation and so the rated power is not reached. The committed errors in this zone are highly influenced by the above rated mismatch. \\
 For what concerns the last three simulations, the error committed in the below rated region is higher (as could be seen in the figure) but the saturation of the power is reached, and so the overall error is lower than the first cases. \\
 From this simulation can be seen that the optimal gain is the one computed previously, and each deviation produces a degradation of the power curve. On the other hand, an overestimation of the gain is less worse than an underestimation, because in the latter case the saturation of the generator's torque command and so the output power is not achieved.
+ 
+%   ___ __  __ __  __ 
+%  |_ _|  \/  |  \/  |
+%   | || |\/| | |\/| |
+%   | || |  | | |  | |
+%  |___|_|  |_|_|  |_|
+                    
+\subsection{Control under uncertainty using the Interactive Multiple Model}
+As said before, the IMM requires a-priori definition of the parameters of the models run in each filter. It could be easily understood how the choice of these parameters is crucial for letting the algorithm work properly. In fact if the true model is in the considered set the algorithm will converge to it, otherwise it will move towards the most similar one, that may be \textit{close enough} or not according to the design choice.\\
+In this example it is decided to consider three models (see \autoref{tab:models_parameters}):
+\begin{table}
+  \centering
+  \caption{Parameters of the models run in the filters. $\rho_j$ and $K_{opt,GE,j}$ are the air density and the value of the feedback gain used in each of the models, while $\rho$ and $K_{opt,GE}$ are their nominal values of 1.225 $\si{\kilo\gram\per\cubic\meter}$ and $1.093\cdot10^{7} \, \si{\newton\meter\square\meter}$.}
+  \begin{tabular}{ccc}
+    \toprule
+    Model \textit{j} & $\frac{\rho_j}{\rho}$ & $\frac{K_{opt,GE,j}}{K_{opt,GE}}$  \\
+    \midrule
+    1 & 0.8 & 0.8\\
+    2 & 1 & 1\\
+    3 & 1.2 & 1.2\\
+    \bottomrule
+  \end{tabular}
+  \label{tab:models_parameters}
+\end{table}
+The choice of the number of models must be a trade off between the computational cost of having many of them and the possible poor estimation accuracy of having only few. In this case three models have been chosen to given an example of the algorithm, but also the real density changes has been tailored simulated to be reasonably close to the chosen models.  
+
+The covariance matrices of the process $Q$ and the measurement noises $W$, and the mode transition matrix $\Pi$ are:
+\begin{gather}
+  Q = \begin{bmatrix}
+    \sigma_{\tilde{T}_R}^2 & 0 \\
+    0 & \sigma_v^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    \left(\frac{0.05 P_R}{3\omega_R}\right)^2 & 0 \\
+    0 & \left(\frac{0.5}{3}\right)^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    3.06\cdot10^{10} & 0 \\
+    0 & 2.78\cdot10^{-2}
+  \end{bmatrix} \\
+  W = \begin{bmatrix}
+    \sigma_{\omega_R}^2 & 0 \\
+    0 & \sigma_{v}^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    \left(\frac{0.005 \omega_{R,rated}}{3}\right)^2 & 0 \\
+    0 & \left(\frac{1}{3}\right)^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    2.86\cdot10^{-6} & 0 \\
+    0 & 1.11\cdot10^{-1}
+  \end{bmatrix} \\
+  \Pi=
+  \begin{bmatrix}
+    0.9850  &  0.0075  &  0.0075\\
+    0.0075  &  0.9850  &  0.0075\\
+    0.0075  &  0.0075  &  0.9850\\
+  \end{bmatrix}
+\end{gather}
+
+\subsubsection{Constant WS} 
+The first test is the application of the IMM with a constant input WS and imposing a linearly varying $\rho$. In particular, a WS of 8 $\si{\meter\per\second}$ has been imposed and the air density has been increased with a slope of $\frac{0.4}{450} \, \si{\kilo\gram\per\cubic\meter\per\second}$, starting at 50 s from the beginning of the simulation from an initial value of $0.9\rho$ and then saturated at $1.3\rho$. On top of this ramp, a random noise (with standard deviation $\sigma_{\rho}=\frac{0.05\rho}{3} \, \si{\kilo\gram\per\cubic\meter}$) has been added, simulating a possible fast variation. With this particular choice $\rho$ spans in a range where is partially covered by the models of the IMM and partially not, in order to study the algorithm behavior in both conditions. The results are reported in \autoref{fig:fig_IMM_sim_const_WS}.
+
+\begin{figure}[htb]
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_17_59_53omega_IMM_1.eps}
+    \caption{Rotor rotational speed. \textit{Mod.} are the estimations done by the model run in parallel, \textit{Est. IMM} is the weighted average of the IMM, \textit{Sim. IMM} is the rotational speed obtained in the simulation with the IMM, \textit{Sim. fix gain} is the simulation with the constant gain.}
+    \label{fig:fig_omega_IMM_1}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_21_06_27probability_bar_IMM.png}
+    \caption{Bar plot of the probability of the models. Each bar represents a probability up to 1, composed by the probability of each model.}
+    \label{fig:fig_probability_IMM}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_17_59_53rho_IMM.eps}
+    \caption{\textit{Real} is the real $\rho$, \textit{Estimated} is the weighted sum of the model run in the IMM, and \textit{Filtered} is its filtered version. \textit{IMM models} are the density used in the model estimation.}
+    \label{fig:fig_rho_IMM}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_21_06_27K_opt_IMM.eps}
+    \caption{Value of the gain $K_{opt}$ used in synthesis of the generator control reference. IMM are the values of the gains associated with the models run in the IMM.}
+    \label{fig:fig_K_IMM}
+  \end{subfigure}
+  \caption{Comparison of the simulation run with the IMM and the constant gain, imposing the same input wind speed of 8 $\si{\meter\per\second}$, and introducing a ramp air density.}
+  \label{fig:fig_IMM_sim_const_WS}
+\end{figure}
+
+The first general comment on \autoref{fig:fig_IMM_sim_const_WS} is that, as stated in the limitation of the analysis, the numerical values chosen are not realistic for what concerns the air density variation and so the results are taken to the extremes. \\
+\autoref{fig:fig_omega_IMM_1} reports the rotor rotational speed. It could be seen that the IMM approach stabilizes $\omega_R$ more than what is done by the fixed gain. In the zoomed rectangle it could be seen the comparison between the estimations of the models run in parallel in the algorithm, alongside their weighted sum, and the actual evolution of the system. \autoref{fig:fig_probability_IMM} is a bar plot of the probability of each model. Given 1 the sum of the probabilities of each model at the any time instant, each bar is colored proportional to the probability of the corresponding model. It could be seen how, going on with the simulation, the first model tends to be less probable while the other two increase their likelihood. \autoref{fig:fig_rho_IMM} shows how the filtered estimation follows the real air density, and also in the final part of the simulation where the real $\rho$ is no more included within the models of the IMM, the algorithm converges towards to the most likely model. Finally, \autoref{fig:fig_K_IMM} shows a similar tendency as the air density. 
+
+\subsubsection{WS series}
+Another test is run to compare the IMM-based control and the one based on the constant gain. Five WSs series with mean value between the cut-in and the rated one (4, 6, 8, 10, and 11 $\mesunt{\meter\per\second}$) have been applied and for each of them a couple of simulation have been run. The same models and parameters variations as the previous case has been applied. The comparison of the control methods have been done computing the integral of the powers in a reference time. The results are reported in \autoref{tab:comparison_IMM}, where the first colum is the integration time, the second is the WS of the tested case, the third, and fourth the mechanical energy extracted from the rotor with the two considered control techniques, while the fifth the error between them. The last three columns report the energy at the electrical output of the generator and the corresponding normalized error. The error has been computed as:
+\begin{equation}
+  \text{Error} = \frac{E_{IMM}-E_{Const}}{E_{Const}}\cdot 100 \left[-\right]
+  \label{eq:energy_error}
+\end{equation}
+where $E_{IMM}$ is the energy computed with the simulation based on the IMM, and $E_{Const}$ is the one compute with the constant gain.
+
+\begin{table}[htb]
+  \caption{Produced energy in the considered time. $E_R$ and $E_{GE}$ are the mechanical extracted energy and the generator output. \textit{IMM} and \textit{Const.} states whether the control law uses the IMM algorithm or the constant $K_{opt,GE}$ gain respectively.}
+  \centering
+  \begin{tabular}{cc|ccc|ccc}
+    \toprule
+    % write R above the third and fourth column and GE above the last two
+    Integration & & \multicolumn{3}{c|}{$E_R$} & \multicolumn{3}{c}{$E_{GE}$}\\
+    time & WS & IMM & Const. & Err. & IMM & Const. & Err.\\
+    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$& $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$ \\
+    \midrule
+    \input{macro/2023_11_24_07_11_59energy.tex}
+  \end{tabular}
+  \label{tab:comparison_IMM}
+\end{table}
+
+From the numerical values of the error, it can be seen that the difference between the methods for the lowest WS are small, even tough the IMM seems to perform better. On the other hand at rated WS the IMM is less effective than the constant gain. This may be explained remembering that in this case the wind series may exceed the rated WS, and hence the pitching mechanism may enter in action reducing the power coefficient, leading to the assumption of working at MPPT not valid anymore.
+
+\autoref{fig:rho_comparison} reports the estimation of the air density in the different simulations, alongside with the real density and the ones used in the models. It can be seen that in general, all the simulations except the one with mean at the rated speed are able to track the real air density. Among the others, the higher WSs seems to track better the variations, probably because the imposed noises, which for simplicity has been set the same for all the simulations, affect more the lower speeds rather than the higher ones.
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.65\columnwidth]{images/vectorial/2023_11_24_07_11_59rho_comparison.eps}
+  \caption{Estimated air density in the simulations with the IMM control and WS, alongside the real density and the ones used in the models.}
+  \label{fig:rho_comparison}
+\end{figure}
+
+\subsubsection{Conclusions on the IMM}
+Overall the IMM seems to be behave as expected in the tested cases, being able to track the changing in time air density, with constant and variable input wind speed at least when it is below the rated value. Even for what concerns the energy extraction, the results suggests that a control based on the IMM may be able to perform better than one using a constant gain. Furthermore, as expected, whenever the real air density is not included in the models run in the IMM algorithm, then the output converges towards the most similar ones.\\
+On the other hand, the method has also some disadvantages, as shown by the high estimation error committed above rated wind speed. Here it happens because when the rated power is exceeded then the pitching mechanism starts to act in order to control it, and so the assumption of MPPT done during the design of the control is no more valid. A further development of the method may consider also the variability of the power coefficient and then being suitable for both the working regions of the WT, as for example done in \cite{kalman_based_IMM}.\\
+Finally, it must be remembered that the tests reported here are not complete in terms of the numerical value assumed by the varying parameters, and so their real proficiency as to be further validated with more realistic example cases. This investigation may also reveal the redundancy of the WS measurement, as done by \cite{kalman_based_IMM}.
 
 \newpage

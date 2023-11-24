@@ -4,21 +4,32 @@
 \begin{document}
 
 \begin{figure}[htb]
-  \centering
-  \begin{subfigure}{0.49\textwidth}
-  \centering
-  \includegraphics[width=\textwidth]{images/vectorial/fig_power_vs_V0.eps}
-  \caption{Mechanical power as function of wind speed\textcolor{red}{Rifare questa figura e quella accanto ingrndendone il testo}}
-  \label{fig:fig_power_vs_V0}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_17_59_53omega_IMM_1.eps}
+    \caption{Rotor rotational speed. \textit{Mod.} are the estimations done by the model run in parallel, \textit{Est. IMM} is the weighted average of the IMM, \textit{Sim. IMM} is the rotational speed obtained in the simulation with the IMM, \textit{Sim. fix gain} is the simulation with the constant gain.}
+    \label{fig:fig_omega_IMM_1}
   \end{subfigure}
-  %\hfill
-  \begin{subfigure}{0.49\textwidth}
-  \includegraphics[width=\textwidth]{images/vectorial/fig_thrust_vs_V0.eps}
-  \caption{Thrust force as function of wind speed}
-  \label{fig:fig_thrust_vs_V0}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_21_06_27probability_bar_IMM.png}
+    \caption{Bar plot of the probability of the models. Each bar represents a probability up to 1, composed by the probability of each model.}
+    \label{fig:fig_probability_IMM}
   \end{subfigure}
-  \caption{Relation between the WS, the power and the thrust for both feather and stall pitching}
-  \label{fig:P_T_vs_V0}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_17_59_53rho_IMM.eps}
+    \caption{\textit{Real} is the real $\rho$, \textit{Estimated} is the weighted sum of the model run in the IMM, and \textit{Filtered} is its filtered version. \textit{IMM models} are the density used in the model estimation.}
+    \label{fig:fig_rho_IMM}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_21_06_27K_opt_IMM.eps}
+    \caption{Value of the gain $K_{opt}$ used in synthesis of the generator control reference. IMM are the values of the gains associated with the models run in the IMM.}
+    \label{fig:fig_K_IMM}
+  \end{subfigure}
+  \caption{Comparison of the simulation run with the IMM and the constant gain, imposing the same input wind speed of 8 $\si{\meter\per\second}$, and introducing a ramp air density.}
+  \label{fig:fig_IMM_sim_const_WS}
 \end{figure}
 
 \end{document}

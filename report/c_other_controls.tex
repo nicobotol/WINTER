@@ -1,13 +1,14 @@
-\section{Turbine control considering model's uncertainty}\label{sec:c_other_controls}
-The control methods developed so far relay on the knowledge of the system by means of their parameters (structural and environmental) and models. In fact, in the calculation of the gains $K_{opt}$ and $K_{opt,GE}$ considered in the torque reference generation, a single deterministic constant in time value of all the different terms in \autoref{eq:T_G2} and \autoref{eq:K_opt_GE} have been used. In order to take into account possible variabilities of the parameters, for example due to the wrong estimation of some quantities or their ageing, a different approach has to been used. These modifications may occur in different time horizons, ranging from the second in case of blade deformation up to years, as the air density, which is expected to increase of 0.5\% in the next 20 years due to global worming as reported by \cite{en12112038}. \\
-To deal with these uncertainty, one possibility is to use model-free methods \textcolor{red}{Mettere una citazione}, such as the extremum seeking, while another is to suppose that the system may evolve following a model within a finite set and then compare the measured system dynamic with the predicted by the model to decide which is the most probable one by means of the so called \acrfull{IMM} estimator \\textcolor{red}{citazione a bar shalom}. In this work, this last method is employed since it can be seen as an extension of the control methods previously analyzed, allowing to identify the variation of one physical parameter in time and provide a value of $K_{opt}$ to be used in the feedback line of the controller.
+\section{Interactive Multiple Model for WT control under uncertainty}\label{sec:c_other_controls}
+The control methods developed so far relay on the knowledge of the system by means of their parameters (structural and environmental) and models. In fact, in the calculation of the gains $K_{opt}$ and $K_{opt,GE}$ considered in the torque reference generation, a single deterministic constant in time value of all the different terms in \autoref{eq:T_G2} and \autoref{eq:K_opt_GE} have been used. In order to take into account possible variabilities of the parameters, for example due to the wrong estimation of some quantities or their ageing, a different approach has to been used. These modifications may occur in different time horizons, ranging from the second up to years. An example of rapidly changing parameter are the blades, while one of slowly changing is the air density, which is expected to increase of 0.5\% in the next 20 years due to global worming as reported by \cite{en12112038}. \\
+To deal with these uncertainties, one possibility is to use model-free methods \textcolor{red}{Mettere una citazione}, such as the extremum seeking. Another possibility is to use the \acrfull{IMM} estimator: supposing that the system may evolve following a model within a finite set, the most probable one is obtained by comparing a measurement depending on the system dynamic with a prediction done using the model \textcolor{red}{citazione a bar shalom}. \\
+In this work, the last estimator is employed since it can be seen as an extension of the control methods previously analyzed, allowing to identify the variation of one physical parameter in time and provide a value of $K_{opt}$ to be used in the feedback line of the controller.
 
 \textcolor{red}{Scrivere che da ora in poi si considera la presenza di un sensore di misura con una propria incertezza per permettere di usare il KF}
 
 \subsection{Interactive Multiple Model}\label{subsec:IMM}
 \cite{Kalman_Filter_and_Its_Application} states that the \textit{Kalman filter is an algorithm that uses a series of data observed over time, which contains noise and other inaccuracies, to estimates unknown variables with more accuracy.} In other words this algorithm uses the model of the dynamic system, the measurement from a sensor and their uncertainties to provide an estimation of the desired quantity better than what would be done by employing the solely measure or model.\\
  A great disadvantage of the \acrfull{KF} is that it is only suitable for linear systems and linear measurement models. To overcome this issues the \acrfull{EKF} is an algorithms that extend the KF concepts in the nonlinear cases. The basic idea behind it is to linearize the nonlinear dynamic around the status of the estimation at the first order of the Taylor expansion, and then apply the same equations of the linear \acrshort{KF}. The \acrfull{UKF} is another approach to solve the non-linearity issues and it is based on the second order Taylor expansion. This method will not be considered in the thesis, and it is cited here only for completeness.\\
-In general, all these methods relay on the knowledge of the model of the system which, as said before, it is not always available due to poor identification or changes in time. One possibility to reduce this issue is given by the \acrshort{IMM}. This algorithm firstly runs a parallel bank of $N_j$ filters estimating the same quantity, each of them using a different model of the system and later on weights the filters' output by their likelihood conditioned on the measurement in order to provide the overall estimation of interest. In principle the filters run in parallel may be of any type (e.g. KF, EKF, UKF, or further ones), but the EKF has been adopted here for its simplicity. 
+In general, all these methods relay on the knowledge of the model of the system which, as said before, it is not always available due to poor identification or changes in time. One possibility to solve this issue is given by the \acrshort{IMM}. This algorithm firstly runs a parallel bank of $N_j$ filters estimating the same quantity, each of them using a different model of the system and later on weights the filters' output by their likelihood conditioned on the measurement in order to provide the overall estimation of interest. In principle the filters run in parallel may be of any type (e.g. KF, EKF, UKF, or further ones), but the EKF has been adopted here for its simplicity. 
 
 \subsubsection{Steps of the implementation of the IMM}
 Here the procedure for implementing the IMM is reported, following the method proposed in \cite{kalman_based_IMM}. In particular the estimation of the quantity is given in 4 subsequently steps named filtering, mode probability updating, state combination and filter interaction. A graphical visualization of the method is given in \autoref{fig:IKK_schema}
@@ -17,7 +18,7 @@ Here the procedure for implementing the IMM is reported, following the method pr
   \caption{Graphical visualization of a IMM, source \cite{kalman_based_IMM}}
   \label{fig:IKK_schema}
 \end{figure}
-It is worth nothing that the method proposed here is not strictly related to the wind turbine filed, but it can be applied to all the dynamic systems.
+It is worth nothing that the method proposed here is not strictly related to the WT filed, but it can be applied to any dynamic system.
 
 \textit{Adopted notation}\\
 \begin{gather}
@@ -38,7 +39,7 @@ It is worth nothing that the method proposed here is not strictly related to the
   \text{Mode probability: } \mu^{(j)}\\
   \text{Likelihood of a filter: } \Lambda^{(j)}
 \end{gather}
-The symbolic expression of the different quantity are reported in the Appendix \autoref{sec:e_symbolic_IMM} for brevity.\\
+The symbolic expression of the different quantity are reported in the Appendix \autoref{sec:e_symbolic_IMM} for brevity.
 
 \begin{enumerate}
 \item \textit{Filtering}
@@ -68,10 +69,6 @@ In this step the mode probabilities are updated from the filter likelihood (i.e.
   \text{Uncertainty on the residual: }S_k^{(j)} = H_k^{(j)} P_k^{(j)-} (H_k^{(j)})^T + R_k^{(j)}\\
   \text{Likelihood: } \Lambda_k^{(j)} = \frac{1}{\sqrt{2 \pi \lvert S_k^{(j)} \rvert}} \exp{\left(-\frac{1}{2}\left(z_k^{(j)}\right)^T \left(S_k^{(j)}\right)^{-1} z_k^{(j)}\right)}\\
   \mu_k^{(j)+} = \frac{\mu_k^{(j)-}\Lambda_k^{(j)}}{\sum_{i} \mu_k^{(i)-}\Lambda_k^{(i)}}
-\end{gather}
-In the application presented in \cite{kalman_based_IMM}, the IMM is used only for an estimation of the state. Here, differently, there is also the necessity of identifying the model for closing the control loop, meaning that at each step a value of $\hat{K}_{opt,GE}$ has to be provided and used for generating the reference torque. To do so, two methods have been identified. The first is to assign the value of the model with the highest probability, while the second is to compute the mean of the models' gain weighted by their probabilities. The second approach is here preferred, because it takes into account the information of all the models run in parallel.
-\begin{gather}
-\hat{K}_{opt,GE,k} = \sum_j \mu_k^{(j)+} K_{opt,GE}^{(j)}
 \end{gather}
 
 \item \textit{State combination}\\
@@ -103,109 +100,158 @@ In this last step, the filter with higher probabilities modify the estimates of 
 Then the filtering step is repeated, with the mixed state $\tilde{x}_k^{(j)+}$ and covariance $\tilde{P}_k^{(j)+}$ in the prediction.
 \end{enumerate}
 
-
 \subsubsection{Limitations of the study}
-Before going on in the description it is important to state some limitation of the proposed study.
+Before going on describing the implementation and presenting some test cases it is important to state some limitation of the proposed study.
 \begin{itemize}
-  \item The proposed method is intended to adapt the control law according to the modification of the wind turbine parameters. For some of those, the aerodynamical implication are not trivial. For example when the blade deforms, then the entire map of the power coefficient developed in \autoref{subsec:lookup_cp} is no more valid and needs to be recomputed, alongside the optimal TSR and pitch angle. In order to keep the problem simple and focus only on the framework of the solution, only the air density variation is taken into account, since it does not modify the values of the optimal $\lambda$ and $\theta$ but only rescales the cp map. 
+  \item The proposed method is intended to adapt the control law according to the modification of the wind turbine parameters. For some of those, the aerodynamical implication are not trivial. For example when the blade deforms (i.e. R changes), then the entire map of the power coefficient developed in \autoref{subsec:lookup_cp} is no more valid and needs to be recomputed, alongside the optimal TSR and pitch angle. In order to keep the problem simple and focus only on the framework of the solution, only the air density $\rho$ variation is taken into account, since it does not modify the $c_P(\lambda,\theta)$ map, and hence $\lambda_{opt}$ and $\theta_{opt}$. A more deep investigation may consider these variations, and consequently provide a suitable control law that may be different from the one proposed here. 
   \item The IMM method works \textit{well} when the models run in parallel are different each others. To make the results of the simulation more clear, the changing parameters will be modified more than what would have been done in reality, in order to employ models that are reasonably different each others. A more fine definition of the models in order to track realistic changes of the real systems may be part of a future investigations. 
-  \item Ref. \cite{kalman_based_IMM} reports an example of the implementation of the IMM in a WT with only a rotational speed measurement, as the methods previously described in the work. On the other hand when I tried to reproduce the same approach, I found it not working as expected since the estimations of the states were not accurate enough to close the control loop in an effective way. In order to overcome this issue, a wind speed measurement has been added. Nevertheless, results shows the method becomes effective even with a low accuracy measurement, as that may be typically obtained from an anemometer placed in the nacelle. \textcolor{red}{Vedere se si trova una reference} \\
-  One may also try to replace the wind speed measurement with others, paying attention to avoid the correlation between them.
+  \item Ref. \cite{kalman_based_IMM} reports an example of the implementation of the IMM in a WT with only a rotational speed measurement, as the methods previously described in the work. On the other hand when I tried to reproduce the same approach, I found it not working as expected since the estimations of the states were not accurate enough to close the control loop in an effective way. In order to overcome this issue, a WS measurement has been added. Nevertheless, results shows the method becomes effective even with a low accuracy measurement, as that may be typically obtained from an anemometer placed in the nacelle. \textcolor{red}{Vedere se si trova una reference} \\
+  One may also try to replace the WS measurement with others, paying attention to avoid the correlation between them.
 \end{itemize} 
 
-\subsubsection{Definition of the boundaries for the variable parameters}
-As said before, the IMM requires a-priori definition of the parameters of the models run in each filter. It could be easily understood how the choice of these parameters is crucial for letting the algorithm work properly. In fact if the true model is in the considered set the algorithm will converge to it, otherwise it will move towards the most similar one, that may be \textit{close enough} or not according to the design choice. As said before, here the models are chosen to be reasonably different each others.
-
-\subsubsection{Definition of the uncertainty}
-In the EKF equations run in the IMM it is necessary to identify the noise on the process $\nu_k \sim \mathcal{N}(0, Q)$. The definition of Q is again done using the \acrshort{MC} approach, with the same distributions already used in the $K_{opt,GE}$ case. Here the equation for the method is:
+\subsubsection{Implementation of the IMM}
+\textbf{Closing the loop}\\
+In the application presented in \cite{kalman_based_IMM}, the IMM is used only for an estimation of the state. Here, differently, there is also the necessity of \textit{closing the loop}, i.e. to act on he system in the most suitable way to let it working in a specific conditions. From the conceptual point of view the estimation of the varying quantity and the corresponding controls are two different problems. A possible solution that well fits with the power control structure developed in the previous parts of the thesis is to provide at each time step a value of $K_{opt,GE}$ given by the probability weighted average of the gains associated to the the same physical model of the filers, name $\hat{K}_{opt,GE}$:
 \begin{equation}
-  \tilde{T}_R=\frac{\frac{1}{2}\tilde{\rho}\pi\tilde{R}^2cp\left(\tilde{\omega}, \tilde{V}_0,\tilde{R}\right)\tilde{V}_0^3}{\tilde{\omega}}
-  \label{eq:T_R_distribution}
+  \hat{K}_{opt,GE,k} = \sum_j \mu_k^{(j)+} K_{opt,GE}^{(j)}
 \end{equation}
-where the \textit{tildes} stress the fact that the parameters come from a distribution. The computed variance of the noise is $Q = 2.3715 \cdot 10^{12} \, \mesunt{\square\newton\square\meter}$.
+The weighted sum is performed in the \textit{Mode probability updating} step of the IMM algorithm. Finally, it must be noted that the value of $\hat{K}_{opt,GE}$ imposed by the controller at the step $k$ is then used to predict the dynamic at the time step $k+1$.
 
-\subsubsection{Filter of the state and the K gain}
-In order to reduce the variability of the rotational speed estimations done by the parallel \acrshort{EKF}, the value in the feedback line is filtered using a low pass filter
+For what concerns the definition of the $K_{opt, GE, j}$ associated with each of the $N_j$ models, remembering that the gain is expressed by:
 \begin{equation}
-  G(s) = \frac{1}{\frac{1}{25.1}s + 1}
+  K_{opt,GE} = \frac{\rho c_{P,opt,GE}\pi R^5}{2\lambda_{GE}^3}
 \end{equation}
-Also the value of the gain $K$ is low pass filtered with a similar filter
+it can be seen that it is linearly proportional with the air density, since a change in $\rho$ does not changes neither $R$ nor the $c_P(\lambda,\theta)$ map, and hence both $c_{P,opt,GE}$ and $\lambda_{GE}$ are not modified. The used value of power coefficient is the optimal one, in order to realize the MPPT. 
+
+\textbf{Numerical values}\\
+As said before, the IMM requires a-priori definition of the parameters of the models run in each filter. It could be easily understood how the choice of these parameters is crucial for letting the algorithm work properly. In fact if the true model is in the considered set the algorithm will converge to it, otherwise it will move towards the most similar one, that may be \textit{close enough} or not according to the design choice.\\
+In this example it is decided to consider three models (see \autoref{tab:models_parameters}):
+\begin{table}
+  \centering
+  \caption{Parameters of the models run in the filters. $\rho_j$ and $K_{opt,GE,j}$ are the air density and the value of the feedback gain used in each of the models, while $\rho$ and $K_{opt,GE}$ are their nominal values of 1.225 $\si{\kilo\gram\per\cubic\meter}$ and $1.093\cdot10^{7} \, \si{\newton\meter\square\meter}$.}
+  \begin{tabular}{ccc}
+    \toprule
+    Model \textit{j} & $\frac{\rho_j}{\rho}$ & $\frac{K_{opt,GE,j}}{K_{opt,GE}}$  \\
+    \midrule
+    1 & 0.8 & 0.8\\
+    2 & 1 & 1\\
+    3 & 1.2 & 1.2\\
+    \bottomrule
+  \end{tabular}
+  \label{tab:models_parameters}
+\end{table}
+The choice of the number of models must be a trade off between the computational cost of having many of them and the possible poor estimation accuracy of having only few. In this case three models have been chosen to given an example of the algorithm, but also the real density changes has been tailored simulated to be reasonably close to the chosen models.  
+
+The covariance matrices of the process $Q$ and the measurement noises $W$, and the mode transition matrix $\Pi$ are:
+\begin{gather}
+  Q = \begin{bmatrix}
+    \sigma_{\tilde{T}_R}^2 & 0 \\
+    0 & \sigma_v^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    \left(\frac{0.05 P_R}{3\omega_R}\right)^2 & 0 \\
+    0 & \left(\frac{0.5}{3}\right)^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    3.06\cdot10^{10} & 0 \\
+    0 & 2.78\cdot10^{-2}
+  \end{bmatrix} \\
+  W = \begin{bmatrix}
+    \sigma_{\omega_R}^2 & 0 \\
+    0 & \sigma_{v}^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    \left(\frac{0.005 \omega_{R,rated}}{3}\right)^2 & 0 \\
+    0 & \left(\frac{1}{3}\right)^2
+  \end{bmatrix} =
+  \begin{bmatrix}
+    2.86\cdot10^{-6} & 0 \\
+    0 & 1.11\cdot10^{-1}
+  \end{bmatrix} \\
+  \Pi=
+  \begin{bmatrix}
+    0.9850  &  0.0075  &  0.0075\\
+    0.0075  &  0.9850  &  0.0075\\
+    0.0075  &  0.0075  &  0.9850\\
+  \end{bmatrix}
+\end{gather}
+
+\textbf{Filter of the state and the K gain}\\
+The estimated air density $\hat{\rho}$ and gain $\hat{K}_{opt,GE}$ from the IMM are low pass filtered to smooth their fast changes. The transfer functions of the filters is \acrshort{GIMM}:  
 \begin{equation}
-  G(s) = \frac{1}{\frac{1}{2.51}s + 1}
+  G_{IMM}(s) = \frac{1}{0.6s + 1}
 \end{equation}
 
 \subsubsection{Results of the IMM} 
-The first test done is the comparison between the IMM-based control and the one based on the constant gain for 5 constant WSs between the cut-in and the rated one (4, 6, 8, 10, and 11 $\mesunt{\meter\per\second}$). In particular, for each input wind velocity a couple of simulation has been run, with the same noise, in order to better compare them. \\
-In order to compare the control methods, the integral of the powers has been computed. It has been observed that the power in the two cases were quite similar, and so the choice of the time interval to be integrated was important to identify which method provides more energy. The results of teh tests are reported in \autoref{tab:comparison_IMM}. The first colum reports the time from the end of the simulation were the integration started, the second reports the wind speed of the tested case, the third, and fourth the energy extracted from the rotor with the two considered control techniques, while the fifth the error between them. The last three columns report the energy at the electrical output of the generator and the corresponding normalized error. The error has been computed as:
+\textbf{Constant WS}\\
+The first test is the application of the IMM with a constant input WS and imposing a linearly varying $\rho$. In particular, a WS of 8 $\si{\meter\per\second}$ has been imposed and the air density has been increased with a slope of $\frac{0.4}{450} \, \si{\kilo\gram\per\cubic\meter\per\second}$, starting at 50 s from the beginning of the simulation from an initial value of $0.9\rho$ and then saturated at $1.3\rho$. On top of this ramp, a random noise (with standard deviation $\sigma_{\rho}=\frac{0.05\rho}{3} \, \si{\kilo\gram\per\cubic\meter}$) has been added, simulating a possible fast variation. With this particular choice $\rho$ spans in a range where is partially covered by the models of the IMM and partially not, in order to study the algorithm behavior in both conditions. The results are reported in \autoref{fig:fig_IMM_sim_const_WS}.
+
+\begin{figure}[htb]
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_17_59_53omega_IMM_1.eps}
+    \caption{Rotor rotational speed. \textit{Mod.} are the estimations done by the model run in parallel, \textit{Est. IMM} is the weighted average of the IMM, \textit{Sim. IMM} is the rotational speed obtained in the simulation with the IMM, \textit{Sim. fix gain} is the simulation with the constant gain.}
+    \label{fig:fig_omega_IMM_1}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_21_06_27probability_bar_IMM.png}
+    \caption{Bar plot of the probability of the models. Each bar represents a probability up to 1, composed by the probability of each model.}
+    \label{fig:fig_probability_IMM}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_17_59_53rho_IMM.eps}
+    \caption{\textit{Real} is the real $\rho$, \textit{Estimated} is the weighted sum of the model run in the IMM, and \textit{Filtered} is its filtered version. \textit{IMM models} are the density used in the model estimation.}
+    \label{fig:fig_rho_IMM}
+  \end{subfigure}
+  \begin{subfigure}{0.49\columnwidth}
+    \centering
+    \includegraphics[width=\columnwidth]{images/vectorial/2023_11_24_21_06_27K_opt_IMM.eps}
+    \caption{Value of the gain $K_{opt}$ used in synthesis of the generator control reference. IMM are the values of the gains associated with the models run in the IMM.}
+    \label{fig:fig_K_IMM}
+  \end{subfigure}
+  \caption{Comparison of the simulation run with the IMM and the constant gain, imposing the same input wind speed of 8 $\si{\meter\per\second}$, and introducing a ramp air density.}
+  \label{fig:fig_IMM_sim_const_WS}
+\end{figure}
+
+The first general comment on \autoref{fig:fig_IMM_sim_const_WS} is that, as stated in the limitation of the analysis, the numerical values chosen are not realistic for what concerns the air density variation and so the results are taken to the extremes. \\
+\autoref{fig:fig_omega_IMM_1} reports the rotor rotational speed. It could be seen that the IMM approach stabilizes $\omega_R$ more than what is done by the fixed gain. In the zoomed rectangle it could be seen the comparison between the estimations of the models run in parallel in the algorithm, alongside their weighted sum, and the actual evolution of the system. \autoref{fig:fig_probability_IMM} is a bar plot of the probability of each model. Given 1 the sum of the probabilities of each model at the any time instant, each bar is colored proportional to the probability of the corresponding model. It could be seen how, going on with the simulation, the first model tends to be less probable while the other two increase their likelihood. \autoref{fig:fig_rho_IMM} shows how the filtered estimation follows the real air density, and also in the final part of the simulation where the real $\rho$ is no more included within the models of the IMM, the algorithm converges towards to the most likely model. Finally, \autoref{fig:fig_K_IMM} shows a similar tendency as the air density. 
+
+\textbf{WS series}
+Another test is run to compare the IMM-based control and the one based on the constant gain. Five WSs series with mean value between the cut-in and the rated one (4, 6, 8, 10, and 11 $\mesunt{\meter\per\second}$) have been applied and for each of them a couple of simulation have been run. The same models and parameters variations as the previous case has been applied. The comparison of the control methods have been done computing the integral of the powers in a reference time. The results are reported in \autoref{tab:comparison_IMM}, where the first colum is the integration time, the second is the WS of the tested case, the third, and fourth the mechanical energy extracted from the rotor with the two considered control techniques, while the fifth the error between them. The last three columns report the energy at the electrical output of the generator and the corresponding normalized error. The error has been computed as:
 \begin{equation}
   \text{Error} = \frac{E_{IMM}-E_{Const}}{E_{Const}}\cdot 100 \left[-\right]
   \label{eq:energy_error}
 \end{equation}
+where $E_{IMM}$ is the energy computed with the simulation based on the IMM, and $E_{Const}$ is the one compute with the constant gain.
 
 \begin{table}[htb]
-  \caption{Comparison of the energy extracted from the resource and at the generator's output for the use of IMM based or fixed gain controllers, and their error}
+  \caption{Produced energy in the considered time. $E_R$ and $E_{GE}$ are the mechanical extracted energy and the generator output. \textit{IMM} and \textit{Const.} states whether the control law uses the IMM algorithm or the constant $K_{opt,GE}$ gain respectively.}
   \centering
   \begin{tabular}{cc|ccc|ccc}
     \toprule
     % write R above the third and fourth column and GE above the last two
-    Integration & & \multicolumn{3}{c|}{Rotor} & \multicolumn{3}{c}{Generator Electrical output}\\
+    Integration & & \multicolumn{3}{c|}{$E_R$} & \multicolumn{3}{c}{$E_{GE}$}\\
     time & WS & IMM & Const. & Err. & IMM & Const. & Err.\\
     $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$& $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$ \\
     \midrule
-    \input{macro/energy.tex}
+    \input{macro/2023_11_24_07_11_59energy.tex}
   \end{tabular}
   \label{tab:comparison_IMM}
 \end{table}
 
-From the numerical values of the error, it can be seen that the difference between the methods are small. This can be explained by observing the time evolution of the K gain, the power, and the rotational speed. In particular, the values of the gains in the IMM control cases are not far from the constant value case (see \autoref{fig:fig_K_IMM} and \autoref{tab:mean_std_IMM} with the error defined as \autoref{eq:K_error}), and so the generator torques are similar.
-\begin{equation}
-  \text{Error} = \frac{K_{IMM}-K_{GE}}{K_{GE}}\cdot 100 \left[-\right]
-  \label{eq:K_error}
-\end{equation}
-Furthermore, the high rotor inertia filters out the torque fluctuations and stabilizes the rotational speed around a similar value, as could be seen in \autoref{fig:fig_omega_IMM} where the rotor speeds for the two cases are reported alongside the estimation done by each of the filter run in the IMM, and the overall IMM estimation. 
+From the numerical values of the error, it can be seen that the difference between the methods for the lowest WS are small, even tough the IMM seems to perform better. On the other hand at rated WS the IMM is less effective than the constant gain. This may be explained remembering that in this case the wind series may exceed the rated WS, and hence the pitching mechanism may enter in action reducing the power coefficient, leading to the assumption of working at MPPT not valid anymore.
 
+\autoref{fig:rho_comparison} reports the estimation of the air density in the different simulations, alongside with the real density and the ones used in the models. It can be seen that in general, all the simulations except the one with mean at the rated speed are able to track the real air density. Among the others, the higher WSs seems to track better the variations, probably because the imposed noises, which for simplicity has been set the same for all the simulations, affect more the lower speeds rather than the higher ones.
 \begin{figure}[htb]
   \centering
-  \begin{subfigure}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_10_27_16_20_52omega_IMM.eps}
-    \caption{K gains for the simulations with the IMM control}
-    \label{fig:fig_K_IMM}
-  \end{subfigure}
-  \\
-  \begin{subfigure}{0.65\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{images/vectorial/2023_10_28_00_11_27fig_rotor_generator_power_dynamic.eps}
-    \caption{Input power from the generator and output power from the electrical generator. }
-    \label{fig:fig_power_IMM}
-  \end{subfigure}
-  \caption{\textcolor{red}{Write an overall caption for the two figures}}
-\end{figure}
-It could be seen that the generator output power in the case of the IMM control fluctuates whereas the other is constant. This difference is clearly given by the different generator's controller. On the other hand the two rotor power are almost equal, because the rotational speed in the two cases are very close each others. 
-
-\begin{table}[htb]
-  \caption{Mean value and standard deviation of the K gains in the simulations using the IMM}
-  \centering
-  \begin{tabular}{ccccc}
-    \toprule
-    Avg. time & WS & Mean & Std & Error \\
-    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\newton\meter\square\second}$ & $\mesunt{\newton\meter\square\second}$ & $\left[\%\right]$\\  \midrule
-    \input{macro/mean_std_IMM.tex}
-  \end{tabular}
-  \label{tab:mean_std_IMM}
-\end{table}
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=0.5\columnwidth]{images/vectorial/2023_10_27_16_20_52omega_IMM_9.eps}
-  \caption{Comparison between the rotor rotational speed in the IMM and constant gain control cases for a WS of 9 $\mesunt{\meter\per\second}$. The figure shows also the estimation done by each filter run during the IMM and the combined estimation.}
-  \label{fig:fig_omega_IMM}
+  \includegraphics[width=0.65\columnwidth]{images/vectorial/2023_11_24_07_11_59rho_comparison.eps}
+  \caption{Estimated air density in the simulations with the IMM control and WS, alongside the real density and the ones used in the models.}
+  \label{fig:rho_comparison}
 \end{figure}
 
-The effect of the filter on the gain value could be seen in \autoref{fig:filter_K}.
-\begin{figure}
-  \centering
-  \includegraphics[width=0.5\columnwidth]{images/vectorial/2023_10_28_09_38_53fig_K.eps}
-  \caption{Value of the gain K obtained from the IMM before and after the application of a low pass filter}
-  \label{fig:filter_K}
-\end{figure}
+\subsubsection{Conclusions on the IMM}
+Overall the IMM seems to be behave as expected in the tested cases, being able to track the changing in time air density, with constant and variable input wind speed at least when it is below the rated value. Even for what concerns the energy extraction, the results suggests that a control based on the IMM may be able to perform better than one using a constant gain. Furthermore, as expected, whenever the real air density is not included in the models run in the IMM algorithm, then the output converges towards the most similar ones.\\
+On the other hand, the method has also some disadvantages, as shown by the high estimation error committed above rated wind speed. Here it happens because when the rated power is exceeded then the pitching mechanism starts to act in order to control it, and so the assumption of MPPT done during the design of the control is no more valid. A further development of the method may consider also the variability of the power coefficient and then being suitable for both the working regions of the WT, as for example done in \cite{kalman_based_IMM}.\\
+Finally, it must be remembered that the tests reported here are not complete in terms of the numerical value assumed by the varying parameters, and so their real proficiency as to be further validated with more realistic example cases. This investigation may also reveal the redundancy of the WS measurement, as done by \cite{kalman_based_IMM}.

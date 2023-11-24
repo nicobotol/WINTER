@@ -78,10 +78,10 @@ if simulation.model == 5 || simulation.model==7
   for i = 1:wind.WS_len/2
     fig = figure('Color', 'w');grid on;box on;hold on;
     max_tmp = 0;  min_tmp = 1e9;
-      plot(out_store{2*i - 1}.K_opt.Time(s_start:end), out_store{2*i - 1}.K_opt.Data(s_start:end), 'LineWidth',line_width, 'DisplayName', ['Sim. ', num2str(i)]);
+      plot(out_store{2*i - 1}.K_opt.Time(s_start:end), out_store{2*i - 1}.K_opt.Data(s_start:end), 'LineWidth',line_width, 'DisplayName', 'IMM simulation');
       max_tmp = max(max_tmp, max(out_store{2*i - 1}.K_opt.Data(s_start:end)));
       min_tmp = min(min_tmp, min(out_store{2*i - 1}.K_opt.Data(s_start:end)));
-    yline(generator.K_opt_GE,'-', 'LineWidth', 2*line_width, 'DisplayName', 'Reference', 'Color', [color(5), 1]);
+    yline(generator.K_opt_GE,'-', 'LineWidth', 2*line_width, 'DisplayName', '$K_{opt,GE}$', 'Color', [color(5), 1]);
     yline(IMM.K_vector, '--', 'LineWidth', 1.5*line_width, 'HandleVisibility', 'Off', 'Color', [color(2), 1]) ;
     plot(NaN, NaN, '--', 'LineWidth', 1.5*line_width, 'Color', [color(2), 1],  'DisplayName', 'IMM');
     xlabel('Time [s]')
@@ -115,7 +115,7 @@ for i=1:wind.WS_len/2
   legend('Model 1', 'Model 2', 'Model 3','Location', 'NorthEast')
   title(['Bar plot of the probabilities of each model, $V_0$ = ', num2str(wind.mean(2*i)), ' [m/s]'])
   if simulation.print_figure == 1
-    export_figure(fig, strcat(date_fig, 'probability_bar_IMM.eps'), path_images);
+    export_figure(fig, strcat(date_fig, 'probability_bar_IMM.png'), path_images);
   end
 
 
@@ -147,14 +147,13 @@ end
 %  | '__| '_ \ / _ \ 
 %  | |  | | | | (_) |
 %  |_|  |_| |_|\___/ 
-                   
-fig = figure('Color', 'w'); hold on; box on; grid on;
-for i=1:2:wind.WS_len
+for i=1:2:wind.WS_len          
+  fig = figure('Color', 'w'); hold on; box on; grid on;
   plot(out_store{i}.rho_eff.Time(s_start:end), out_store{i}.rho_eff.Data(s_start:end), 'DisplayName', 'Real', 'LineWidth', 0.5*line_width, 'Color', color(1))
   plot(out_store{i}.rho.Time(s_start:end), out_store{i}.rho.Data(s_start:end), 'DisplayName', 'Estimated', 'LineWidth', 0.5*line_width, 'Color', color(3))
   plot(out_store{i}.rho_filter.Time(s_start:end), out_store{i}.rho_filter.Data(s_start:end), 'DisplayName', 'Filtered', 'LineWidth', 0.75*line_width, 'Color', color(2))
   yline(IMM.rho_vector, '--', 'LineWidth', 1.2*line_width, 'Color', [color(7), 1], 'HandleVisibility', 'Off');
-  plot(NaN, NaN, '--', 'LineWidth', 1.2*line_width, 'Color', color(7), 'DisplayName', 'IMM');
+  plot(NaN, NaN, '--', 'LineWidth', 1.2*line_width, 'Color', color(7), 'DisplayName', 'IMM models');
   ylim([0.95*min(IMM.rho_vector), 1.05*max(IMM.rho_vector)])
   legend('Location', 'SouthEast')
   xlabel('Time [s]')
@@ -163,6 +162,25 @@ for i=1:2:wind.WS_len
 end
 if simulation.print_figure == 1
   export_figure(fig, strcat(date_fig, 'rho_IMM.eps'), path_images);
+end
+
+fig = figure('Color','w'); hold on; grid on; box on;
+plot(time, out_store{1}.rho.Data(s_start:end), 'LineWidth', 0.5*line_width, 'LineStyle', '-', 'Color', [0 0 0 0.5], 'DisplayName', 'True')
+for i=1:2:wind.WS_len
+  t_start = out_store{1}.model_x_est.Time(end) - simulation.plot_time(1); % [s]
+  [~, s_start] = min(abs(out_store{1}.model_x_est.Time - t_start)); % sample from where to start
+  time = out_store{1}.model_x_est.Time(s_start:end);
+
+  plot(time, out_store{i}.rho_filter.Data(s_start:end), 'LineWidth', line_width, 'DisplayName', ['$V_0=', num2str(wind.mean(i), 3), ' [\frac{m}{s}$]']);
+end
+plot(NaN, NaN, 'LineWidth', 1.5*line_width, 'LineStyle', '--', 'Color', [color(9), 1], 'DisplayName', 'IMM models')
+yline(IMM.rho_vector, 'LineWidth', 1.5*line_width, 'LineStyle', '--', 'Color', [color(9), 1], 'HandleVisibility', 'Off')
+xlabel('Time [s]');
+ylabel('$\rho [\frac{kg}{m^3}]$');
+title('Estimated and real $\rho$')
+legend('Location', 'best', 'NumColumns', 4);
+if simulation.print_figure == 1
+  export_figure(fig, strcat(date_fig, 'rho_comparison.eps'), path_images);
 end
 
 end

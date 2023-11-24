@@ -237,3 +237,11 @@ The friction has been considered $ 0 \, \si{\kilo\gram\square\meter\per\second}$
 \end{figure}
 
  
+\subsection{Low pass filtering of the rotor speed}
+As presented in \cite{Olimpo_Anaya‐Lara}, in order to prevent the feeding into the control loop of high frequency dynamic, the rotor rotational speed is low pass filtered before being used in both the torque and the pitch controllers. According to the same source, this filter has an important influence on the pitching dynamics since if it is tuned too low then the performance of the rotor speed control decays due to phase offset between the actual and filtered speed measurements but, on the other hand, if it is too high the pitch mechanism may react to aerodynamic excitation even when it would be not necessary. \\
+The proposed filter's transfer function is:
+\begin{equation}
+    G = \frac{1}{1+\frac{s}{\alpha_{\beta}}} =  \frac{1}{1+\frac{s}{2\pi0.4}}
+    \label{eq:filter_pitch}
+\end{equation}
+with the choice of $\alpha_{\beta}=0.4 \left[\si{\hertz}\right] = 2\pi0.4 \left[\si{\radian\per\second}\right]$. 
