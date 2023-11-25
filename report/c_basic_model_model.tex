@@ -1,6 +1,6 @@
 \newpage
 \section{Model implementation}\label{sec:c_basic_model_model}
-In this section of the work, the models adopted in the different sub-components are described, in terms of motivation and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, the aerodynamic, the transmission, the rotor mechanical balance, and finally the generator. \\
+In this section of the work, the models adopted in the different sub-components are described, in terms of motivation and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, the aerodynamic, the transmission, the rotor mechanical balance, and finally the generator.\\
 \autoref{fig:d_plant_schema} gives an overview of the interconnection between the different implemented sub-components that will be discussed more into detail in this section of the work.
 \begin{figure}[htb]
   \centering
@@ -8,6 +8,18 @@ In this section of the work, the models adopted in the different sub-components 
   \caption{Interconnection of the different sub-components of the implemented simulator}
   \label{fig:d_plant_schema}
 \end{figure}
+
+\subsection{Limitation of the scope}
+Before going on with the modelling of the different sub-components, it is necessary to introduce the assumptions that have been done in order to simplify the analysis.
+\begin{itemize}
+  \item In this thesis the main control focus is the power extraction, meaning that the aim is the extraction of most of the available power up to the rated power. In real turbines other kinds of controller run alongside the power one, such as one for limiting the aerodynamic loads, the vibrations, contrasting the wave effect (in case of offshore plants) and providing ancillary services to the grid. The literature about controllers applied to wind turbines is very wide. In this thesis the main followed references are \cite{Olimpo_Anaya‐Lara}, \cite{NREL_5MW_reference} and \cite{DTU_Wind_Energy_E_0028}. 
+  \item The aerodynamic interaction between the incoming wind and the blades has been modelled using a formulation relying on static aerodynamic parameters even with variable wind speeds.
+  \item The blades have been considered as rigid, and deployed exactly on the rotor plane, so neither deflection nor vibration related issues have been taken into account.
+  \item The yaw control (i.e. the one ensuring the orientation of the rotor plane with respect to the wind speed direction) has not been considered because it acts with a dynamic slower than the ones of the pitching mechanism and generator. Furthermore, this kind of control is usually relevant during the study of wind farms made by more turbines rather than when the focus is on the operating condition of a single one. 
+  \item The pitch actuators and the power converter have not been explicitly modeled, but their presence has been included in the simulation by means of a time delay between the imposed control signal and the one applied to the system. This assumption is valid because the focus of the thesis is on the generation of the reference signals that have to be tracked by the different subsystems rather then on the real actuators performing the control actions.
+  \item Even tough the DTU 10 MW is an offshore turbine, the hydrodynamic loads and  the type of foundation or floating platform have not been considered. Furthermore, the presence of the tower shadowing the wind flow in the stream has not been included.
+  \item Since the grid integration of the turbine is not considered in the thesis, the grid interface has not been studied.    
+\end{itemize}
 
 \subsection[Wind speed temporal series]{Model of the wind speed temporal series}
 This section deals with the generation of a realistic \acrshort{WS} time series. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
@@ -23,7 +35,7 @@ A wind series that fulfils the prescribed \acrshort{PSD} is:
     u(t) = V_{10}+\sum_{j=1}^{N_s}\sqrt{\frac{2PSD(f_j)}{T}}\cos{(\omega_jt-\varphi_j)} \ \ \left[\si{\meter \per \second}\right]
     \label{eq:wind_series}
 \end{gather}
-with $t = i\Delta_t$ for $i=1,\dots,N_s$ and \acrshort{phij} randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
+with $t = i\Delta_t$ for $i=1,\dots,N_s$, $\omega_j=\frac{j}{T}$, and \acrshort{phij} randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
 An example of generated wind series for $V_{10}=10 \ \si{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$, height above ground of $h=150 
  \ \si{\meter}$, and for a time horizon of $T = 300 \ \si{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which define the interval where the generated data are expected to be with more than the 99\% of probability. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
 \begin{figure}[htb]
@@ -141,13 +153,13 @@ T_G^G = \eta n T_R^R \\
 \end{aligned}
 \right. 
 \label{eq:damping_sys}\\
-B_{eq}^R= \frac{T_R^R}{\omega_R}(1 - \eta)= \frac{K_{opt}(\omega_R)^2}{\omega_R}(1 - \eta) = K_{opt}\omega_R(1 - \eta) \ \ \mesunt{\kilo\gram\square\meter}
+B_{eq}^R= \frac{T_R^R}{\omega_R}(1 - \eta)= \frac{K_{opt}(\omega_R)^2}{\omega_R}(1 - \eta) = K_{opt}\omega_R(1 - \eta) \ \ \mesunt{\kilo\gram\square\meter\per\second}
 \label{eq:damping}
 \end{gather} 
 where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the unit of $\mesunt{\newton \meter \square\second }$.\\
 It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature information at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these assumptions in mind, the damping becomes:
 \begin{equation}
-  B_{eq}^R = K_{opt}\omega_R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter}
+  B_{eq}^R = K_{opt}\omega_R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter\per\second}
 \end{equation}
 
 \subsection[Electrical generator]{Model of the electrical generator}\label{subsec:electrical_generator_description}

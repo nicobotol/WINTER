@@ -1,4 +1,5 @@
-\section{Description of the most important subsystems} \label{sec:c_modelling_of_subsystem}
+
+\subsection{Description of the most important subsystems} \label{subsec:c_modelling_of_subsystem}
 A general schematic of a WT energy conversion chain is reported in \autoref{fig:fig_drivetrain} (source \cite{Olimpo_Anaya‐Lara}). 
 \begin{figure}[htb]
   \centering
@@ -10,8 +11,8 @@ The incoming wind flow makes the blades rotate at a low rotational speed (around
 Conceptually on top of the physical components there are multiple hierarchical levels of control, that may have different objectives. The highest level supervises operator commands, faults, extreme events, startup and shutdown, possibly also coordinating with other turbines in the farm. Then a lower level is primary responsible of keeping the rotational speed within limits, and secondly reducing the aerodynamic loads, structural vibrations, and provide ancillary services to the grid.  The two most important controllers for the sake of this thesis are the one regulating the inclination of the blades (called pitch) and the electrical machine.\\
 In the following subsections the most important subsystems will be described in order to provide some information about their structures and functionalities. These \textit{subsystems} are not only seen from a physical point of view but also as functional blocks interconnected to provide to the turbine its full capabilities.
 
-\subsection{Basic aerodynamic model for the blade}
-\subsubsection{Mechanical power and power coefficient}\label{subsec:mech_pow_and_pow_coeff}
+\subsubsection{Basic aerodynamic model for the blade}\label{subsec:mech_pow_and_pow_coeff}
+\textbf{Mechanical power and power coefficient}\\
 The mechanical power that a \acrshort{WT} can extract from the wind is expressed by the well known equation:
 \begin{gather}
     P_R = \frac{1}{2}\ A \, \rho \, c_P \, V_0^3 \ \ \left[\si{\watt}\right] \label{eq:power} \\
@@ -40,20 +41,20 @@ The pitch angle is the rotation angle of the blade around its main axis, and by 
 
 Usually the power is reduced by decreasing the \acrshort{AOA} by pitching the leading edge of the blades up against the wind, but also the opposite is possible \cite{Aerodynamics_of_wind_turbines}. The first strategy is called \textit{feathering} while the second \textit{stalling}.
 
-\subsubsection{Thrust force and thrust coefficient}
+\textbf{Thrust force and thrust coefficient}\\
 The thrust force, usually denoted as \acrshort{TR}, is the force produced by the rotor in the streamwise direction. It produces the wind speed reduction from the incoming one to the one in the wake, and it is compute as:
 \begin{equation}
     T_R = \frac{1}{2} \, A \, \rho \, c_T \, V_0^2 \ \ \left[\si{\newton}\right]
     \label{eq:thrust_coeff}
 \end{equation}
-The thrust coefficient $c_T$ is obtained similarly to the power one, as it will be shown later in \autoref{subsec:BEM_algorithm}.
+The thrust coefficient $c_T$ is obtained similarly to the power one, as it will be shown later in \autoref{subsec:mech_pow_and_pow_coeff}.
 
-\subsubsection{BEM algorithm}\label{subsec:BEM_algorithm}
+\textbf{BEM algorithm}\\
 As reviewed in \cite{HANSEN2006285}, the most common families of methods used to study the aerodynamic of a WTs are \acrfull{BEM}, lifting line, panel and vortex, generalized actuator disc, and 2D/3D full CFD. Since they made different types of assumptions then their fidelity and computational cost change. In this work only \acrshort{BEM} method will be discussed and used while the others families are only cited to give an overview of the modelling possibilities. The choice of the BEM method has been done since it is the most simple and computationally cheap while it still provides satisfactory results once good airfoil data are available \cite{HANSEN2006285}.\\
 The \acrshort{BEM} solves the problem by providing the tangential and normal forces to the blade. The assumptions on which it is based are the absence of radial dependency of the blade-wind interaction and a constant force from the blades on the flow. The last assumption corresponds to having a rotor with an infinite number of blades, and so it is later corrected with a coefficient taking into account their finite number \cite{Aerodynamics_of_wind_turbines}.\\
 At the basis of the computations done in this work there is a \acrshort{BEM} algorithm implemented in Matlab whose pseudo-code is reported in \autoref{app:BEM_code}. In particular, Algorithm \ref{main_BEM} reports the main functions that loops between the different TSR, pitch, and cross sections, while Algorithm \ref{detailed_BEM} reports the implementation details leading to the computation of the local (i.e. for a cross section) thrust and power coefficients. This algorithm was originally developed during the course \textit{Wind Turbine Technology and Aerodynamics} (46300) attended during the exchange period in the fall semester 2022-2023. A list of the main terms used in the code is reported in \autoref{tab:BEM_code_notation}.
 
-\subsection{Drivetrain}
+\subsubsection{Drivetrain}
 The term \textit{drivetrain} identifies all the components of the mechanical system used to transfer the power from the rotor to the generator.
 The classical components of a drivetrain are the \textit{main shaft} (i.e. the shaft connected to the rotor) which usually rotates at low speed, the \textit{gearbox} (which is not always present), and the generator. According to \cite{Olimpo_Anaya‐Lara}, in 85\% of the drivetrains a gearbox is present but this value may be biased by the older installed machines. Its primary use is to step up the rotational speed, and so to use high speed machines. \\
 The other possibility is to have a \textit{gearless} configuration, and the direct drive is the most common, while hydraulic transmissions are under development, \cite{Olimpo_Anaya‐Lara}.\\
@@ -67,7 +68,7 @@ In the market it is not clear which of the two solutions will be the dominant, s
 
 It is possible to notice that Siemens-Gamesa and General Electric use direct drive concepts, while Vestas still prefers a geared solution even tough with the same kind of electrical machine.
 
-\subsection{Electrical generator}
+\subsubsection{Electrical generator}
 The electrical generator is one of the most important components since it has the function of converting the incoming mechanical energy into electrical one. Since the market offers a lot of different types then the choice of the most suitable for an application is a key point in order to maximize the efficiency, reducing the \acrfull{OeM} and ultimately the cost of energy \cite{Olimpo_Anaya‐Lara}. According the same source, some of the requirements from the electrical machine are high efficiency, reliability, cost effectiveness, reduced dimensions and weights, ability to operate in a wide range of torques and speeds. \\
 The four most important types of electrical generators employed are the \acrfull{SCIG}, the \acrfull{DFIG}, the \acrfull{WRSM} and the \acrfull{PMSM}.
 \begin{itemize}
@@ -80,8 +81,8 @@ The four most important types of electrical generators employed are the \acrfull
 In the case of large offshore WTs the drawbacks of the described technologies are further highlighted since, as the dimensions increase, also the quantity of materials, and hence their costs increases. For these reasons the reliability is even more important. \\
 Ref. \cite{Olimpo_Anaya‐Lara} reports some interesting trends regarding new generator technologies and concepts, here not reported because not strictly relevant for the work. 
 
-\subsection{Power electronic converters}
-As will be better seen in \autoref{sec:control_objective}, the power electronic converters are the components that allow the turbine to work in a wider regions of speeds, so in maximizing the energy harvested from the wind. \cite{Olimpo_Anaya‐Lara} reports the most important requirements of those components, among whom there are the reliability (since they are reported to be at the top of the list of the most common failures). \\
+\subsubsection{Power electronic converters}
+The power electronic converters are the components that allow the turbine to work in a wider regions of speeds, so in maximizing the energy harvested from the wind. \cite{Olimpo_Anaya‐Lara} reports the most important requirements of those components, among whom there are the reliability (since they are reported to be at the top of the list of the most common failures). \\
 The functional principle of these converter is to transform the variable voltage/frequency output of the turbine to DC and back to AC with fixed frequency/voltage suitable for connection to the grid.\\
 According to the type of electrical generator and the power rating, different constructions are possible for those circuits. The wider classification can be done between low voltage ($<1 \si{\kilo \volt}$) and medium voltage (1-35 $\si{\kilo \volt}$). The \acrfull{VSR} controls the generator torque and speed, while the \acrfull{VSI} controls the DC bus and the grid reactive power. Typical switching frequencies for these electric components are in the range 1-3 $\si{\kilo \hertz}$ \cite{Olimpo_Anaya‐Lara}. \\
 Two possible arrangements of power electronic devices used for achieving the power conversion at low voltage are visible in \autoref{fig:B2B_converters}.
@@ -112,12 +113,12 @@ Alongside with the previously discussed configurations, \cite{Olimpo_Anaya‐Lar
   \label{fig:boost_converter}
 \end{figure}
 
-\subsection{Rotor braking system}
+\subsubsection{Rotor braking system}
 It is generally known that the lifespan of a wind turbine is in the order of 20 years, reaching even 30-35 with proper maintenance and repairing, as stated for example by the WT manufacturer Gamesa \cite{gamesa_life_turbine}. In all this long period of time the turbine has to be stopped such as in case of extreme events or maintenance, and so a rotor braking system is necessary.\\
 The primary brakes uses as aerodynamic mechanism, while an emergency mechanical brake is also present. The first one acts by pitching the entire blades of 90$\si{\degree}$ upwind (if the blade can be pitched from the root) or turning only the tip (whenever the pitching mechanism is not present, such as the old stall-regulated turbines). The generated aero torque slows down the rotor in few rotations at most \cite{brake_dromstorre}. Usually these mechanism are spring operated in order to work also under electrical or hydraulic power failures.\\
 The mechanical brake is mainly used as parking system and emergency brake \cite{brake_dromstorre}, and it is usually placed on the high speed shaft (in the geared turbines) and activated by an hydraulic circuit \cite{brake_wiley}. 
 
-\subsection{Yaw mechanism and yaw braking}
+\subsubsection{Yaw mechanism and yaw braking}
 The yaw mechanism is the mechanical part allowing the nacelle and the rotor to be rotated around the tower axis. This feature is necessary for controlling the swept area of the turbine, which can be used either for maximizing the power production and also for reducing the power and loads when necessary. Since the moment of inertia of the nacelle-rotor assemble with respect to the yaw degree of freedom is high, then this approach is not used as primary power control method, even though some attempts are cited in \cite{Kim_2014}. On the other hand, yaw control can be exploited in wind parks where it may be advantageous to limit the wake produced by one device (and so its power) in order to maintain the flow reaching the surrounding higher hence maximizing the farm production \cite{Kim_2014}.\\
 An example of yawing/brake mechanism assemble can be seen in \autoref{fig:fig_brake}. Other different arrangements are possible, depending also on other factors such as the accessibility for installation and maintenance, the weight reduction, and the stress distribution. Furthermore the visible electric motors can be replaced by hydraulic ones \cite{Kim_2014}.\\
 For what concerns yaw brake, it is often hydraulically regulated even tough some electric configurations are also available \cite{Kim_2014}. 
