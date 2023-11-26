@@ -5,10 +5,10 @@ For what concerns the generator, first of all the basic idea behind the control 
 For what concerns the blade pitch control, the method implemented is firstly exposed in its theoretical concepts, then it is validated on the NREL 5 MW wind turbine (since more data for benchmarking the process are available) and finally implemented for the DTU 10 MW.   
 
 \subsection{Generator control}
-\autoref{subsec:torque_reference} describes the power control for obtaining the MPPT below rated power, and how to limit the mechanical input above that WS. Since the control actions are conceptually different in the two operating regions their are treated separately. It is worth noting that this control method is used for example in \cite{DTU_Wind_Energy_E_0028}, and requires only a measurement of the rotor rotational speed. \\
-In \autoref{subsec:method_control_P_GE} a control method for the maximization of the generator electrical output power is presented. Firstly the steps for the implementation are described and later some assumptions are done to make its implementation simpler by means of using only the rotor rotational speed measure. Also in this case the control changes below and above the rated WS.\\
-The last controller, presented in \autoref{sec:c_other_controls} is the ones that tries to consider the presence of uncertainties in the systems, and adapt to them according to the variations of some parameters. This is done by means of an IMM running a set of \acrfull{EKF} estimators in parallel, and then combining their outputs to provide the overall estimation. In that case the focus is only in the below rated region.\\
-Even tough these three control methods have a similar structure and implementation, they are mutually exclusive, meaning that they are implemented on the WT once at the time.\\
+\autoref{subsec:torque_reference} describes the power control for obtaining the MPPT below rated power, and how to limit the mechanical input above that WS. Since the control actions are conceptually different in the two operating regions their are treated separately. It is worth noting that this method requires only a measurement of the rotor rotational speed, which can be obtained easily than other measurements such as the WS. This control schema is presented in literature, for example in \cite{DTU_Wind_Energy_E_0028}. \\
+In \autoref{subsec:method_control_P_GE} a control method for the maximization of the generator electrical output power is presented. Firstly the steps for the implementation are described and later some assumptions are done to make its implementation simpler by means of using only the rotor rotational speed measure. Also in this case the control changes below and above the rated WS, and requires only the knowledge of the rotational speed.\\
+The last controller, presented in \autoref{sec:c_other_controls} is the ones that tries to consider the presence of uncertainties in the systems, and adapt to them according to the variations of some parameters. This is done by means of an IMM running a set of \acrfull{EKF} estimators in parallel, and then combining their outputs to provide the overall estimation. In that case the focus is only in the below rated region, but in \cite{kalman_based_IMM} it is also extended above it. The difference between this reference and this thesis is that here the information about the changing parameters is used to close the control loop. \\
+Even tough these three control methods have a similar structure and implementation, they are mutually exclusive, meaning that they are implemented on the WT once at the time.
 
 \subsubsection{Setpoint for rotor side power maximization}\label{subsec:torque_reference}
 \textbf{Below rated WS}\label{subsec:below_rotor}\\
@@ -48,7 +48,7 @@ Since the $K_{opt}$ coefficient may be used for computing both the power and the
      K_{opt, computed} = 1.020 \cdot 10^7 \ \ \ \left[\si{\newton\meter\square\second}\right] 
  \end{gather*}
 
- A deeper derivation may observe that the damping can be included in \autoref{eq:T_G1}:
+ A deeper derivation may observe that the damping can be included in \autoref{eq:T_G1}, and the following equation obtained:
  \begin{equation}
   T_G^{G} = \frac{P_G}{\omega_G} = \frac{P_R-B_{eq}(\omega_R)^2}{\omega_G} = K_{opt} - B_{eq}n^2\omega_G  
   \label{eq:T_G5}
@@ -72,7 +72,8 @@ In the Simulink model the implementation of the generator's torque reference $T_
     \label{fig:d_torque_control_2}
 \end{figure}
 The saturation block constraints the reference power in between $P_G^* \in \left[0, P_{G,rated}\right]$.
-The values of the gains are \acrshort{kiP}$= 5.5$ and \acrshort{kpP}$=0.5$, according as \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.
+The values of the gains are \acrshort{kiP}$= 5.5$ and \acrshort{kpP}$=0.5$, according as \cite{Olimpo_Anaya‐Lara}. The integral action is chosen to be high to track the power commands, while the proportional gain helps to keep command and output in phase, at the cost of amplifying the high frequency part of the control signal.\\
+The presence of the $B_{eq}\omega_G^2$ block is dashed in order to highlight that its use it is not strictly necessary for the function of the control schema and it may be omitted whenever tha damping is not identified or not available. On the other hand, its presence is useful for driving to zero the power error and so to realize the MPPT more strictly. 
 
 \subsubsection{Setpoint for generator side power maximization}\label{subsec:method_control_P_GE}
 \textbf{Formulation of the problem}\\
@@ -99,21 +100,21 @@ The tip speed ratio can be introduced:
 \textbf{Below rated WS}\\
 In the case describe in \autoref{subsec:below_rotor} the choice of the reference values of TSR and pitch angle to be used below rated WS were based only on aerodynamical considerations, with the aim of maximizing the power extracted from the resource. In this case the same could not be done, and in principle it is not ensured that the TSR and the pitch are univocally identified. This has also the implication that the $K_{opt}$ used in the synthesis of the generator reference torque may be not univocally identified, and so the approach followed in \autoref{eq:T_G2} may be no longer valid. \\
 To study the problem, a numerical method is employed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximizing the power itself) with respect to the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}, alongside the corresponding counterpart found with the policy based on the rotor power maximization. The study has been repeated twice, considering or excluding the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_eq}, when the damping is not included in the picture, the output power is the input rotor power minus the joule loss (since in that case $T_R=T_G$).\\
-An important assumption done here is that the rated WS is not changed with respect to the case of the $P_R$ maximization. This is done to make the comparison between the two control methods easier by preserving the same operating regions. This choice has an implication on the values of the nominal powers which requires a further explanation. In fact, during the definition of $V_{0,rated}$, after finding the optimal pitch angle and TSR, the power was computed with the cubic function of the WS, and then the velocity at which the rated power was reached identified. At this point, given the mechanical power, it was possible to retrieve the others (i.e. $P_G$ and $P_{GE}$). Now the steps followed are not exactly the same, since after obtaining the new pitch and TSR, the use of the power curve up to the previously rated WS leads to a $P_{GE}$ slightly different from the previous one, and thus to different $P_G$ and $P_R$. \autoref{tab:table_power} summarizes these differences. 
-\begin{table}
-  \centering
-  \caption{Rated power values for the two control strategies}
-  \begin{tabular}{cccc}
-    \toprule
-    & $P_R \, \mesunt{\mega\watt}$ & $P_G \, \mesunt{\mega\watt}$ & $P_{GE} \, \mesunt{\mega\watt}$\\ \midrule
-    Rotor & 10.64 & 10.15 & 9.71 \\
-    Generator & 10.53 & 10.07 & 9.62 \\
-    \bottomrule
-  \end{tabular}
-  \label{tab:table_power}
-\end{table}
+An important assumption done here is that the rated WS is not changed with respect to the case of the $P_R$ maximization. This is done to make the comparison between the two control methods easier by preserving the same operating regions. This choice has an implication on the values of the nominal powers which requires a further explanation. In fact, during the definition of $V_{0,rated}$, after finding the optimal pitch angle and TSR, the power was computed with the cubic function of the WS, and then the velocity at which the rated power was reached identified. At this point, given the mechanical power, it was possible to retrieve the others (i.e. $P_G$ and $P_{GE}$). Now the steps followed are not exactly the same, since after obtaining the new pitch and TSR, the use of the power curve up to the previously rated WS leads to a $P_{GE}$ slightly different from the previous one, and thus to different $P_G$ and $P_R$. %\autoref{tab:table_power} summarizes these differences. 
+% \begin{table}
+%   \centering
+%   \caption{Rated power values for the two control strategies}
+%   \begin{tabular}{cccc}
+%     \toprule
+%     & $P_R \, \mesunt{\mega\watt}$ & $P_G \, \mesunt{\mega\watt}$ & $P_{GE} \, \mesunt{\mega\watt}$\\ \midrule
+%     Max. rotor power & 10.64 & 10.15 & 9.71 \\
+%     Max. generator power & 10.53 & 10.07 & 9.62 \\
+%     \bottomrule
+%   \end{tabular}
+%   \label{tab:table_power}
+% \end{table}
 
-\begin{figure}[H]
+\begin{figure}[htb]
   \begin{subfigure}{0.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/vectorial/2023_11_12_17_56_46fig_lambda_GE.eps}
@@ -144,7 +145,7 @@ An important assumption done here is that the rated WS is not changed with respe
     \caption{$K_{opt}$ gain}
     \label{fig:fig_K_map}
   \end{subfigure}
-  \caption{Comparison of the most important parameters for the operation below rated WS, where \textit{rotor} are quantities referred to the quantities identified basing on the rotor input power and \textit{generator} are the ones referred to the generator electrical power. This latter case is investigated with and without taking the damping into account.}
+  \caption{Comparison of the most important parameters for the operation below rated WS. \textit{Rotor} are quantities identified basing on the rotor mechanical power maximization and \textit{generator} are the ones for generator electrical power maximization. This latter case is investigated with and without taking the damping into account.}
   \label{fig:parameters_for_below_rated}
 \end{figure}
 
@@ -193,6 +194,7 @@ In order to validate these strategies, the two controllers have been modified wi
   \caption{Scheme of the implemented active power torque controller considering the generator.}
   \label{fig:d_torque_control_GE}
 \end{figure}
+Also in this case the presence of the $B_{eq}\omega_G^2$ is not compulsory for the general function of the controller but it is required for driving the error to zero.
 
 %   ___ __  __ __  __ 
 %  |_ _|  \/  |  \/  |
@@ -203,9 +205,9 @@ In order to validate these strategies, the two controllers have been modified wi
 
 \subsubsection{Interactive Multiple Model for WT control under uncertainty}\label{sec:c_other_controls}
 The control methods developed so far relay on the knowledge of the system by means of their parameters (structural and environmental) and models. In fact, in the calculation of the gains $K_{opt}$ and $K_{opt,GE}$ considered in the torque reference generation, a single deterministic constant in time value of all the different terms in \autoref{eq:T_G2} and \autoref{eq:K_opt_GE} have been used. In order to take into account possible variabilities of the parameters, for example due to the wrong estimation of some quantities or their ageing, a different approach has to been used. These modifications may occur in different time horizons, ranging from the second up to years. An example of rapidly changing parameter are the blades, while one of slowly changing is the air density, which is expected to increase of 0.5\% in the next 20 years due to global worming as reported by \cite{en12112038}. \\
-To deal with these uncertainties, one possibility is to use model-free methods \textcolor{red}{Mettere una citazione}, such as the extremum seeking. Another possibility is to use the \acrfull{IMM} estimator: supposing that the system may evolve following a model within a finite set, the most probable one is obtained by comparing a measurement depending on the system dynamic with a prediction done using the model \textcolor{red}{citazione a bar shalom}. \\
+To deal with these uncertainties, one possibility is to use model-free methods as the reviewed in \cite{MOUSA2021106598}, one of whom is the extremum seeking. Another possibility is to use the \acrfull{IMM} estimator: supposing that the system may evolve following a model within a finite set, the most probable one is obtained by comparing a measurement depending on the system dynamic with a prediction done using the model \cite{Bar_Shalom}. \\
 In this work, the last estimator is employed since it can be seen as an extension of the control methods previously analyzed, allowing to identify the variation of one physical parameter in time and provide a value of $K_{opt}$ to be used in the feedback line of the controller.\\
-To make the problem more close to a real application, the presence of a measurement instrument for the rotational speed has been considered by means of adding a random white noise to the rotational speed signal. This is taken onto account both in the simulation with the IMM and in the one with the constant control method.
+To make the problem more close to a real application, the presence of a measurement instrument for the rotational speed has been considered by means of adding a random white noise to the rotational speed signal. This is taken onto account both in the simulation with the IMM and in the one with the constant control method. 
 
 \textbf{Interactive Multiple Model estimator}\label{subsec:IMM}\\
 Ref. \cite{Kalman_Filter_and_Its_Application} states that the \textit{Kalman filter is an algorithm that uses a series of data observed over time, which contains noise and other inaccuracies, to estimates unknown variables with more accuracy.} In other words this algorithm uses the model of the dynamic system, the measurement from a sensor and their uncertainties to provide an estimation of the desired quantity better than what would be done by employing the solely measure or model.\\
@@ -301,16 +303,6 @@ In this last step, the filter with higher probabilities modify the estimates of 
 \end{equation}
 Then the filtering step is repeated, with the mixed state $\tilde{x}_k^{(j)+}$ and covariance $\tilde{P}_k^{(j)+}$ in the prediction.
 \end{enumerate}
-
-\textbf{Limitations of the study}\\
-Before going on describing the implementation and presenting some test cases it is important to state some limitation of the proposed study.
-\begin{itemize}
-  \item The proposed method is intended to adapt the control law according to the modification of the wind turbine parameters. For some of those, the aerodynamical implication are not trivial. For example when the blade deforms (i.e. R changes), then the entire map of the power coefficient developed in \autoref{subsec:lookup_cp} is no more valid and needs to be recomputed, alongside the optimal TSR and pitch angle. In order to keep the problem simple and focus only on the framework of the solution, only the air density $\rho$ variation is taken into account, since it does not modify the $c_P(\lambda,\theta)$ map, and hence $\lambda_{opt}$ and $\theta_{opt}$. A more deep investigation may consider these variations, and consequently provide a suitable control law that may be different from the one proposed here. 
-  \item This controller is intended to be used only in the below rated region, and it is not coupled with a specific pitching law for limiting the incoming power after reaching the rated WS.
-  \item The IMM method works \textit{well} when the models run in parallel are different each others. To make the results of the simulation more clear, the changing parameters will be modified more than what would have been done in reality, in order to employ models that are reasonably different each others. A more fine definition of the models in order to track realistic changes of the real systems may be part of a future investigations. 
-  \item Ref. \cite{kalman_based_IMM} reports an example of the implementation of the IMM in a WT with only a rotational speed measurement, as the methods previously described in the work. On the other hand when I tried to reproduce the same approach, I found it not working as expected since the estimations of the states were not accurate enough to close the control loop in an effective way. In order to overcome this issue, a WS measurement has been added. Nevertheless, results shows the method becomes effective even with a low accuracy measurement, as that may be typically obtained from an anemometer placed in the nacelle. \textcolor{red}{Vedere se si trova una reference} \\
-  One may also try to replace the WS measurement with others, paying attention to avoid the correlation between them.
-\end{itemize} 
 
 \textbf{Closing the loop}\\
 In the application presented in \cite{kalman_based_IMM}, the IMM is used only for an estimation of the state. Here, differently, there is also the necessity of \textit{closing the loop}, i.e. to act on he system in the most suitable way to let it working in a specific conditions. From the conceptual point of view the estimation of the varying quantity and the corresponding controls are two different problems. A possible solution that well fits with the power control structure developed in the previous parts of the thesis is to provide at each time step a value of $K_{opt,GE}$ given by the probability weighted average of the gains associated to the the same physical model of the filers, name $\hat{K}_{opt,GE}$:

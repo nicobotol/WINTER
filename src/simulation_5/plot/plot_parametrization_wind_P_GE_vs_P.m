@@ -15,6 +15,7 @@ hold on
 line_type = {':', '-', '--', '-.'};
 k=0;
 for i=1:2:wind.WS_len
+  % k=k+1;
   if wind.WS_len ~= 2
     k=k+1;
     subplot(2,3,k)

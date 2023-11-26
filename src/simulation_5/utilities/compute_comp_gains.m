@@ -1,6 +1,6 @@
-function energy = compute_comp_gains(out_store, simulation, IMM, wind, vector, name, generator)
+function energy = compute_comp_gains(out_store, simulation, IMM, wind, vector, name, generator, date_fig)
   % This function computes the integral of the power in a given time
-  fileID = fopen(['../../report/macro/',name,'.tex'],'w');
+  fileID = fopen(strcat('../../report/macro/',date_fig,name,'.tex'),'w');
 
   for j=1:length(vector)
     simulation.post_process_time = vector(j)*ones(length(simulation.post_process_time),1);

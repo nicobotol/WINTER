@@ -109,9 +109,9 @@ if enable_plot == 1
 end
 
 file_name = "C:\Users\Niccolò\Documents\UNIVERSITA\TESI_MAGISTRALE\report\macro\macro.tex";
-mode = "a";
+mode = "w";
 data = [kp, ki, kd, tau_d1, PM];
-write_latex_macro(file_name, names, data, mode)
+% write_latex_macro(file_name, names, data, mode)
 
 
 end

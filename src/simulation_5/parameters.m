@@ -116,7 +116,7 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 7;       % choice of the model
+simulation.model = 3;       % choice of the model
                             % 1 -> without power controller
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator power
@@ -137,10 +137,10 @@ elseif simulation.model == 6
 elseif simulation.model == 7 
     simulation.mdl = 'winter_simulink_IMM_control_2states'; 
   end
-simulation.stop_time = 500*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 1e3*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 12;       % 1 -> constant wind speed
+simulation.type = 11;       % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -152,14 +152,14 @@ simulation.type = 12;       % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 490*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 995*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
                             % 1 -> plot enabled
                             % 0 -> plot disable
 simulation.seed = 3;        % seed for the random number generation
-simulation.post_process_time = 1e3*ones(10,1); % time from the end of the simulation in which to perform the post processing 
+simulation.post_process_time = 995*ones(10,1); % time from the end of the simulation in which to perform the post processing 
 % Rotor parameters
 rotor.R = 89.17;            % rotor radius [m]
 rotor.A = rotor.R^2*pi;     % rotor area [m^2]
@@ -248,7 +248,7 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = [8 8]; %kron([5 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = kron([4 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = kron([0.5 0.5 1 1 1], [1 1]); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]

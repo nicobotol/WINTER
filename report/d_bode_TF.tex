@@ -19,9 +19,9 @@
     \node [output, right of=Yq] (output) {};
     \node [left of=input] {Not regulated};
     
-    \draw [draw,->] (input) -- node {$u$} (G_c);
-    \draw [->] (G_c) -- node {} (Yq);
-    \draw [->] (Yq) -- node {$y$} (output);
+    \draw [draw,->] (input) -- node {$U_q^*$} (G_c);
+    \draw [->] (G_c) -- node {$U_q$} (Yq);
+    \draw [->] (Yq) -- node {$I_q$} (output);
 
     %   ____                  _       _             
     %  |  _ \ ___  __ _ _   _| | __ _| |_ ___  _ __ 
@@ -34,8 +34,8 @@
     \node [output, right of=R3] (output3) {};
     \node [left of=input3] {Regulator};
 
-    \draw [draw,->] (input3) -- node {$u$} (R3);
-    \draw [->] (R3) -- node {$y$} (output3);
+    \draw [draw,->] (input3) -- node {$I_q^*-I_q$} (R3);
+    \draw [->] (R3) -- node {$U_q^*$} (output3);
 
     %   ____                  _       _           _ 
     %  |  _ \ ___  __ _ _   _| | __ _| |_ ___  __| |
@@ -50,10 +50,10 @@
     \node [output, right of=Yq2] (output2) {};
     \node [left of=input2] {Regulated};
 
-    \draw [draw,->] (input2) -- node {$u$} (R2);
-    \draw [->] (R2) -- node {} (G_c2);
-    \draw [->] (G_c2) -- node {} (Yq2);
-    \draw [->] (Yq2) -- node {$y$} (output2);
+    \draw [draw,->] (input2) -- node {$I_q^*-I_q$} (R2);
+    \draw [->] (R2) -- node {$U_q^*$} (G_c2);
+    \draw [->] (G_c2) -- node {$U_q$} (Yq2);
+    \draw [->] (Yq2) -- node {$I_q$} (output2);
 
 
 
