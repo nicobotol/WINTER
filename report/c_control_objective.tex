@@ -1,5 +1,5 @@
 \subsection{WT controllers and their objectives} \label{subsec:control_objective}
-This section of the work gives an overview of the different controllers present in a WT and their motivation. First of all, it is highlighted they act on different time scales and so they are stacked in multiple hierarchical levels. In a second part, the different standard operating regions of a WT are presented. These are wind ranges in which the turbine is controlled to extract the power in a specific way, and are usually defined according to the maximum power that can be extracted with respect to the nominal. In the third part, three approaches to implement the power limitations are described. Finally the yaw and electrical generator controllers are briefly discussed. The former will not be taken into account in the thesis, while the latter will be deeply studied in following sections of the work.  
+This section of the work gives an overview of the different controllers present in a WT and their motivation. First of all, the time scale at which they act and the hierarchical levels at which they can be stacked are described. In a second part, the different standard operating regions of a WT are presented. These are wind ranges in which the turbine is controlled to extract the power in a specific way, and are usually defined according to the maximum power that can be extracted with respect to the nominal. In the third part, three approaches to implement the power limitations are described. Finally the yaw and electrical generator controllers are briefly discussed. The former will not be taken into account in the thesis, while the latter will be deeply studied in following sections of the work.  
 
 \subsubsection{Hierarchical levels of control objectives}
 There are different conceptual levels of control for the wind turbines, each of them with a specific target, as could be seen in \autoref{fig:control_levels} (source \cite{9535421}).
@@ -18,7 +18,7 @@ The further identified region in \cite{5874598} and region I in \cite{10-MW_Dire
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{images/vectorial/operating_reagions.eps}
-    \caption{Wind speed division in 5 different operating regions according to \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}}
+    \caption{Wind speed division in 5 different operating regions according to \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} \textcolor{red}{Plottare linee verdi sopra le altre}}
     \label{fig:operating_reagions}
 \end{figure}
 
@@ -34,7 +34,6 @@ From the aerodynamic point of view, when the incoming wind increases its speed, 
   \label{eq:tangential_load}
 \end{equation}
 \acrshort{pT} is the tangential force to the rotorplane normalized by the blade length, $\alpha$ is the \acrshort{AOA}, \acrshort{phi} is the \textit{flow angle} between the plane of rotation and the relative velocity, \acrshort{lift} is the normalized lift force on the blade, and \acrshort{d} is the normalized drag force on the blade. \textit{D} and \textit{L} of \autoref{fig:velocity_triangle} are given by the rescale of \textit{d} and \textit{l} by blade length.\\
-
 The fixed pitch construction has the drawback of being rigid since the maximum power reduction is limited by the initial positioning of the blades, and their re-setting is possible only by unbolting and repositioning them. Hence, whenever the generator stops to produce a resisting torque, it is possible that the stalling would not be effective enough to avoid the acceleration of the drivetrain, increasing the risks of breakage for the components. In that case aerodynamic safety systems are activated, for example by turning the outer part of the blades of 90$\si{\degree}$ with respect to the rotor plane. 
 
 \textbf{Power control based on pitch regulation with constant rotor rotational speed}\\

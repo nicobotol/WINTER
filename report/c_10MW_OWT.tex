@@ -31,8 +31,8 @@ The value of the rotor inertia is not declared in the report, and so it has been
     I_{blade}=\sum_{i=1}^{N-1}\Delta m_i\left(\frac{r_{i+1} + r_i}{2}\right)^2 \ \ \left[\si{\kilo\gram\square\meter}\right]\\
     I_{rotor}=3I_{blade} \ \ \left[\si{\kilo\gram\square\meter}\right]
 \end{gather}
-\acrshort{xi} in $ \left[\si{\kilo\gram\per\meter}\right]$ is the linear mass density at section $i-th$, $r_i$ is the distance of section $i-th$ from the rotor axes, \acrshort{N} is the number of cross-sections for which data are available.\\
-Before being applied on the \acrshort{WT} under study, the method is validated on the NREL 5 MW. The results of the validation and the calculation of the inertia are reported in \autoref{tab:rotor_inertia} alongside the percentage error computed as $\text{Error}=\frac{ |\text{Computed} - \text{Reference}| }{\text{Reference}}\cdot 100$.
+\acrshort{xi} in $\si{\kilo\gram\per\meter}$ is the linear mass density at section $i-th$, $r_i$ is the distance of section $i-th$ from the rotor axes, \acrshort{N} is the number of cross-sections for which data are available.\\
+Before being applied on the \acrshort{WT} under study, the method is validated on the NREL 5 MW. The results and the calculation of the inertia are reported in \autoref{tab:rotor_inertia} alongside the percentage error computed as $\text{Error}=\frac{ |\text{Computed} - \text{Reference}| }{\text{Reference}}\cdot 100$.
 
 \begin{table}[htb]
  \caption{Validation of the rotor inertia and mass for the NREL 5MW and results for the DTU 10 MW}
@@ -52,7 +52,7 @@ Before being applied on the \acrshort{WT} under study, the method is validated o
 \end{table}
 
 \subsection{Power coefficient and other rated parameters}\label{subsec:lookup_cp}
-Even tough some values for the aerodynamic parameters are reported \cite{DTU_Wind_Energy_Report-I-0092}, they are here recomputed starting from the airfoil characteristics, mainly as a validation of the literature results and to have control on the assumptions under which the vales have been obtained. Among these, the first to be identified is the power coefficient $c_{P, opt}(\lambda_{opt}, \theta_{opt})$ that produces the maximum power extraction. To do so, a parametric study is carried out and the results are saved in a lookup table that will be used later on during the simulation: a range of values for $\lambda$ and $\theta$ are distributed between suitable bounds ($\lambda \in \left[0, 18\right]$  and $\theta \in \left[-15, 90\right] \left[\si{\degree}\right]$), and then the \acrshort{BEM} code is run for all their combinations in order to compute a mesh of \acrshort{cp} and \acrshort{ct}. The results are the contour plots reported in \autoref{fig:contour_plot}, for a reduced set of the parameters around the optimal values. The optimal \acrlong{cp} is the highest among the computed ones, and the corresponding \acrshort{TSR} and pitch angle are the optimal ($\theta=0\si{\degree}$ and $\lambda=7.91$). 
+Even tough some values for the aerodynamic parameters are reported \cite{DTU_Wind_Energy_Report-I-0092}, they are here recomputed starting from the airfoil characteristics, mainly as a validation of the literature results and to have control on the assumptions under which the vales have been obtained. Among these, the first to be identified is the power coefficient $c_{P, opt}(\lambda_{opt}, \theta_{opt})$ that produces the maximum power extraction. To do so, a parametric study is carried out and the results are saved in a lookup table that will be used later on during the simulation: a range of values for $\lambda$ and $\theta$ are distributed between suitable bounds ($\lambda \in \left[0, 18\right]$  and $\theta \in \left[-15, 90\right] \si{\degree}$), and then the \acrshort{BEM} code is run for all their combinations in order to compute a mesh of \acrshort{cp} and \acrshort{ct}. The results are the contour plots reported in \autoref{fig:contour_plot}, for a reduced set of the parameters around the optimal values. The optimal \acrlong{cp} is the highest among the computed ones, and the corresponding \acrshort{TSR} and pitch angle are the optimal ($\theta=0\si{\degree}$ and $\lambda=7.91$). 
 
 \begin{figure}[htb]
     \centering
@@ -78,13 +78,13 @@ Given the optimal power coefficient it is possible to compute the rated wind spe
     V_{0, rated} = \sqrt[3]{\frac{2 \ P_{R,rated}}{A \rho c_{P, max}}} \ \ \left[\si{\meter \per \second}\right]
 \end{equation}
 
-The wind turbines are usually identified by their electrical output power and not by their incoming mechanical one, so even tough the studied turbine is called \textit{10 MW} its rated $P_{R}$ is slightly higher. For this reason a reference value of $P_{R,rated} = 10.64 \left[\si{\mega \watt}\right]$ is considered during the computations, as reported in \cite{DTU_Wind_Energy_Report-I-0092}. In order to compare the different results, the analysis are repeated twice, one for each of the two different $P_{R,rated}$: in \textit{Case 1} $P_{R,rated}=10 \ \left[\si{\mega \watt}\right]$ while in \textit{Case 2} $P_{R,rated}=10.64 \ \left[\si{\mega \watt}\right]$ and so the other values are recomputed by consequence. Furthermore, the \acrshort{TSR} from the DTU report is assumed to be 7.5 as design choice, while in the two computed cases they are the ones generating the maximum power coefficients, and are slightly higher (7.93 in the first case and 7.91 in the second). \\ 
+The wind turbines are usually identified by their electrical output power and not by their incoming mechanical one, so even tough the studied turbine is called \textit{10 MW} its rated $P_{R}$ is slightly higher. For this reason a reference value of $P_{R,rated} = 10.64 \si{\mega \watt}$ is considered during the computations, as reported in \cite{DTU_Wind_Energy_Report-I-0092}. In order to compare the different results, the analysis are repeated twice, one for each of the two different $P_{R,rated}$: in \textit{Case 1} $P_{R,rated}=10 \ \si{\mega \watt}$ while in \textit{Case 2} $P_{R,rated}=10.64 \ \si{\mega \watt}$ and so the other values are recomputed by consequence. Furthermore, the \acrshort{TSR} from the DTU report is assumed to be 7.5 as design choice, while in the two computed cases they are the ones generating the maximum power coefficients, and are slightly higher (7.93 in the first case and 7.91 in the second). \\ 
 The results are reported in \autoref{tab:DTU_10_aero} and \autoref{fig:fig_cP_cT_comp}, alongside with the reference values from the DTU report. They are quite consistent and differences may be due to the reduced number of cross-sections along the blade taken into account in the implementation of the \acrshort{BEM} algorithm and in the choice of the discretization of the intervals for \acrshort{TSR} and $\theta$. \\
-In \autoref{fig:fig_cP_cT_comp} it is possible to see a great difference between the results below 7 $\left[\si{\meter \per \second}\right]$. To understand this behavior, a further explanation about the vibration of the \acrshort{WT} is required. In general, the rotation of the rotor excites the tower at frequencies multiple of 3$\mathbb{P}$, with 
+In \autoref{fig:fig_cP_cT_comp} it is possible to see a great difference between the results below 7 $\si{\meter \per \second}$. To understand this behavior, a further explanation about the vibration of the \acrshort{WT} is required. In general, the rotation of the rotor excites the tower at frequencies multiple of 3$\mathbb{P}$, with 
 \begin{equation}
   \mathbb{P}=\frac{\omega_R \ \left[\text{rpm}\right]}{60 \ \left[\si{\second \per \minute}\right]} \ \left[\si{\hertz}\right]
 \end{equation} 
-and $\omega_R$ the rotational speed of the \acrshort{WT}, \cite{Olimpo_Anaya‐Lara}. In order to prevent the resonance between this periodic load and the tower lowest natural frequency, which in the case described in \cite{DTU_Wind_Energy_Report-I-0092} is reported to be 0.25 $\si{\hertz}$, a minimum rotational speed of 6 $\left[\text{rpm}\right]$ is imposed to excite at least at:
+and $\omega_R$ the rotational speed of the \acrshort{WT}, \cite{Olimpo_Anaya‐Lara}. In order to prevent the resonance between this periodic load and the tower lowest natural frequency, which in the case described in \cite{DTU_Wind_Energy_Report-I-0092} is reported to be 0.25 $\si{\hertz}$, a minimum rotational speed of 6 $\text{rpm}$ is imposed to excite at least at:
 \begin{equation}
     3\mathbb{P} = 3\frac{6}{60}=0.3 \ \ \mesunt{\hertz}
 \end{equation}
@@ -137,7 +137,7 @@ The results of the \acrshort{BEM} algorithm can be used to build the static powe
 \end{figure}
 
 
-\subsection{Pitch angle for different wind speeds}\label{subsec:pitch_map}
+\subsection{Pitch angle map}\label{subsec:pitch_map}
 Since the turbine is pitch regulated, the map between the \acrshort{WS} and the corresponding pitch angle needs to be reconstructed in order to verify the static performance of the simulator. The process to build this map is straightforward. The rotor speed is kept constant at the maximum value reached in the below rated condition, then for each velocity up to the cut-out one:
 \begin{enumerate}
     \item  the actual \acrshort{TSR} $\lambda_V$ is computed;
@@ -185,6 +185,4 @@ Even though both fathering and stall limit the power at the same amount (see \au
 \end{figure}
 
 In \autoref{fig:fig_pitch_vs_V0} it is possible to see again some differences at low \acrshort{WSs} ($4\div7 \, \si{\meter\per\second}$), which are related to the one of \autoref{subsec:lookup_cp}. Since operating at a fixed rotational speed in that range of \acrshort{WS} is not optimal because the \acrshort{TSR} is fixed at a value lower than the nominal, then the blades are pitched to obtain the highest $c_P$ allowed by the constraint on $\lambda$. Again this effect is not taken into account in the thesis and the pitch is assumed to be 0$\si{\degree}$ below rated \acrshort{WS}.
-
-
 \newpage

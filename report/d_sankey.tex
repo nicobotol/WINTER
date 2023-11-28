@@ -1,0 +1,110 @@
+%% Sankey diagram for the power flow
+\def \PW {22.90}                 % Power from the wind 
+\def \PR {10.6401}              % Rotor power
+\def \PNE {\PW - \PR}  % Power not converted
+\def \PG {10.1601}                  % Power input generator
+\def \PDAMP {\PR - \PG }      % Power lost in damping
+\def \PGE {9.71}               % Power output generator
+\def \PJOULE {\PG - \PGE   }    % Power lost in Joule heating 
+% \definecolor{airforceblue}{rgb}{0.36, 0.54, 0.66}
+
+\begin{tikzpicture}
+  % font choice
+  \renewcommand\rmdefault{txr}\rmfamily\footnotesize
+  \sisetup{
+    round-mode=places,
+    round-precision=2,
+  }
+  \begin{sankeydiagram}
+    \colorlet{energy}{blue!20!cyan!70!black} % color of the transformed energy
+    \colorlet{lost energy}{red!50!orange!90!black}  % color of the loss
+    \sankeyset{
+      % ratio=13em/100,
+      ratio=20em/100,
+      minimum radius=1em,
+      start style=simple,end style=arrow,
+      draw/.style={draw=none,line width=0},
+      energy/.style={
+          fill/.style={
+              draw=energy,
+              line width=0,
+              fill=energy,
+            }
+        },
+      lost energy/.style={
+          fill/.style={
+              draw=lost energy,
+              line width=0,
+              fill=lost energy,
+            }
+        }
+    }
+    \newcommand\abovelabel[2]{ % valname, label
+      \node[anchor=south east,align=center,inner xsep=0] at (#1.left) {#2};
+    }
+    \newcommand\energylabel[1]{ % valname
+      \node[anchor=north east,text=energy,inner xsep=0] at (#1.right)
+      {\num{\sankeygetnodeqty{#1}}};
+    }
+    \newcommand\lostenergylabel[2]{ % valname, label
+      \node[anchor=north,text=lost energy] at ([yshift=-2.5mm]#1.center)
+      (value)
+      {\num{\sankeygetnodeqty{#1}}};
+      \node[anchor=north,inner sep=0,align=center] at (value.south) {#2};
+    }
+    \newcommand\lostenergylabelbottom[2]{ % valname, label
+      \draw[draw=lost energy,dashed,thick]
+      ([yshift=-10mm]#1.center) coordinate (#1) -- ([yshift=-10mm]#1.center);
+      \lostenergylabel{#1}{#2}
+    }
+
+    \sankeynode{name=Wind,quantity=\PW}
+    \path (Wind.right) ++(0,-7mm) coordinate (c);
+    \newcommand\turnandstop[2]{ % valname, label
+      \begingroup
+      \sankeyset{lost energy}
+      \sankeyturnright{#1}{90}
+      \sankeynode{as=#1,name=#1-stop,at={#1 |- c}}
+      \sankeyoutin{#1}{#1-stop}
+      \sankeynode{as=#1-stop,name=#1}
+      \sankeyend{#1}
+      \lostenergylabel{#1}{#2}
+      \endgroup
+    }
+    \newcommand\turnandstopbottom[2]{ % valname, label
+      \begingroup
+      \sankeyset{lost energy}
+      \sankeyturnright{#1}{90}
+      \sankeynode{as=#1,name=#1-stop,at={#1 |- c}}
+      \sankeyoutin{#1}{#1-stop}
+      \sankeynode{as=#1-stop,name=#1}
+      \sankeyend{#1}
+      \lostenergylabelbottom{#1}{#2}
+      \endgroup
+    }
+    \def\hshift{6em}
+
+    \sankeyadvance[energy]{Wind}{1.2*\hshift}
+    \abovelabel{Wind}{\textbf{Wind} $\left(\mathbf{P_{W}}\right)$}
+    \energylabel{Wind}
+    
+    \sankeyfork{Wind}{\PR/P_r, \PNE/P_r_loss}  % fork of the powers
+    \turnandstop{P_r_loss}{Not extracted}           % power loss name and text
+    \sankeyadvance[energy]{P_r}{1.8*\hshift}        % label of the advances power
+    \abovelabel{P_r}{\textbf{Mech.} \\ \textbf{Rotor} $\left(\mathbf{P_{R}}\right)$} % advanced power text
+    \energylabel{P_r}                               % advanced power label
+    
+    \sankeyfork{P_r}{\PG/P_g, \PDAMP/P_damp}  % fork of the powers
+    \turnandstop{P_damp}{Damping loss \\ + \\ \textit{Inertia}}              % power loss name and text
+    \sankeyadvance[energy]{P_g}{1.8*\hshift}        % label of the advances power
+    \abovelabel{P_g}{\textbf{Mech.} \\ \textbf{Generator} $\left(\mathbf{P_{G}}\right)$} % advanced power text
+    \energylabel{P_g}                               % advanced power label
+    
+    \sankeyfork{P_g}{\PGE/P_ge, \PJOULE/P_joule}  % fork of the powers
+    \turnandstop{P_joule}{Joule loss \\ + \\ \textit{Induction}}           % power loss name and text
+    \sankeyadvance[energy]{P_ge}{1.8*\hshift}        % label of the advances power
+    \abovelabel{P_ge}{\textbf{Electrical} \\ \textbf{output} $\left(\mathbf{P_{GE}}\right)$} % advanced power text
+    \energylabel{P_ge}                               % advanced power label
+  
+  \end{sankeydiagram}
+\end{tikzpicture}

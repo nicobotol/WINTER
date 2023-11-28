@@ -1,5 +1,6 @@
 \newpage
 \section{Model implementation}\label{sec:c_basic_model_model}
+\textcolor{red}{Questa sezione potrebbe non cominciare a pagina nuova, lo farò fare in seguito}
 In this section of the work, the models adopted in the different sub-components are described, in terms of motivation and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, the aerodynamic, the transmission, the rotor mechanical balance, and finally the generator.\\
 \autoref{fig:d_plant_schema} gives an overview of the interconnection between the different implemented sub-components that will be discussed more into detail in this section of the work.
 \begin{figure}[htb]
@@ -10,11 +11,12 @@ In this section of the work, the models adopted in the different sub-components 
 \end{figure}
 
 \subsection{Limitation of the scope}
-Before going on with the modelling of the different sub-components, it is necessary to introduce the assumptions that have been done in order to simplify the analysis.
+\textcolor{blue}{Limitation of the scope moved here} Before going on with the modelling of the different sub-components, it is necessary to introduce the assumptions that have been done in order to simplify the analysis.
 \begin{itemize}
-  \item In this thesis the main control focus is the power extraction, meaning that the aim is the extraction of most of the available power up to the rated power. In real turbines other kinds of controller run alongside the power one, such as one for limiting the aerodynamic loads, the vibrations, contrasting the wave effect (in case of offshore plants) and providing ancillary services to the grid. The literature about controllers applied to wind turbines is very wide. In this thesis the main followed references are \cite{Olimpo_Anaya‐Lara}, \cite{NREL_5MW_reference} and \cite{DTU_Wind_Energy_E_0028}. 
+  \item \textcolor{blue}{In this thesis the control is mainly focused is the power extraction, meaning that the aim is the conversion of most of the available power, from the resource or from the generator, according to different controls formulation, up to the rated power.} In real turbines other kinds of controller run alongside the power one, such as one for limiting the aerodynamic loads, the vibrations, contrasting the wave effect (in case of offshore plants) and providing ancillary services to the grid. The literature about controllers applied to wind turbines is very wide. In this thesis the main followed references are \cite{Olimpo_Anaya‐Lara}, \cite{NREL_5MW_reference} and \cite{DTU_Wind_Energy_E_0028}. 
   \item The aerodynamic interaction between the incoming wind and the blades has been modelled using a formulation relying on static aerodynamic parameters even with variable wind speeds.
   \item The blades have been considered as rigid, and deployed exactly on the rotor plane, so neither deflection nor vibration related issues have been taken into account.
+  \item No pitching at low wind speed has been considered. The change of the blade pitch angle is used only for the power limitation and not for the vibration mitigation at low WS.
   \item The yaw control (i.e. the one ensuring the orientation of the rotor plane with respect to the wind speed direction) has not been considered because it acts with a dynamic slower than the ones of the pitching mechanism and generator. Furthermore, this kind of control is usually relevant during the study of wind farms made by more turbines rather than when the focus is on the operating condition of a single one. 
   \item The pitch actuators and the power converter have not been explicitly modeled, but their presence has been included in the simulation by means of a time delay between the imposed control signal and the one applied to the system. This assumption is valid because the focus of the thesis is on the generation of the reference signals that have to be tracked by the different subsystems rather then on the real actuators performing the control actions.
   \item Even tough the DTU 10 MW is an offshore turbine, the hydrodynamic loads and  the type of foundation or floating platform have not been considered. Furthermore, the presence of the tower shadowing the wind flow in the stream has not been included.
@@ -23,25 +25,25 @@ Before going on with the modelling of the different sub-components, it is necess
 
 \subsection[Wind speed temporal series]{Model of the wind speed temporal series}
 This section deals with the generation of a realistic \acrshort{WS} time series. This problem in general may take into account both time and spatial-dependent aspects, such as turbulence, wind shear, presence of the tower and possibly of other WTs in the neighborhood. Starting from the easy things, only the turbulence effect will be initially considered, following what is proposed by \cite{Aerodynamics_of_wind_turbines}. \\
-Calling \acrshort{Deltat} $\left[\si{\second}\right]$ the time between two following measurements of an anemometer working at a sample frequency of \acrshort{fs} $\left[\si{\hertz}\right]$, the number of samples collected in the total observation time \acrshort{T} $\left[\si{\second}\right]$ is \acrshort{Ns}. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\left[\si{\hertz}\right]$. \\
+Calling \acrshort{Deltat} $\si{\second}$ the time between two following measurements of an anemometer working at a sample frequency of \acrshort{fs} $\si{\hertz}$, the number of samples collected in the total observation time \acrshort{T} $\si{\second}$ is \acrshort{Ns}. The lowest frequency that can be resolved is called $f_{low}=1/T$ $\si{\hertz}$. \\
 Assuming the signal to be periodic, it can be decomposed using the \acrfull{DFT}. On the other way around, once the \acrfull{PSD} is known then the inverse \acrshort{DFT} can be used to generate a wind series with desired characteristics. One possible analytical expression for a \acrshort{PSD} is the so called Kaimal spectrum \cite{Aerodynamics_of_wind_turbines}:
 \begin{equation}
     PSD(f) = \frac{\mathcal{I} ^2V_{10}\mathcal{L} }{\left(1+1.5\frac{f \ \mathcal{L} }{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
     \label{eq:PSD}
 \end{equation}
-where \acrshort{I}$=\sigma_{10}/V_{10}$ is the turbulence intensity, \acrshort{sigma10} is the wind standard deviation $\left[\si{\meter\per\second}\right]$, $f$ is the frequency $\left[\si{\hertz}\right]$, \acrshort{V10} is the 10 minutes average wind speed, \acrshort{L} is the length scale (said $h \ \left[\si{\meter}\right]$ the height above ground, $\mathcal{L}=20h$ for $h<30 \ \left[\si{\meter}\right]$, and  $\mathcal{L}=600 \ \left[\si{\meter}\right]$ otherwise).\\
+where \acrshort{I}$=\sigma_{10}/V_{10}$ is the turbulence intensity, \acrshort{sigma10} is the wind standard deviation $\si{\meter\per\second}$, $f$ is the frequency $\si{\hertz}$, \acrshort{V10} is the 10 minutes average wind speed, \acrshort{L} is the length scale (said $h \ \si{\meter}$ the height above ground, $\mathcal{L}=20h$ for $h<30 \ \si{\meter}$, and  $\mathcal{L}=600 \ \si{\meter}$ otherwise).\\
 A wind series that fulfils the prescribed \acrshort{PSD} is:
 \begin{gather}
     u(t) = V_{10}+\sum_{j=1}^{N_s}\sqrt{\frac{2PSD(f_j)}{T}}\cos{(\omega_jt-\varphi_j)} \ \ \left[\si{\meter \per \second}\right]
     \label{eq:wind_series}
 \end{gather}
-with $t = i\Delta_t$ for $i=1,\dots,N_s$, $\omega_j=\frac{j}{T}$, and \acrshort{phij} randomly generated in $ \left[0, 2\pi\right]$ $\left[\si{\radian}\right]$. \\
+with $t = i\Delta_t$ for $i=1,\dots,N_s$, $\omega_j=\frac{j}{T}$, and \acrshort{phij} randomly generated in $ \left[0, 2\pi\right]$ $\si{\radian}$. \\
 An example of generated wind series for $V_{10}=10 \ \si{\meter\per\second}$ with turbulence of $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$, height above ground of $h=150 
  \ \si{\meter}$, and for a time horizon of $T = 300 \ \si{\second}$ is reported in \autoref{fig:wind_generation}. As a cross-check of the results, the same figure reports also the expected mean (i.e. $V_{10}$) and two horizontal reference lines at $V_{10}\pm3\sigma_{V_{10}}$ which define the interval where the generated data are expected to be with more than the 99\% of probability. Furthermore, the PSD of the generated signal is computed and plotted alongside the one used in the generating procedure (\autoref{eq:wind_series}) in \autoref{fig:wind_generation_PSD} and it could be seen that the two are pretty similar. 
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation.eps}
-    \caption{Example of generated wind series with $V_{10}=10\si{\meter\per\second}$ and $\sigma_{V_{10}}=1\si{\meter\per\second}$ }
+    \caption{Example of generated wind series with $V_{10}=10 \ \ \si{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \ \si{\meter\per\second}$ }
     \label{fig:wind_generation}
 \end{figure}
 
@@ -80,8 +82,8 @@ The simplest mechanical model has a second order dynamic, as suggested by \cite{
     \frac{\theta}{\theta^*}=\frac{\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
     \label{eq:beta_TF}
 \end{equation}
-with \acrshort{zetap}$=0.7$ and \acrshort{omegap}$=2\pi \left[\si{\radian}\right]$ provided by the same reference.\\
-The maximum pitching rate is reported to be $\pm 9 \left[\si{\degree\per\second}\right]$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \left[\si{\degree\per\second}\right]$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \left[\si{\degree\per\second}\right]$ is placed after the actuation block.
+with \acrshort{zetap}$=0.7$ and \acrshort{omegap}$=2\pi \ \ \si{\radian}$ provided by the same reference.\\
+The maximum pitching rate is reported to be $\pm 9 \  \ \si{\degree\per\second}$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \ \ \si{\degree\per\second}$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \ \ \si{\degree\per\second}$ is placed after the actuation block.
 
 \subsection[Mechanical transmission]{Model of the mechanical transmission}
 \begin{figure}[htb]
@@ -132,7 +134,7 @@ This system of equations may be solved and finally the mechanical dynamic equati
 Where the apex indicates if the quantity is referred to the rotor or to the generator, while the subscript indicates the side of the transmission in which it is expressed.
 
 \subsection[Transmission damping]{Model of the transmission damping}
-Finding information on the mechanical damping of real turbines is not simple because this is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equations in \autoref{eq:damping_sys} may be set up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission,in steady-state conditions, while the latter is the torque balance:
+Finding information on the mechanical damping of real turbines is not simple because this is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equations in \autoref{eq:damping_sys} may be set up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, in steady-state conditions, while the latter is the torque balance:
 \begin{gather}
 \left\{
 \begin{aligned}
@@ -156,7 +158,7 @@ T_G^G = \eta n T_R^R \\
 B_{eq}^R= \frac{T_R^R}{\omega_R}(1 - \eta)= \frac{K_{opt}(\omega_R)^2}{\omega_R}(1 - \eta) = K_{opt}\omega_R(1 - \eta) \ \ \mesunt{\kilo\gram\square\meter\per\second}
 \label{eq:damping}
 \end{gather} 
-where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the unit of $\mesunt{\newton \meter \square\second }$.\\
+where the coefficient $K_{opt}$ is a coefficient that will be later introduced in \autoref{subsec:torque_reference}, and has the unit of $\si{\newton \meter \square\second }$.\\
 It could be noticed that, for a chosen value of efficiency $\eta$, then the damping in \autoref{eq:damping} depends on the rotational speed. Furthermore, it is also possible that the efficiency itself depends on the rotational speed, and so it is not possible to build a real map between these quantities with only the literature information at our disposal. To solve this problem, two assumptions are done. The first one is that the efficiency is not speed dependent and so only one value may be used as representative for all the operative conditions. In particular, the efficiency $\eta = 0.954$ is chosen, as proposed by \cite{Olimpo_Anaya‐Lara}. The second one is to consider the rated rotational speed. With these assumptions in mind, the damping becomes:
 \begin{equation}
   B_{eq}^R = K_{opt}\omega_R(1 - \eta) = 1.02\cdot10^7 1.014(1 - 0.954)=475.76 \cdot 10^3 \ \ \mesunt{\kilo\gram\square\meter\per\second}
@@ -178,7 +180,7 @@ In this frame the equations of the machine are:
   \omega_{me}\Lambda_{mg}=u_q+L_{s}i_d\omega_{me}+L_{s}\frac{di_q}{dt}+R_{s}i_q
   \label{eq:q_axis_eq}
 \end{gather}
-where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as thevoltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\si{\radian \per \second}$), \acrshort{Ls} $\si{\henry}$ is the inductance and \acrshort{Rs} $\si{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\si{\weber}$ is the flux linkage of the permanent magnets.\\
+where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\si{\radian \per \second}$), \acrshort{Ls} $\si{\henry}$ is the inductance and \acrshort{Rs} $\si{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\si{\weber}$ is the flux linkage of the permanent magnets.\\
 By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
   p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L_{s}\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R_{s}(i_d^2 + i_q^2)
@@ -201,7 +203,7 @@ The choice of this frame makes the system of equations describing the generator 
 \label{fig:PMSM}
 \end{figure}
 
-\autoref{fig:PMSM} represents the block diagram of q-axis current control of a \acrshort{PMSM}, coupled with also the mechanical equation. $R_{iq}$ is the controller, \acrshort{tauc} $\left[\si{\second}\right]$ is the time delay of the power electronic converter, $T_R \ \left[\si{\newton\meter}\right]$ is the torque imposed by the wind on the rotor.\\
+\autoref{fig:PMSM} represents the block diagram of q-axis current control of a \acrshort{PMSM}, coupled with also the mechanical equation. $R_{iq}$ is the controller, \acrshort{tauc} $\si{\second}$ is the time delay of the power electronic converter, $T_R \ \si{\newton\meter}$ is the torque imposed by the wind on the rotor.\\
 It could be seen that the aerodynamical torque $T_R$ enters as a disturb in the block diagram, and its source is not specified. In reality $T_R$ is affected by the \acrshort{WS}, the pitch angle, and the rotational speed $\Omega_G$, meaning that in principle the dependency of $T_R$ from $\Omega_G$ should have been introduced (as done in the aerodynamical block of \autoref{fig:d_plant_schema}). Unfortunately, this interaction is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved decoupling the aero and electrical domains observing that the fluid dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. 
 
  Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation.
@@ -239,13 +241,21 @@ The friction has been considered $ 0 \, \si{\kilo\gram\square\meter\per\second}$
  \end{gather}
  In more detail, the $\uptau_c$ is a delay introduced by the analog PWM modulator controlling the electrical machine. Assuming that the converter samples input signals and acts its switches synchronously, then the propagation time from the input to the output of the command signal is bounded between two extreme conditions. On one hand, if the change of the input happens at a time instant slightly before the sampling one it will be immediately detected and the corresponding output value will be provided as output almost immediately, while on the other hand, when the change happens slightly after the sampling instant, then the output will be propagated after an entire cycle. To average these two situations, a propagation delay equal to half of the converter period may be assumed. In case of a digital converter, the analog to digital and digital to analog conversions have to be taken into account and so the delay increased, usually of 1.5 the switching delay.
  
- \subsubsection[Power curve with generator]{Recalculation of the static power curve including the generator}\label{subsec:genertaor_power_curve}
+ \subsubsection{Static power curve including the generator}\label{subsec:genertaor_power_curve}
  Now that the generator's characteristics have been introduced, it is possible to add to the static power curve presented in \autoref{subsec:static_power_curve} the expected $P_{GE}$ taking into account the electrical losses $P_{joule}$. These curves can be found starting from \autoref{eq:gen_power_balance3} and considering that the time derivative are zero. The steady state current and voltage can be found thanks to \autoref{eq:q_axis_eq}. The powers as function of the \acrshort{WS} are reported in \autoref{fig:fig_static_electro_power}, with or without the damping.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.65\textwidth]{images/vectorial/fig_static_electro_power.eps}
-\caption{The blue line is the power curve of the mechanical power extracted from the resource. The solid yellow and orange lines are the electrical power outputs of the generator with and without damping respectively. The dashed yellow and orange lines are the power lost due to joule effect with and without damping respectively. }
+\caption{The blue line is the power curve of the mechanical power extracted from the resource. The purple line is the mechanical input power to the generator. The solid yellow and orange lines are the electrical power outputs of the generator with and without damping respectively. The dashed yellow and orange lines are the power lost due to joule effect with and without damping respectively. }
   \label{fig:fig_static_electro_power}
+\end{figure}
+
+A better visualization of the power conversion from the resource up to the generator output can be better visualized in \autoref{fig:d_sankey}. The representation considers a static condition at rated \acrshort{WS}, so the power lost during the transitory effects (i.e. stored/provided by the inertia during acceleration and deceleration of the rotor, and lost in the indiction of the generator) are not considered, and so their indications is written in italic. 
+\begin{figure}[htb]
+  \centering
+  \input{d_sankey.tex}
+  \caption{Sankey diagram of the power flow at the rated WS. The italic text are the powers lost during the transitory phases, and are not present in steady state.}
+  \label{fig:d_sankey}
 \end{figure}
 
  
