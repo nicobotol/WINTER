@@ -80,7 +80,7 @@ yl_1 = yline(lambda_GE_mean, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibi
 yl_1.LabelHorizontalAlignment = 'left';
 yl_2 = yline(lambda_GE_mean_no_B, '--', 'Mean', 'LineWidth',line_width, 'HandleVisibility', 'off', 'Color',colors_vect(2,:), 'FontSize', font_size);
 yl_2.LabelHorizontalAlignment = 'left';
-yl_3 = yline(lambda_opt, '--', 'Rotor','LineWidth',line_width, 'HandleVisibility', 'off','Color',colors_vect(5,:), 'FontSize', font_size);
+yl_3 = yline(lambda_opt, '--', 'Rotor','LineWidth',line_width, 'DisplayName', 'Rotor','Color',colors_vect(5,:), 'FontSize', font_size);
 yl_3.LabelHorizontalAlignment = 'left';
 title('Tip speed ratio')
 xlabel('$V_0$ [m/s]')

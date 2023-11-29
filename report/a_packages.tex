@@ -62,7 +62,26 @@
 \newcolumntype{M}{>{\begin{varwidth}{4cm}}c<{\end{varwidth}}} %M is for Maximal column
 \usepackage{glossary-mcols}
 \usepackage[section]{placeins}
-\usepackage{sankey}
+\usepackage{sankey} % for sankey diagrams
+
+%                  _              _   _ _   _           
+%    ___ ___ _ __ | |_ ___ _ __  | |_(_) |_| | ___  ___ 
+%   / __/ _ \ '_ \| __/ _ \ '__| | __| | __| |/ _ \/ __|
+%  | (_|  __/ | | | ||  __/ |    | |_| | |_| |  __/\__ \
+%   \___\___|_| |_|\__\___|_|     \__|_|\__|_|\___||___/
+                                                      
+% \usepackage{sectsty} % for section formatting 
+% \sectionfont{\centering} % for section formatting
+
+%   _   _ _   _                             _             
+%  | |_(_) |_| | ___   ___ _ __   __ _  ___(_)_ __   __ _ 
+%  | __| | __| |/ _ \ / __| '_ \ / _` |/ __| | '_ \ / _` |
+%  | |_| | |_| |  __/ \__ \ |_) | (_| | (__| | | | | (_| |
+%   \__|_|\__|_|\___| |___/ .__/ \__,_|\___|_|_| |_|\__, |
+%                         |_|                       |___/ 
+\usepackage{titlesec} % for section formatting
+\titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{50pt plus 2pt minus 2pt}% for section formatting
+
 % \usepackage{syntonly} % execute only the syntax of the document
 % \syntaxonly % remove before compiling the final version
 

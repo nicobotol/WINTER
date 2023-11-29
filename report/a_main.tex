@@ -1,14 +1,16 @@
 % main
-\documentclass[11pt, a4paper]{article}
+\documentclass[11pt, a4paper, twoside]{article}
 \input{a_packages.tex}
 \input{b_glossary.tex}
 
 \begin{document}
 % chapters
 \input{b_front_page.tex}
-\newpage
+% \newpage
+\cleardoublepage
 \input{b_abstract.tex}
-\newpage
+% \newpage
+\cleardoublepage
 \tableofcontents
 \newpage
 \setglossarystyle{listgroup} % list the acronyms in alphabetic order
@@ -17,21 +19,27 @@
   \printnoidxglossaries
 \end{multicols}
 \input{b_introduction.tex}
-\newpage
+\cleardoublepage
+% \newpage
 \input{c_WT_characteristics.tex}
 \input{c_modelling_of_subsystem.tex}
 \input{c_control_objective.tex}
-\newpage
+% \newpage
+\cleardoublepage
 \input{c_10MW_OWT.tex}
-\newpage
+% \newpage
+\cleardoublepage
 \input{c_basic_model_model.tex}
-\newpage
+% \newpage
+\cleardoublepage
 \input{c_basic_model_control.tex}
-\newpage
+% \newpage
+\cleardoublepage
 \input{c_basic_model_simulation.tex}
 % \newpage
 % \input{c_other_controls.tex}
-\newpage
+\cleardoublepage
+% \newpage
 \input{c_conclusions.tex}
 
 % \input{c_active_power_control.tex}
@@ -39,12 +47,16 @@
 % \input{c_DTU_controller_implementation}
 
 % bibliography
+\cleardoublepage
 \clearpage
 \printbibliography
 
 \clearpage
 \appendix
 \input{e_pid_tuning.tex}
+\cleardoublepage
 \input{e_bem_algorithm.tex}
+\cleardoublepage
+\input{e_IMM_theo.tex}
 
 \end{document}

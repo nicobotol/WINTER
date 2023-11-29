@@ -85,7 +85,7 @@
     \def\hshift{6em}
 
     \sankeyadvance[energy]{Wind}{1.2*\hshift}
-    \abovelabel{Wind}{\textbf{Wind} $\left(\mathbf{P_{W}}\right)$}
+    \abovelabel{Wind}{\textbf{Wind}}
     \energylabel{Wind}
     
     \sankeyfork{Wind}{\PR/P_r, \PNE/P_r_loss}  % fork of the powers
@@ -95,13 +95,13 @@
     \energylabel{P_r}                               % advanced power label
     
     \sankeyfork{P_r}{\PG/P_g, \PDAMP/P_damp}  % fork of the powers
-    \turnandstop{P_damp}{Damping loss \\ + \\ \textit{Inertia}}              % power loss name and text
+    \turnandstop{P_damp}{Damping loss \\ + \\ \textit{Stored}}              % power loss name and text
     \sankeyadvance[energy]{P_g}{1.8*\hshift}        % label of the advances power
     \abovelabel{P_g}{\textbf{Mech.} \\ \textbf{Generator} $\left(\mathbf{P_{G}}\right)$} % advanced power text
     \energylabel{P_g}                               % advanced power label
     
     \sankeyfork{P_g}{\PGE/P_ge, \PJOULE/P_joule}  % fork of the powers
-    \turnandstop{P_joule}{Joule loss \\ + \\ \textit{Induction}}           % power loss name and text
+    \turnandstop{P_joule}{Joule loss \\ + \\ \textit{Stored}}           % power loss name and text
     \sankeyadvance[energy]{P_ge}{1.8*\hshift}        % label of the advances power
     \abovelabel{P_ge}{\textbf{Electrical} \\ \textbf{output} $\left(\mathbf{P_{GE}}\right)$} % advanced power text
     \energylabel{P_ge}                               % advanced power label

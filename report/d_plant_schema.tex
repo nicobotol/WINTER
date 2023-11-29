@@ -36,8 +36,8 @@ dot/.default = 4pt % size of the circle diameter
   \node [style=block, align=center] (3) at (3, -2.5) {Mechanical \\ transmission};
   \node [style=block, align=center] (4) at (6, -2.5) {Pitch \\ controller};
   \node [style=block, align=center] (5) at (9, -2.5) {Pitch \\ actuator};
-  \node [style=block, align=center] (6) at (3, -4.25) {Torque \\ controller};
-  \node [style=block, align=center] (24) at (6, -4.25) {$\frac{2T_G^*}{3p\Lambda_{mg}}$};
+  \node [style=block, align=center] (6) at (3, -4.25) {Power \\ controller};
+  \node [style=block, align=center] (24) at (6, -4.25) {Current \\ controller};
   \node [style=block] (7) at (9, -4.25) {Generator};
   \node [style=block, align=center] (8) at (12.5, -4.25) {Power \\electronics};
   \node [style=block] (9) at (15, -4.25) {Grid};
@@ -72,7 +72,7 @@ dot/.default = 4pt % size of the circle diameter
   \draw [->] (25) |- node {} (6.160);
   \draw [->] (21) |- node {} (6.180);
   \draw [->] (6) -- node {$T_G^*$} (24);
-  \draw [->] (24) -- node {$I_q^*$ } (7);
+  \draw [->] (24) -- node {$U_q^*$ } (7);
   \draw [->] (7) -> node[pos=0.65] {$P_{GE}$} (8);
   % \draw [-] (18) |- node {} (19);
   \draw [-] (7) -- node[pos=0.5] {$P_{G}$} (20);

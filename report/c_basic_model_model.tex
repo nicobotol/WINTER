@@ -1,8 +1,8 @@
 \newpage
+\clearpage
 \section{Model implementation}\label{sec:c_basic_model_model}
-\textcolor{red}{Questa sezione potrebbe non cominciare a pagina nuova, lo farò fare in seguito}
-In this section of the work, the models adopted in the different sub-components are described, in terms of motivation and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, the aerodynamic, the transmission, the rotor mechanical balance, and finally the generator.\\
-\autoref{fig:d_plant_schema} gives an overview of the interconnection between the different implemented sub-components that will be discussed more into detail in this section of the work.
+In this section of the work, the models adopted in the different sub-components are described, in terms of scope and mathematical expressions. The order of presentation follows the energy conversion chain, starting from the wind resource, the pitch actuation mechanism, the aerodynamic, the transmission, the rotor mechanical balance, and finally the electrical generator.\\
+\autoref{fig:d_plant_schema} gives an overview of the interconnection between the different implemented sub-components that will be discussed more in detail in this section of the work.
 \begin{figure}[htb]
   \centering
   \input{d_plant_schema.tex}
@@ -10,10 +10,10 @@ In this section of the work, the models adopted in the different sub-components 
   \label{fig:d_plant_schema}
 \end{figure}
 
-\subsection{Limitation of the scope}
-\textcolor{blue}{Limitation of the scope moved here} Before going on with the modelling of the different sub-components, it is necessary to introduce the assumptions that have been done in order to simplify the analysis.
+\subsection{Assumptions}
+Before going on with the modelling of the different sub-components, it is necessary to introduce the assumptions that have been done in order to simplify the analysis.
 \begin{itemize}
-  \item \textcolor{blue}{In this thesis the control is mainly focused is the power extraction, meaning that the aim is the conversion of most of the available power, from the resource or from the generator, according to different controls formulation, up to the rated power.} In real turbines other kinds of controller run alongside the power one, such as one for limiting the aerodynamic loads, the vibrations, contrasting the wave effect (in case of offshore plants) and providing ancillary services to the grid. The literature about controllers applied to wind turbines is very wide. In this thesis the main followed references are \cite{Olimpo_Anaya‐Lara}, \cite{NREL_5MW_reference} and \cite{DTU_Wind_Energy_E_0028}. 
+  \item In this thesis the control is mainly focused on the power extraction, meaning that the aim is the conversion of the largest possible share of available wind power into mechanical or electrical power (according to different controls formulation), up to the rated power. In real turbines other kinds of controller run alongside the power one, such as the ones for limiting the aerodynamic loads and the vibrations, for contrasting the wave effect (in case of offshore plants) and providing ancillary services to the grid. The literature about controllers applied to wind turbines is very wide. In this thesis the main followed references are \cite{Olimpo_Anaya‐Lara}, \cite{NREL_5MW_reference} and \cite{DTU_Wind_Energy_E_0028}. 
   \item The aerodynamic interaction between the incoming wind and the blades has been modelled using a formulation relying on static aerodynamic parameters even with variable wind speeds.
   \item The blades have been considered as rigid, and deployed exactly on the rotor plane, so neither deflection nor vibration related issues have been taken into account.
   \item No pitching at low wind speed has been considered. The change of the blade pitch angle is used only for the power limitation and not for the vibration mitigation at low WS.
@@ -43,7 +43,7 @@ An example of generated wind series for $V_{10}=10 \ \si{\meter\per\second}$ wit
 \begin{figure}[htb]
     \centering
     \includegraphics[width=0.6\textwidth]{images/vectorial/2023_05_3_20_12_23wind_generation.eps}
-    \caption{Example of generated wind series with $V_{10}=10 \ \ \si{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \ \si{\meter\per\second}$ }
+    \caption{Example of generated wind series with $V_{10}=10 \ \si{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$ }
     \label{fig:wind_generation}
 \end{figure}
 
@@ -55,7 +55,7 @@ An example of generated wind series for $V_{10}=10 \ \si{\meter\per\second}$ wit
 \end{figure}
 
 \subsection[Aerodynamic]{Model of the aerodynamic response}
-The inputs of this logical block are the WS, the actual rotational speed, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor (see \autoref{fig:d_aerodynamic_block}). 
+The inputs of this logical block are the WS, the actual rotational speed of the rotor, and the pitch angle while the outputs are the torque and power that the wind produces while spinning the rotor (see \autoref{fig:d_aerodynamic_block}). 
 \begin{figure}
   \centering
   \input{d_aerodynamic_block.tex}
@@ -65,7 +65,7 @@ The inputs of this logical block are the WS, the actual rotational speed, and th
 
 In the block the actual \acrshort{TSR} is firstly computed, then the power coefficient is extracted from the lookup table obtained from the \autoref{subsec:lookup_cp} and finally the rotor torque is obtained by dividing the rotor power (expressed as in \autoref{eq:power}) by the rotor speed:
 \begin{equation}
-    T_R = \frac{P_R}{\omega_R} \ \ \left[\si{\newton\meter}\right]
+    T_R = \frac{P_R}{\omega_R}\ \left[\si{\newton\meter}\right]
 \end{equation}
 
 \subsection[Pitch actuation]{Model of the pitch actuation}
@@ -82,8 +82,8 @@ The simplest mechanical model has a second order dynamic, as suggested by \cite{
     \frac{\theta}{\theta^*}=\frac{\omega_p^2}{s^2+2\zeta_p\omega_p s+\omega_p^2}
     \label{eq:beta_TF}
 \end{equation}
-with \acrshort{zetap}$=0.7$ and \acrshort{omegap}$=2\pi \ \ \si{\radian}$ provided by the same reference.\\
-The maximum pitching rate is reported to be $\pm 9 \  \ \si{\degree\per\second}$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10 \ \ \si{\degree\per\second}$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10 \ \ \si{\degree\per\second}$ is placed after the actuation block.
+with \acrshort{zetap}$=0.7$ and \acrshort{omegap}$=2\pi\ \si{\radian}$ provided by the same reference.\\
+The maximum pitching rate is reported to be $\pm 9 \ \si{\degree\per\second}$ in \cite{Olimpo_Anaya‐Lara}, and $\pm 10\ \si{\degree\per\second}$ in \cite{Aerodynamics_of_wind_turbines} and \cite{DTU_Wind_Energy_Report-I-0092}. In this simulation, a rate limiter block with threshold at $\pm 10\ \si{\degree\per\second}$ is placed after the actuation block.
 
 \subsection[Mechanical transmission]{Model of the mechanical transmission}
 \begin{figure}[htb]
@@ -92,7 +92,7 @@ The maximum pitching rate is reported to be $\pm 9 \  \ \si{\degree\per\second}$
   \caption{Logical block representing the mechanical transmission}
   \label{fig:d_mechanical_transmission_block}
 \end{figure}
-In this simple simulation, the transmission ratio is unitary, and so the relationship between therotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
+In this simple simulation, the transmission ratio is unitary, and so the relationship between the rotational speed of the rotor $\omega_{R}$ and the generator $\omega_{G}$ is:
 \begin{equation}
     n = \frac{\omega_{R}}{\omega_{G}} = 1
     \label{eq:transmission_ratio}
@@ -105,7 +105,7 @@ In this configuration the turbine is assumed to be direct drive, but a general n
   \begin{subfigure}{0.6\columnwidth}
     \centering
     \includegraphics[width=\columnwidth]{images/transmission_schema.eps}
-    \caption{Torque convention schema}
+    \caption{Torque convention scheme}
     \label{fig:transmission_convention}
   \end{subfigure}
   
@@ -131,7 +131,7 @@ This system of equations may be solved and finally the mechanical dynamic equati
     J_{eq} \dot{\omega}_R = T_R^R - T_R^G - B_{eq}\omega_R
     \label{eq:mech_eq}
 \end{gather}
-Where the apex indicates if the quantity is referred to the rotor or to the generator, while the subscript indicates the side of the transmission in which it is expressed.
+Where the apex indicates if the quantity is referred to the WT rotor (R) or to the generator (G), while the subscript indicates the side of the transmission in which it is expressed.
 
 \subsection[Transmission damping]{Model of the transmission damping}
 Finding information on the mechanical damping of real turbines is not simple because this is a parameter difficult to be identified via simulations only, and so real measurements would be required. Since a value of B is necessary to make the simulation more realistic (at least conceptually) then the system of equations in \autoref{eq:damping_sys} may be set up to try to recover it. The former equation is the power balance between rotor and generator side of the transmission, in steady-state conditions, while the latter is the torque balance:
@@ -180,7 +180,7 @@ In this frame the equations of the machine are:
   \omega_{me}\Lambda_{mg}=u_q+L_{s}i_d\omega_{me}+L_{s}\frac{di_q}{dt}+R_{s}i_q
   \label{eq:q_axis_eq}
 \end{gather}
-where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respectively quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed $\si{\radian \per \second}$), \acrshort{Ls} $\si{\henry}$ is the inductance and \acrshort{Rs} $\si{\ohm}$ the resistance of the stator, \acrshort{Lambdamg} $\si{\weber}$ is the flux linkage of the permanent magnets.\\
+where \acrshort{ud} and \acrshort{uq} are the voltage of the d- and q-axis expressed in the dq frame (i.e. the peak value of the respective quantities in the abc frame), \acrshort{id} and \acrshort{iq} are the current in the dq frame (transformed in the same way as the voltage), \acrshort{omegame} is the electro-mechanical speed of the rotor ($\omega_{me}=p\omega_G$, with \acrshort{poles} the number of pole pairs and $\omega_G$ the mechanical rotational speed), \acrshort{Ls} is the inductance and \acrshort{Rs} the resistance of the stator, \acrshort{Lambdamg} is the flux linkage of the permanent magnets.\\
 By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis_eq} by $i_q$, and then summing them together is it possible to obtain the following power balance:
 \begin{equation}
   p\omega\Lambda_{mg}i_q=u_di_d + u_qi_q+ L_{s}\left(i_d\frac{di_d}{dt} + i_q\frac{di_q}{dt}\right) + R_{s}(i_d^2 + i_q^2)
@@ -188,7 +188,7 @@ By multiplying both sides of \autoref{eq:d_axis_eq} by $i_d$, \autoref{eq:q_axis
 \end{equation}
 Since in isotropic machines the relationship between a given input torque and the corresponding q-axis current is univocal (i.e. the d-axis does not play any role in the conversion of the torque) it is convenient to keep the total current as low as possible in order to minimize the joule losses. This is achieved by working in the so called \acrfull{MTPA} regime, in which the current on the d-axis is null. For this reason, knowing that the quadrature axis controller ensures $i_d=0 \, \si{\ampere}$ one can rewrite:
 \begin{equation}
-  \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L_{s} i_q\frac{di_q}{dt}}_{Inductance} + \underbrace{R_{s}i_q^2}_{Joule}
+  \underbrace{p\omega\Lambda_{mg}i_q}_{Mech. IN} = \underbrace{u_qi_q}_{Elec. OUT}+ \underbrace{L_{s} i_q\frac{di_q}{dt}}_{Stored} + \underbrace{R_{s}i_q^2}_{Joule}
   \label{eq:gen_power_balance2}
 \end{equation}
 Since the power is not invariant in the transformation from the abc frame to the dq but \acrshort{Pdq}$= \frac{3}{2}$\acrshort{Pabc}, \autoref{eq:gen_power_balance2} has to be rewritten as:
@@ -203,10 +203,11 @@ The choice of this frame makes the system of equations describing the generator 
 \label{fig:PMSM}
 \end{figure}
 
-\autoref{fig:PMSM} represents the block diagram of q-axis current control of a \acrshort{PMSM}, coupled with also the mechanical equation. $R_{iq}$ is the controller, \acrshort{tauc} $\si{\second}$ is the time delay of the power electronic converter, $T_R \ \si{\newton\meter}$ is the torque imposed by the wind on the rotor.\\
+\autoref{fig:PMSM} represents the block diagram of q-axis current control of a \acrshort{PMSM}, coupled with also the mechanical equation. $R_{iq}$ is the controller, \acrshort{tauc} (in $\si{\second}$) is the time delay introduced by the power electronic converter, $T_R$ is the torque imposed by the wind on the rotor.\\
 It could be seen that the aerodynamical torque $T_R$ enters as a disturb in the block diagram, and its source is not specified. In reality $T_R$ is affected by the \acrshort{WS}, the pitch angle, and the rotational speed $\Omega_G$, meaning that in principle the dependency of $T_R$ from $\Omega_G$ should have been introduced (as done in the aerodynamical block of \autoref{fig:d_plant_schema}). Unfortunately, this interaction is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved decoupling the aero and electrical domains observing that the fluid dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. 
 
- Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation.
+ Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation. These values refer to a PMSM generator with rated power of 10 MW, similar mechanical characteristics (e.g. rotor diameter, rated WS, hub height), and direct driven. All that considered, even tough the chosen model is not the one of a real machine, it should have parameters reasonably close to one of them.  
+
 \begin{table}[htb]
     \caption{Parameters for the \acrlong{PMSM} generator presented by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}}
     \centering
@@ -254,7 +255,7 @@ A better visualization of the power conversion from the resource up to the gener
 \begin{figure}[htb]
   \centering
   \input{d_sankey.tex}
-  \caption{Sankey diagram of the power flow at the rated WS. The italic text are the powers lost during the transitory phases, and are not present in steady state.}
+  \caption{Sankey diagram of the power flow at the rated WS, with the power expressed in MW. The text in italic are the powers exchanged during the transitory phases (i.e. in kinetic energy of the rotor and in the inductors of the generator), and are not present in steady state.}
   \label{fig:d_sankey}
 \end{figure}
 
@@ -266,4 +267,4 @@ The proposed filter's transfer function is:
     G = \frac{1}{1+\frac{s}{\alpha_{\beta}}} =  \frac{1}{1+\frac{s}{2\pi0.4}}
     \label{eq:filter_pitch}
 \end{equation}
-with the choice of $\alpha_{\beta}=0.4 \left[\si{\hertz}\right] = 2\pi0.4 \left[\si{\radian\per\second}\right]$. 
+with the choice of $\alpha_{\beta}=0.4 \si{\hertz} = 2\pi0.4 \si{\radian\per\second}$. 

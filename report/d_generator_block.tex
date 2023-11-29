@@ -1,4 +1,4 @@
-\tikzstyle{block} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em, align=center]
 \tikzstyle{sum} = [draw, fill=white, circle, node distance=2.0cm]
 \tikzstyle{input} = [coordinate]
 \tikzstyle{output} = [coordinate]
@@ -36,22 +36,23 @@ dot/.default = 4pt % size of the circle diameter
   \node [style=input] (2) at (-0.75, -1.5) {};
   \node [style=input] (6) at (0.75, 0.65) {};
   \node [style=input] (9) at (0.75, -0.65) {};
-  \node [style=input] (10) at (5.75, 0) {};
-  \node [style=input] (11) at (8.25, -1.5) {};
-  \node [style=input] (12) at (9.25, -1.5) {};
+  \node [style=input] (10) at (4.75, 0) {};
+  \node [style=input] (11) at (11.25, -1.5) {};
+  \node [style=input] (12) at (12.25, -1.5) {};
 
-  \node [style=block, minimum size=24mm] (3) at (2, 0) {Controller};
-  \node [style=block, minimum size=24mm] (4) at (7, -0.75) {Generator};
+  \node [style=block, minimum size=24mm, align=center] (3) at (2, 0) {Power \\ controller};
+  \node [style=block, minimum size=24mm, align=center] (4) at (6, -0.75) {Current \\ controller};
+  \node [style=block, minimum size=24mm] (13) at (10, -0.75) {Generator};
 
-  \node [dot=1pt] (5) at (8.5, 2) {};
-  \node [dot=1pt] (7) at (5.75, -1.5) {};
+  \node [dot=1pt] (5) at (12, 2) {};
+  \node [dot=1pt] (7) at (4.75, -1.5) {};
   \node [dot=1pt] (8) at (0, -1.5) {};
 
-  \draw [-] (4) -| node {} (5);
+  \draw [-] (13) -| node {} (5);
   \draw [-] (5) -| node {} (1);
   \draw [arrows = {-Stealth[scale=1.5]}] (1) -- node {$P_G$} (6);
-
   \draw [arrows = {-Stealth[scale=1.5]}] (3) -- node {$T^{*}_{G}$} (10);
+  \draw [arrows = {-Stealth[scale=1.5]}] (4) -- node {$U^{*}_{q}$} (13);
 
   \draw [-] (2) -- node {$\omega_G$} (8);
   \draw [arrows = {-Stealth[scale=1.5]}] (8) -- node {} (7);
