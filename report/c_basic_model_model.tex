@@ -19,7 +19,8 @@ Before going on with the modelling of the different sub-components, it is necess
   \item No pitching at low wind speed has been considered. The change of the blade pitch angle is used only for the power limitation and not for the vibration mitigation at low WS.
   \item The yaw control (i.e. the one ensuring the orientation of the rotor plane with respect to the wind speed direction) has not been considered because it acts with a dynamic slower than the ones of the pitching mechanism and generator. Furthermore, this kind of control is usually relevant during the study of wind farms made by more turbines rather than when the focus is on the operating condition of a single one. 
   \item The pitch actuators and the power converter have not been explicitly modeled, but their presence has been included in the simulation by means of a time delay between the imposed control signal and the one applied to the system. This assumption is valid because the focus of the thesis is on the generation of the reference signals that have to be tracked by the different subsystems rather then on the real actuators performing the control actions.
-  \item Even tough the DTU 10 MW is an offshore turbine, the hydrodynamic loads and  the type of foundation or floating platform have not been considered. Furthermore, the presence of the tower shadowing the wind flow in the stream has not been included.
+  \item Even though the DTU 10 MW is an offshore turbine, the hydrodynamic loads and  the type of foundation or floating platform have not been considered. Furthermore, the presence of the tower shadowing the wind flow in the stream has not been included.
+  \item An isotropic PMSM generator has been chosen and only losses due to Joule effect and stored energy in the stator inductance are considered. Neither losses in the iron nor saturations effects have been taken into account.
   \item Since the grid integration of the turbine is not considered in the thesis, the grid interface has not been studied.    
 \end{itemize}
 
@@ -206,7 +207,7 @@ The choice of this frame makes the system of equations describing the generator 
 \autoref{fig:PMSM} represents the block diagram of q-axis current control of a \acrshort{PMSM}, coupled with also the mechanical equation. $R_{iq}$ is the controller, \acrshort{tauc} (in $\si{\second}$) is the time delay introduced by the power electronic converter, $T_R$ is the torque imposed by the wind on the rotor.\\
 It could be seen that the aerodynamical torque $T_R$ enters as a disturb in the block diagram, and its source is not specified. In reality $T_R$ is affected by the \acrshort{WS}, the pitch angle, and the rotational speed $\Omega_G$, meaning that in principle the dependency of $T_R$ from $\Omega_G$ should have been introduced (as done in the aerodynamical block of \autoref{fig:d_plant_schema}). Unfortunately, this interaction is not linear, implying that it is not possible to find a transfer function between them, and furthermore (and more important from the theoretical point of view) that the Laplace domain techniques are not valid any more. This problem may be solved decoupling the aero and electrical domains observing that the fluid dynamic evolves slowly compared to the electrical one, and so the latter sees the former as an almost-constant disturb. 
 
- Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation. These values refer to a PMSM generator with rated power of 10 MW, similar mechanical characteristics (e.g. rotor diameter, rated WS, hub height), and direct driven. All that considered, even tough the chosen model is not the one of a real machine, it should have parameters reasonably close to one of them.  
+ Obtaining the electrical parameters of commercial generators is not an easy task because they are protected by the manufacturers. For this reason, the values used by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model} and reported in \autoref{tab:generator_parameter} are employed in this simulation. These values refer to a PMSM generator with rated power of 10 MW, similar mechanical characteristics (e.g. rotor diameter, rated WS, hub height), and direct driven. All that considered, even though the chosen model is not the one of a real machine, it should have parameters reasonably close to one of them.  
 
 \begin{table}[htb]
     \caption{Parameters for the \acrlong{PMSM} generator presented by \cite{10-MW_Direct-Drive_PMSG-Based_Wind_Energy_Conversion_System_Model}}
@@ -251,7 +252,7 @@ The friction has been considered $ 0 \, \si{\kilo\gram\square\meter\per\second}$
   \label{fig:fig_static_electro_power}
 \end{figure}
 
-A better visualization of the power conversion from the resource up to the generator output can be better visualized in \autoref{fig:d_sankey}. The representation considers a static condition at rated \acrshort{WS}, so the power lost during the transitory effects (i.e. stored/provided by the inertia during acceleration and deceleration of the rotor, and lost in the indiction of the generator) are not considered, and so their indications is written in italic. 
+A better visualization of the power conversion from the resource up to the generator output can be visualized in \autoref{fig:d_sankey}. The representation considers a static condition at rated \acrshort{WS}, so the power lost during the transitory effects (i.e. stored/provided by the inertia during acceleration and deceleration of the rotor, or in the induction of the generator) are not considered, and so their labels are written in italic. 
 \begin{figure}[htb]
   \centering
   \input{d_sankey.tex}
@@ -267,4 +268,4 @@ The proposed filter's transfer function is:
     G = \frac{1}{1+\frac{s}{\alpha_{\beta}}} =  \frac{1}{1+\frac{s}{2\pi0.4}}
     \label{eq:filter_pitch}
 \end{equation}
-with the choice of $\alpha_{\beta}=0.4 \si{\hertz} = 2\pi0.4 \si{\radian\per\second}$. 
+with the choice of $\alpha_{\beta}=0.4 \ \si{\hertz} = 2\pi0.4 \ \si{\radian\per\second}$. 

@@ -1,13 +1,13 @@
 
 \subsection{Description of the most important subsystems} \label{subsec:c_modelling_of_subsystem}
-A general schematic of a WT energy conversion chain is reported in \autoref{fig:fig_drivetrain} (source \cite{Olimpo_Anaya‐Lara}). 
+A general schematic of a WT energy conversion chain is reported in \autoref{fig:fig_drivetrain} \cite{Olimpo_Anaya‐Lara}. 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.5\textwidth]{images/fig_drivetrain.jpg}
   \caption{General structure of a wind turbine drive train \cite{Olimpo_Anaya‐Lara}}
   \label{fig:fig_drivetrain}
 \end{figure}
-The incoming wind flow makes the blades rotate at a low rotational speed (around 10 $\left[\text{rpm}\right]$ to give an order of magnitude). This rotation is then transmitted to the generator with or without the use of a step up gearbox, according to the requirement of the electrical machine. Finally, a power electronic converter conditions the power of the generator both controlling the torque/speed of the mechanical side and also ensuring the electrical compatibility of the waveforms at the point of connection. Again, the function and structure of this component depends on the employed generator type.\\
+The incoming wind flow makes the blades rotate at a low rotational speed (around 10 rpm to give an order of magnitude). This rotation is then transmitted to the generator with or without the use of a step up gearbox, according to the requirement of the electrical machine. Finally, a power electronic converter conditions the power of the generator both controlling the torque/speed of the mechanical side and also ensuring the electrical compatibility of the waveforms at the point of connection. Again, the function and structure of this component depends on the employed generator type.\\
 Conceptually on top of the physical components there are multiple hierarchical levels of control, that may have different objectives. The highest level supervises operator commands, faults, extreme events, startup and shutdown, possibly also coordinating with other turbines in the farm. Then a lower level is primary responsible of keeping the rotational speed within limits, and secondly reducing the aerodynamic loads and structural vibrations, and provide ancillary services to the grid.  The two most important controllers for the sake of this thesis are the one regulating the inclination of the blades (called pitch) and the electrical machine.\\
 In the following subsections the most important subsystems will be described in order to provide some information about their structures and functionalities. These \textit{subsystems} are not only seen from a physical point of view but also as functional blocks interconnected to provide the turbine its full capabilities.
 
@@ -66,10 +66,10 @@ In the market it is not clear which of the two solutions will be the dominant, s
     \input{d_table_review_transmission}
 \end{table}
 
-It is possible to notice that Siemens-Gamesa and General Electric use direct drive concepts, while Vestas still prefers a geared solution even tough with the same kind of electrical machine.
+It is possible to notice that Siemens-Gamesa and General Electric use direct drive concepts, while Vestas still prefers a geared solution even though with the same kind of electrical machine.
 
 \subsubsection{Electrical generator}
-The electrical generator is one of the most important components since it has the function of converting the incoming mechanical energy into electrical one. Since the market offers a lot of different types then the choice of the most suitable for an application is a key point in order to maximize the efficiency, reducing the \acrfull{OeM} and ultimately the cost of energy \cite{Olimpo_Anaya‐Lara}. According to the same source, some of the requirements from the electrical machine are high efficiency, reliability, cost effectiveness, reduced dimensions and weights, ability to operate in a wide range of torques and speeds. \\
+The electrical generator is one of the most important components because it has the function of converting the incoming mechanical energy into electrical one. Since the market offers a lot of different types then the choice of the most suitable for an application is a key point in order to maximize the efficiency, reducing the \acrfull{OeM} and ultimately the cost of energy \cite{Olimpo_Anaya‐Lara}. According to the same source, some of the requirements from the electrical machine are high efficiency, reliability, cost effectiveness, reduced dimensions and weights, ability to operate in a wide range of torques and speeds. \\
 The four most important types of electrical generators employed are the \acrfull{SCIG}, the \acrfull{DFIG}, the \acrfull{WRSM} and the \acrfull{PMSM}.
 \begin{itemize}
 \item The \acrshort{SCIG} has a proven technology and so it is robust and its mass production is cost effective. Unfortunately it requires a fixed shaft rotational speed, which limits its operation regime. Nowadays this drawback reduces its popularity, and in fact none of the large scale WTs reported in \autoref{tab:transmission_review} uses it.

@@ -101,7 +101,7 @@ The tip speed ratio can be introduced:
 In the case described in \autoref{subsec:below_rotor} the choice of the reference values of TSR and pitch angle to be used below rated WS was based only on aerodynamical considerations, with the aim of maximizing the power extracted from the resource. In this case the same could not be done, and in principle it is not ensured that the TSR and the pitch are univocally identified. This has also the implication that the $K_{opt}$ used in the synthesis of the generator reference torque may be not univocally identified, and so the approach followed in \autoref{eq:T_G2} may be no longer valid. \\
 To study the problem, a numerical method is employed. For a reasonably fine sampling of velocities in the considered range, the inverse of the power function has been minimized (i.e. equivalent to maximizing the power itself) with respect to the pitch angle and the TSR. The results are shown in \autoref{fig:parameters_for_below_rated}, alongside the corresponding counterpart found with the policy based on the rotor power maximization. The study has been repeated twice, considering or excluding the transmission damping. In fact, as could be seen in \autoref{eq:P_G_out_eq}, when the damping is not included in the picture, the output power is the input rotor power minus the joule loss (since in that case $T_R=T_G$).
 
-\begin{figure}[htb]
+\begin{figure}[!htbp]
   \begin{subfigure}{0.5\textwidth}
     \centering
     \includegraphics[width=\textwidth]{images/vectorial/2023_11_29_17_33_45fig_lambda_GE.eps}
@@ -178,7 +178,7 @@ Above rated WS, the definition of the new pitch angle map follows the same appro
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{images/vectorial/fig_new_pitch_map.eps}
-  \caption{Power and pitch angle comparison between the control based on the aerodynamical power and the one based on the power output at the generator side}
+  \caption{Pitch angle comparison between the control based on the maximization of the mechanical rotor power and the maximization of the generator one}
   \label{fig:fig_new_pitch_map}
 \end{figure}
 
@@ -205,7 +205,7 @@ Also in this case the presence of the $B_{eq}\omega_G^2$ is not compulsory for t
                     
 
 \subsubsection{Interactive Multiple Model for WT control under uncertainty}\label{sec:c_other_controls}
-The control methods developed so far rely on the knowledge of the system by means of their parameters (structural and environmental) and models without uncertainties. In fact, in \autoref{eq:T_G2} and \autoref{eq:K_opt_GE} (i.e. the definition of $K_{opt}$ and $K_{opt,GE}$ respectively) only the deterministic (and constant in time) values have been used. In order to take into account possible variations of the parameters, for example due to the wrong estimation of some quantities or their variation over time, a different approach has to been used. Parameters modifications may occur in different time horizons, ranging from the second up to years. An example of rapidly changing parameter are the blade's radius and aerodynamic properties due to their deflection, \textcolor{red}{while an example of slowly changing is the air density, which, in the location studied by \cite{air_density} vary hourly, daily (even of 5.5\%), and seasonally (in a range of 2-3.5\%). Furthermore it is mean value is expected to increase of 0.5\% in the next 20 years due to global worming as reported by \cite{en12112038}}. \\
+The control methods developed so far rely on the knowledge of the system by means of their parameters (structural and environmental) and models without uncertainties. In fact, in \autoref{eq:T_G2} and \autoref{eq:K_opt_GE} (i.e. the definition of $K_{opt}$ and $K_{opt,GE}$ respectively) only the deterministic (and constant in time) values have been used. In order to take into account possible variations of the parameters, for example due to the wrong estimation of some quantities or their variation over time, a different approach has to been used. Parameters modifications may occur in different time horizons, ranging from the second up to years. An example of rapidly changing parameter are the blade's radius and aerodynamic properties due to their deflection, while an example of slowly changing is the air density, which, in the location studied in \cite{air_density} varies hourly, daily, and seasonally. \\
 To deal with these uncertainties, one possibility is to use model-free methods as the ones reviewed in \cite{MOUSA2021106598}, one of which is the extremum seeking. Another possibility is to use the \acrfull{IMM} estimator: supposing that the system may evolve following a model within a finite set of models, the most probable one is obtained by comparing a measurement depending on the system dynamic with a prediction done using the model structure \cite{Bar_Shalom}. \\
 In this work, the IMM estimator is employed since it can be seen as an extension of the control methods previously analyzed, allowing to identify the variation of a physical parameter in time and provide a value of $K_{opt}$ to be used in the feedback line of the controller.
 
@@ -257,7 +257,7 @@ The estimated air density $\hat{\rho}_{k}$ and gain $\hat{K}_{opt,GE,k}$ from th
                                           
 
 \subsubsection{Generator's low level control}\label{subsec:generator_low_level-control}
-Once the torque reference is synthesized according to the desired control law as described in \autoref{subsec:torque_reference} or \autoref{subsec:method_control_P_GE}, the first operation of the control scheme is to transform it in a $I_q$ current reference knowing that:
+Once the torque reference is synthesized according to the desired control law as described in \autoref{subsec:torque_reference}, \ref{subsec:method_control_P_GE}, or \ref{subsec:IMM} the first operation of the control scheme is to transform it in a $I_q$ current reference knowing that:
 \begin{equation}
     T_G = \frac{3}{2}\Lambda_{mg} p I_q \ \ \left[\si{\newton\meter}\right]
     \label{eq:T_G4}
@@ -364,7 +364,7 @@ Specifically for the DTU 10 MW, \cite{Olimpo_Anaya‐Lara} proposes the schedule
     k_i(\theta)=0.351-2.405 \ \theta+13.128 \ \theta^2-31.926 \ \theta^3+27.689 \ \theta^4
     \label{eq:k_i_poly}
 \end{gather}
-with $\theta$ in $\left[\si{\radian}\right]$. For a more practical visualization these polynomials have been plotted in \autoref{fig:fig_gain_schduling}, where it can be seen that a great variation of the coefficients happens in between the minimum and maximum angles.
+with $\theta$ in $\si{\radian}$. For a more practical visualization these polynomials have been plotted in \autoref{fig:fig_gain_schduling}, where it can be seen that a great variation of the coefficients happens in between the minimum and maximum angles.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{images/vectorial/fig_gain_scheduling.eps}
@@ -383,7 +383,7 @@ As described in \cite{Aerodynamics_of_wind_turbines}, \cite{NREL_5MW_reference},
     k_i(\theta) = \frac{J_{eq}\omega_{rated}\omega_{\Phi\eta}^2}{\frac{1}{n}\left(-\frac{dP_R(\theta)}{d\theta}\right)\lvert_{\theta=0}}GK(\theta)
     \label{eq:ki}
 \end{gather}
-where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, \textit{n} is the gear ratio, \acrshort{zetaphi} and \acrshort{omegaphieta} are the damping ratio and the resonant frequency of the second order dynamic response of the idealized PI-controlled rotor-speed error (source \cite{NREL_5MW_reference}), and \acrshort{thetaK} is a parameter related to the pitch sensitivity and will be further discussed in \autoref{subsec:gain_schdeuling_aero}. Ref. \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6\si{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power with respect to the pitch angle $-\frac{dP_R}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
+where $J_{eq}$ is the inertia of the drivetrain on the low speed shaft, $\omega_{rated}$ is the rotational speed of the low speed shaft at rated power, \textit{n} is the gear ratio, \acrshort{zetaphi} and \acrshort{omegaphieta} are the damping ratio and the resonant frequency of the second order dynamic response of the idealized PI-controlled rotor-speed error \cite{NREL_5MW_reference}, and \acrshort{thetaK} is a parameter related to the pitch sensitivity and will be further discussed in \autoref{subsec:gain_schdeuling_aero}. Ref. \cite{NREL_5MW_reference} suggests to take $\omega_{\Phi\eta}=0.6 \ \si{\radian\per\second}$ and $0.6<\zeta_{\Phi}<0.7$. The most complicated term to be computed is the sensitivity of the power with respect to the pitch angle $-\frac{dP_R}{d\theta}$. Its estimation should be done applying a steady \acrshort{BEM} (also known as \textit{Frozen wake BEM}) as reported in \cite{Aerodynamics_of_wind_turbines} or with specific software. \\
 The frozen wake BEM is implemented in two steps, then repeated for all the \acrshort{WS} between the rated and the cut out one. In the first one, the standard BEM presented in \autoref{subsec:mech_pow_and_pow_coeff} is applied on the blade, considering that it is pitched as to produce the rated power (i.e. the pitch angle is the one scheduled in \autoref{subsec:pitch_map}). In this step the induction coefficients \textit{a} and \textit{$a_{prime}$} found are stored. In the second step, the previously described BEM is applied but the pitch angle is changed on a set around the optimal one, while the induction coefficients are kept constant (i.e. they are not computed with the iterative procedure). The power is then computed for each pitch angle and finally the power derivative with respect to the pitch angle is obtained applying a numerical differentiation method.
 
 \textbf{Validation of the procedure on the NREL 5 MW}\\ 
