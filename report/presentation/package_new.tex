@@ -1,0 +1,97 @@
+
+
+\usepackage{pgfpages}
+% \pgfpagesuselayout{2 on 1}[a4paper,border shrink=5mm]
+%\documentclass[11pt,aspectratio=1610]{beamer} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{csquotes}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{biblatex} 
+\usepackage{textpos}
+\usepackage{dashrule}
+\usepackage{tikz}
+\usepackage[export]{adjustbox}
+%\bibliographystyle{unsrt}  %Type of stye for reference
+%\bibliography{reference} %Name of the reference file, without the .bib extension
+% \addbibresource{../document.bib}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{footline}[frame number]
+
+\addtobeamertemplate{frametitle}{%
+\begin{textblock*}{0mm}(127.1mm,-11mm) % Image position
+\includegraphics[height=11mm]{images/logo_dip.jpg}
+\end{textblock*}
+
+}
+
+% \definecolor{orangeline}{rgb}{0.7647, 0.2941, 0.0863}
+% \definecolor{blueline}{rgb}{0, 0.4, 0.6667}
+\definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{indaco}{rgb}{0.18, 0.18, 0.627}
+\definecolor{deepmagenta}{rgb}{0.8, 0.0, 0.8}
+\definecolor{yaleblue}{rgb}{0.06, 0.3, 0.57}
+
+
+\newcommand{\makeblue}[1]{\textcolor{mDarkTeal}{#1}}
+\newcommand{\makeorange}[1]{\textcolor{orange}{#1}}
+\newcommand{\makered}[1]{\textcolor{red}{#1}}
+\newcommand{\makedarkgreen}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\makemagenta}[1]{\textcolor{deepmagenta}{#1}}
+\newcommand{\makeorangeline}[1]{\textcolor{orangeline}{#1}}
+\newcommand{\makeblueline}[1]{\textcolor{blueline}{#1}}
+\setbeamercolor{block title}{bg=mDarkTeal, fg=white}
+\setbeamerfont{block title}{size=\small}
+
+\newcommand{\vertalign}[1]{%
+  \raisebox{-0.5\height}{\makebox[0pt][l]{#1}}%
+}
+
+%                    _                    
+%   _ __   __ _  ___| | ____ _  __ _  ___ 
+%  | '_ \ / _` |/ __| |/ / _` |/ _` |/ _ \
+%  | |_) | (_| | (__|   < (_| | (_| |  __/
+%  | .__/ \__,_|\___|_|\_\__,_|\__, |\___|
+%  |_|                         |___/      
+\usetheme[height=11mm]{Rochester}
+\usecolortheme[named=yaleblue]{structure}
+
+\setbeamertemplate{background} 
+{
+    \includegraphics[width=\paperwidth,height=\paperheight]{bg_slides.png}
+}
+
+\newcommand{\wider}[1]{
+\begin{adjustbox}{minipage=\paperwidth,margin=0pt,center}
+    \begin{tikzpicture}[overlay, remember picture]
+    \node[text width=\linewidth] at (current page.center)
+    {#1};
+    \end{tikzpicture}
+\end{adjustbox}
+}
+
+\newcommand{\makecenter}[1]{
+\begin{columns}
+    \column{0.05\linewidth}
+    \column{0.9\linewidth}
+    \centering
+    #1
+    \column{0.05\linewidth}
+\end{columns}
+
+}
