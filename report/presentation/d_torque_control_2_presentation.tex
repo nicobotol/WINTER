@@ -1,0 +1,72 @@
+\centering
+\tikzstyle{block} = [draw, fill=white, rectangle, minimum height=1.7em, minimum width=1.7em]
+\tikzstyle{sum} = [draw, fill=white, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={0.001,thin,black}]
+\tikzset{
+  dot/.style = {circle, fill, minimum size=#1, inner sep=0pt, outer sep=0pt}, dot/.default = 1pt % size of the circle diameter 
+}
+
+\usetikzlibrary{positioning}
+\makeatletter
+\pgfdeclareshape{record}{
+  \inheritsavedanchors[from={rectangle}]
+  \inheritbackgroundpath[from={rectangle}]
+  \inheritanchorborder[from={rectangle}]
+  \foreach \x in {center,north east,north west,north,south,south east,south west}{
+  \inheritanchor[from={rectangle}]{\x}
+  }
+  \foregroundpath{
+  \pgfpointdiff{\northeast}{\southwest}
+  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \northeast
+  \pgfpathmoveto{\pgfpointadd{\southwest}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+  \pgfpathlineto{\pgfpointadd{\southwest}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+  \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+  \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+  }
+}
+
+\begin{tikzpicture}[auto, node distance=1.3cm,>=latex']
+
+    \node [input, name=input] {};
+    \node [dot, right of=input, node distance=0.5cm] (fake_input) {};
+    \node [block, right of=input, node distance=1.0cm] (power) {$u^3$};
+    \node [block, right of=power, node distance=1.2cm] (k_opt) {$K_{opt}$};
+    \node [sum, right of=k_opt, node distance=0.9cm] (sum3) {};
+    \node [record,minimum size=0.8cm,fill=white!30,draw,right of=sum3, node distance=1.2cm] (saturation) {};
+    \node [sum, right of=saturation, node distance=1.2cm] (sum) {};
+    \node [block, right of=sum, node distance=1.0cm] (prop_gain) {$k_{p,P}$};
+    \node [block, below of=prop_gain, node distance=1.5cm] (int_gain) {$k_{i,P}$};
+    \node [block, right of=int_gain, node distance=1.0cm] (integrator) {$\frac{1}{s}$};
+    \node [sum, right of=prop_gain, node distance=1.5cm] (sum2) {};
+    \node [block, right of=sum2] (iq_gain) {$\frac{2}{3p\Lambda_{mg}}$};
+    \node [block, right of=iq_gain, node distance=1.8cm,align=center] (current_controller) {$I_q / U_q$};
+    \node [block, below of=current_controller, node distance=1.5cm] (PMSM) {$PMSM$};
+    \node [output, right of=PMSM] (output) {};
+    \node [input, below of=sum, name=P_g] {};
+    \node [block, below of=power, node distance=1.4cm, densely dashed] (power2) {$u^2$};
+    \node [block, right of=power2, node distance=1.2cm, densely dashed] (B_eq) {$B_{eq}$};
+
+
+    \draw [draw,->] (input) -- node {$\omega_G$} (power);
+    \draw [->] (power) -- node {} (k_opt);
+    \draw [->] (k_opt) -- node {} (sum3);
+    \draw [->] (sum3) -- node {$P_{G}^*$} (saturation);
+    \draw [->] (sum3) -- node {} (saturation);
+    \draw [->] (saturation) -- node {$P_{G}^*$} (sum);
+    \draw [->] (sum) -- node [name=error] {} (prop_gain);
+    \draw [->] (prop_gain) -- node [pos=0.9] {$+$} (sum2);
+    \draw [draw, ->] (P_g) -- node [pos=0.9] {$-$} node {$P_G$} (sum);
+    \draw [->] (error) |- node {} (int_gain) {};
+    \draw [->] (int_gain) -- node {} (integrator);
+    \draw [->] (integrator) -|  node [pos=0.9] {$+$} (sum2);
+    \draw [->] (sum2) --node {$T_G^*$} (iq_gain);
+    \draw [->] (iq_gain) -- node {$I_q^*$} (current_controller);
+    \draw [->] (current_controller) --node {} (PMSM);
+    \draw [->, densely dashed] (fake_input) |- node {} (power2);
+    \draw [->, densely dashed] (power2) -- node {} (B_eq);
+    \draw [->, densely dashed] (B_eq) -| node [pos=0.9] {$+$} (sum3);
+
+\end{tikzpicture}

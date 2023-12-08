@@ -1,79 +1,79 @@
-% %   ____                       
-% %  / ___|  ___ ___  _ __   ___ 
-% %  \___ \ / __/ _ \| '_ \ / _ \
-% %   ___) | (_| (_) | |_) |  __/
-% %  |____/ \___\___/| .__/ \___|
-% %                  |_|         
+%   ____                       
+%  / ___|  ___ ___  _ __   ___ 
+%  \___ \ / __/ _ \| '_ \ / _ \
+%   ___) | (_| (_) | |_) |  __/
+%  |____/ \___\___/| .__/ \___|
+%                  |_|         
 
-% \section{Scope of the thesis}
-% \begin{frame}{Scope of thesis}
-%   \begin{itemize}
-%     \item Develop a model for a WT
-%     \item Test different control strategies
-%   \end{itemize}
-% \end{frame}
+\section{Scope of the thesis}
+\begin{frame}{Scope of thesis}
+  \begin{itemize}
+    \item Develop a model for a WT
+    \item Test different control strategies
+  \end{itemize}
+\end{frame}
 
-% %   __  __       _   _            _   _               
-% %  |  \/  | ___ | |_(_)_   ____ _| |_(_) ___  _ __    
-% %  | |\/| |/ _ \| __| \ \ / / _` | __| |/ _ \| '_ \   
-% %  | |  | | (_) | |_| |\ V / (_| | |_| | (_) | | | |  
-% %  |_|  |_|\___/ \__|_| \_/ \__,_|\__|_|\___/|_| |_|  
+%   __  __       _   _            _   _               
+%  |  \/  | ___ | |_(_)_   ____ _| |_(_) ___  _ __    
+%  | |\/| |/ _ \| __| \ \ / / _` | __| |/ _ \| '_ \   
+%  | |  | | (_) | |_| |\ V / (_| | |_| | (_) | | | |  
+%  |_|  |_|\___/ \__|_| \_/ \__,_|\__|_|\___/|_| |_|  
                                                     
-% \section{Motivation}
-% \begin{frame}{Motivation}
-%   \begin{itemize}
-%     \item European goals: reduce the greenhouse emission of 55\% by 2030 w.r.t. 1990
-%     \item 
-%     \[
-%       \text{In 2022 }
-%       \begin{cases}
-%         \text{W.E. covers 17\% of EU-27+UK demand}\\
-%         \text{onshore 4.1 MW, offshore 8.0 MW}
-%       \end{cases}
-%     \]
+\section{Motivation}
+\begin{frame}{Motivation}
+  \begin{itemize}
+    \item EU goals: reduce the greenhouse emission of 55\% by 2030 w.r.t. 1990
+    \item 
+    \[
+      \text{In 2022 }
+      \begin{cases}
+        \text{W.E. covers 17\% of EU-27+UK demand}\\
+        \text{onshore 4.1 MW, offshore 8.0 MW}
+      \end{cases}
+    \]
     
-%     \item 
-%     \begin{multicols}{2}
-%     \[
-%       \text{Upscaling trend } 
-%       \begin{cases}
-%         \text{higher costs}\\
-%         \text{no real prototypes} \\
-%         \text{higher loads}
-%       \end{cases}  
-%     \]
+    \item 
+    \begin{multicols}{2}
+    \[
+      \text{Upscaling trend } 
+      \begin{cases}
+        \text{higher costs}\\
+        \text{no real prototypes} \\
+        \text{higher loads}
+      \end{cases}  
+    \]
 
-%       \begin{figure}
-%         \centering
-%         \includegraphics[scale=0.13]{../images/dimensions.jpg}
-%       \end{figure}
+      \begin{figure}
+        \centering
+        \includegraphics[scale=0.13]{../images/dimensions.jpg}
+      \end{figure}
   
-%     \end{multicols}
+    \end{multicols}
     
-%     \item
-%     \[
-%       \text{Control systems important }
-%       \begin{cases}
-%         \text{extract as much energy as possible}\\
-%         \text{reduce loads}
-%       \end{cases}
-%     \]
+    \item
+    \[
+      \text{Control systems important }
+      \begin{cases}
+        \text{extract as much energy as possible}\\
+        \text{reduce loads}
+      \end{cases}
+    \]
 
-%     \item Use of the DTU 10 MW $\Rightarrow$ above the average but already present
-%   \end{itemize}
-% \end{frame}
+    \item Use of the DTU 10 MW $\Rightarrow$ above the average but already present
+  \end{itemize}
+\end{frame}
 
-% %   __  __           _      _ _ _             
-% %  |  \/  | ___   __| | ___| | (_)_ __   __ _ 
-% %  | |\/| |/ _ \ / _` |/ _ \ | | | '_ \ / _` |
-% %  | |  | | (_) | (_| |  __/ | | | | | | (_| |
-% %  |_|  |_|\___/ \__,_|\___|_|_|_|_| |_|\__, |
-% %                                       |___/ 
+%   __  __           _      _ _ _             
+%  |  \/  | ___   __| | ___| | (_)_ __   __ _ 
+%  | |\/| |/ _ \ / _` |/ _ \ | | | '_ \ / _` |
+%  | |  | | (_) | (_| |  __/ | | | | | | (_| |
+%  |_|  |_|\___/ \__,_|\___|_|_|_|_| |_|\__, |
+%                                       |___/ 
 
-% \section{Modelling}
-% \begin{frame}{Modelling}
-%   \input{d_plant_schema_presentation.tex}
-% \end{frame}
+\section{Modelling}
+\begin{frame}{Modelling}
+  \input{d_plant_schema_presentation.tex}
+\end{frame}
 
 %    ____            _             _ 
 %   / ___|___  _ __ | |_ _ __ ___ | |
@@ -103,54 +103,169 @@
 
 \end{frame}
 
-% \begin{frame}{Pitch controller}
-%   \begin{itemize}
-%     \item Figure 34
-%     \item Gain scheduling
-%   \end{itemize}
-% \end{frame}
+\begin{frame}{Pitch controller}
+  \begin{figure}
+    \centering
+    \begin{subfigure}{\columnwidth}
+      \centering
+      \begingroup
+        \tikzset{every picture/.style={scale=0.7}}
+        \input{../d_blade_control}
+      \endgroup
+    \end{subfigure} 
 
-% \begin{frame}{Generator high level control}
-%   \begin{itemize}
-%     \item Figure 21 -> became figure 25 -> Equation 35
-%   \end{itemize}
-%   Only rotational speed measurement, damping compensation to avoid identification
-% \end{frame}
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width = \columnwidth]{../images/fig_gain_sched_DTU10MW.eps}
+    \end{subfigure}
+  \end{figure}
 
-% \begin{frame}{Generator high level control - 2}
-%   Inclusion of the generator -> definition of a new control law \\
-%   maybe figure 26
-% \end{frame}
+\end{frame}
 
-% \begin{frame}{Generator high level control - 3}
-%   Inclusion of the uncertainties -> IMM for the MPPT under uncertainties\\
-%   Close the loop via weighted sum of the models
-% \end{frame}
+\begin{frame}{Generator high level control}
 
-% %   ____  _                 _       _   _                 
-% %  / ___|(_)_ __ ___  _   _| | __ _| |_(_) ___  _ __  ___ 
-% %  \___ \| | '_ ` _ \| | | | |/ _` | __| |/ _ \| '_ \/ __|
-% %   ___) | | | | | | | |_| | | (_| | |_| | (_) | | | \__ \
-% %  |____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|___/
+  \begin{figure}
+    \begin{subfigure}{\columnwidth}
+      \centering
+      \begingroup
+        \input{d_generator_block_presentation.tex}
+      \endgroup
+    \end{subfigure}
+    \\
+    \begin{subfigure}{\columnwidth}
+      \centering
+      \begingroup
+        \tikzset{every picture/.style={scale=0.1}}
+        \input{d_torque_control_2_presentation.tex}
+      \endgroup
+    \end{subfigure}
+  \end{figure}
+
+  % \begin{itemize}
+  %   \item Figure 21 -> became figure 25 -> Equation 35
+  % \end{itemize}
+  % Only rotational speed measurement, damping compensation to avoid identification
+\end{frame}
+
+\begin{frame}{Generator high level control - 2}
+  Inclusion of the generator $\Rightarrow$ definition of a new control law \\
+  \begin{figure}[!htbp]
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{../images/vectorial/2023_11_29_17_33_45fig_lambda_GE.eps}
+      \caption{Tip speed ratio}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{../images/vectorial/2023_11_13_08_17_10fig_pitch_GE.eps}
+      \caption{Optimal pitch angle}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{../images/vectorial/2023_11_11_23_31_31fig_omega_GE.eps}
+      \caption{Rotational speed}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{../images/vectorial/fig_K_map.eps}
+      \caption{$K_{opt}$ gain}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Generator high level control - 3}
+  Inclusion of the uncertainties $\Rightarrow$ IMM for the MPPT under uncertainties\\
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../images/IMM_schema.png}
+    \caption{Source \textit{Kalman-based interacting multiple-model wind speed estimator for wind turbines}}
+  \end{figure}
+  \begin{gather}
+    \notag
+    \hat{\rho}_{k} = \sum_j \mu_k^{(j)+} \rho^{(j)}\\ \notag
+    \hat{K}_{opt,GE,k} = \sum_j \mu_k^{(j)+} K_{opt,GE}^{(j)} 
+  \end{gather}
+
+\end{frame}
+
+%   ____  _                 _       _   _                 
+%  / ___|(_)_ __ ___  _   _| | __ _| |_(_) ___  _ __  ___ 
+%  \___ \| | '_ ` _ \| | | | |/ _` | __| |/ _ \| '_ \/ __|
+%   ___) | | | | | | | |_| | | (_| | |_| | (_) | | | \__ \
+%  |____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|___/
                                                         
-% \section{Simulations}
-% \begin{frame}{Simulation control 1}
-%   Figure 43
-% \end{frame}
+\section{Simulations}
+\begin{frame}{Simulation with standard control}
+  \begin{figure}[!htbp]
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_56_44fig_wind_TS.eps}
+      \caption{Wind time series}
+    \end{subfigure}
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_57_26fig_pitch_param.eps}
+      \caption{Pitch angle time series}
+    \end{subfigure}
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_56_58fig_power_param.eps}
+      \caption{Input power to the generator}
+    \end{subfigure}
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_57_38fig_omega_param.eps}
+      \caption{Rotational speed}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
 
-% \begin{frame}{Simulation control 2}
-%   Figure 49b
-% \end{frame}
+\begin{frame}{Control based on generator power max}
+  \begin{figure}
+    \centering
+    \includegraphics[width = \columnwidth]{../images/vectorial/2023_11_21_10_17_02comparison_control_laws.eps}
+  \end{figure}
+\end{frame}
 
-% \begin{frame}{Simulation control 3}
-%   Figure 51
-% \end{frame}
+\begin{frame}{Simulation with IMM}
+  \begin{figure}[!htbp]
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_17_59_53omega_IMM_1.eps}
+      \caption{Rotor rotational speed.}
+    \end{subfigure}
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_21_06_27probability_bar_IMM.png}
+      \caption{Bar plot of the probabilities.}
+    \end{subfigure}
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_17_59_53rho_IMM.eps}
+      \caption{Estimated and real $\rho$.}
+    \end{subfigure}
+    \begin{subfigure}{0.49\columnwidth}
+      \centering
+      \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_21_06_27K_opt_IMM.eps}
+      \caption{$K_{opt}$ for generator control ref. }
+    \end{subfigure}
+  \end{figure}
+\end{frame}
 
-% %    ____                 _           _                 
-% %   / ___|___  _ __   ___| |_   _ ___(_) ___  _ __  ___ 
-% %  | |   / _ \| '_ \ / __| | | | / __| |/ _ \| '_ \/ __|
-% %  | |__| (_) | | | | (__| | |_| \__ \ | (_) | | | \__ \
-% %   \____\___/|_| |_|\___|_|\__,_|___/_|\___/|_| |_|___/
+%    ____                 _           _                 
+%   / ___|___  _ __   ___| |_   _ ___(_) ___  _ __  ___ 
+%  | |   / _ \| '_ \ / __| | | | / __| |/ _ \| '_ \/ __|
+%  | |__| (_) | | | | (__| | |_| \__ \ | (_) | | | \__ \
+%   \____\___/|_| |_|\___|_|\__,_|___/_|\___/|_| |_|___/
                                                       
-% \section{Conclusions}
-
+\section{Conclusions}
+\begin{frame}
+  \begin{itemize}
+    \item Evolution, development trends, description of the subsystems
+    \item Development of a Simulink model for aerodynamic, electrical generator, blade 
+    \item Control for the maximization of the rotor power
+    \item Control for maximization of the generator power
+    \item Control considering the uncertainties
+  \end{itemize}
+\end{frame}

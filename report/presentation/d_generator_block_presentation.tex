@@ -1,0 +1,62 @@
+\tikzstyle{block} = [draw, fill=white, rectangle, minimum height=2em, minimum width=2em, align=center]
+\tikzstyle{block_red} = [draw=red, fill=white, rectangle, minimum height=2em, minimum width=2em, align=center, ultra thick]
+\tikzstyle{sum} = [draw, fill=white, circle, node distance=2.0cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+\tikzset{
+dot/.style = {circle, fill, minimum size=#1, inner sep=0pt, outer sep=0pt},
+dot/.default = 4pt % size of the circle diameter 
+}
+
+\usetikzlibrary {arrows.meta}
+\usetikzlibrary{positioning}
+\makeatletter
+\pgfdeclareshape{record}{
+  \inheritsavedanchors[from={rectangle}]
+  \inheritbackgroundpath[from={rectangle}]
+  \inheritanchorborder[from={rectangle}]
+  \foreach \x in {center,north east,north west,north,south,south east,south west}{
+  \inheritanchor[from={rectangle}]{\x}
+  }
+  \foregroundpath{
+  \pgfpointdiff{\northeast}{\southwest}
+  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \northeast
+  \pgfpathmoveto{\pgfpointadd{\southwest}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+  \pgfpathlineto{\pgfpointadd{\southwest}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+  \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+  \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+  }
+}
+\makeatother
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+  \node [style=input] (1) at (0, 0.4) {};
+  \node [style=input] (2) at (-0.5, -1.0) {};
+  \node [style=input] (6) at (1.05, 0.4) {};
+  \node [style=input] (9) at (1.05, -0.3) {};
+  \node [style=input] (10) at (3.85, 0) {};
+  \node [style=input] (11) at (9.0, -1.5) {};
+  \node [style=input] (12) at (10.25, -1.5) {};
+
+  \node [style=block_red, minimum size=14mm, align=center] (3) at (2, 0) {Power \\ controller};
+  \node [style=block, minimum size=24mm, align=center] (4) at (5, -0.75) {Current \\ controller};
+  \node [style=block, minimum size=20mm] (13) at (8, -0.75) {Generator};
+
+  \node [dot=1pt] (5) at (10, 1) {};
+  \node [dot=1pt] (7) at (3.85, -1.0) {};
+  \node [dot=1pt] (8) at (0, -1.0) {};
+
+  \draw [-] (13) -| node {} (5);
+  \draw [-] (5) -| node {} (1);
+  \draw [arrows = {-Stealth[scale=1.5]}] (1) -- node {$P_G$} (6);
+  \draw [arrows = {-Stealth[scale=1.5]}] (3) -- node {$T^{*}_{G}$} (10);
+  \draw [arrows = {-Stealth[scale=1.5]}] (4) -- node {$U^{*}_{q}$} (13);
+
+  \draw [-] (2) -- node {$\omega_G$} (8);
+  \draw [arrows = {-Stealth[scale=1.5]}] (8) -- node {} (7);
+  \draw [arrows = {-Stealth[scale=1.5]}] (8) |- node {} (9);
+  \draw [arrows = {-Stealth[scale=1.5]}] (11) -- node[pos=0.95] {$T_G$} (12);
+
+\end{tikzpicture}
