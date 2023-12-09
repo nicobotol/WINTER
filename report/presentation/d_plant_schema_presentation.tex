@@ -1,17 +1,17 @@
 \tikzstyle{block} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
 \tikzstyle{block_skyblue} = [draw, fill=cyan, rectangle, minimum height=2.5em, minimum width=3em]
 \tikzstyle{block_yellow} = [draw, fill=yellow, rectangle, minimum height=2.5em, minimum width=3em]
-\tikzstyle{block_green} = [draw, fill=green, rectangle, minimum height=2.5em, minimum width=3em]
-\tikzstyle{block_magenta} = [draw, fill=magenta, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block_green} = [draw, fill=darkpastelgreen, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block_magenta} = [draw, fill=red-violet, rectangle, minimum height=2.5em, minimum width=3em]
+% \tikzstyle{block_magenta} = [draw, fill=magenta, rectangle, minimum height=2.5em, minimum width=3em]
 \tikzstyle{block_dashed} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em, dashed]
 \tikzstyle{sum} = [draw, fill=white, circle, node distance=2.0cm]
 \tikzstyle{input} = [coordinate]
 \tikzstyle{output} = [coordinate]
 \tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
 \tikzset{
-dot/.style = {circle, fill, minimum size=#1,
-              inner sep=0pt, outer sep=0pt},
-dot/.default = 4pt % size of the circle diameter 
+  dot/.style = {circle, fill, minimum size=#1, inner sep=0pt, outer sep=0pt},
+  dot/.default = 4pt % size of the circle diameter 
 }
 
 \usetikzlibrary{positioning}
@@ -57,14 +57,16 @@ dot/.default = 4pt % size of the circle diameter
   \node [dot=1pt] (19) at (4.5, -0.75) {};
   \node [dot=1pt] (20) at (9, -5.25) {};
   \node [dot=1pt] (21) at (1.25, -5.25) {};
-  \node [dot=1pt] (22) at (10, -4) {};
+  \node [dot=1pt] (22) at (9.9, -4) {};
   \node [dot=1pt] (23) at (10.5, -4) {};
   \node [dot=1pt] (25) at (1.25, -3.5) {};
+  \node [dot=1pt] (26) at (2.3, 0.35) {};
+  \node [dot=1pt] (27) at (5.22, 0.25) {};
 
-  \draw [->] (10) -- node {$V_0$} (1.155);
+  \draw [->] (10) -- node {$V_0$} (26);
   \draw [->] (11) -- node {$\omega_R$} (3);
   \draw [-] (11) -- node {} (13);
-  \draw [->] (1.160) ++(1.4,0) -- node {$T_R$} (2.165);
+  \draw [->] (1.160) ++(1.4,0) -- node {$T_R$} (27);
   \draw [-] (2) -| node[pos=0.65] {$\omega_R$} (12); 
   \draw [-] (12) -- node {} (13);
   \draw [->] (13) |- node {} (1.175);

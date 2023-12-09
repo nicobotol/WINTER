@@ -7,10 +7,21 @@
 
 \section{Scope of the thesis}
 \begin{frame}{Scope of thesis}
-  \begin{itemize}
+  \begin{myitemize}
     \item Develop a model for a WT
+    \begin{myitemize}
+      \item Wind blade, transmission system, generator, blade pitch
+      \item No hydrodynamic loads, no mooring system, no tower effects
+      \item No grid connection
+    \end{myitemize} 
+    
     \item Test different control strategies
-  \end{itemize}
+    \begin{myitemize}
+      \item Maximization of the power to the rotor side
+      \item Maximization of the electrical power output
+      \item Power maximization considering the uncertainties
+    \end{myitemize}
+  \end{myitemize}
 \end{frame}
 
 %   __  __       _   _            _   _               
@@ -21,7 +32,7 @@
                                                     
 \section{Motivation}
 \begin{frame}{Motivation}
-  \begin{itemize}
+  \begin{myitemize}
     \item EU goals: reduce the greenhouse emission of 55\% by 2030 w.r.t. 1990
     \item 
     \[
@@ -60,7 +71,7 @@
     \]
 
     \item Use of the DTU 10 MW $\Rightarrow$ above the average but already present
-  \end{itemize}
+  \end{myitemize}
 \end{frame}
 
 %   __  __           _      _ _ _             
@@ -84,42 +95,58 @@
 \section{Control}
 \begin{frame}{Operational regions}
 
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{../images/vectorial/operating_reagions.eps}
-  \end{figure}
+  \begin{columns}
 
-  \begin{figure}
-    \centering
-    \begin{subfigure}{0.49\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../images/vectorial/contour_plot_cP.eps}
-    \end{subfigure}
-    \begin{subfigure}{0.49\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{../images/vectorial/fig_pitch_vs_V0.eps}
-    \end{subfigure}
-  \end{figure}
+    \begin{column}{0.5\columnwidth}
+      Tip Speed Ratio $\Rightarrow$ $\lambda=\frac{\omega R}{V_0}$\\
+      Blade pitch angle $\Rightarrow$ $\theta$\\
+      Mech. rotor $\Rightarrow$ $P_R = \frac{1}{2}\pi R^2 \rho c_{P} V_0^3$
+    \end{column}
 
+    \begin{column}{0.5\columnwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\columnwidth]{../images/vectorial/contour_plot_cP.eps}
+      \end{figure}
+    \end{column}
+    
+  \end{columns}
+
+\begin{columns}
+  \begin{column}{0.5\columnwidth}
+    \begin{figure}
+      \centering
+      \includegraphics[width=\columnwidth]{../images/vectorial/fig_power_vs_pitch.eps}
+    \end{figure}
+  \end{column}
+  \begin{column}{0.5\columnwidth}
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=\columnwidth]{../images/vectorial/operating_reagions.eps}
+    \end{figure}
+  \end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Pitch controller}
   \begin{figure}
     \centering
-    \begin{subfigure}{\columnwidth}
       \centering
       \begingroup
         \tikzset{every picture/.style={scale=0.7}}
         \input{../d_blade_control}
       \endgroup
-    \end{subfigure} 
-
+  \end{figure} 
+  \begin{figure}
     \begin{subfigure}{0.49\textwidth}
       \centering
-      \includegraphics[width = \columnwidth]{../images/fig_gain_sched_DTU10MW.eps}
+      \includegraphics[width = 0.9\columnwidth]{../images/fig_gain_sched_DTU10MW.eps}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width = 0.9\columnwidth]{../images/vectorial/fig_pitch_vs_V0.eps}
     \end{subfigure}
   \end{figure}
-
 \end{frame}
 
 \begin{frame}{Generator high level control}
@@ -141,9 +168,9 @@
     \end{subfigure}
   \end{figure}
 
-  % \begin{itemize}
+  % \begin{myitemize}
   %   \item Figure 21 -> became figure 25 -> Equation 35
-  % \end{itemize}
+  % \end{myitemize}
   % Only rotational speed measurement, damping compensation to avoid identification
 \end{frame}
 
@@ -260,12 +287,24 @@
 %   \____\___/|_| |_|\___|_|\__,_|___/_|\___/|_| |_|___/
                                                       
 \section{Conclusions}
-\begin{frame}
-  \begin{itemize}
+\begin{frame}{Conclusions}
+  \begin{myitemize}
     \item Evolution, development trends, description of the subsystems
     \item Development of a Simulink model for aerodynamic, electrical generator, blade 
     \item Control for the maximization of the rotor power
     \item Control for maximization of the generator power
     \item Control considering the uncertainties
-  \end{itemize}
+  \end{myitemize}
+\end{frame}
+
+
+%   ____             _                  
+%  | __ )  __ _  ___| | __  _   _ _ __  
+%  |  _ \ / _` |/ __| |/ / | | | | '_ \ 
+%  | |_) | (_| | (__|   <  | |_| | |_) |
+%  |____/ \__,_|\___|_|\_\  \__,_| .__/ 
+%                                |_|    
+
+\begin{frame}{Controller}
+  
 \end{frame}
