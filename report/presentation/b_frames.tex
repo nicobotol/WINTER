@@ -14,15 +14,27 @@
       \item No hydrodynamic loads, no mooring system, no tower effects
       \item No grid connection
     \end{myitemize} 
-    
-    \item Test different control strategies
+
+    \item Test different control strategies for MPPT
     \begin{myitemize}
       \item Maximization of the power to the rotor side
       \item Maximization of the electrical power output
       \item Power maximization considering the uncertainties
     \end{myitemize}
+
+    \item Blade pitch control
   \end{myitemize}
+
+
+  \note{
+    \begin{itemize}
+      \item What I have included on the model and some limitations of the scope
+      \item Talk briefly about the different control strategies implemented. Maybe introduce here the so called MPPT: change the behavior of the turbine to convert the maximum amount of energy while the  environmental condition (i.e. wind speed) changes
+      \item Use of the blade pitch for controlling the rotational speed
+    \end{itemize}
+  }
 \end{frame}
+
 
 %   __  __       _   _            _   _               
 %  |  \/  | ___ | |_(_)_   ____ _| |_(_) ___  _ __    
@@ -49,8 +61,8 @@
       \text{Upscaling trend } 
       \begin{cases}
         \text{higher costs}\\
-        \text{no real prototypes} \\
-        \text{higher loads}
+        \text{higher loads}\\
+        \text{no real prototypes} 
       \end{cases}  
     \]
 
@@ -72,6 +84,16 @@
 
     \item Use of the DTU 10 MW $\Rightarrow$ above the average but already present
   \end{myitemize}
+
+
+  \note{
+    \begin{itemize}
+      \item Why should be interested in the wind energy? Mitigate the effects of climate changes exploiting all the renewable resources and meet the EU goals of reducing the greenhouse emission of 55\% by 2030 w.r.t. 1990
+      \item Last year wind energy covered 17\% of the EU-27+UK demand. Onshore wind turbines (i.e. the ones placed on land) are around 4.1 MW, offshore (i.e. the ones placed on the sea and oceans) wind turbines are around 8.0 MW. These values are biased by the older installed plants, since newer plants are bigger
+      \item Upscaling trends, since bigger plants can reduce the costs because expenditures are made for plants that can deliver more power. Off course, this trends came with some drawbacks: higher cost of the single generator, higher loads to be withstood by the structure and blades, cannot relay on real prototypes
+      \item The use of controllers is fundamental for reducing the loads and extract as much energy as possible. The first is important for extending the lifespan of the turbine while the second for increasing the revenue of the plant
+    \end{itemize}
+  }
 \end{frame}
 
 %   __  __           _      _ _ _             
@@ -82,6 +104,7 @@
 %                                       |___/ 
 
 \section{Modelling}
+
 \begin{frame}{Modelling}
   \input{d_plant_schema_presentation.tex}
 \end{frame}
@@ -147,6 +170,8 @@
       \includegraphics[width = 0.9\columnwidth]{../images/vectorial/fig_pitch_vs_V0.eps}
     \end{subfigure}
   \end{figure}
+
+  \note{Saturation necessary to avoid pitching action before the reaching of the rated rotational speed}
 \end{frame}
 
 \begin{frame}{Generator high level control}
