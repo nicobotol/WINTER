@@ -1,19 +1,130 @@
-%   ____                       
-%  / ___|  ___ ___  _ __   ___ 
-%  \___ \ / __/ _ \| '_ \ / _ \
-%   ___) | (_| (_) | |_) |  __/
-%  |____/ \___\___/| .__/ \___|
-%                  |_|         
-
-\section{Scope of the thesis}
-\begin{frame}{Scope of thesis}
+%   __  __       _   _            _   _               
+%  |  \/  | ___ | |_(_)_   ____ _| |_(_) ___  _ __    
+%  | |\/| |/ _ \| __| \ \ / / _` | __| |/ _ \| '_ \   
+%  | |  | | (_) | |_| |\ V / (_| | |_| | (_) | | | |  
+%  |_|  |_|\___/ \__|_| \_/ \__,_|\__|_|\___/|_| |_|  
+                                                    
+\section{Motivation}
+\begin{frame}{Motivation}
   \begin{myitemize}
-    \item Develop a model for a WT
+    \item EU goals: reduce the greenhouse emission of 55\% by 2030 w.r.t. 1990
+    
+    % \item 
+      \begin{columns}
+        \begin{column}{0.5\columnwidth}
+          \[
+          \text{Upscaling trend } 
+          \begin{cases}
+            \text{higher costs}\\
+            \text{higher loads}\\
+            \text{no real prototypes} 
+          \end{cases}  
+          \]
+        \end{column}
+        \begin{column}{0.5\columnwidth}
+          \begin{figure}
+            \centering
+            \includegraphics[scale=0.13]{../images/dimensions.jpg}
+          \end{figure}
+        \end{column}
+      \end{columns}
+      
+    \item
+    \[
+      \text{Control systems important }
+      \begin{cases}
+        \text{extract as much energy as possible}\\
+        \text{reduce loads}
+      \end{cases}
+      \]
+
+    \item \[
+      \text{Scopes }
+      \begin{cases}
+        \text{Develop a model}\\
+        \text{Test different control strategies}
+      \end{cases}
+      \]
+        
+  \end{myitemize}
+  
+
+  \note{
+    \begin{itemize}
+      \item Why should be interested in the wind energy? Mitigate the effects of climate changes exploiting all the renewable resources and meet the EU goals of reducing the greenhouse emission of 55\% by 2030 w.r.t. 1990
+      %\item Last year wind energy covered 17\% of the EU-27+UK demand. Onshore wind turbines (i.e. the ones placed on land) are around 4.1 MW, offshore (i.e. the ones placed on the sea and oceans) wind turbines are around 8.0 MW. These values are biased by the older installed plants, since newer plants are bigger
+      \item Upscaling trends, since bigger plants can reduce the costs because expenditures are made for plants that can deliver more power. Off course, this trends came with some drawbacks: higher cost of the single generator, higher loads to be withstood by the structure and blades, cannot relay on real prototypes
+      \item The use of controllers is fundamental for reducing the loads and extract as much energy as possible. The first is important for extending the lifespan of the turbine while the second for increasing the revenue of the plant
+    \end{itemize}
+    }
+  
+  \end{frame}
+  
+  %   __  __           _      _ _ _             
+  %  |  \/  | ___   __| | ___| | (_)_ __   __ _ 
+  %  | |\/| |/ _ \ / _` |/ _ \ | | | '_ \ / _` |
+  %  | |  | | (_) | (_| |  __/ | | | | | | (_| |
+  %  |_|  |_|\___/ \__,_|\___|_|_|_|_| |_|\__, |
+  %                                       |___/ 
+  
+\section{Modelling}
+
+\begin{frame}{Target and assumptions}
+  \begin{myitemize}
+    \item Use of the DTU 10 MW Ref. WT
     \begin{myitemize}
-      \item Wind blade, transmission system, generator, blade pitch
-      \item No hydrodynamic loads, no mooring system, no tower effects
-      \item No grid connection
-    \end{myitemize} 
+      \item Public data
+      \item Size above the average but already present
+      \item Direct driven, variable speed, pitch controlled
+    \end{myitemize}
+
+    \item Wind blade, transmission system, generator, blade pitch
+    \item No hydrodynamic loads, no mooring system, no tower effects
+    \item No grid connection
+  \end{myitemize} 
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../images/fig_drivetrain.jpg}
+  \end{figure}
+
+  \note{
+    \begin{itemize}
+      \item Use of the DTU 10 MW which is a turbine not intended to be built but only used to design purposes and share the data with community. Its size is above the average but already present in the market. It is direct driven, variable speed, and pitch regulated (later on will we see the meaning of these terms)
+      \item The model includes the wind-blade interaction, the blade pitching mechanism, the transmission system, the electric generator
+      \item Even though the turbine was designed for offshore deployment no specific offshore characteristics are taken into account, such as the hydrodynamic loads, the mooring system, the tower effects. Finally, the grid connection is not considered
+    \end{itemize}
+    }
+  
+
+\end{frame}
+
+\begin{frame}{Model scheme}
+  \input{d_plant_schema_presentation.tex}
+
+  \note{
+    \begin{itemize}
+      \item In this slid the scheme of the simulation can be seen. In the upper part there is the block modelling the aero torque given the wind speed, the rotational speed and the pitch angle. Then there is the mechanical dynamic that solves the euler equation for the rotor. The rotational speed is reported at the other side of the transmission by means of a transmission (that in this case has unit ratio but it is considered to be a placeholder). The rotational speed is then used for defining both the pitch control and the generator power one. Finally the generator torque is used for the mechanical dynamic. The power electronic and grid blocks are included only to complete the picture but they are not modelled in the simulation.
+    \end{itemize}
+    }
+
+\end{frame}
+
+%    ____            _             _ 
+%   / ___|___  _ __ | |_ _ __ ___ | |
+%  | |   / _ \| '_ \| __| '__/ _ \| |
+%  | |__| (_) | | | | |_| | | (_) | |
+%   \____\___/|_| |_|\__|_|  \___/|_|
+                                   
+\section{Control}
+\begin{frame}{Controllers}
+  
+  \begin{myitemize}
+    \item  Different levels of controllers
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.7\columnwidth]{../images/control_levels.jpg}
+    \end{figure}
 
     \item Test different control strategies for MPPT
     \begin{myitemize}
@@ -25,97 +136,18 @@
     \item Blade pitch control
   \end{myitemize}
 
-
   \note{
     \begin{itemize}
-      \item What I have included on the model and some limitations of the scope
-      \item Talk briefly about the different control strategies implemented. Maybe introduce here the so called MPPT: change the behavior of the turbine to convert the maximum amount of energy while the  environmental condition (i.e. wind speed) changes
-      \item Use of the blade pitch for controlling the rotational speed
+      \item In a WT there are different levels of controllers. At the higher there are the ones related to power quality and coordination between turbines. In the middle level there are the feature at which we are interested, which are on a higher level with respect to the voltage and current controllers or the PWM.
+      \item We are interested in the MPPT. The Maximum Power Point Tracking is a control strategy intended to follow the Maximum Power Point, which is a specific combination of operative conditions, in that case WS, rotational speed, and pitch angle at which the turbine is able to convert the maximum amount of power. Since the MPP changes as function of the WS, then it is necessary to change the others in order to follow this modification. The maximum point at which we may want to work may be the one maximizing the power extracted from the resource or the one send to the generator. Finally this concept has also be extended to the case with uncertainty in the measurements or with uncertainty in the model.
+      \item The blade pitching has been introduced in order to avoid the exceeding of the rated power, as will be seen later. 
     \end{itemize}
   }
+
+
 \end{frame}
 
 
-%   __  __       _   _            _   _               
-%  |  \/  | ___ | |_(_)_   ____ _| |_(_) ___  _ __    
-%  | |\/| |/ _ \| __| \ \ / / _` | __| |/ _ \| '_ \   
-%  | |  | | (_) | |_| |\ V / (_| | |_| | (_) | | | |  
-%  |_|  |_|\___/ \__|_| \_/ \__,_|\__|_|\___/|_| |_|  
-                                                    
-\section{Motivation}
-\begin{frame}{Motivation}
-  \begin{myitemize}
-    \item EU goals: reduce the greenhouse emission of 55\% by 2030 w.r.t. 1990
-    \item 
-    \[
-      \text{In 2022 }
-      \begin{cases}
-        \text{W.E. covers 17\% of EU-27+UK demand}\\
-        \text{onshore 4.1 MW, offshore 8.0 MW}
-      \end{cases}
-    \]
-    
-    \item 
-    \begin{multicols}{2}
-    \[
-      \text{Upscaling trend } 
-      \begin{cases}
-        \text{higher costs}\\
-        \text{higher loads}\\
-        \text{no real prototypes} 
-      \end{cases}  
-    \]
-
-      \begin{figure}
-        \centering
-        \includegraphics[scale=0.13]{../images/dimensions.jpg}
-      \end{figure}
-  
-    \end{multicols}
-    
-    \item
-    \[
-      \text{Control systems important }
-      \begin{cases}
-        \text{extract as much energy as possible}\\
-        \text{reduce loads}
-      \end{cases}
-    \]
-
-    \item Use of the DTU 10 MW $\Rightarrow$ above the average but already present
-  \end{myitemize}
-
-
-  \note{
-    \begin{itemize}
-      \item Why should be interested in the wind energy? Mitigate the effects of climate changes exploiting all the renewable resources and meet the EU goals of reducing the greenhouse emission of 55\% by 2030 w.r.t. 1990
-      \item Last year wind energy covered 17\% of the EU-27+UK demand. Onshore wind turbines (i.e. the ones placed on land) are around 4.1 MW, offshore (i.e. the ones placed on the sea and oceans) wind turbines are around 8.0 MW. These values are biased by the older installed plants, since newer plants are bigger
-      \item Upscaling trends, since bigger plants can reduce the costs because expenditures are made for plants that can deliver more power. Off course, this trends came with some drawbacks: higher cost of the single generator, higher loads to be withstood by the structure and blades, cannot relay on real prototypes
-      \item The use of controllers is fundamental for reducing the loads and extract as much energy as possible. The first is important for extending the lifespan of the turbine while the second for increasing the revenue of the plant
-    \end{itemize}
-  }
-\end{frame}
-
-%   __  __           _      _ _ _             
-%  |  \/  | ___   __| | ___| | (_)_ __   __ _ 
-%  | |\/| |/ _ \ / _` |/ _ \ | | | '_ \ / _` |
-%  | |  | | (_) | (_| |  __/ | | | | | | (_| |
-%  |_|  |_|\___/ \__,_|\___|_|_|_|_| |_|\__, |
-%                                       |___/ 
-
-\section{Modelling}
-
-\begin{frame}{Modelling}
-  \input{d_plant_schema_presentation.tex}
-\end{frame}
-
-%    ____            _             _ 
-%   / ___|___  _ __ | |_ _ __ ___ | |
-%  | |   / _ \| '_ \| __| '__/ _ \| |
-%  | |__| (_) | | | | |_| | | (_) | |
-%   \____\___/|_| |_|\__|_|  \___/|_|
-                                   
-\section{Control}
 \begin{frame}{Operational regions}
 
   \begin{columns}
@@ -123,7 +155,8 @@
     \begin{column}{0.5\columnwidth}
       Tip Speed Ratio $\Rightarrow$ $\lambda=\frac{\omega R}{V_0}$\\
       Blade pitch angle $\Rightarrow$ $\theta$\\
-      Mech. rotor $\Rightarrow$ $P_R = \frac{1}{2}\pi R^2 \rho c_{P} V_0^3$
+      Incoming wind power $\Rightarrow$ $P_W = \frac{1}{2}\pi R^2 \rho V_0^3$\\
+      Mech. rotor $\Rightarrow$ $P_R = \left(\frac{1}{2}\pi R^2 \rho V_0^3\right) c_{P}$
     \end{column}
 
     \begin{column}{0.5\columnwidth}
@@ -149,80 +182,87 @@
     \end{figure}
   \end{column}
 \end{columns}
+
+\note{
+  \begin{itemize}
+    \item This may be the most complicated slid to be described
+    \item In the top right we can define some quantities. The tip speed ratio is a dimensionless parameter used for expressing in one value the rotational speed, the rotor radius and the incoming wind speed. Then there is the expression of the potential power of the incoming WS, the power extracted from the resource which is a rescaled version of the incoming WS power. 
+    \item The first thing for the analysis of the wind-blade interaction is the definition of that $c_P$. This is done by applying the so called Blade Element Momentum theory, which under some assumptions (...) allows to find the forces on the rotor plane, and thus the $c_P$. Changing the TSR and the pitch angle different values of $c_P$ can be obtained and they are generally reported in countor plots like the one on top right. 
+    \item In the top right plot a specific point is highlighted, and is the maximum value of $c_P$. It means that working at that specific point one can extract the maximum amount of power from the resource. Since changing the WS also $\lambda$ changes, then it is necessary to adapt the turbine rotational speed in order to work at the same $\lambda$. This condition realizes the MPPT described before.
+    \item Since the power extracted grows with the cubic of the WS, then the power may quickly exceed the rated values, which may lead to damages to the components. To do so, once the maximum power is reached, then it is necessary to move from the peak of the $c_P$ curve by means of changing the blade pitch angle, but keeping the rotational speed constant. As could be seen in the left bottom figure, by changing the pitch angle then the pitch angle decreases and there are two angles for which the power is limited exactly at the rated value. 
+    \item The full power curve is the one depicted in the bottom right figure, where also the cut in and cut out wind speed are included. 
+  \end{itemize}
+}
+
 \end{frame}
 
-\begin{frame}{Pitch controller}
-  \begin{figure}
-    \centering
-      \centering
-      \begingroup
-        \tikzset{every picture/.style={scale=0.7}}
-        \input{../d_blade_control}
-      \endgroup
-  \end{figure} 
-  \begin{figure}
-    \begin{subfigure}{0.49\textwidth}
-      \centering
-      \includegraphics[width = 0.9\columnwidth]{../images/fig_gain_sched_DTU10MW.eps}
-    \end{subfigure}
-    \begin{subfigure}{0.49\textwidth}
-      \centering
-      \includegraphics[width = 0.9\columnwidth]{../images/vectorial/fig_pitch_vs_V0.eps}
-    \end{subfigure}
-  \end{figure}
-
-  \note{Saturation necessary to avoid pitching action before the reaching of the rated rotational speed}
-\end{frame}
-
-\begin{frame}{Generator high level control}
+\begin{frame}{Generator power control - MPPT on rotor power}
 
   \begin{figure}
-    \begin{subfigure}{\columnwidth}
       \centering
       \begingroup
         \input{d_generator_block_presentation.tex}
       \endgroup
-    \end{subfigure}
-    \\
-    \begin{subfigure}{\columnwidth}
-      \centering
-      \begingroup
-        \tikzset{every picture/.style={scale=0.1}}
-        \input{d_torque_control_2_presentation.tex}
-      \endgroup
-    \end{subfigure}
   \end{figure}
+    \textcolor{yaleblue}{\textbf{Assumptions}}: no damping and unitary transmission ratio:
+    \begin{gather}
+      P_G = \frac{1}{2}\rho A c_P V_0^3 \Rightarrow \boxed{c_P = c_{P,MAX}, V_0=\frac{\omega R}{\lambda_{OPT}}} \Rightarrow \notag\\
+      \Rightarrow \frac{1}{2}\rho A c_{P,MAX} \left(\frac{\omega R}{\lambda_{OPT}}\right)^3=K_{OPT}\omega^3
+      \notag
+    \end{gather}
 
-  % \begin{myitemize}
-  %   \item Figure 21 -> became figure 25 -> Equation 35
-  % \end{myitemize}
-  % Only rotational speed measurement, damping compensation to avoid identification
+  \textcolor{yaleblue}{\textbf{Pros}}: No need for damping identification; only $\omega$ measurement\\
+  \textcolor{bostonuniversityred}{\textbf{Cons}}: Blind to model errors; losses in the generator
+
+  \note{
+    \begin{itemize}
+      \item In this slid I want first of all to show how does the structure of the generator controller. There is a high level controller that synthesis the torque reference, which is converted in voltage reference and then applied to the generator. 
+      \item As you can see, the torque reference is generated starting from the mechanical power in input at the generator, and a rotational speed measurement. In fact, as could be seen in the equation of the mechanical power at the generator input one can rewrite the maximum mechanical power as function of a constant (depending on the operational conditions generating the maximum power) and the cube of the rotational speed. Then the difference between the powers is used as input in a PI controller. 
+      \item The pros of this method is that it does not require the damping identification, even tough better results may be obtained with it, and requires only a rotational speed measurement. The cons are that the method relays on the model of the plant, and so if there are any changes in it they are not taken into account. Furthermore the method realizes the MPPT on the extracted mechanical power, which does not mean that the electrical output of the generator is maximized.
+       
+    \end{itemize}
+  }
 \end{frame}
 
-\begin{frame}{Generator high level control - 2}
-  Inclusion of the generator $\Rightarrow$ definition of a new control law \\
+\begin{frame}{Generator power control - MPPT on generator power}
+
+  {\scriptsize
+  \begin{gather}
+    P_{GE} = P_R - B_{eq}\omega_R^2 - \frac{3}{2} R_s i_q^2 =\frac{\rho\pi R^2c_PV_0^3}{2} - B_{eq}\omega_R^2-\frac{3}{2}R_s\left(\frac{n\left(A \, c_P \, \rho \, V_0^3 \,-\,2B_{eq}{\omega_R}^2\right)}{3\omega_R\,p\,\Lambda_{mg}}\right)^2 \notag 
+  \end{gather}
+  
   \begin{figure}[!htbp]
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.49\columnwidth}
       \centering
-      \includegraphics[width=\textwidth]{../images/vectorial/2023_11_29_17_33_45fig_lambda_GE.eps}
-      \caption{Tip speed ratio}
+      \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_29_17_33_45fig_lambda_GE.eps}
+      % \caption{Tip speed ratio}
     \end{subfigure}
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.49\columnwidth}
       \centering
-      \includegraphics[width=\textwidth]{../images/vectorial/2023_11_13_08_17_10fig_pitch_GE.eps}
-      \caption{Optimal pitch angle}
+      \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_13_08_17_10fig_pitch_GE.eps}
+      % \caption{Optimal pitch angle}
     \end{subfigure}
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.49\columnwidth}
       \centering
-      \includegraphics[width=\textwidth]{../images/vectorial/2023_11_11_23_31_31fig_omega_GE.eps}
-      \caption{Rotational speed}
+      \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_11_23_31_31fig_omega_GE.eps}
+      % \caption{Rotational speed}
     \end{subfigure}
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.49\columnwidth}
       \centering
-      \includegraphics[width=\textwidth]{../images/vectorial/fig_K_map.eps}
-      \caption{$K_{opt}$ gain}
+      \includegraphics[width=\columnwidth]{../images/vectorial/fig_K_map.eps}
+      % \caption{$K_{opt}$ gain}
     \end{subfigure}
   \end{figure}
+  }
+
+  \note{
+    \begin{itemize}
+      \item Definition of a new control low based on the maximization of the power a the generator side. To do so, one can include the losses on the generator, and then apply the maximization of the power with respect to the blade pitch angle and the Tip Speed Ratio, for every wind velocity.  
+      \item It could be seen that the optimal TSR and the pitch angle are not constant wrt the WS, so it in theory the control must now the actual WS to apply the correct values. This cannot be done, because the WS is not known because it is not measured. In order to simplify the control control, a single constant value is considered and then applied the same law as before but with the new values
+      \item It is expected that the maximization of the power will be more effective where the wind speed is closer to where the approximation is closer to the value that should be
+    \end{itemize}
+  }
+
 \end{frame}
 
 \begin{frame}{Generator high level control - 3}
@@ -231,7 +271,7 @@
   \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\columnwidth]{../images/IMM_schema.png}
-    \caption{Source \textit{Kalman-based interacting multiple-model wind speed estimator for wind turbines}}
+    % \caption{Source \textit{Kalman-based interacting multiple-model wind speed estimator for wind turbines}}
   \end{figure}
   \begin{gather}
     \notag
@@ -329,7 +369,69 @@
 %  | |_) | (_| | (__|   <  | |_| | |_) |
 %  |____/ \__,_|\___|_|\_\  \__,_| .__/ 
 %                                |_|    
+\section{Beck up slides}
+\begin{frame}{Pitch controller}
+  \begin{figure}
+    \centering
+      \centering
+      \begingroup
+        \tikzset{every picture/.style={scale=0.7}}
+        \input{../d_blade_control}
+      \endgroup
+  \end{figure} 
+  \begin{figure}
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width = 0.9\columnwidth]{../images/fig_gain_sched_DTU10MW.eps}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+      \centering
+      \includegraphics[width = 0.9\columnwidth]{../images/vectorial/fig_pitch_vs_V0.eps}
+    \end{subfigure}
+  \end{figure}
 
-\begin{frame}{Controller}
-  
+  \note{
+    \begin{itemize}  
+      \item This slide shows the implementation of the blade pitch controller. Its main parts are a PI, two gain scheduler and a saturation block.
+      
+      \item The PI controller uses the rotational speed error between the actual transmission side rotational speed and the reference one (i.e. the rotational speed associated with the optimal TSR at the wind speed of reaching the rated power)
+      \item Saturation necessary to avoid pitching action before the reaching of the rated rotational speed. A simple anti-windup schema is implemented for avoiding delays in the pitching action.
+      \item The gain scheduling is necessary to ...
+    \end{itemize}
+  }
+
+\end{frame}
+
+\begin{frame}{MPPT control implementation}
+  \begin{gather}
+    P_G = P_R - B_{eq} \omega^2 \Rightarrow \boxed{c_P = c_{P,MAX}, V_0=\frac{\omega R}{\lambda_{OPT}}} \Rightarrow \notag\\
+    \Rightarrow \frac{1}{2}\rho A c_{P,MAX} \left(\frac{\omega R}{\lambda_{OPT}}\right)^3 - B_{eq} \omega^2=K\omega^3 - B_{eq} \omega^2
+    \notag
+  \end{gather}
+
+  \begin{figure}
+      \centering
+      \begingroup
+        \tikzset{every picture/.style={scale=0.1}}
+        \input{d_torque_control_2_presentation.tex}
+      \endgroup
+  \end{figure}
+  Note: $B_{eq}$ inclusion $\Rightarrow$ Identification needed but finer tracking
+\end{frame}
+
+\begin{frame}{Generator low level control}
+  \begin{figure}[H]
+    \centering
+    \begingroup
+      \tikzset{every picture/.style={scale=0.05}}
+      \input{d_torque_control_presentation.tex}
+    \endgroup
+  \end{figure}
+
+  \begin{gather}
+    \text{Controller: } R_{iq}=k_{p,iq} + \frac{k_{i,iq}}{s}+k_{d,iq}s=k_{i,iq}\left( \frac{k_{p,iq}}{k_{i,iq}} + \frac{1}{s} + \frac{k_{d,iq}}{k_{i,iq}}s \right) = \notag\\
+    =\frac{k_{i,iq}}{s}\left(1+s\uptau_P\right)\left(1+s\uptau_I\right) \notag\\
+    \text{Converter delay: } G_c = \frac{1}{1+\uptau_cs} \notag\\
+    \text{Generator: } Y_{iq} = -\frac{B_{eq} + J_{eq}s}{L_sJ_{eq}s^2+\left(R_sJ_{eq} + L_s B_{eq}\right)s + R_sB_{eq} + \frac{3}{2}(p\Lambda_{mg})^2} \notag        
+  \end{gather}
 \end{frame}
