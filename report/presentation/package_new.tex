@@ -31,7 +31,7 @@
 %\bibliography{reference} %Name of the reference file, without the .bib extension
 % \addbibresource{../document.bib}
 \setbeamertemplate{itemize items}[circle]
-\setbeamertemplate{enumerate items}[default]
+% \setbeamertemplate{enumerate items}[default]
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{blocks}[rounded][shadow=false]
 \setbeamertemplate{footline}[frame number]
@@ -59,7 +59,10 @@
 \definecolor{mediumred-violet}{rgb}{0.73, 0.2, 0.52}
 \definecolor{red-violet}{rgb}{0.78, 0.08, 0.52}
 \definecolor{bostonuniversityred}{rgb}{0.8, 0.0, 0.0}
-
+\definecolor{paleyellow}{RGB}{255, 255, 153}
+\definecolor{coral}{RGB}{255, 111, 97}
+\definecolor{mintgreen}{RGB}{161, 232, 175}
+\definecolor{lavender}{RGB}{177, 156, 217}
 
 \newcommand{\makeblue}[1]{\textcolor{mDarkTeal}{#1}}
 \newcommand{\makeorange}[1]{\textcolor{orange}{#1}}
@@ -68,6 +71,7 @@
 \newcommand{\makemagenta}[1]{\textcolor{deepmagenta}{#1}}
 \newcommand{\makeorangeline}[1]{\textcolor{orangeline}{#1}}
 \newcommand{\makeblueline}[1]{\textcolor{blueline}{#1}}
+\newcommand{\bluebold}[1]{\textcolor{yaleblue}{\textbf{#1}}}
 \setbeamercolor{block title}{bg=mDarkTeal, fg=white}
 \setbeamerfont{block title}{size=\small}
 
@@ -116,7 +120,7 @@
 %  |___/\___|\___|\__|_|\___/|_| |_|  \__|_|\__|_|\___|
                                                      
 \AtBeginSection[]{
-  \begin{frame}
+  \begin{frame}[plain,noframenumbering]
   \vfill
   \centering
   \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
@@ -137,7 +141,10 @@
 % \setlist[myitemize,1]{label=\textbullet} % Outer level uses bullet
 \setlist[myitemize,1]{label=\textcolor{yaleblue}{$\bullet$}} % Outer level uses bullet
 \setlist[myitemize,2]{label=\textcolor{yaleblue}{$\diamond$}} % Second level uses diamond
-\setbeamertemplate{enumerate items}[circle]
+% \setbeamertemplate{enumerate items}[circle]
+\newlist{myenumerate}{enumerate}{2}
+\setlist[myenumerate,1]{label=\textcolor{yaleblue}{\Roman*.}} % Outer level uses bullet
+\setlist[myenumerate,2]{label=\textcolor{yaleblue}{\arabic*.}} % Second level uses diamond
 
 %   _        _              __                   _   
 %  | |_ __ _| |__     ___  / _|   ___ ___  _ __ | |_ 
@@ -159,6 +166,6 @@
 %  |_| |_|\___/ \__\___|
                       
 % \setbeamertemplate{note page}[plain] % un-comment to don't see the notes
-\setbeameroption{show notes} % un-comment to see the notes
-% \setbeameroption{show notes on second screen=right} 
+% \setbeameroption{show notes} % un-comment to see the notes
+\setbeameroption{show notes on second screen=right} 
 \setbeamerfont{note page}{size=\tiny}
