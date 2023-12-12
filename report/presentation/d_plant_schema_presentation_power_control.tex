@@ -1,8 +1,9 @@
 \tikzstyle{block} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
-\tikzstyle{block_skyblue} = [draw, fill=coral, rectangle, minimum height=2.5em, minimum width=3em]
-\tikzstyle{block_yellow} = [draw, fill=paleyellow, rectangle, minimum height=2.5em, minimum width=3em]
-\tikzstyle{block_green} = [draw, fill=mintgreen, rectangle, minimum height=2.5em, minimum width=3em]
-\tikzstyle{block_magenta} = [draw, fill=lavender, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block_skyblue} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block_yellow} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block_green} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block_magenta} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em]
+\tikzstyle{block_red} = [draw, fill=red, rectangle, minimum height=2.5em, minimum width=3em, text=white]
 % \tikzstyle{block_magenta} = [draw, fill=magenta, rectangle, minimum height=2.5em, minimum width=3em]
 \tikzstyle{block_dashed} = [draw, fill=white, rectangle, minimum height=2.5em, minimum width=3em, dashed]
 \tikzstyle{sum} = [draw, fill=white, circle, node distance=2.0cm]
@@ -41,7 +42,7 @@
   \node [style=block_magenta, align=center] (3) at (3, -2.5) {Mechanical \\ transmission};
   \node [style=block_yellow, align=center] (4) at (6, -2.5) {Pitch \\ controller};
   \node [style=block_yellow, align=center] (5) at (9, -2.5) {Pitch \\ actuator};
-  \node [style=block_green, align=center] (6) at (3, -4.25) {Power \\ controller};
+  \node [style=block_red, align=center] (6) at (3, -4.25) {Power \\ controller};
   \node [style=block_green, align=center] (24) at (6, -4.25) {Current \\ controller};
   \node [style=block_green, align=center] (7) at (9, -4.25) {Generator \\ (PMSM)};
   \node [style=block_dashed, align=center] (8) at (12.5, -4.25) {Power \\electronics};
@@ -60,14 +61,13 @@
   \node [dot=1pt] (22) at (9.9, -4) {};
   \node [dot=1pt] (23) at (10.5, -4) {};
   \node [dot=1pt] (25) at (1.25, -3.5) {};
-  \node [dot=1pt] (26) at (2.4, 0.35) {};
-  \node [dot=1pt] (27) at (5.22, 0.35) {};
-  \node [dot=1pt] (28) at (3.6, 0.35) {};
+  \node [dot=1pt] (26) at (2.3, 0.35) {};
+  \node [dot=1pt] (27) at (5.22, 0.25) {};
 
   \draw [->] (10) -- node {$V_0$} (26);
   \draw [->] (11) -- node {$\omega_R$} (3);
   \draw [-] (11) -- node {} (13);
-  \draw [->] (28) -- node {$T_R$} (27);
+  \draw [->] (1.160) ++(1.4,0) -- node {$T_R$} (27);
   \draw [-] (2) -| node[pos=0.65] {$\omega_R$} (12); 
   \draw [-] (12) -- node {} (13);
   \draw [->] (13) |- node {} (1.175);

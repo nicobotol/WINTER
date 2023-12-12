@@ -24,6 +24,8 @@
 \usepackage{dashrule}
 \usepackage{tikz}
 \usepackage{upgreek}
+\usepackage{multirow}
+% \usepackage{adjustbox}
 \usetikzlibrary{shapes,arrows}
 \usetikzlibrary{math} %needed tikz library
 \usepackage[export]{adjustbox}
@@ -42,6 +44,8 @@
 \end{textblock*}
 
 }
+
+\newcommand{\mesunt}[1]{\left[\si{#1}\right]}
 
 %             _                
 %    ___ ___ | | ___  _ __ ___ 
@@ -72,6 +76,7 @@
 \newcommand{\makeorangeline}[1]{\textcolor{orangeline}{#1}}
 \newcommand{\makeblueline}[1]{\textcolor{blueline}{#1}}
 \newcommand{\bluebold}[1]{\textcolor{yaleblue}{\textbf{#1}}}
+\newcommand{\redbold}[1]{\textcolor{bostonuniversityred}{\textbf{#1}}}
 \setbeamercolor{block title}{bg=mDarkTeal, fg=white}
 \setbeamerfont{block title}{size=\small}
 

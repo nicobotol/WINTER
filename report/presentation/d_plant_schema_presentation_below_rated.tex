@@ -16,35 +16,35 @@
 
 \usetikzlibrary{positioning}
 \makeatletter
-\pgfdeclareshape{record}{
-\inheritsavedanchors[from={rectangle}]
-\inheritbackgroundpath[from={rectangle}]
-\inheritanchorborder[from={rectangle}]
-\foreach \x in {center,north east,north west,north,south,south east,south west}{
-\inheritanchor[from={rectangle}]{\x}
-}
-\foregroundpath{
-\pgfpointdiff{\northeast}{\southwest}
-\pgf@xa=\pgf@x \pgf@ya=\pgf@y
-\northeast
-\pgfpathmoveto{\pgfpointadd{\southwest}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
-\pgfpathlineto{\pgfpointadd{\southwest}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
-\pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
-\pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
-}
-}
+% \pgfdeclareshape{record}{
+% \inheritsavedanchors[from={rectangle}]
+% \inheritbackgroundpath[from={rectangle}]
+% \inheritanchorborder[from={rectangle}]
+% \foreach \x in {center,north east,north west,north,south,south east,south west}{
+% \inheritanchor[from={rectangle}]{\x}
+% }
+% \foregroundpath{
+% \pgfpointdiff{\northeast}{\southwest}
+% \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+% \northeast
+% \pgfpathmoveto{\pgfpointadd{\southwest}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+% \pgfpathlineto{\pgfpointadd{\southwest}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+% \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.75\pgf@xa}{-0.6\pgf@ya}}}
+% \pgfpathlineto{\pgfpointadd{\northeast}{\pgfpoint{-0.33\pgf@xa}{-0.6\pgf@ya}}}
+% }
+% }
 \makeatother
 
-\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex',centered=left]
   \node [style=block_skyblue, align=center] (1) at (3, 0) {Aero};
   \node [style=block_magenta, align=center] (2) at (6, 0) {Mech. \\ dynamic};
   \node [style=block_magenta, align=center] (3) at (3, -2.5) {Mechanical \\ transmission};
-  \node [style=block_yellow, align=center] (4) at (6, -2.5) {Pitch \\ controller};
-  \node [style=block_yellow, align=center] (5) at (9, -2.5) {Pitch \\ actuator};
-  \node [style=block_green, align=center] (6) at (3, -4.25) {Power \\ controller};
-  \node [style=block_green, align=center] (24) at (6, -4.25) {Current \\ controller};
-  \node [style=block_green, align=center] (7) at (9, -4.25) {Generator \\ (PMSM)};
-  \node [style=block_dashed, align=center] (8) at (12.5, -4.25) {Power \\electronics};
+  \node [style=block_dashed, align=center] (4) at (6, -2.5) {Pitch \\ controller};
+  % \node [style=block_yellow, align=center] (5) at (9, -2.5) {Pitch \\ actuator};
+  \node [style=block_green, align=center] (6) at (3, -4.75) {Power \\ controller};
+  \node [style=block_green, align=center] (24) at (6, -4.75) {Current \\ controller};
+  \node [style=block_green, align=center] (7) at (9, -4.75) {Generator \\ (PMSM)};
+  \node [style=block_dashed, align=center] (8) at (12.5, -4.75) {Power \\electronics};
   \node [style=block_dashed] (9) at (12.5, -2.25) {Grid};
   \node [style=input] (10) at (1.5,0.35) {};
   \node [dot=1pt] (11) at (1.25, -2.5) {};
@@ -53,12 +53,12 @@
   \node [dot=1pt] (14) at (10.25, -1.5) {};
   \node [dot=1pt] (15) at (2, -1.5) {};
   \node [dot=1pt] (17) at (4.5, -2.5) {};
-  \node [dot=1pt] (18) at (10.5, -4.25) {};
+  \node [dot=1pt] (18) at (10.5, -4.75) {};
   \node [dot=1pt] (19) at (4.5, -0.75) {};
-  \node [dot=1pt] (20) at (9, -5.25) {};
-  \node [dot=1pt] (21) at (1.25, -5.25) {};
-  \node [dot=1pt] (22) at (9.9, -4) {};
-  \node [dot=1pt] (23) at (10.5, -4) {};
+  \node [dot=1pt] (20) at (9, -5.75) {};
+  \node [dot=1pt] (21) at (1.25, -5.75) {};
+  \node [dot=1pt] (22) at (9.9, -4.5) {};
+  \node [dot=1pt] (23) at (10.5, -4.5) {};
   \node [dot=1pt] (25) at (1.25, -3.5) {};
   \node [dot=1pt] (26) at (2.4, 0.35) {};
   \node [dot=1pt] (27) at (5.22, 0.35) {};
@@ -67,14 +67,15 @@
   \draw [->] (10) -- node {$V_0$} (26);
   \draw [->] (11) -- node {$\omega_R$} (3);
   \draw [-] (11) -- node {} (13);
-  \draw [->] (28) -- node {$T_R$} (27);
+  \draw [->] (28)-- node {$T_R$} (27);
   \draw [-] (2) -| node[pos=0.65] {$\omega_R$} (12); 
   \draw [-] (12) -- node {} (13);
   \draw [->] (13) |- node {} (1.175);
   \draw [->] (3) -> node {$\omega_G$} (4);
-  \draw [->] (4) -> node {$\theta^*$} (5);
-  \draw [-] (5) -| node {} (14);
-  \draw [-] (15) -- node {$\theta$} (14);
+  % \draw [->] (4) -> node {$\theta^*$} (5);
+  % \draw [-] (5) -| node {} (14);
+  \draw [-] (4) -| node {} (14);
+  \draw [-] (15) -- node {\redbold{$\theta$=constant}} (14);
   \draw [->] (15) |- node {} (1.200);
   \draw [-] (17) |- node {} (25);
   \draw [->] (25) |- node {} (6.160);

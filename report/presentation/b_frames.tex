@@ -13,7 +13,7 @@
       \begin{cases}
         \text{was the second renewable energy source}\\
         \text{covered 17\% of electrical demand}\\
-        \text{onshore average size 4.1 MW, offshore 8.0 MW}
+        \text{onshore avg. size 4.1 MW, offshore 8.0 MW}
       \end{cases}
       \]
     
@@ -23,7 +23,7 @@
           \[
             \text{\bluebold{Upscaling trend}}
             \begin{cases}
-              \text{more power}\\
+              \text{more power (e.g. 15 MW)}\\
               \text{higher costs}\\
               \text{higher loads}
             \end{cases}  
@@ -32,7 +32,7 @@
         \begin{column}{0.5\columnwidth}
           \begin{figure}
             \centering
-            \includegraphics[scale=0.13]{../images/dimensions.jpg}
+            \includegraphics[scale=0.063]{../images/V236.jpg}
           \end{figure}
         \end{column}
       \end{columns}
@@ -50,7 +50,8 @@
      \[
       \text{\bluebold{Scopes} of the thesis}
       \begin{cases}
-        \text{develop integrated simulation model}\\
+        \text{develop integrated simulation model} \\
+        \text{conceptually simple, reasonably fast}\\
         \text{test different control strategies}
       \end{cases}
       \]
@@ -65,7 +66,7 @@
       \item Upscaling trends, since bigger plants can reduce the costs because expenditures are made for plants that can deliver more power. Off course, this trends came with some drawbacks: higher cost of the single generator, higher loads to be withstood by the structure and blades, cannot relay on real prototypes
       \item The use of controllers is fundamental for reducing the loads and extract as much energy as possible. The first is important for extending the lifespan of the turbine while the second for increasing the revenue of the plant
       \item The scope of the thesis is twofold because in the first part I want to develop a model fo a WT, while in the second I want to use it for testing different control strategies
-      \item Uso didattico, matlab e simulink erchè complessivo, non ci interassano modelli eccesvamente comomplicati ma doveva essere ragionevolmente semplice
+      \item The simulator is also intended to be used for didactic purposes, so it should complex enough to see the behavior of the turbine but also simple enough to be easily understood. For this reason it is decided to implement it in simulink which is quite affordable. 
     \end{myitemize}
     }
   
@@ -80,51 +81,25 @@
   
 \section{Modelling}
 
-\begin{frame}{Target and assumptions}
-  \begin{myitemize}
-    \item Use of the \bluebold{DTU 10 MW} Ref. WT
-    \begin{myitemize}
-      \item Public data
-      \item Size above the average but already present
-      \item Offshore deployment 
-      \item Direct driven, variable speed, pitch controlled
-    \end{myitemize}
-
-    \item Wind blade, transmission system, generator, blade pitch
-    \item No hydrodynamic loads, no mooring system, no tower effects
-    \item No grid connection
-  \end{myitemize} 
-
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.5\columnwidth]{../images/fig_drivetrain.jpg}
-  \end{figure}
-
-  \note{
-    \begin{myitemize}
-      \item Use of the DTU 10 MW which is a turbine not intended to be built but only used to design purposes and share the data with community. Its size is above the average but already present in the market. It is direct driven, variable speed, and pitch regulated (later on will we see the meaning of these terms)
-      \item The model includes the wind-blade interaction, the blade pitching mechanism, the transmission system, the electric generator
-      \item Even though the turbine was designed for offshore deployment no specific offshore characteristics are taken into account, such as the hydrodynamic loads, the mooring system, the tower effects. Finally, the grid connection is not considered
-    \end{myitemize}
-    }
-  
-
-\end{frame}
-
-\begin{frame}{Model scheme - Move on the backup}
+\begin{frame}{Model scheme}
   \input{d_plant_schema_presentation.tex}
+  Target turbine: \bluebold{DTU 10 MW} Reference turbine\\
+  \redbold{Not included:} hydrodynamic loads, mooring, tower effects
 
   \note{
     \begin{myitemize}
       \item In this slid the scheme of the simulation can be seen. In the upper part there is the block modelling the aero torque given the wind speed, the rotational speed and the pitch angle. Then there is the mechanical dynamic that solves the euler equation for the rotor. The rotational speed is reported at the other side of the transmission by means of a transmission (that in this case has unit ratio b ut it is considered to be a placeholder). The rotational speed is then used for defining both the pitch control and the generator power one. Finally the generator torque is used for the mechanical dynamic. The power electronic and grid blocks are included only to complete the picture but they are not modelled in the simulation.
-      \item Togliere BEM dal grafico
+      \item Transmission included to model also non-direct drive WTs
     \end{myitemize}
     }
 
 \end{frame}
 
-\begin{frame}{simulink}
-  Screen shot scheme
+\begin{frame}{Simulink implementation}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{../images/simulink_screen.jpg}
+  \end{figure}
 \end{frame}
 
 %    ____            _             _ 
@@ -133,26 +108,17 @@
 %  | |__| (_) | | | | |_| | | (_) | |
 %   \____\___/|_| |_|\__|_|  \___/|_|
                                    
-\section{Control}
+\section{Controls and simulations}
 \begin{frame}{Controllers}
   
-  \begin{myitemize}
-    \item  Different \bluebold{levels} of controllers
+ Different \bluebold{levels} of controllers
     \begin{figure}
       \centering
       \includegraphics[width=0.7\columnwidth]{../images/control_levels.jpg}
+      \caption{{\tiny \textit{Power electronics: The enabling technology for renewable energy integration}}}
     \end{figure}
 
-    \item Test different control strategies for \bluebold{MPPT}
-    \begin{myitemize}
-      \item Maximization of the power to the rotor side
-      \item Maximization of the electrical power output
-      \item Power maximization considering the uncertainties
-    \end{myitemize}
-
-    \item Blade pitch control
-  \end{myitemize}
-
+    Control for Maximum Power Point Tracking (\bluebold{MPPT})
   \note{
     \begin{myitemize}
       \item In a WT there are different levels of controllers. At the higher there are the ones related to power quality and coordination between turbines. In the middle level there are the feature at which we are interested, which are on a higher level with respect to the voltage and current controllers or the PWM.
@@ -169,39 +135,39 @@
 
   \begin{columns}
 
-    \begin{column}{0.5\columnwidth}
-      {\small
-      Definire i simboli\\
-      Wind power $\Rightarrow$ $P_W = \frac{1}{2}\pi R^2 \rho V_0^3$\\
-      Mech. rotor $\Rightarrow$ $P_R = \left(\frac{1}{2}\pi R^2 \rho V_0^3\right) c_{P}$
-      Tip Speed Ratio $\Rightarrow$ $\lambda=\frac{\omega R}{V_0}$\\
-      Blade pitch angle $\Rightarrow$ $\theta$\\
-      }
+    \begin{column}{0.4\columnwidth}
+      \begin{myitemize}
+        \item Wind power: $P_W = \frac{1}{2}\pi R^2 \rho V_0^3$
+        \item Mech. rotor: $P_R = \left(\frac{1}{2}\pi R^2 \rho V_0^3\right) c_{P}$
+        \item Tip Speed Ratio: $\lambda=\frac{\omega R}{V_0}$
+      \end{myitemize}
+     
+     
+      \begin{table}
+        \begin{tabular}{cc}
+          \toprule
+          $V_0$ & Wind speed\\
+          $\rho$ & Air density\\
+          R & Rotor radius\\
+          $\omega$ & Rotational speed\\
+          $\theta$ & Blade pitch angle  \\        
+          \bottomrule
+        \end{tabular}
+      \end{table}
     \end{column}
 
-    \begin{column}{0.5\columnwidth}
+    \begin{column}{0.55\columnwidth}
       \begin{figure}
         \centering
-        \includegraphics[width=\columnwidth]{../images/vectorial/contour_plot_cP.eps}
+        \includegraphics[width=\columnwidth]{../images/vectorial/contour_plot_cP_presentation.eps}
+      \end{figure}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=\columnwidth]{../images/vectorial/operating_reagions.eps}
       \end{figure}
     \end{column}
     
   \end{columns}
-
-\begin{columns}
-  \begin{column}{0.5\columnwidth}
-    \begin{figure}
-      \centering
-      \includegraphics[width=\columnwidth]{../images/vectorial/fig_power_vs_pitch.eps}
-    \end{figure}
-  \end{column}
-  \begin{column}{0.5\columnwidth}
-    \begin{figure}[H]
-      \centering
-      \includegraphics[width=\columnwidth]{../images/vectorial/operating_reagions.eps}
-    \end{figure}
-  \end{column}
-\end{columns}
 
 \note{
   \begin{myitemize}
@@ -211,22 +177,62 @@
     \item In the top right plot a specific point is highlighted, and is the maximum value of $c_P$. It means that working at that specific point one can extract the maximum amount of power from the resource. Since changing the WS also $\lambda$ changes, then it is necessary to adapt the turbine rotational speed in order to work at the same $\lambda$. This condition realizes the MPPT described before.
     \item Since the power extracted grows with the cubic of the WS, then the power may quickly exceed the rated values, which may lead to damages to the components. To do so, once the maximum power is reached, then it is necessary to move from the peak of the $c_P$ curve by means of changing the blade pitch angle, but keeping the rotational speed constant. As could be seen in the left bottom figure, by changing the pitch angle then the pitch angle decreases and there are two angles for which the power is limited exactly at the rated value. 
     \item The full power curve is the one depicted in the bottom right figure, where also the cut in and cut out wind speed are included. 
-    \item Togliere grafico sinistra
-    \item Identificare nel grafico lambda e theta opt con linee
   \end{myitemize}
 }
 
 \end{frame}
 
+\begin{frame}{Active routes}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../images/vectorial/operating_reagions.eps}
+  \end{figure}
+
+  %divide in two columns 0.5\columnwidt each
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Active routes \bluebold{below} rated power
+      % \begin{figure} 
+        \begin{center}
+          \adjustbox{center}{
+          \resizebox{\columnwidth}{!}{%
+            \input{d_plant_schema_presentation_below_rated.tex}
+          }
+          }
+        \end{center}
+      % \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      Active routes \bluebold{above} rated power
+      % \begin{figure}
+        \begin{center}
+          \adjustbox{center}{
+          \resizebox{\columnwidth}{!}{%
+            \input{d_plant_schema_presentation_above_rated.tex}
+          }
+          }
+        \end{center}
+      % \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%   __  __ ____  ____ _____             _             
+%  |  \/  |  _ \|  _ \_   _|  _ __ ___ | |_ ___  _ __ 
+%  | |\/| | |_) | |_) || |   | '__/ _ \| __/ _ \| '__|
+%  | |  | |  __/|  __/ | |   | | | (_) | || (_) | |   
+%  |_|  |_|_|   |_|    |_|   |_|  \___/ \__\___/|_|   
+                                                    
 \begin{frame}{Generator power control - MPPT on rotor power}
 
   \begin{figure}
-      \centering
-      \begingroup
-        \input{d_generator_block_presentation.tex}
-      \endgroup
+  \resizebox{0.7\textwidth}{!}{%
+    \input{d_plant_schema_presentation_power_control.tex}
+  }
   \end{figure}
-    \textcolor{yaleblue}{\textbf{Assumptions}}: unitary transmission ratio
+
+    % \textcolor{yaleblue}{\textbf{Assumptions}}: unitary transmission ratio
     \begin{gather}
      \text{Power set point: } P_G = \frac{1}{2}\rho A c_P V_0^3 \Rightarrow \boxed{c_P = c_{P,max}, V_0=\frac{\omega R}{\lambda_{opt}}} \Rightarrow \notag\\
       \Rightarrow \frac{1}{2}\rho A c_{P,max} \left(\frac{\omega R}{\lambda_{opt}}\right)^3=K_{opt}\omega^3
@@ -234,123 +240,18 @@
     \end{gather}
 
   \textcolor{yaleblue}{\textbf{Pros}}: Only $\omega$ measurement\\
-  \textcolor{bostonuniversityred}{\textbf{Cons}}: Blind to model errors; losses in the generator no damping 
+  \textcolor{bostonuniversityred}{\textbf{Cons}}: Losses in the generator \& no damping; Blind to model errors 
 
   \note{
     \begin{myitemize}
       \item In this slid I want first of all to show how does the structure of the generator controller. There is a high level controller that synthesis the torque reference, which is converted in voltage reference and then applied to the generator. 
       \item As you can see, the torque reference is generated starting from the mechanical power in input at the generator, and a rotational speed measurement. In fact, as could be seen in the equation of the mechanical power at the generator input one can rewrite the maximum mechanical power as function of a constant (depending on the operational conditions generating the maximum power) and the cube of the rotational speed. Then the difference between the powers is used as input in a PI controller. 
       \item The pros of this method is that it does not require the damping identification, even tough better results may be obtained with it, and requires only a rotational speed measurement. The cons are that the method relays on the model of the plant, and so if there are any changes in it they are not taken into account. Furthermore the method realizes the MPPT on the extracted mechanical power, which does not mean that the electrical output of the generator is maximized.
-       \item Togliere grafico da questa slide mettere quello complete devidenziando in rosso power controller li 
     \end{myitemize}
   }
 \end{frame}
 
-\begin{frame}{Generator power control - MPPT on generator power}
-
-  Inclusion of the generator losses in the power equations
-  
-
-  \begin{columns}
-    \begin{column}{0.5\columnwidth}
-      {\scriptsize
-      \begin{gather*}
-        P_{GE} = P_R - B_{eq}\omega^2 - \frac{3}{2} R_s i_q^2 =\\
-        =\frac{\rho\pi R^2c_PV_0^3}{2} - B_{eq}\omega^2-\frac{3}{2}R_s\left(\frac{A \, c_P \, \rho \, V_0^3 \,-\,2B_{eq}{\omega}^2}{3\omega\,p\,\Lambda_{mg}}\right)^2 
-      \end{gather*}
-      \begin{equation*}
-      \underset{\lambda, \theta}{\text{maximize}} P_{GE}
-      \end{equation*}
-      }
-    \end{column}
-    \begin{column}{0.5\columnwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[width=0.8\columnwidth]{../images/vectorial/2023_11_29_17_33_45fig_lambda_GE.eps}
-        % \caption{Tip speed ratio}
-      \end{figure}
-    \end{column}
-  \end{columns}
-
-\begin{columns}
-\begin{column}{0.5\columnwidth}
-  \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{../images/vectorial/2023_11_13_08_17_10fig_pitch_GE.eps}
-    % \caption{Optimal pitch angle}
-  \end{figure}
-\end{column}
-\begin{column}{0.5\columnwidth}
-  \begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{../images/vectorial/fig_K_map.eps}
-    % \caption{$K_{opt}$ gain}
-  \end{figure}
-  \end{column}
-\end{columns}
-
-\textcolor{yaleblue}{Pros: } Use of the same controller structure as before\\
-\textcolor{bostonuniversityred}{Cons: } Approximations in the solution
-
-%   \note{
-%     \begin{myitemize}
-%       \item Definition of a new control low based on the maximization of the power a the generator side. To do so, one can include the losses on the generator, and then apply the maximization of the power with respect to the blade pitch angle and the Tip Speed Ratio, for every wind velocity.  
-%       \item Again it is assumed that only a rotational speed measurement is available
-%       \item It could be seen that the optimal TSR and the pitch angle are not constant wrt the WS, so it in theory the control must now the actual WS to apply the correct values. This cannot be done, because the WS is not known because it is not measured. In order to simplify the control control, a single constant value is considered and then applied the same law as before but with the new values
-%       \item This is an advantage because the controller used so far, (with only a rotational speed measures) is still valid
-%       \item It is expected that the maximization of the power will be more effective where the wind speed is closer to where the approximation is closer to the value that should be
-%     \end{myitemize}
-%   }
-
-\end{frame}
-
-\begin{frame}{Generator power control - MPPT with uncertainty}
- \textcolor{yaleblue}{\textbf{Problem:}} What happen when parameters change in time or are unknown?
-  \begin{equation}
-    K_{opt} =  \frac{\rho \pi R^5 c_{p,max}}{2\lambda_{opt}^3}
-    \notag
-  \end{equation}
-
-  \begin{columns}
-    \begin{column}{0.5\columnwidth}
-      \begin{myenumerate}
-        \item Run a bank of Extended Kalman Filters over different models $\rho^{(j)}$
-        \item Compute the probability of each model $\mu_k^{(j)}$
-        \item Compute the gain as weighted sum of the models
-        \begin{gather}
-          \notag
-          \hat{K}_{opt,k} = \sum_j \mu_k^{(j)} K_{opt}^{(j)} 
-        \end{gather}
-      \end{myenumerate}
-    \end{column}
-
-    \begin{column}{0.5\columnwidth}
-      \begin{figure}[H]
-        \centering
-        \includegraphics[width=\columnwidth]{../images/IMM_schema.png}
-        % \caption{Source \textit{Kalman-based interacting multiple-model wind speed estimator for wind turbines}}
-      \end{figure}
-    \end{column}
-  \end{columns}
-
-  \note{
-    \begin{myitemize}
-      \item Up to now, only constant in time parameters have been considered in the construction of the MPPT feedback, since all the parameters in $K_{opt}$ has been considered constant. This in the reality is not true, since for example density could change, blade can deform loading a different R which in turns induces different cp and TSR because all the blade aerodynamic changes. To make things easy, only a variation of the $\rho$ has been considered here, which does not imply a modification of the cp map and the TSR. Furthermore the $K_{opt}$ scales linearly with the density.
-      \item A possible solution is to use a IMM, as described in the slide. The idea is to run a bank of N EKF in parallel, each of them having a different model of the plant (i.e. a different air density). The state of the estimation are the rotational speed of the rotor and the WS. Then, basing on the error between the measurement and the prediction done with the model, one can quantify the probability that one model really describes the real plant. In the third step the most probable models updates the estimations done by the less probable ones.
-      \item On top of the estimation of the state, in this problem there is also the necessity of \textit{closing the loop}, meaning that there is the necessity to identify at each time step the most suitable $K_{opt}$ to be used in the controller. A simple solution is to weigh the different models by their probability 
-      
-    \end{myitemize}
-  }
-\end{frame}
-
-%   ____  _                 _       _   _                 
-%  / ___|(_)_ __ ___  _   _| | __ _| |_(_) ___  _ __  ___ 
-%  \___ \| | '_ ` _ \| | | | |/ _` | __| |/ _ \| '_ \/ __|
-%   ___) | | | | | | | |_| | | (_| | |_| | (_) | | | \__ \
-%  |____/|_|_| |_| |_|\__,_|_|\__,_|\__|_|\___/|_| |_|___/
-                                                        
-\section{Simulations}
-\begin{frame}{Simulation with standard control}
+\begin{frame}{Simulation - MPPT on rotor power}
   \begin{figure}[!htbp]
     \begin{subfigure}{0.49\columnwidth}
       \centering
@@ -385,7 +286,67 @@
   }
 \end{frame}
 
-\begin{frame}{Control based on generator power max}
+%   __  __ ____  ____ _____                                   _             
+%  |  \/  |  _ \|  _ \_   _|   __ _  ___ _ __   ___ _ __ __ _| |_ ___  _ __ 
+%  | |\/| | |_) | |_) || |    / _` |/ _ \ '_ \ / _ \ '__/ _` | __/ _ \| '__|
+%  | |  | |  __/|  __/ | |   | (_| |  __/ | | |  __/ | | (_| | || (_) | |   
+%  |_|  |_|_|   |_|    |_|    \__, |\___|_| |_|\___|_|  \__,_|\__\___/|_|   
+%                             |___/                                         
+
+\begin{frame}{Generator power control - MPPT on generator power}
+
+  Inclusion of the generator joule losses in the power equations
+  
+
+  \begin{columns}
+    \begin{column}{0.4\columnwidth}
+      { \tiny
+      \begin{gather*}
+          P_{GE} = P_R - B_{eq}\omega^2 - \frac{3}{2} R_s i_q^2 =\\
+        =\frac{\rho\pi R^2c_PV_0^3}{2} - B_{eq}\omega^2-\frac{3}{2}R_s\left(\frac{A \, c_P \, \rho \, V_0^3 \,-\,2B_{eq}{\omega}^2}{3\omega\,p\,\Lambda_{mg}}\right)^2 
+      \end{gather*}
+      }
+      \begin{equation*}
+        \underset{\lambda, \theta}{\text{maximize}} \, P_{GE}
+      \end{equation*}
+      
+      \begin{table}
+        \begin{tabular}{cc}
+          \toprule
+          Rs & Generator resistance\\
+          p & Number of pole pairs\\
+          $\Lambda_{mg}$ & Generator magnetic flux\\
+          \bottomrule
+        \end{tabular}
+      \end{table}
+            
+    \end{column}
+    \begin{column}{0.6\columnwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.8\columnwidth]{../images/vectorial/fig_K_map.eps}
+        % \caption{Tip speed ratio}
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+\vspace{0.5cm}
+\textcolor{yaleblue}{Pros:} Use of the same controller structure as before\\
+\textcolor{bostonuniversityred}{Cons:} Approximations in the solution
+
+  \note{
+    \begin{myitemize}
+      \item Definition of a new control low based on the maximization of the power a the generator side. To do so, one can include the losses on the generator, and then apply the maximization of the power with respect to the blade pitch angle and the Tip Speed Ratio, for every wind velocity.  
+      \item Again it is assumed that only a rotational speed measurement is available
+      \item It could be seen that the optimal TSR and the pitch angle are not constant wrt the WS, so it in theory the control must now the actual WS to apply the correct values. This cannot be done, because the WS is not known because it is not measured. In order to simplify the control control, a single constant value is considered and then applied the same law as before but with the new values
+      \item This is an advantage because the controller used so far, (with only a rotational speed measures) is still valid
+      \item It is expected that the maximization of the power will be more effective where the wind speed is closer to where the approximation is closer to the value that should be
+    \end{myitemize}
+  }
+
+\end{frame}
+
+\begin{frame}{Simulation - MPPT on generator power}
   \begin{figure}
     \centering
     \includegraphics[width = \columnwidth]{../images/vectorial/2023_11_21_10_17_02comparison_control_laws.eps}
@@ -399,7 +360,54 @@
   }
 \end{frame}
 
-\begin{frame}{Simulation with Interactive Multiple Model}
+%   __  __ ____  ____ _____                      
+%  |  \/  |  _ \|  _ \_   _|  _   _ _ __   ___   
+%  | |\/| | |_) | |_) || |   | | | | '_ \ / __|  
+%  | |  | |  __/|  __/ | |   | |_| | | | | (__ _ 
+%  |_|  |_|_|   |_|    |_|    \__,_|_| |_|\___(_)
+                                               
+
+\begin{frame}{Generator power control - MPPT with uncertainty}
+ \textcolor{yaleblue}{\textbf{Problem:}} What happens when parameters change over time or they are unknown?
+  \begin{equation}
+    K_{opt} =  \frac{\rho \pi R^5 c_{p,max}}{2\lambda_{opt}^3}
+    \notag
+  \end{equation}
+  Interactive Multiple Model (\bluebold{IMM}) approach
+
+  \begin{columns}
+    \begin{column}{0.5\columnwidth}
+      \begin{myenumerate}
+        \item Run a bank of Extended Kalman Filters (\bluebold{EKF}) over different models $\rho^{(j)}$
+        \item Compute the \bluebold{probability} of each model $\mu_k^{(j)}$
+        \item Compute the gain as \bluebold{weighted sum} of the models
+        \begin{gather}
+          \notag
+          \hat{K}_{opt,k} = \sum_j \mu_k^{(j)} K_{opt}^{(j)} 
+        \end{gather}
+      \end{myenumerate}
+    \end{column}
+
+    \begin{column}{0.5\columnwidth}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=\columnwidth]{../images/IMM_schema.png}
+        \caption{{\tiny \textit{Kalman-based interacting multiple-model wind speed estimator for wind turbines}}}
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+  \note{
+    \begin{myitemize}
+      \item Up to now, only constant in time parameters have been considered in the construction of the MPPT feedback, since all the parameters in $K_{opt}$ has been considered constant. This in the reality is not true, since for example density could change, blade can deform loading a different R which in turns induces different cp and TSR because all the blade aerodynamic changes. To make things easy, only a variation of the $\rho$ has been considered here, which does not imply a modification of the cp map and the TSR. Furthermore the $K_{opt}$ scales linearly with the density.
+      \item A possible solution is to use a IMM, as described in the slide. The idea is to run a bank of N EKF in parallel, each of them having a different model of the plant (i.e. a different air density). The state of the estimation are the rotational speed of the rotor and the WS. Then, basing on the error between the measurement and the prediction done with the model, one can quantify the probability that one model really describes the real plant. In the third step the most probable models updates the estimations done by the less probable ones.
+      \item On top of the estimation of the state, in this problem there is also the necessity of \textit{closing the loop}, meaning that there is the necessity to identify at each time step the most suitable $K_{opt}$ to be used in the controller. A simple solution is to weigh the different models by their probability 
+      
+    \end{myitemize}
+  }
+\end{frame}
+                                                        
+\begin{frame}{Simulation - MPPT with uncertainty}
   \begin{figure}[!htbp]
     \begin{subfigure}{0.49\columnwidth}
       \centering
@@ -470,6 +478,36 @@
 %  | |_) | (_| | (__|   <  | |_| | |_) |
 %  |____/ \__,_|\___|_|\_\  \__,_| .__/ 
 %                                |_|    
+\begin{frame}[plain,noframenumbering]{Target and assumptions}
+  \begin{myitemize}
+    \item Use of the \bluebold{DTU 10 MW} Ref. Wind Turbine (WT)
+    \begin{myitemize}
+      \item Public data
+      \item Size above the average but already present
+      \item Offshore deployment 
+      \item Direct driven, variable speed, pitch controlled
+    \end{myitemize}
+
+    \item Wind blade, transmission system, generator, blade pitch
+    \item No hydrodynamic loads, no mooring system, no tower effects
+    \item No grid connection
+  \end{myitemize} 
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{../images/fig_drivetrain.jpg}
+  \end{figure}
+
+  \note{
+    \begin{myitemize}
+      \item Use of the DTU 10 MW which is a turbine not intended to be built but only used to design purposes and share the data with community. Its size is above the average but already present in the market. It is direct driven, variable speed, and pitch regulated (later on will we see the meaning of these terms)
+      \item The model includes the wind-blade interaction, the blade pitching mechanism, the transmission system, the electric generator
+      \item Even though the turbine was designed for offshore deployment no specific offshore characteristics are taken into account, such as the hydrodynamic loads, the mooring system, the tower effects. Finally, the grid connection is not considered
+    \end{myitemize}
+    }
+  
+\end{frame}
+
 \section*{Back up slides}
 \begin{frame}[plain,noframenumbering]{Pitch controller}
   \begin{figure}
@@ -501,6 +539,72 @@
     \end{myitemize}
   }
   
+\end{frame}
+
+\begin{frame}[plain,noframenumbering]{Wind speed generation}
+
+{ \footnotesize
+  \begin{equation*}
+      PSD(f) = \frac{\mathcal{I} ^2V_{10}\mathcal{L} }{\left(1+1.5\frac{f \ \mathcal{L} }{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
+      \label{eq:PSD}
+  \end{equation*}
+  \begin{gather*}
+      u(t) = V_{10}+\sum_{j=1}^{N_s}\sqrt{\frac{2PSD(f_j)}{T}}\cos{(\omega_jt-\varphi_j)} \ \ \left[\si{\meter \per \second}\right]
+      \label{eq:wind_series}
+  \end{gather*}
+}
+
+{\tiny
+  \begin{columns}
+    \begin{column}{0.5\columnwidth}
+      \begin{table}
+        \begin{tabular}{cc}
+          \toprule
+          $\mathcal{I}=\sigma_{10}/V_{10}$ & turbulence intensity\\
+          $\sigma_{10}$ & wind standard deviation\\
+          $f$ & frequency\\
+          $V_{10}$ & 10 minutes average wind speed\\
+          $\mathcal{L}$ & length scale (depending on the height)\\
+          \bottomrule
+        \end{tabular}
+      \end{table}
+    \end{column}
+    
+    \begin{column}{0.5\columnwidth}
+      \begin{table}
+        \begin{tabular}{cc}
+          \toprule
+          $t=i\Delta_t$ & time\\
+          $i=1,\dots,N_s$ & time index\\
+          $\omega_j=\frac{j}{T}$ & angular frequency\\
+          $\phi_{ij}$ & random phase\\
+          \bottomrule
+        \end{tabular}
+      \end{table}
+    \end{column}  
+  \end{columns}
+}
+Example: $V_{10}=10 \ \si{\meter\per\second}$, $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$, $h=150 \ \si{\meter}$
+
+  \begin{columns}
+    \begin{column}{0.5\columnwidth}
+      \begin{figure}[htb]
+        \centering
+        \includegraphics[width=0.9\columnwidth]{../images/vectorial/2023_05_3_20_12_23wind_generation.eps}
+        % \caption{Example of generated wind series with $V_{10}=10 \ \si{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$ }
+        \label{fig:wind_generation}
+    \end{figure}
+    \end{column}
+  
+    \begin{column}{0.5\columnwidth}
+      \begin{figure}[htb]
+          \centering
+          \includegraphics[width=0.9\columnwidth]{../images/vectorial/2023_05_3_20_12_23wind_generation_PSD.eps}
+          % \caption{Comparison between the PSD used during the generation phase and the one computed on the series itself}
+          \label{fig:wind_generation_PSD}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[plain,noframenumbering]{MPPT control implementation}
@@ -535,4 +639,46 @@
     \text{Converter delay: } G_c = \frac{1}{1+\uptau_cs} \notag\\
     \text{Generator: } Y_{iq} = -\frac{B_{eq} + J_{eq}s}{L_sJ_{eq}s^2+\left(R_sJ_{eq} + L_s B_{eq}\right)s + R_sB_{eq} + \frac{3}{2}(p\Lambda_{mg})^2} \notag        
   \end{gather}
+\end{frame}
+
+\begin{frame}[plain,noframenumbering]{MPPT on generator power - Further steps}
+  \begin{columns}
+    \begin{column}{0.5\columnwidth}
+      \begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_13_08_17_10fig_pitch_GE.eps}
+        % \caption{Optimal pitch angle}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\columnwidth}
+      \begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_29_17_33_45fig_lambda_GE.eps}
+        % \caption{$K_{opt}$ gain}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[plain,noframenumbering]{Example of IMM control}
+  \begin{equation*}
+    \Delta E_{norm} = \frac{E_{IMM}-E_{Const}}{E_{Const}}\cdot 100 \left[\%\right]
+    \label{eq:energy_error}
+  \end{equation*}
+  \begin{table}[!htbp]
+  \caption{Produced energy in the considered time. $E_R$ and $E_{GE}$ are the mechanical extracted energy and the generator output. \textit{IMM} and \textit{Const.} states whether the control law uses the IMM algorithm or the constant $K_{opt,GE}$ gain respectively.}
+  \centering
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{cc|ccc|ccc}
+    \toprule
+    % write R above the third and fourth column and GE above the last two
+    Integration & & \multicolumn{3}{c|}{$E_R$} & \multicolumn{3}{c}{$E_{GE}$}\\
+    time & WS & IMM & Const. & $\Delta E_{norm}$ & IMM & Const. & $\Delta E_{norm}$\\
+    $\mesunt{\second}$ & $\mesunt{\meter\per\second}$ & $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$& $\mesunt{\giga\joule}$ &   $\mesunt{\giga\joule}$ & $\left[\%\right]$ \\
+    \midrule
+    \input{../macro/2023_11_24_07_11_59energy.tex}
+  \end{tabular}
+  \label{tab:comparison_IMM}
+  }
+\end{table}
 \end{frame}
