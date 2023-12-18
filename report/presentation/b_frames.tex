@@ -13,7 +13,7 @@
       \begin{cases}
         \text{was the second renewable energy source}\\
         \text{covered 17\% of electrical demand}\\
-        \text{onshore avg. size 4.1 MW, offshore 8.0 MW}
+        \text{onshore avg. 4.1 MW, offshore 8.0 MW}
       \end{cases}
       \]
     
@@ -24,8 +24,8 @@
             \text{\bluebold{Upscaling trend}}
             \begin{cases}
               \text{more power (e.g. 15 MW)}\\
-              \text{higher costs}\\
-              \text{higher loads}
+              \text{higher loads}\\
+              \text{higher costs}
             \end{cases}  
           \]
         \end{column}
@@ -82,7 +82,11 @@
 \section{Modelling}
 
 \begin{frame}{Model scheme}
-  \input{d_plant_schema_presentation.tex}
+  \adjustbox{center}{
+    \resizebox{\columnwidth}{!}{%
+    \input{d_plant_schema_presentation.tex}
+  }
+  }
   Target turbine: \bluebold{DTU 10 MW} Reference turbine\\
   \redbold{Not included:} hydrodynamic loads, mooring, tower effects
 
@@ -98,7 +102,7 @@
 \begin{frame}{Simulink implementation}
   \begin{figure}
     \centering
-    \includegraphics[width=\columnwidth]{../images/simulink_screen.jpg}
+    \includegraphics[width=0.9\columnwidth]{../images/simulink_screen.jpg}
   \end{figure}
 \end{frame}
 
@@ -118,6 +122,7 @@
       \caption{{\tiny \textit{Power electronics: The enabling technology for renewable energy integration}}}
     \end{figure}
 
+    Maximum Power Point (\bluebold{MPP}) $\Rightarrow$ Condition with maximum conversion\\
     Control for Maximum Power Point Tracking (\bluebold{MPPT})
   \note{
     \begin{myitemize}
@@ -158,12 +163,14 @@
 
     \begin{column}{0.55\columnwidth}
       \begin{figure}
-        \centering
-        \includegraphics[width=\columnwidth]{../images/vectorial/contour_plot_cP_presentation.eps}
-      \end{figure}
-      \begin{figure}[H]
-        \centering
-        \includegraphics[width=\columnwidth]{../images/vectorial/operating_reagions.eps}
+        \begin{subfigure}{0.85\columnwidth}
+          \centering
+          \includegraphics[width=\columnwidth]{../images/vectorial/contour_plot_cP_presentation.eps}
+        \end{subfigure}
+        \begin{subfigure}{0.85\columnwidth}
+          \centering
+          \includegraphics[width=\columnwidth]{../images/vectorial/operating_reagions.eps}
+        \end{subfigure}
       \end{figure}
     \end{column}
     
@@ -191,7 +198,7 @@
 
   %divide in two columns 0.5\columnwidt each
   \begin{columns}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.4\textwidth}
       Active routes \bluebold{below} rated power
       % \begin{figure} 
         \begin{center}
@@ -203,7 +210,7 @@
         \end{center}
       % \end{figure}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.4\textwidth}
       Active routes \bluebold{above} rated power
       % \begin{figure}
         \begin{center}
@@ -227,17 +234,25 @@
 \begin{frame}{Generator power control - MPPT on rotor power}
 
   \begin{figure}
-  \resizebox{0.7\textwidth}{!}{%
-    \input{d_plant_schema_presentation_power_control.tex}
-  }
+    \adjustbox{center}{
+      \resizebox{0.7\textwidth}{!}{%
+        \input{d_plant_schema_presentation_power_control.tex}
+      }
+    }
   \end{figure}
 
-    % \textcolor{yaleblue}{\textbf{Assumptions}}: unitary transmission ratio
-    \begin{gather}
-     \text{Power set point: } P_G = \frac{1}{2}\rho A c_P V_0^3 \Rightarrow \boxed{c_P = c_{P,max}, V_0=\frac{\omega R}{\lambda_{opt}}} \Rightarrow \notag\\
-      \Rightarrow \frac{1}{2}\rho A c_{P,max} \left(\frac{\omega R}{\lambda_{opt}}\right)^3=K_{opt}\omega^3
-      \notag
-    \end{gather}
+  % \textcolor{yaleblue}{\textbf{Assumptions}}: unitary transmission ratio
+  {\small
+  \begin{gather*}
+    \text{Power set point: } P_G = \frac{1}{2}\rho A c_P V_0^3 \Rightarrow \boxed{c_P = c_{P,max}, V_0=\frac{\omega R}{\lambda_{opt}}} \Rightarrow \frac{1}{2}\rho A c_{P,max} \left(\frac{\omega R}{\lambda_{opt}}\right)^3=K_{opt}\omega^3\\
+    \text{Torque set point: } T_G = \frac{P_G}{\omega} = K_{opt}\omega^2    
+  \end{gather*}
+  }
+  % \begin{gather*}
+  %   \text{Power set point: } P_G = \frac{1}{2}\rho A c_P V_0^3 \Rightarrow \boxed{c_P = c_{P,max}, V_0=\frac{\omega R}{\lambda_{opt}}} \Rightarrow\\
+  %   \Rightarrow \frac{1}{2}\rho A c_{P,max} \left(\frac{\omega R}{\lambda_{opt}}\right)^3=K_{opt}\omega^3\\
+  %   \text{Torque set point: } T_G = K_{opt}\omega^2    
+  % \end{gather*}
 
   \textcolor{yaleblue}{\textbf{Pros}}: Only $\omega$ measurement\\
   \textcolor{bostonuniversityred}{\textbf{Cons}}: Losses in the generator \& no damping; Blind to model errors 
@@ -253,24 +268,24 @@
 
 \begin{frame}{Simulation - MPPT on rotor power}
   \begin{figure}[!htbp]
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
-      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_56_44fig_wind_TS.eps}
+      \includegraphics[width = 0.95\columnwidth]{../images/vectorial/2023_10_4_14_56_44fig_wind_TS.eps}
       \caption{Wind time series}
     \end{subfigure}
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
-      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_57_26fig_pitch_param.eps}
+      \includegraphics[width = 0.95\columnwidth]{../images/vectorial/2023_10_4_14_57_26fig_pitch_param.eps}
       \caption{Pitch angle time series}
     \end{subfigure}
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
-      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_56_58fig_power_param.eps}
+      \includegraphics[width = 0.95\columnwidth]{../images/vectorial/2023_10_4_14_56_58fig_power_param.eps}
       \caption{Input power to the generator}
     \end{subfigure}
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
-      \includegraphics[width = \columnwidth]{../images/vectorial/2023_10_4_14_57_38fig_omega_param.eps}
+      \includegraphics[width = 0.95\columnwidth]{../images/vectorial/2023_10_4_14_57_38fig_omega_param.eps}
       \caption{Rotational speed}
     \end{subfigure}
   \end{figure}
@@ -281,7 +296,6 @@
       \item Three specific WS has been chosen to be representative of three operative conditions: below rated the blue, around the transition in the orange one, and above rated the yellow one. 
       \item The other graphs represents the parametrization of different quantities plotted on top of the static curve, parametrized for the incoming WS. 
       \item It could be seen that the dynamic simulations are clustered around the corresponding static curves.
-      \item Aggiungere info su come è stata generata la velocità del vento
     \end{myitemize}
   }
 \end{frame}
@@ -300,7 +314,7 @@
 
   \begin{columns}
     \begin{column}{0.4\columnwidth}
-      { \tiny
+      { \scriptsize
       \begin{gather*}
           P_{GE} = P_R - B_{eq}\omega^2 - \frac{3}{2} R_s i_q^2 =\\
         =\frac{\rho\pi R^2c_PV_0^3}{2} - B_{eq}\omega^2-\frac{3}{2}R_s\left(\frac{A \, c_P \, \rho \, V_0^3 \,-\,2B_{eq}{\omega}^2}{3\omega\,p\,\Lambda_{mg}}\right)^2 
@@ -309,7 +323,7 @@
       \begin{equation*}
         \underset{\lambda, \theta}{\text{maximize}} \, P_{GE}
       \end{equation*}
-      
+     {\scriptsize 
       \begin{table}
         \begin{tabular}{cc}
           \toprule
@@ -319,12 +333,12 @@
           \bottomrule
         \end{tabular}
       \end{table}
-            
+    }
     \end{column}
     \begin{column}{0.6\columnwidth}
       \begin{figure}
         \centering
-        \includegraphics[width=0.8\columnwidth]{../images/vectorial/fig_K_map.eps}
+        \includegraphics[width=0.75\columnwidth]{../images/vectorial/fig_K_map.eps}
         % \caption{Tip speed ratio}
       \end{figure}
     \end{column}
@@ -355,7 +369,6 @@
     \begin{myitemize}
       \item In this slide, the effect of the control law based on the maximization of the generator power is reported. In particular the power at the incoming mechanical power at rotor and the electrical output of the generator for 5 constant incoming WS is reported. 
       \item It could be seen how, for all the WS the blue cross is above the orange one, meaning that the control based on the rotor power maximization extracts more power from the resource rather than the other. At the same time it could be seen how the orange circle is above the blue ones for almost all the WS meaning that the law based on the generator power provides more electrical power. This is not visible at the rated WS, probably because here the approximation of constant value done before is less valuable.  
-      \item Rifare le figure e vedere solo la potenza generata dal genratore, non considerando quella del rotore
     \end{myitemize}
   }
 \end{frame}
@@ -376,7 +389,7 @@
   Interactive Multiple Model (\bluebold{IMM}) approach
 
   \begin{columns}
-    \begin{column}{0.5\columnwidth}
+    \begin{column}{0.55\columnwidth}
       \begin{myenumerate}
         \item Run a bank of Extended Kalman Filters (\bluebold{EKF}) over different models $\rho^{(j)}$
         \item Compute the \bluebold{probability} of each model $\mu_k^{(j)}$
@@ -388,10 +401,10 @@
       \end{myenumerate}
     \end{column}
 
-    \begin{column}{0.5\columnwidth}
+    \begin{column}{0.45\columnwidth}
       \begin{figure}[H]
         \centering
-        \includegraphics[width=\columnwidth]{../images/IMM_schema.png}
+        \includegraphics[width=0.9\columnwidth]{../images/IMM_schema.png}
         \caption{{\tiny \textit{Kalman-based interacting multiple-model wind speed estimator for wind turbines}}}
       \end{figure}
     \end{column}
@@ -409,22 +422,22 @@
                                                         
 \begin{frame}{Simulation - MPPT with uncertainty}
   \begin{figure}[!htbp]
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
       \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_17_59_53omega_IMM_1.eps}
       \caption{Rotor rotational speed.}
     \end{subfigure}
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
       \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_17_59_53rho_IMM.eps}
       \caption{Estimated and real $\rho$.}
     \end{subfigure}
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
       \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_21_06_27probability_bar_IMM.png}
       \caption{Bar plot of the probabilities.}
     \end{subfigure}
-    \begin{subfigure}{0.49\columnwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
       \includegraphics[width=\columnwidth]{../images/vectorial/2023_11_24_21_06_27K_opt_IMM.eps}
       \caption{$K_{opt}$ for generator control ref. }
@@ -438,7 +451,6 @@
       \item The second figure shows the estimation fo the air density. The blue is the real evolution, the yellow the estimated by the IMM, while the orange is the filtered version. It could be seen how the estimation is close to the real one when the model covers the real, while it converges to it one it is not included, as in the final part of the simulation. 
       \item This is also seen in the bar plot of the probabilities, since at the beginning the first model is the closest, while continuing with the simulation the second and the third become more probable.
       \item Lastly the evolution of the used gain is shown. It could be seen that it changes with time, following the air density estimation.
-      \item Includere tabelle con i lavori
     \end{myitemize}
   }
 
@@ -495,7 +507,7 @@
 
   \begin{figure}
     \centering
-    \includegraphics[width=0.5\columnwidth]{../images/fig_drivetrain.jpg}
+    \includegraphics[width=0.45\columnwidth]{../images/fig_drivetrain.jpg}
   \end{figure}
 
   \note{
@@ -513,19 +525,20 @@
   \begin{figure}
     \centering
       \centering
-      \begingroup
-        \tikzset{every picture/.style={scale=0.7}}
-        \input{../d_blade_control}
-      \endgroup
+      \adjustbox{center}{
+        \resizebox{0.7\columnwidth}{!}{
+          \input{../d_blade_control}
+        }
+      }
   \end{figure} 
   \begin{figure}
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
-      \includegraphics[width = 0.9\columnwidth]{../images/fig_gain_sched_DTU10MW.eps}
+      \includegraphics[width = \columnwidth]{../images/fig_gain_sched_DTU10MW.eps}
     \end{subfigure}
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.4\columnwidth}
       \centering
-      \includegraphics[width = 0.9\columnwidth]{../images/vectorial/fig_pitch_vs_V0.eps}
+      \includegraphics[width = \columnwidth]{../images/vectorial/fig_pitch_vs_V0.eps}
     \end{subfigure}
   \end{figure}
 
@@ -543,20 +556,22 @@
 
 \begin{frame}[plain,noframenumbering]{Wind speed generation}
 
-{ \footnotesize
-  \begin{equation*}
-      PSD(f) = \frac{\mathcal{I} ^2V_{10}\mathcal{L} }{\left(1+1.5\frac{f \ \mathcal{L} }{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
-      \label{eq:PSD}
-  \end{equation*}
-  \begin{gather*}
-      u(t) = V_{10}+\sum_{j=1}^{N_s}\sqrt{\frac{2PSD(f_j)}{T}}\cos{(\omega_jt-\varphi_j)} \ \ \left[\si{\meter \per \second}\right]
-      \label{eq:wind_series}
-  \end{gather*}
-}
-
-{\tiny
   \begin{columns}
     \begin{column}{0.5\columnwidth}
+      { \scriptsize
+        \begin{equation*}
+            PSD(f) = \frac{\mathcal{I} ^2V_{10}\mathcal{L} }{\left(1+1.5\frac{f \ \mathcal{L} }{V_{10}}\right)^{5/3}} \ \ \mesunt{\square \meter \per \second}
+            \label{eq:PSD}
+        \end{equation*}
+        \begin{gather*}
+            u(t) = V_{10}+\sum_{j=1}^{N_s}\sqrt{\frac{2PSD(f_j)}{T}}\cos{(\omega_jt-\varphi_j)} \ \ \left[\si{\meter \per \second}\right]
+            \label{eq:wind_series}
+        \end{gather*}
+      }
+    \end{column}
+    \begin{column}{0.5\columnwidth}
+    {\tiny
+
       \begin{table}
         \begin{tabular}{cc}
           \toprule
@@ -568,9 +583,7 @@
           \bottomrule
         \end{tabular}
       \end{table}
-    \end{column}
-    
-    \begin{column}{0.5\columnwidth}
+
       \begin{table}
         \begin{tabular}{cc}
           \toprule
@@ -581,25 +594,27 @@
           \bottomrule
         \end{tabular}
       \end{table}
-    \end{column}  
+    }
+    \end{column}
   \end{columns}
-}
-Example: $V_{10}=10 \ \si{\meter\per\second}$, $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$, $h=150 \ \si{\meter}$
 
-  \begin{columns}
-    \begin{column}{0.5\columnwidth}
-      \begin{figure}[htb]
-        \centering
-        \includegraphics[width=0.9\columnwidth]{../images/vectorial/2023_05_3_20_12_23wind_generation.eps}
-        % \caption{Example of generated wind series with $V_{10}=10 \ \si{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$ }
-        \label{fig:wind_generation}
-    \end{figure}
+  {\scriptsize
+  Example: $V_{10}=10 \ \si{\meter\per\second}$, $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$, $h=150 \ \si{\meter}$
+  }
+    \begin{columns}
+      \begin{column}{0.5\columnwidth}
+        \begin{figure}[htb]
+          \centering
+          \includegraphics[width=0.7\columnwidth]{../images/vectorial/2023_05_3_20_12_23wind_generation.eps}
+          % \caption{Example of generated wind series with $V_{10}=10 \ \si{\meter\per\second}$ and $\sigma_{V_{10}}=1 \ \si{\meter\per\second}$ }
+          \label{fig:wind_generation}
+      \end{figure}
     \end{column}
   
     \begin{column}{0.5\columnwidth}
       \begin{figure}[htb]
           \centering
-          \includegraphics[width=0.9\columnwidth]{../images/vectorial/2023_05_3_20_12_23wind_generation_PSD.eps}
+          \includegraphics[width=0.7\columnwidth]{../images/vectorial/2023_05_3_20_12_23wind_generation_PSD.eps}
           % \caption{Comparison between the PSD used during the generation phase and the one computed on the series itself}
           \label{fig:wind_generation_PSD}
       \end{figure}
@@ -616,10 +631,12 @@ Example: $V_{10}=10 \ \si{\meter\per\second}$, $\sigma_{V_{10}}=1 \ \si{\meter\p
 
   \begin{figure}
       \centering
-      \begingroup
+      \adjustbox{center}{
+        \resizebox{\columnwidth}{!}{%
         \tikzset{every picture/.style={scale=0.1}}
         \input{d_torque_control_2_presentation.tex}
-      \endgroup
+      }
+      }
   \end{figure}
   Note: $B_{eq}$ inclusion $\Rightarrow$ Identification needed but finer tracking
 \end{frame}
