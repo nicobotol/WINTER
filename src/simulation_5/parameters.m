@@ -116,31 +116,28 @@ a_prime_guess = 0.1;        % initial guess for the BEM code
 V0_cut_in = 4;              % cut in wind speed [m/s]
 V0_cut_out = 25;            % cut out wind speed [m/s]
 
-simulation.model = 3;       % choice of the model
-                            % 1 -> without power controller
+simulation.model = 7;       % choice of the model
                             % 2 -> with power controller
                             % 3 -> with controller based on the generator power
                             % 4 -> extremum seeking controller
                             % 5 -> IMM controller
-if simulation.model == 1    % without power controller
-  simulation.mdl = 'winter_simulink_without_PC'; 
-elseif simulation.model == 2 % with power controller
+if simulation.model == 2 % with power controller
   simulation.mdl = 'winter_simulink_with_PC'; 
 elseif simulation.model == 3 % with power controller considering the generator
     simulation.mdl = 'winter_simulink_with_PC_generator_control'; 
-  elseif simulation.model == 4 % extremum seeking controller
-    simulation.mdl = 'winter_simulink_extremum_seeking_control'; 
-elseif simulation.model == 5 % IMM controller
-    simulation.mdl = 'winter_simulink_IMM_control'; 
-elseif simulation.model == 6 
-    simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
+% elseif simulation.model == 4 % extremum seeking controller
+%   simulation.mdl = 'winter_simulink_extremum_seeking_control'; 
+% elseif simulation.model == 5 % IMM controller
+%     simulation.mdl = 'winter_simulink_IMM_control'; 
+% elseif simulation.model == 6 
+%     simulation.mdl = 'winter_simulink_with_PC_generator_control_EKF'; 
 elseif simulation.model == 7 
     simulation.mdl = 'winter_simulink_IMM_control_2states'; 
   end
-simulation.stop_time = 1e3*ones(10,1); % max time to investigaste [s]
+simulation.stop_time = 10*ones(10,1); % max time to investigaste [s]
 simulation.time_step_H=1e-2;% time step for the mechanical part [s]
 simulation.time_step_L=5e-5;% time step for the electrical part [s]
-simulation.type = 11;       % 1 -> constant wind speed
+simulation.type = 12;       % 1 -> constant wind speed
                             % 2 -> ramp -> NOT USE, USE 6
                             % 3 -> generated wind series
                             % 4 -> generator step response
@@ -152,7 +149,7 @@ simulation.type = 11;       % 1 -> constant wind speed
                             % 10 -> comparison with K_opt and K_opt_GE
                             % 11 -> sensitivity analysis on the gains
                             % 12 -> test IMM or constant gain
-simulation.plot_time = 995*ones(10, 1);  % time from the end of the simulation to 
+simulation.plot_time = 5*ones(10, 1);  % time from the end of the simulation to 
                             % average the response [s]
 % simulation.plot_step = simulation.plot_time/simulation.time_step;
 simulation.print_figure = 0;% enables or disable plot's autosaving 
@@ -181,19 +178,8 @@ generator.P_rated = generator.eta*rotor.P_rated; % rated power [W]
 generator.omega_rated = omega_rated/gearbox.ratio; % rated speed gen. side [rad/s]
 generator.I = 0.0;         % generator iniertia [kgm^2]
 generator.B = 0.0;          % rotational friction [kgm^2/s] (random placeholder)
-% generator.vll = sqrt(3)*3500;        % rated line-to-line voltage [V]
-% generator.is = 1926;      % rated stator current [A]
-% generator.fe = 15.8;       % rated stator frequency [Hz]
-
-% Olimpo
-% generator.p = 198/2;          % number of poles 320
-% generator.Ld = 5.29e-3;      % d-axis stator inductance [H]
-% generator.Lq = 5.29e-3;      % q-axis stator inductance [H]
-% generator.Rs = 36.6e-3;       % stator resistance [ohm]
-% generator.Lambda = 4.47;   % magnet flux-linkage [Wb]
-
-% Marcelo Lobo
-generator.p = 320/2;          % number of poles 320
+% from "10-MW Direct-Drive PMSG-Based Wind Energy Conversion System Model"
+generator.p = 320/2;        % pole pairs (number of poles 320)
 generator.Ld = 1.8e-3;      % d-axis stator inductance [H]
 generator.Lq = 1.8e-3;      % q-axis stator inductance [H]
 generator.Rs = 64e-3;       % stator resistance [ohm]
@@ -218,15 +204,6 @@ generator.bode_plot_TG = 1; % 1 enables bode plot, 0 disables it
 generator.alpha_omega= 2.51;% Speed low pass filter frequency [rad/s]  
 generator.power_ctrl_kp=0.5;% power controller gain 0.5
 generator.power_ctrl_ki=5.5;% power controller gain
-% generator.kp = 7.33e7;
-% generator.kd = 0;
-% generator.ki = 1.32e7;
-% generator.omega1_min = 0;
-% generator.omega2_min = 1.05*generator.omega1_min;
-% generator.omega1_max = 0.90*generator.omega_rated;
-% generator.omega2_max = 0.95*generator.omega_rated;
-% generator.torque_full = generator.K_opt*generator.omega_rated^2; % full load torque [Nm]
-
 
 % Blade parameters
 blade.mass = 4.3388e4;      % mass [kg]
@@ -248,7 +225,7 @@ blade.pitch_min = 0;        % minimum pitch angle [rad]
 blade.actuator_dynamic = tf(blade.omegap^2, [1 2*blade.zetap*blade.omegap blade.omegap^2]); % transfer function of the pitch actuator
 
 % Wind parameters
-wind.mean = kron([4 6 8 10 V0_rated], [1 1]); % 10 minutes mean wind speed [m/s]
+wind.mean = kron(8, [1 1]); % 10 minutes mean wind speed [m/s]
 wind.turbulence = kron([0.5 0.5 1 1 1], [1 1]); % 10 min std (i.e. turbulence) [m/s]
 wind.height = 119.0;            % height where to measure the wind [m]
 wind.sample_f = 50;             % wind sample frequncy [Hz]
@@ -302,9 +279,6 @@ else
 end
 IMM.W = [(omega_rated*0.005/3)^2 0;  0 (1/3)^2]; % measurement noise
 IMM.Q = [(0.05*rotor.P_rated/omega_rated/3)^2 0; 0 (0.5/3)^2];
-% IMM.Q = [2.3715*1e12 0; 0 (0.001/3)^2];
-% IMM.W = [(omega_rated*0.005/3)^2 0 0; 0 2.3715*(0.005/3)^2 0; 0 0 (2/3)^2]; % measurement noise
-% IMM.Q = [2.3715*1e12 0 0; 0 (0.1)^2 0; 0 0 (5e-3*12.2*1e3/3)^2];
 IMM.P_est = 1e3*eye(IMM.states_len, IMM.states_len); % initial covariance matrix
 IMM.sigma_omega = omega_rated*0.05/3; % fixed as 5% of the nominal value
 IMM.sigma_rho = rho*0.05/3; % fixed as 5% of the nominal value
@@ -315,15 +289,6 @@ IMM.sigma_V0_rated = V0_rated*0.15/3; % fixed as 15% of the nominal value
 IMM.sigma_theta = 1*pi/180/3; % assuming 1 deg of uncertainty
 IMM.enable = 1; % enables or disables the IMM controller/constant gain
 IMM.sigma_gain = kron(1.0*[1 1 1 1 1], [1 1]); % gain to scale the sigmas
-IMM.freq_theta = 0.5*0.01;
-IMM.phase_theta = 2*pi*rand();
-IMM.phase_theta2 = 2*pi*rand();
-IMM.freq_rho = 0.5*0.01;
-IMM.phase_rho = 2*pi*rand();
-IMM.phase_rho2 = 2*pi*rand();
-IMM.freq_R = 0.5*0.01;
-IMM.phase_R = 2*pi*rand();
-IMM.phase_R2 = 2*pi*rand();
 
 % Pitching startegy (feathering or stall)
 pitch_strategy = 0;  % 0     -> feathering
